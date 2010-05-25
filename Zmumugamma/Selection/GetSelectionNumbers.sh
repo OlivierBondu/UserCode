@@ -2,6 +2,8 @@
 # Script to fetch cut informations
 # Created by Olivier Bondu for CMSSW 357 (May 2010)
 
+CMSSW_release="CMSSW_3_5_8_patch3"
+
 syntax="${0} {SelectionVersion}"
 
 if [[ -z ${1} ]]
@@ -11,7 +13,7 @@ then
 fi
 
 SelectionVersion=${1}
-SELECTEDDIR=/sps/cms/obondu/CMSSW_3_5_7/src/Zmumugamma/Selection/Selected/${SelectionVersion}
+SELECTEDDIR=/sps/cms/obondu/${CMSSW_release}/src/Zmumugamma/Selection/Selected/${SelectionVersion}
 
 currentDay=`date --rfc-3339=date`
 

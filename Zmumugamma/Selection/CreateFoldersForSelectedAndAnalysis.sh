@@ -2,6 +2,8 @@
 # Small script to create folder architecture in Analysis (ClemAnalysis) and in Selected (ClemFilter)
 # Written for CMSSW 336 by Olivier Bondu (February 2010)
 
+CMSSW_release="CMSSW_3_5_8_patch3"
+
 syntax="Syntax is: ${0} {Selection Version}"
 if [[ -z ${1} ]]
 then
@@ -12,7 +14,7 @@ SelectionVersion=${1}
 
 for Case in `echo "Analysis Selected"`
 do
-	for folder in `'ls' -l  /sps/cms/obondu/CMSSW_3_5_7/src/Zmumugamma/RecoSamples | egrep "^d" | awk '{print $9}' | grep -v crab`
+	for folder in `'ls' -l  /sps/cms/obondu/${CMSSW_release}/src/Zmumugamma/RecoSamples | egrep "^d" | awk '{print $9}' | grep -v crab`
 	do
 		if [[ -d ${Case}/${SelectionVersion} ]]
 		then

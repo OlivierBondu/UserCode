@@ -1,7 +1,7 @@
 #!/usr/local/bin/bash
 # Small script to run the selection code on the anastasie CC IN2P3 batch cluster
 # Written by Olivier Bondu (January 2010) for CMSSW 3_1_4
-CMSSWversion=CMSSW_3_5_7
+CMSSWversion=CMSSW_3_5_8_patch3
 
 HOME=/afs/in2p3.fr/home/o/obondu
 WORKINGDIR=/sps/cms/obondu/${CMSSWversion}/src/Zmumugamma/Selection

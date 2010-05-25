@@ -2,7 +2,9 @@
 # Small script to generate the file which will run the selection on all the samples that have not been run yet
 # Written by Olivier Bondu (March 2010)
 
-sampleDirectory=/sps/cms/obondu/CMSSW_3_5_7/src/Zmumugamma/RecoSamples
+CMSSW_release="CMSSW_3_5_8_patch3"
+
+sampleDirectory=/sps/cms/obondu/${CMSSW_release}/src/Zmumugamma/RecoSamples
 
 for sample in `'ls' -l ${sampleDirectory} | grep drw | awk '{print $9}' | grep 7TeV`
 do
