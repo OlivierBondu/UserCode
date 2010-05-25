@@ -1,0 +1,1 @@
+qsub -eo -o ./outfile_${3}.log -l platform=oldLINUX,T=1000000,scratch=2GB,spool=50MB,M=2GB,u_sps_cmsf $1 $2 $3

@@ -1,0 +1,27 @@
+#!/usr/local/bin/bash
+#PBS -l platform=LINUX,u_sps_cmsf     # Plateforme d'execution
+#PBS -l T=TIME              # Nombre d'unite normalisee (consommation cpu)
+#PBS -q QUEUE
+#PBS -l M=MEMORY
+#PBS -N NAME               # Job Name
+#PBS -o OUTLOG.out
+#PBS -e ERRLOG.err
+
+export HOMEDIR=/afs/in2p3.fr/home/o/obondu
+source ${HOMEDIR}/357.sh
+
+echo "ROOTSYS :"
+echo ${ROOTSYS}
+
+echo "LD_LIBRARY_PATH"
+echo ${LD_LIBRARY_PATH}
+
+WORKDIR=/sps/cms/obondu/CMSSW_3_5_7/src/Zmumugamma/Selection
+echo "Move to WORKDIR ${WORKDIR}"
+cd ${WORKDIR}
+pwd
+
+
+echo "Running actual job"
+root -l -b -q MACRO.C
+
