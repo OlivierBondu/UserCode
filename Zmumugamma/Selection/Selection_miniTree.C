@@ -13,37 +13,34 @@
 #include "TMath.h"
 #include "TSystem.h"
 
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootDummyEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
 
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootDummyEvent.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
-#include "/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
 
-
-//int main(int argc, char*argv[])
-//int TotoAna(int run)
-//int TotoAna_miniTree(){
-int main(){
+int Selection_miniTree(){
+//int main(){
 	//gSystem->Load("libPhysics.so");
 	//gSystem->Load("libEG.so");
 	//gSystem->Load("/afs/cern.ch/cms/CAF/CMSCOMM/COMM_ECAL/lethuill/Skim_PTString plotDir=aolo_MinimumBias_BeamCommissioning09_BSCFilter_v6/libToto.so");
-	gSystem->Load("/sps/cms/morgan/common/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/src/libToto.so");
+	gSystem->Load("/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/src/libToto.so");
 //	gSystem->Load("/sps/cms/chanon/Samples/DATA_MC_IpnTreeProducer35701_CMSSW356_EGskim/libToto.so");
 	
 	bool doHLT                    = true;
@@ -71,8 +68,8 @@ int main(){
 	
 	TString dataset = "DATA";
 	TChain *inputEventTree = new TChain("eventTree");
-  //inputEventTree->Add("/sps/cms/chanon/Samples/DATA_MC_IpnTreeProducer35701_CMSSW356_EGskim/DATA_MinimumBias__Commissioning10-Apr15Skim_356_PreProduction_SD_EG-v2__RECO_TOTOANA_1_1.root");
-  //inputEventTree->Add("/sps/cms/chanon/Samples/DATA_MC_IpnTreeProducer35701_CMSSW356_EGskim/MC_MinBias_V26A_356ReReco-v1_EGskim/MC__MinBias__Spring10-START3X_V26A_356ReReco-v1__GEN-SIM-RECO__FILTER__TOTOANA_*root");
+	//inputEventTree->Add("/sps/cms/chanon/Samples/DATA_MC_IpnTreeProducer35701_CMSSW356_EGskim/DATA_MinimumBias__Commissioning10-Apr15Skim_356_PreProduction_SD_EG-v2__RECO_TOTOANA_1_1.root");
+	//inputEventTree->Add("/sps/cms/chanon/Samples/DATA_MC_IpnTreeProducer35701_CMSSW356_EGskim/MC_MinBias_V26A_356ReReco-v1_EGskim/MC__MinBias__Spring10-START3X_V26A_356ReReco-v1__GEN-SIM-RECO__FILTER__TOTOANA_*root");
 	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_5_8_patch3/src/Zmumugamma/RecoSamples/2010-05-25-RUN-136033_LUMI-1007/Toto_2010-05-25-RUN-136033_LUMI-1007_1.root");
 	
 	TFile* OutputRootFile = new TFile("miniTree_TEST_data.root", "RECREATE");
@@ -197,7 +194,6 @@ int main(){
 	//	if(doCluster)
 	//	{
 
-	  
 		TBranch* clusters_br = 0;
 		TClonesArray* clusters = new TClonesArray("TRootCluster", 0);
 		inputEventTree->SetBranchAddress("BasicClusters", &clusters, &clusters_br);
@@ -276,7 +272,7 @@ cout << endl;
 	Int_t isSignalApplied, isStewApplied, isZJetsApplied;
 
 	Int_t isBeforeAllCuts, isAfterCutCSA07ID, isAfterCutZJETVETO;
-  Int_t isAfterCut1a, isAfterCut1b, isAfterCut1c, isAfterCut1d, isAfterCut1e;
+	Int_t isAfterCut1a, isAfterCut1b, isAfterCut1c, isAfterCut1d, isAfterCut1e;
 	Int_t isAfterCut2a, isAfterCut2b, isAfterCut2c;
 	Int_t isAfterCut3, isAfterCut4, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
 	Int_t isSelected;
@@ -310,13 +306,12 @@ cout << endl;
 	// Photon variables
 	// ___________________________________________
 	Int_t NbPhotons;
-	Float_t Photon_Et, Photon_Eta Photon_Phi;
+	Float_t Photon_Eta, Photon_Phi;
 	Int_t Photon_isEBorEE, Photon_isEB, Photon_isEE, Photon_isEEP, Photon_isEEM;
 
 	Int_t Photon_Multiplicity, Photon_hasPixelSeed, Photon_isAlsoElectron, Photon_Nclusters, Photon_nBasicClusters, Photon_nXtals;
 	Int_t Photon_isTightPhoton, Photon_isLoosePhoton;
 	Int_t Photon_convNTracks, Photon_isoNTracksSolidCone, Photon_isoNTracksHollowCone, Photon_isolationPersoNTracksSolidCone;
-	Float_t Photon_Eta, Photon_Phi;
 	Float_t Photon_E, Photon_Et, Photon_E2x2, Photon_E3x3, Photon_E5x5, Photon_Emax, Photon_E2nd;
 	Float_t Photon_r19, Photon_r9, Photon_cross;
 	Float_t Photon_caloConeSize, Photon_PreshEnergy, Photon_HoE, Photon_covIetaIeta, Photon_covIphiIphi, Photon_etaWidth, Photon_phiWidth;
@@ -328,7 +323,7 @@ cout << endl;
 	// ____________________________________________
 	
 	Float_t Mmumu, Mmumugamma;
-	Float_t deltaRNear, deltaRFar, deltaRmin, deltaRmax, deltaRHigh, deltaRLow;
+	Float_t deltaRNear, deltaRFar, deltaRMinus, deltaRPlus, deltaRHigh, deltaRLow;
  
 	// ____________________________________________
 	// preparing the tree
@@ -337,8 +332,8 @@ cout << endl;
 	TTree* miniTree = new TTree("miniTree","Mu Mu Gamma informations");
 
 	// ____________________________________________
-  // Event information
-  // ____________________________________________
+	// Event information
+	// ____________________________________________
 	
 	miniTree->Branch("iEvent", &iEvent, "iEvent/I");
 	miniTree->Branch("iEventID", &iEventID, "iEventID/I");
@@ -372,9 +367,9 @@ cout << endl;
 
 	miniTree->Branch("isSelected", &isSelected, "isSelected/I");
 
-  // ____________________________________________
-  // Muon variables
-  // ____________________________________________
+	// ____________________________________________
+	// Muon variables
+	// ____________________________________________
 
 	miniTree->Branch("NbMuons", &NbMuons, "NbMuons/I");
 
@@ -489,90 +484,89 @@ cout << endl;
 	miniTree->Branch("MuonL_isoR05_sumPt", &MuonL_isoR05_sumPt, "MuonL_isoR05_sumPt/F");
 
 	// ____________________________________________
-  // Photon variables
-  // ___________________________________________
+	// Photon variables
+	// ___________________________________________
 
 	miniTree->Branch("NbPhotons", &NbPhotons, "NbPhotons/I");
 
-  miniTree->Branch("Photon_Eta", &Photon_Eta, "Photon_Eta/F");
-  miniTree->Branch("Photon_Phi", &Photon_Phi, "Photon_Phi/F");
-  miniTree->Branch("Photon_Et", &Photon_Et, "Photon_Et/F");
+	miniTree->Branch("Photon_Eta", &Photon_Eta, "Photon_Eta/F");
+	miniTree->Branch("Photon_Phi", &Photon_Phi, "Photon_Phi/F");
 
 	miniTree->Branch("Photon_isEBorEE", &Photon_isEBorEE, "Photon_isEBorEE/I");
-  miniTree->Branch("Photon_isEB", &Photon_isEB, "Photon_isEB/I");
-  miniTree->Branch("Photon_isEE", &Photon_isEE, "Photon_isEE/I");
-  miniTree->Branch("Photon_isEEP", &Photon_isEEP, "Photon_isEEP/I");
-  miniTree->Branch("Photon_isEEM", &Photon_isEEM, "Photon_isEEM/I");
+	miniTree->Branch("Photon_isEB", &Photon_isEB, "Photon_isEB/I");
+	miniTree->Branch("Photon_isEE", &Photon_isEE, "Photon_isEE/I");
+	miniTree->Branch("Photon_isEEP", &Photon_isEEP, "Photon_isEEP/I");
+	miniTree->Branch("Photon_isEEM", &Photon_isEEM, "Photon_isEEM/I");
 
-  miniTree->Branch("Photon_Multiplicity", &Photon_Multiplicity, "Photon_Multiplicity/I");
-  miniTree->Branch("Photon_hasPixelSeed", &Photon_hasPixelSeed, "Photon_hasPixelSeed/I");
-  miniTree->Branch("Photon_isAlsoElectron", &Photon_isAlsoElectron, "Photon_isAlsoElectron/I");
-  miniTree->Branch("Photon_Nclusters", &Photon_Nclusters, "Photon_Nclusters/I");
-  miniTree->Branch("Photon_nBasicClusters", &Photon_nBasicClusters, "Photon_nBasicClusters/I");
-  miniTree->Branch("Photon_nXtals", &Photon_nXtals, "Photon_nXtals/I"); // Variable not filled in current version
+	miniTree->Branch("Photon_Multiplicity", &Photon_Multiplicity, "Photon_Multiplicity/I");
+	miniTree->Branch("Photon_hasPixelSeed", &Photon_hasPixelSeed, "Photon_hasPixelSeed/I");
+	miniTree->Branch("Photon_isAlsoElectron", &Photon_isAlsoElectron, "Photon_isAlsoElectron/I");
+	miniTree->Branch("Photon_Nclusters", &Photon_Nclusters, "Photon_Nclusters/I");
+	miniTree->Branch("Photon_nBasicClusters", &Photon_nBasicClusters, "Photon_nBasicClusters/I");
+	miniTree->Branch("Photon_nXtals", &Photon_nXtals, "Photon_nXtals/I"); // Variable not filled in current version
 
-  miniTree->Branch("Photon_isTightPhoton", &Photon_isTightPhoton, "Photon_isTightPhoton/I");
-  miniTree->Branch("Photon_isLoosePhoton", &Photon_isLoosePhoton, "Photon_isLoosePhoton/I");
+	miniTree->Branch("Photon_isTightPhoton", &Photon_isTightPhoton, "Photon_isTightPhoton/I");
+	miniTree->Branch("Photon_isLoosePhoton", &Photon_isLoosePhoton, "Photon_isLoosePhoton/I");
 
-  miniTree->Branch("Photon_E", &Photon_E, "Photon_E/F");
-  miniTree->Branch("Photon_Et", &Photon_Et, "Photon_Et/F");
-  miniTree->Branch("Photon_E2x2", &Photon_E2x2, "Photon_E2x2/F");
-  miniTree->Branch("Photon_E3x3", &Photon_E3x3, "Photon_E3x3/F");
-  miniTree->Branch("Photon_E5x5", &Photon_E5x5, "Photon_E5x5/F");
-  miniTree->Branch("Photon_Emax", &Photon_Emax, "Photon_Emax/F");
-  miniTree->Branch("Photon_E2nd", &Photon_E2nd, "Photon_E2nd/F");
+	miniTree->Branch("Photon_E", &Photon_E, "Photon_E/F");
+	miniTree->Branch("Photon_Et", &Photon_Et, "Photon_Et/F");
+	miniTree->Branch("Photon_E2x2", &Photon_E2x2, "Photon_E2x2/F");
+	miniTree->Branch("Photon_E3x3", &Photon_E3x3, "Photon_E3x3/F");
+	miniTree->Branch("Photon_E5x5", &Photon_E5x5, "Photon_E5x5/F");
+	miniTree->Branch("Photon_Emax", &Photon_Emax, "Photon_Emax/F");
+	miniTree->Branch("Photon_E2nd", &Photon_E2nd, "Photon_E2nd/F");
 
-  miniTree->Branch("Photon_r19", &Photon_r19, "Photon_r19/F");
-  miniTree->Branch("Photon_r9", &Photon_r9, "Photon_r9/F");
-  miniTree->Branch("Photon_cross", &Photon_cross, "Photon_cross/F");
+	miniTree->Branch("Photon_r19", &Photon_r19, "Photon_r19/F");
+	miniTree->Branch("Photon_r9", &Photon_r9, "Photon_r9/F");
+	miniTree->Branch("Photon_cross", &Photon_cross, "Photon_cross/F");
 
-  miniTree->Branch("Photon_caloConeSize", &Photon_caloConeSize, "Photon_caloConeSize/F");
-  miniTree->Branch("Photon_PreshEnergy", &Photon_PreshEnergy, "Photon_PreshEnergy/F");
-  miniTree->Branch("Photon_HoE", &Photon_HoE, "Photon_HoE/F");
-  miniTree->Branch("Photon_covIetaIeta", &Photon_covIetaIeta, "Photon_covIetaIeta/F");
-  miniTree->Branch("Photon_covIphiIphi", &Photon_covIphiIphi, "Photon_covIphiIphi/F");
-  miniTree->Branch("Photon_convNTracks", &Photon_convNTracks, "Photon_convNTracks/I");
-  miniTree->Branch("Photon_etaWidth", &Photon_etaWidth, "Photon_etaWidth/F");
-  miniTree->Branch("Photon_phiWidth", &Photon_phiWidth, "Photon_phiWidth/F");
+	miniTree->Branch("Photon_caloConeSize", &Photon_caloConeSize, "Photon_caloConeSize/F");
+	miniTree->Branch("Photon_PreshEnergy", &Photon_PreshEnergy, "Photon_PreshEnergy/F");
+	miniTree->Branch("Photon_HoE", &Photon_HoE, "Photon_HoE/F");
+	miniTree->Branch("Photon_covIetaIeta", &Photon_covIetaIeta, "Photon_covIetaIeta/F");
+	miniTree->Branch("Photon_covIphiIphi", &Photon_covIphiIphi, "Photon_covIphiIphi/F");
+	miniTree->Branch("Photon_convNTracks", &Photon_convNTracks, "Photon_convNTracks/I");
+	miniTree->Branch("Photon_etaWidth", &Photon_etaWidth, "Photon_etaWidth/F");
+	miniTree->Branch("Photon_phiWidth", &Photon_phiWidth, "Photon_phiWidth/F");
 
-  miniTree->Branch("Photon_isoEcalRecHit", &Photon_isoEcalRecHit, "Photon_isoEcalRecHit/F");
-  miniTree->Branch("Photon_isoHcalRecHit", &Photon_isoHcalRecHit, "Photon_isoHcalRecHit/F");
-  miniTree->Branch("Photon_isoSolidTrkCone", &Photon_isoSolidTrkCone, "Photon_isoSolidTrkCone/F");
-  miniTree->Branch("Photon_isoHollowTrkCone", &Photon_isoHollowTrkCone, "Photon_isoHollowTrkCone/F");
-  miniTree->Branch("Photon_isoNTracksSolidCone", &Photon_isoNTracksSolidCone, "Photon_isoNTracksSolidCone/I");
-  miniTree->Branch("Photon_isoNTracksHollowCone", &Photon_isoNTracksHollowCone, "Photon_isoNTracksHollowCone/I");
-  miniTree->Branch("Photon_isoPersoSolidTrkCone", &Photon_isoPersoSolidTrkCone, "Photon_isoPersoSolidTrkCone/F");
-  miniTree->Branch("Photon_isolationPersoTracksSolidCone", &Photon_isolationPersoTracksSolidCone, "Photon_isolationPersoTracksSolidCone/F");
-  miniTree->Branch("Photon_isolationPersoNTracksSolidCone", &Photon_isolationPersoNTracksSolidCone, "Photon_isolationPersoNTracksSolidCone/I");
+	miniTree->Branch("Photon_isoEcalRecHit", &Photon_isoEcalRecHit, "Photon_isoEcalRecHit/F");
+	miniTree->Branch("Photon_isoHcalRecHit", &Photon_isoHcalRecHit, "Photon_isoHcalRecHit/F");
+	miniTree->Branch("Photon_isoSolidTrkCone", &Photon_isoSolidTrkCone, "Photon_isoSolidTrkCone/F");
+	miniTree->Branch("Photon_isoHollowTrkCone", &Photon_isoHollowTrkCone, "Photon_isoHollowTrkCone/F");
+	miniTree->Branch("Photon_isoNTracksSolidCone", &Photon_isoNTracksSolidCone, "Photon_isoNTracksSolidCone/I");
+	miniTree->Branch("Photon_isoNTracksHollowCone", &Photon_isoNTracksHollowCone, "Photon_isoNTracksHollowCone/I");
+	miniTree->Branch("Photon_isoPersoSolidTrkCone", &Photon_isoPersoSolidTrkCone, "Photon_isoPersoSolidTrkCone/F");
+	miniTree->Branch("Photon_isolationPersoTracksSolidCone", &Photon_isolationPersoTracksSolidCone, "Photon_isolationPersoTracksSolidCone/F");
+	miniTree->Branch("Photon_isolationPersoNTracksSolidCone", &Photon_isolationPersoNTracksSolidCone, "Photon_isolationPersoNTracksSolidCone/I");
 
-  miniTree->Branch("Photon_seedTime", &Photon_seedTime, "Photon_seedTime/F");
-  miniTree->Branch("Photon_seedFlag", &Photon_seedFlag, "Photon_seedFlag/F");
+	miniTree->Branch("Photon_seedTime", &Photon_seedTime, "Photon_seedTime/F");
+	miniTree->Branch("Photon_seedFlag", &Photon_seedFlag, "Photon_seedFlag/F");
 
 	// ____________________________________________
-  // mugamma / mumu / mumugamma information
-  // ____________________________________________
+	// mugamma / mumu / mumugamma information
+	// ____________________________________________
 
 	miniTree->Branch("Mmumu", &Mmumu, "Mmumu/F");
 	miniTree->Branch("Mmumugamma", &Mmumugamma, "Mmumugamma/F");
 
-  miniTree->Branch("deltaRNear", &deltaRNear, "deltaRNear/F");
-  miniTree->Branch("deltaRFar", &deltaRFar, "deltaRFar/F");
-  miniTree->Branch("deltaRmin", &deltaRmin, "deltaRmin/F");
-  miniTree->Branch("deltaRmax", &deltaRmax, "deltaRmax/F");
-  miniTree->Branch("deltaRHigh", &deltaRHigh, "deltaRHigh/F");
-  miniTree->Branch("deltaRLow", &deltaRLow, "deltaRLow/F");
+	miniTree->Branch("deltaRNear", &deltaRNear, "deltaRNear/F");
+	miniTree->Branch("deltaRFar", &deltaRFar, "deltaRFar/F");
+	miniTree->Branch("deltaRPlus", &deltaRPlus, "deltaRPlus/F");
+	miniTree->Branch("deltaRMinus", &deltaRMinus, "deltaRMinus/F");
+	miniTree->Branch("deltaRHigh", &deltaRHigh, "deltaRHigh/F");
+	miniTree->Branch("deltaRLow", &deltaRLow, "deltaRLow/F");
 	
 	
-	unsigned int nTotEvents = (int)inputEventTree->GetEntries();
-	//unsigned int nTotEvents = 1000;
-		cout<<"Nb of events : "<<nTotEvents<<endl;
+	//unsigned int NbEvents = (int)inputEventTree->GetEntries();
+	unsigned int NbEvents = 5;
+		cout<<"Nb of events : "<<NbEvents<<endl;
 	
 
 
-	for(unsigned int ievt=0; ievt<nTotEvents; ievt++)
+	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 	{
-		int nprint = (int)((double)NbEvents/(double)100.0);
-    if( (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEvents*100)<<" \% )"<<endl; }
+//		int nprint = (int)((double)NbEvents/(double)100.0);
+//		if( (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEvents*100)<<" \% )"<<endl; }
 		iEvent = ievt;
 
 		// ____________________________________________
@@ -611,12 +605,11 @@ cout << endl;
 		// Photon variables
 		// ___________________________________________
 		NbPhotons = -999;
-		Photon_Et = Photon_Eta Photon_Phi = -999;
+		Photon_Eta = Photon_Phi = -999;
 		Photon_isEBorEE = Photon_isEB = Photon_isEE = Photon_isEEP = Photon_isEEM = -999;
 		Photon_Multiplicity = Photon_hasPixelSeed = Photon_isAlsoElectron = Photon_Nclusters = Photon_nBasicClusters = Photon_nXtals = -999;
 		Photon_isTightPhoton = Photon_isLoosePhoton = -999;
 		Photon_convNTracks = Photon_isoNTracksSolidCone = Photon_isoNTracksHollowCone = Photon_isolationPersoNTracksSolidCone = -999;
-		Photon_Eta = Photon_Phi = -999;
 		Photon_E = Photon_Et = Photon_E2x2 = Photon_E3x3 = Photon_E5x5 = Photon_Emax = Photon_E2nd = -999;
 		Photon_r19 = Photon_r9 = Photon_cross = -999;
 		Photon_caloConeSize = Photon_PreshEnergy = Photon_HoE = Photon_covIetaIeta = Photon_covIphiIphi = Photon_etaWidth = Photon_phiWidth = -999;
@@ -627,7 +620,7 @@ cout << endl;
 		// mugamma / mumu / mumugamma information
 		// ____________________________________________
 		Mmumu = Mmumugamma = -999;
-		deltaRNear = deltaRFar = deltaRmin = deltaRmax = deltaRHigh = deltaRLow = -999;
+		deltaRNear = deltaRFar = deltaRPlus = deltaRMinus = deltaRHigh = deltaRLow = -999;
 		// ____________________________________________
 		// END OF INITIALIZATION
 		// ____________________________________________
@@ -635,13 +628,16 @@ cout << endl;
 		inputEventTree->GetEvent(ievt);
 		iEventID = event->eventId();
 		isBeforeAllCuts = 1;
-		
+	
+		// FIXME
+		bool stew = false; bool zjet_veto = false;
+	
 		// CSA07 ID
 		if(stew){
 			if( (event->csa07id() != 62) && (event->csa07id() != 63) ){
 				cerr<<"CSA07ID is not 62/63 ( "<< event->csa07id() << ") aborting event " << ievt << endl;
 				isAfterCutCSA07ID = 0;
-      	continue;
+				continue;
 			} else {
 				isAfterCutCSA07ID = 1;
 			}
@@ -649,47 +645,232 @@ cout << endl;
 		
 		// ZJET VETO
 		if( zjet_veto ){
-      bool MCphotons_from_muons = false;
-      for( int iMCparticle = 0 ; iMCparticle < mcParticles->GetEntries() ; iMCparticle++ ){
-        TRootMCParticle *mcParticleCandidate = (TRootMCParticle *)mcParticles->At(iMCparticle);
-        if( (mcParticleCandidate->status()==1) && (mcParticleCandidate->type() == 22) ){ // if the particle is a true MC photon
-          if( abs(mcParticleCandidate->motherType()) == 13 ){// if the true MC photon origins from a muon
-            MCphotons_from_muons = true;
-          }
-        }
-      }// end of loop over MC particles
-      if( MCphotons_from_muons ){
-        cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
+			bool MCphotons_from_muons = false;
+			for( int iMCparticle = 0 ; iMCparticle < mcParticles->GetEntries() ; iMCparticle++ ){
+				TRootMCParticle *mcParticleCandidate = (TRootMCParticle *)mcParticles->At(iMCparticle);
+				if( (mcParticleCandidate->status()==1) && (mcParticleCandidate->type() == 22) ){ // if the particle is a true MC photon
+					if( abs(mcParticleCandidate->motherType()) == 13 ){// if the true MC photon origins from a muon
+						MCphotons_from_muons = true;
+					}
+				}
+			}// end of loop over MC particles
+			if( MCphotons_from_muons ){
+				cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
 				isAfterCutZJETVETO = 0;
-        continue;
-      } else {
-        isAfterCutZJETVETO = 1;
-      }
-    }// end of if Z+Jets veto
+				continue;
+			} else {
+				isAfterCutZJETVETO = 1;
+			}
+		}// end of if Z+Jets veto
 
 		NbMuons = muons->GetEntries();
 		NbPhotons = photons->GetEntries();
 
 		// CUT 1a: nb of muons > 1
-		if(!( NbMuonstot>1 )){
+		if(!( NbMuons>1 )){
+			cerr << "\tCUT: event " << ievt << " CUT at level I because "<< NbMuons	<< " muons only" << endl;
 			continue;
 		}
 
 		// CUT 1b: (nb of muons with |eta| < 2.5) > 1
+		vector<int> muonsValidEta;
+			muonsValidEta.clear();
+			TRootMuon *muonValidEtaCandidate = new TRootMuon();
+			for(int imuon=0 ; imuon<NbMuons ; imuon++){
+				TRootMuon *muonValidEtaCandidate = (TRootMuon*) muons->At(imuon);
+				if( fabs(muonValidEtaCandidate->Eta())<2.5 ){
+					muonsValidEta.push_back(imuon);
+				}
+			}
+			muonValidEtaCandidate->Clear();
+			unsigned int NbMuonsValidEta = muonsValidEta.size();
+		if(!( NbMuonsValidEta>1 )) {
+			cerr << "\tCUT: event " << ievt << " CUT at level I because of bad muons (eta)" << endl;
+			continue;
+		}
+
 		// CUT 1c: two muons with correct eta AND with opposite charge
+		TRootMuon *MPtMuon = (TRootMuon*) muons->At(muonsValidEta[0]);
+		double PtMuon = MPtMuon->Pt();
+		int imuonValidEtaMPt = 0;
+		TRootMuon *MPtMuonCandidate;
+		MPtMuonCandidate = new TRootMuon();
+		for(int imuon=1 ; imuon<NbMuonsValidEta ; imuon++){
+			MPtMuonCandidate = new TRootMuon();
+			MPtMuonCandidate = (TRootMuon*) muons->At(muonsValidEta[imuon]);
+			if(MPtMuonCandidate->Pt() > PtMuon){
+				MPtMuon = MPtMuonCandidate;
+				PtMuon = MPtMuon->Pt();
+				imuonValidEtaMPt = imuon;
+			}
+		}
+		MPtMuonCandidate->Clear();
+		TRootMuon *MPtMuon_oppositeCharge = new TRootMuon();
+		double PtMuon_oppositeCharge = 0.0;
+		bool isThereOppositeCharge = false;
+		for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
+			TRootMuon *MPtMuon_oppositeChargeCandidate = new TRootMuon();
+			TRootMuon *MPtMuon_oppositeChargeCandidate = (TRootMuon*) muons->At(muonsValidEta[imuon]);
+			if( imuon != imuonValidEtaMPt ){
+				if( (MPtMuon_oppositeChargeCandidate->charge())*(MPtMuon->charge()) < 0.0 ){
+					if(MPtMuon_oppositeChargeCandidate->Pt() > PtMuon_oppositeCharge){
+						MPtMuon_oppositeCharge = MPtMuon_oppositeChargeCandidate;
+						PtMuon_oppositeCharge = MPtMuon_oppositeCharge->Pt();
+						isThereOppositeCharge = true;
+					}
+				}
+			}
+		}
+		if(!( isThereOppositeCharge )){
+			cerr << "\tCUT: event " << ievt << " CUT at level I because of bad muons (charge)" << endl;
+			continue;
+		}
+
 		// CUT 1d: two muons with correct eta with opposite charge AND pT>10 GeV
+		if(!( (PtMuon>10.0) && (PtMuon_oppositeCharge>10.0) )){
+			cerr << "\tCUT: event " << ievt << " CUT at level I because of bad muons (pt)" << endl;
+			continue;
+		}
+
 		// CUT 1e: dimuon invariant mass >= 20 GeV
+		TRootParticle *mumu = new TRootParticle();
+		*mumu = (*MPtMuon) + (*MPtMuon_oppositeCharge);
+		double mumuInvMass = mumu->M();
+		cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
+		mumu->Clear();
+		if(!( mumuInvMass >= 20.0 )){
+			cerr << "\tCUT: event " << ievt << " CUT at level I because of m(mumu)" << endl;
+			continue;
+		}
+
 		// CUT 2a: nb of photons > 0
+		if(!( NbPhotons>0 )){
+			cerr << "\tCUT: event " << ievt << " CUT at level II because "<<  NbPhotons  << " gamma" << endl;
+			continue;
+		}
+
 		// CUT 2b: one photon with |eta| < 2.5 and pT>10GeV
+		unsigned int NbPhotonsValidEta = 0;
+		vector<int> photonsValidEta;
+		photonsValidEta.clear();
+		TRootPhoton *photonValidEtaCandidate = new TRootPhoton();
+		for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
+			TRootPhoton *photonValidEtaCandidate = (TRootPhoton*) photons->At(iphoton);
+			if( (photonValidEtaCandidate->Pt()>10.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){
+				photonsValidEta.push_back(iphoton);
+			}
+		}
+		photonValidEtaCandidate->Clear();
+		NbPhotonsValidEta = photonsValidEta.size();
+		if(!( NbPhotonsValidEta>0 )){
+			cerr << "\tCUT: event " << ievt << " CUT at level II because of bad gamma" << endl;
+			continue;
+		}
+
+		// GET most energetic photon
+		TRootPhoton *MPtPhoton = new TRootPhoton();
+		TRootPhoton *MPtPhoton = (TRootPhoton*) photons->At(photonsValidEta[0]);
+		double PtPhoton = MPtPhoton->Pt();
+		for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
+			TRootPhoton *MPtPhotonCandidate = new TRootPhoton();
+			TRootPhoton *MPtPhotonCandidate = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
+			if(MPtPhotonCandidate->Pt() > PtPhoton){
+				MPtPhoton = MPtPhotonCandidate;
+				PtPhoton = MPtPhoton->Pt();
+			}
+			MPtPhotonCandidate->Clear();
+		}
+
+		// ********************************************************************
+		// *** Compute mumugamma invariant mass ***
+		// ********************************************************************
+		TRootParticle *mumugamma = new TRootParticle();
+		*mumugamma = (*MPtMuon) + (*MPtMuon_oppositeCharge) + (*MPtPhoton);
+		double mumugammaInvMass = mumugamma->M();
+		mumugamma->Clear();
+
+		double phiPhoton = MPtPhoton->Phi();
+		double etaPhoton = MPtPhoton->Eta();
+		double phiMuon = MPtMuon->Phi();
+		double etaMuon = MPtMuon->Eta();
+		double phiMuon_oppositeCharge = MPtMuon_oppositeCharge->Phi();
+		double etaMuon_oppositeCharge = MPtMuon_oppositeCharge->Eta();
+		double dphiPM = fabs(phiPhoton - phiMuon);
+		while (dphiPM > TMath::Pi()) dphiPM -= 2*TMath::Pi();
+		while (dphiPM <= -TMath::Pi()) dphiPM += 2*TMath::Pi();
+		double dphiPAM = fabs(phiPhoton - phiMuon_oppositeCharge);
+		while (dphiPAM > TMath::Pi()) dphiPAM -= 2*TMath::Pi();
+		while (dphiPAM <= -TMath::Pi()) dphiPAM += 2*TMath::Pi();
+		double detaPM = fabs(etaPhoton - etaMuon);
+		double detaPAM = fabs(etaPhoton - etaMuon_oppositeCharge);
+		double deltaRPM = sqrt(detaPM*detaPM + dphiPM*dphiPM);
+		double deltaRPAM = sqrt(detaPAM*detaPAM + dphiPAM*dphiPAM);
+
+		double deltaRmin;
+		TRootMuon *farMuon;
+		TRootMuon *nearMuon;
+		if(deltaRPM < deltaRPAM){
+			deltaRmin = deltaRPM;
+			farMuon = (TRootMuon*) MPtMuon_oppositeCharge;
+			nearMuon = (TRootMuon*) MPtMuon;
+		} else {
+			deltaRmin = deltaRPAM;
+			farMuon = (TRootMuon*) MPtMuon;
+			nearMuon = (TRootMuon*) MPtMuon_oppositeCharge;
+		}
+
 		// CUT 2c: DeltaR(photon, close muon) >= 0.05
-		// CUT 3: pT_photon > 1.0 (obsolete)
-		// CUT 4: 40GeV <= dimuon invariant mass <= 80GeV
-		// CUT 5: photon_Et >= 12GeV && DeltaR(photon, close muon)<=0.8
-		// CUT 6: 87.2GeV <= mumugamma invariant mass <= 95.2GeV
-		// CUT 7: 70GeV <= mumugamma invariant mass <= 110GeV
-		// CUT 8: farMuon->isoR03_emEt() <= 1.0
-		// CUT 9: farMuon->Pt() >= 30.0
-		// CUT 10: nearMuon->isoR03_hadEt() < 1.0
+		if(!( deltaRmin>=0.05 )){
+			cerr << "\tCUT: event " << ievt  << " CUT at level II for Photons (deltar)" << endl;
+			continue;
+		}
+
+		// CUT 3: 40GeV <= dimuon invariant mass <= 80GeV
+		if(!( (mumuInvMass>=40.0)&&(mumuInvMass<=80.0) )){
+			cerr << "\tCUT: event " << ievt  << " CUT at level III for Drell-Yan " << endl;
+			continue;
+		}
+
+		// CUT 4: photon_Et >= 12GeV && DeltaR(photon, close muon)<=0.8
+		if(!( (MPtPhoton->Et()>=12.0)&&(deltaRmin<=0.8) )){
+			cerr << "\tCUT: event " << ievt  << " CUT at level IV for gamma momentum" << endl;
+			continue;
+		}
+
+		// CUT 5: 87.2GeV <= mumugamma invariant mass <= 95.2GeV *** *** *** 70GeV <= mumugamma invariant mass <= 110GeV
+		// FIXME
+		bool signal = false;
+		bool cutMuMuGammaWindow = false;
+		if(signal){
+			cutMuMuGammaWindow = (mumugammaInvMass >=87.2) && (mumugammaInvMass <=95.2);} // in case of signal
+		else {
+			cutMuMuGammaWindow = (mumugammaInvMass >=70.0) && (mumugammaInvMass <=110.0);} // in case of background
+		if(!( cutMuMuGammaWindow )){
+			cerr << "\tCUT: event " << ievt  << " CUT at level V for Z Mass Window " << endl;
+			continue;
+		}
+	
+		// CUT 6: farMuon->isoR03_emEt() <= 1.0
+		if(!( farMuon->isoR03_emEt()<=1.0 )) {
+			cerr << "\tCUT: event " << ievt  << " CUT at level VI for large emEt " << endl;
+			continue;
+		}
+
+		// CUT 7: farMuon->Pt() >= 30.0
+		if(!( farMuon->Pt()>=30.0 )) {
+			cerr << "\tCUT: event " << ievt  << " CUT at level VII for soft far muon " << endl;
+			continue;
+		}
+
+		// CUT 8: nearMuon->isoR03_hadEt() < 1.0
+		if(!( nearMuon->isoR03_hadEt()<1.0 )){
+			cerr << "\tCUT: event " << ievt  << " CUT at level VIII for large hadEt " << endl;
+			continue;
+		}
+
+
+		farMuon->Clear();
+		nearMuon->Clear();
 
 
 
@@ -725,10 +906,7 @@ cout << endl;
 
 
 
-
-
-
-		Photon_iEvent = ievt;
+/*		Photon_iEvent = ievt;
 		inputEventTree->GetEvent(ievt);
 		if( (ievt%10==0 && ievt<=100)  || (ievt%100==0 && ievt<=1000)   || (ievt%1000==0 && ievt>1000)  )
 		{
@@ -736,9 +914,9 @@ cout << endl;
 		}
 		//_________________________________________
 		//__________ TO BE CHECKED
-		nTotEventsSelectedRuns++;
-		nTotEventsSelectedL1++;
-		nTotEventsSelectedVertex++;
+		NbEventsSelectedRuns++;
+		NbEventsSelectedL1++;
+		NbEventsSelectedVertex++;
 
 		// Count nb of evts with at least one SC with rawEt>2 GeV (for Eiko)
 		Bool_t atLeastOneSChigherThan2GeV = false;
@@ -780,11 +958,11 @@ cout << endl;
 					Photon_isAfterCut0 = 1;
 				myphoton = (TRootPhoton*) photons->At(iphoton);
 
-        if (myphoton->isEBPho()){ Photon_isEB = 1; Photon_isEE = 0; }
-        if (myphoton->isEEPho()){ Photon_isEE = 1; Photon_isEB = 0; }
-        if (myphoton->isEEPho() && myphoton->Eta()<0){ Photon_isEEM = 1; }
-        if (myphoton->isEEPho() && myphoton->Eta()>0){ Photon_isEEP = 1; }
-
+				if (myphoton->isEBPho()){ Photon_isEB = 1; Photon_isEE = 0; }
+				if (myphoton->isEEPho()){ Photon_isEE = 1; Photon_isEB = 0; }
+				if (myphoton->isEEPho() && myphoton->Eta()<0){ Photon_isEEM = 1; }
+				if (myphoton->isEEPho() && myphoton->Eta()>0){ Photon_isEEP = 1; }
+*/
 				/*
 				cout << "myphoton->clusterAlgo=" << myphoton->clusterAlgo() << " myphoton->isEBPho=" << myphoton->isEBPho() << " myphoton->isEEPho=" << myphoton->isEEPho() << endl;
 				cout << "myphoton->superCluster()=" << myphoton->superCluster() << endl;
@@ -795,7 +973,7 @@ cout << endl;
 				cout << "myphoton->superClusterOfType(323)=" << myphoton->superClusterOfType(323) << endl;
 				*/
 				//if (myphoton->superClusterOfType(211) == 0 && myphoton->superClusterOfType(323) == 0 ) continue;
-					Photon_Multiplicity = photons->GetEntriesFast();
+	/*				Photon_Multiplicity = photons->GetEntriesFast();
 					Photon_E = myphoton->Energy();
 					Photon_Et = myphoton->Et();
 					Photon_Eta = myphoton->Eta();
@@ -880,19 +1058,33 @@ cout << endl;
 		} // end of do photons
 		
 		nSelectedEvents++;
-		
+*/		
 	} // fin boucle sur evts
 
 	
-	if(nTotEvents>0) cout << "nTotEvents=" << nTotEvents << "  nTotEventsSelectedRuns=" << nTotEventsSelectedRuns << "  nTotEventsSelectedL1=" << nTotEventsSelectedL1
-		<< "  nTotEventsSelectedVertex=" << nTotEventsSelectedVertex  << "  nSelectedEvents=" << nSelectedEvents   << "  nEventsWithScHigherThan2GeV=" << nEventsWithScHigherThan2GeV
-	<< "  nSelectedEvents/nTotEventsSelectedRuns=" <<100.*nSelectedEvents/nTotEventsSelectedRuns << "%" << "  nSelectedEvents/nTotEvents=" <<100.*nSelectedEvents/nTotEvents << "%" << endl;
+/*	if(NbEvents>0) cout << "NbEvents=" << NbEvents << "  NbEventsSelectedRuns=" << NbEventsSelectedRuns << "  NbEventsSelectedL1=" << NbEventsSelectedL1
+		<< "  NbEventsSelectedVertex=" << NbEventsSelectedVertex  << "  nSelectedEvents=" << nSelectedEvents   << "  nEventsWithScHigherThan2GeV=" << nEventsWithScHigherThan2GeV
+	<< "  nSelectedEvents/NbEventsSelectedRuns=" <<100.*nSelectedEvents/NbEventsSelectedRuns << "%" << "  nSelectedEvents/NbEvents=" <<100.*nSelectedEvents/NbEvents << "%" << endl;
 	if(nTotPhotons>0) cout << "nSelectedPhotons=" << nSelectedPhotons << "  nTotPhotons=" << nTotPhotons << "  Eff=" <<100.*nSelectedPhotons/nTotPhotons << "%" << endl;
 	cout << "nCut1=" << nCut1 << "  nCut2=" << nCut2 << "  nCut3=" << nCut3 << "  nCut4=" << nCut4 << "  nCut5=" << nCut5 << "  nCut6=" << nCut6 << endl;
-	
+	*/
 	OutputRootFile->cd();
 	OutputRootFile->Write();
-  OutputRootFile->Close();
+	OutputRootFile->Close();
+
+/*
+// FIXME
+	cout << nSelected << " selected events out of " << NbEvents << endl;
+  cout<<"Writing surviving events in OUTPUT.root"<<endl;
+  outputEventTree->AutoSave();
+  outputFile.Write();
+  outputFile.Close();
+  delete outputFile;
+  delete inputEventTree;
+
+*/
+
+
 
 	return 0;
 }
