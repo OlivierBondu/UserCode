@@ -75,8 +75,9 @@ int main(){
 	TString dataset = "DATA";
 	TChain *inputEventTree = new TChain("eventTree");
 	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_5_8_patch3/src/Zmumugamma/RecoSamples/2010-05-25-RUN-136033_LUMI-1007/Toto_2010-05-25-RUN-136033_LUMI-1007_1.root");
+	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_5_8_patch3/src/Zmumugamma/RecoSamples/2010-05-20-RUN-135149_LUMI-1345/Toto_2010-05-20-RUN-135149_LUMI-1345_1.root");
 	
-	TFile* OutputRootFile = new TFile("miniTree_TEST_data.root", "RECREATE");
+	TFile* OutputRootFile = new TFile("miniTree_eventTree.root", "RECREATE");
 	
 	TBranch* event_br = 0;
 	TRootEvent* event = 0;
@@ -186,7 +187,6 @@ int main(){
 		inputEventTree->SetBranchStatus("Electrons", 1);
 	}
 	
-//	TClonesArray* photons = 0;
 		TBranch* photons_br = 0;
 		TClonesArray* photons = new TClonesArray("TRootPhoton", 0);
 	if(doPhoton)
@@ -195,19 +195,21 @@ int main(){
 		inputEventTree->SetBranchStatus("Photons", 1);
 	}
 	
-	//	if(doCluster)
-	//	{
-
 		TBranch* clusters_br = 0;
 		TClonesArray* clusters = new TClonesArray("TRootCluster", 0);
+	if(doCluster)
+	{
 		inputEventTree->SetBranchAddress("BasicClusters", &clusters, &clusters_br);
 		inputEventTree->SetBranchStatus("BasicClusters", 1);
-		
+	}
+	
 		TBranch* superClusters_br = 0;
 		TClonesArray* superClusters = new TClonesArray("TRootSuperCluster", 0);
+	if(doCluster)
+	{
 		inputEventTree->SetBranchAddress("SuperClusters", &superClusters, &superClusters_br);
 		inputEventTree->SetBranchStatus("SuperClusters", 1);
-		//	}
+	}
 	
 		TBranch* conversions_br = 0;
 		TClonesArray* conversionTracks = new TClonesArray("TRootTrack", 0);
@@ -303,7 +305,6 @@ cout << endl;
 	Float_t MuonM_isoR05_nJets, MuonP_isoR05_nJets, MuonN_isoR05_nJets, MuonF_isoR05_nJets, MuonH_isoR05_nJets, MuonL_isoR05_nJets;
 	Float_t MuonM_isoR05_nTracks, MuonP_isoR05_nTracks, MuonN_isoR05_nTracks, MuonF_isoR05_nTracks, MuonH_isoR05_nTracks, MuonL_isoR05_nTracks;
 	Float_t MuonM_isoR05_sumPt, MuonP_isoR05_sumPt, MuonN_isoR05_sumPt, MuonF_isoR05_sumPt, MuonH_isoR05_sumPt, MuonL_isoR05_sumPt;
-//	Float_t MuonM_, MuonP_, MuonN_, MuonF_, MuonH_, MuonL_;
 
 	// ____________________________________________
 	// Photon variables
@@ -333,6 +334,7 @@ cout << endl;
 	// ____________________________________________
 
 	TTree* miniTree = new TTree("miniTree","Mu Mu Gamma informations");
+	TTree *outputEventTree = inputEventTree->CloneTree(0);
 
 	// ____________________________________________
 	// Event information
@@ -557,9 +559,9 @@ cout << endl;
 	miniTree->Branch("deltaRHigh", &deltaRHigh, "deltaRHigh/F");
 	miniTree->Branch("deltaRLow", &deltaRLow, "deltaRLow/F");
 	
-	
+	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
-	//unsigned int NbEvents = 5;
+//	unsigned int NbEvents = 500;
 	bool signal = false;
 	bool stew = false;
 	bool zjet_veto = false;
@@ -567,7 +569,7 @@ cout << endl;
 	cout << "Signal is: " << signal <<endl;
 	cout << "Stew is: " << stew << endl;
 	cout << "ZJet veto is: " << zjet_veto << endl;
-
+	int nSelected = 0;
 
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 	{
@@ -679,10 +681,8 @@ cout << endl;
 		// CUT 1b: (nb of muons with |eta| < 2.5) > 1
 		vector<int> muonsValidEta;
 		muonsValidEta.clear();
-//		TRootMuon *muonValidEtaCandidate = new TRootMuon();
 		TRootMuon *muonValidEtaCandidate;
 		for(int imuon=0 ; imuon<NbMuons ; imuon++){
-//			TRootMuon *muonValidEtaCandidate = (TRootMuon*) muons->At(imuon);
 			muonValidEtaCandidate = (TRootMuon*) muons->At(imuon);
 			if( fabs(muonValidEtaCandidate->Eta())<2.5 ){
 				muonsValidEta.push_back(imuon);
@@ -704,9 +704,7 @@ cout << endl;
 		double PtMuon = MPtMuon->Pt();
 		int imuonValidEtaMPt = 0;
 		TRootMuon *MPtMuonCandidate;
-//		MPtMuonCandidate = new TRootMuon();
 		for(int imuon=1 ; imuon<NbMuonsValidEta ; imuon++){
-//			MPtMuonCandidate = new TRootMuon();
 			MPtMuonCandidate = (TRootMuon*) muons->At(muonsValidEta[imuon]);
 			if(MPtMuonCandidate->Pt() > PtMuon){
 				MPtMuon = MPtMuonCandidate;
@@ -714,15 +712,12 @@ cout << endl;
 				imuonValidEtaMPt = imuon;
 			}
 		}
-//FIXME		MPtMuonCandidate->Clear();
-//		TRootMuon *MPtMuon_oppositeCharge = new TRootMuon();
+		MPtMuonCandidate->~TRootMuon();
 		TRootMuon *MPtMuon_oppositeCharge;
 		double PtMuon_oppositeCharge = 0.0;
 		bool isThereOppositeCharge = false;
 		for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
-//			TRootMuon *MPtMuon_oppositeChargeCandidate = new TRootMuon();
 			TRootMuon *MPtMuon_oppositeChargeCandidate;
-// FIXME			TRootMuon *MPtMuon_oppositeChargeCandidate = (TRootMuon*) muons->At(muonsValidEta[imuon]);
 			MPtMuon_oppositeChargeCandidate = (TRootMuon*) muons->At(muonsValidEta[imuon]);
 			if( imuon != imuonValidEtaMPt ){
 				if( (MPtMuon_oppositeChargeCandidate->charge())*(MPtMuon->charge()) < 0.0 ){
@@ -733,6 +728,7 @@ cout << endl;
 					}
 				}
 			}
+			MPtMuon_oppositeChargeCandidate->~TRootMuon();
 		}
 		if(!( isThereOppositeCharge )){
 			cerr << "\tCUT: event " << ievt << " CUT at level I because of bad muons (charge)" << endl;
@@ -750,13 +746,11 @@ cout << endl;
 		isAfterCut1d = 1;
 
 		// CUT 1e: dimuon invariant mass >= 20 GeV
-//		TRootParticle *mumu = new TRootParticle();
 		TLorentzVector mumu;
-//		TRootParticle *mumu;
 		mumu = (*MPtMuon) + (*MPtMuon_oppositeCharge);
 		double mumuInvMass = mumu.M();
 		cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
-//FIXME		mumu->Clear();
+		mumu.Clear();
 		if(!( mumuInvMass >= 20.0 )){
 			cerr << "\tCUT: event " << ievt << " CUT at level I because of m(mumu)" << endl;
 			miniTree->Fill();
@@ -776,15 +770,14 @@ cout << endl;
 		unsigned int NbPhotonsValidEta = 0;
 		vector<int> photonsValidEta;
 		photonsValidEta.clear();
-//		TRootPhoton *photonValidEtaCandidate = new TRootPhoton();
 		TRootPhoton *photonValidEtaCandidate;
 		for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
-			TRootPhoton *photonValidEtaCandidate = (TRootPhoton*) photons->At(iphoton);
+			photonValidEtaCandidate = (TRootPhoton*) photons->At(iphoton);
 			if( (photonValidEtaCandidate->Pt()>10.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){
 				photonsValidEta.push_back(iphoton);
 			}
 		}
-//FIXME		photonValidEtaCandidate->Clear();
+		photonValidEtaCandidate->~TRootPhoton();
 		NbPhotonsValidEta = photonsValidEta.size();
 		if(!( NbPhotonsValidEta>0 )){
 			cerr << "\tCUT: event " << ievt << " CUT at level II because of bad gamma" << endl;
@@ -794,21 +787,17 @@ cout << endl;
 		isAfterCut2b = 1;
 
 		// GET most energetic photon
-//		TRootPhoton *MPtPhoton = new TRootPhoton();
 		TRootPhoton *MPtPhoton;
-// FIXME		TRootPhoton *MPtPhoton = (TRootPhoton*) photons->At(photonsValidEta[0]);
 		MPtPhoton = (TRootPhoton*) photons->At(photonsValidEta[0]);
 		double PtPhoton = MPtPhoton->Pt();
 		for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
-//			TRootPhoton *MPtPhotonCandidate = new TRootPhoton();
 			TRootPhoton *MPtPhotonCandidate;
-// FIXME			TRootPhoton *MPtPhotonCandidate = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
 			MPtPhotonCandidate = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
 			if(MPtPhotonCandidate->Pt() > PtPhoton){
 				MPtPhoton = MPtPhotonCandidate;
 				PtPhoton = MPtPhoton->Pt();
 			}
-//FIXME			MPtPhotonCandidate->Clear();
+			MPtPhotonCandidate->~TRootPhoton();
 		}
 		// FILL THE MINITREE
 		Photon_Eta = MPtPhoton->Eta();
@@ -855,12 +844,11 @@ cout << endl;
 		// ********************************************************************
 		// *** Compute mumugamma invariant mass ***
 		// ********************************************************************
-//		TRootParticle *mumugamma = new TRootParticle();
-//		TRootParticle *mumugamma;
 		TLorentzVector mumugamma;
 		mumugamma = (*MPtMuon) + (*MPtMuon_oppositeCharge) + (*MPtPhoton);
 		double mumugammaInvMass = mumugamma.M();
-// FIXME		mumugamma->Clear();
+		mumugamma.Clear();
+		cerr << "\t\tINFO: mumugamma invariant mass : Mmumugamma = " << mumugammaInvMass << endl;
 
 		double phiPhoton = MPtPhoton->Phi();
 		double etaPhoton = MPtPhoton->Eta();
@@ -1059,31 +1047,32 @@ cout << endl;
 		isAfterCut9 = 1;
 		isAfterCut10 = 1;
 		isSelected = 1;
+		nSelected++;
 
-		farMuon->Clear();
-		nearMuon->Clear();
-		
+		farMuon->~TRootMuon();
+		nearMuon->~TRootMuon();
+		minusMuon->~TRootMuon();
+		plusMuon->~TRootMuon();
+		highMuon->~TRootMuon();
+		lowMuon->~TRootMuon();
+
+		MPtMuon->~TRootMuon();
+		MPtMuon_oppositeCharge->~TRootMuon();
+		MPtPhoton->~TRootPhoton();
 
 		miniTree->Fill();
+		outputEventTree->Fill();
 	} // fin boucle sur evts
 
+  cout << nSelected << " selected events out of " << NbEvents << endl;
+	outputEventTree->AutoSave();
+	
 	OutputRootFile->cd();
 	OutputRootFile->Write();
 	OutputRootFile->Close();
 
-/*
-// FIXME
-	cout << nSelected << " selected events out of " << NbEvents << endl;
-  cout<<"Writing surviving events in OUTPUT.root"<<endl;
-  outputEventTree->AutoSave();
-  outputFile.Write();
-  outputFile.Close();
-  delete outputFile;
-  delete inputEventTree;
-
-*/
-
-
+	OutputRootFile->Clear();
+	inputEventTree->Clear();
 
 	return 0;
 }
