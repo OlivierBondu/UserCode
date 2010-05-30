@@ -13,26 +13,26 @@
 #include "TMath.h"
 #include "TSystem.h"
 
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootDummyEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
-#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootBardak.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootBeamSpot.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootDummyEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootEcalRecHit.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootElectron.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootJet.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootMCParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootMCPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootMET.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootMuon.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootRun.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootSignalEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootSuperCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootTopTop.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootTrack.h"
+#include "/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/interface/TRootVertex.h"
 
 
 double DeltaR( double eta1, double phi1, double eta2, double phi2){
@@ -47,7 +47,7 @@ double DeltaR( double eta1, double phi1, double eta2, double phi2){
 
 //int Selection_miniTree(){
 int main(){
-	gSystem->Load("/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/IpnTreeProducer/src/libToto.so");
+	gSystem->Load("/sps/cms/obondu/CMSSW_3_5_8_patch3/src/UserCode/358p4-IpnTreeProducer/src/libToto.so");
 	
 	bool doHLT                    = true;
 	bool doMC                     = false;
@@ -74,10 +74,9 @@ int main(){
 	
 	TString dataset = "DATA";
 	TChain *inputEventTree = new TChain("eventTree");
-	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_5_8_patch3/src/Zmumugamma/RecoSamples/2010-05-25-RUN-136033_LUMI-1007/Toto_2010-05-25-RUN-136033_LUMI-1007_1.root");
-	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_5_8_patch3/src/Zmumugamma/RecoSamples/2010-05-20-RUN-135149_LUMI-1345/Toto_2010-05-20-RUN-135149_LUMI-1345_1.root");
+	inputEventTree->Add("/sps/cms/falkiewi/Data_MC_EG_filter_CMSSW_3_5_8_patch3/QCD_Pt-15_7TeV-pythia6_Spring10-START3X_V26B-v1/QCD_Pt-15_7TeV-pythia6_Spring10-START3X_V26B-v1*root");
 	
-	TFile* OutputRootFile = new TFile("miniTree_eventTree.root", "RECREATE");
+	TFile* OutputRootFile = new TFile("miniTree_eventTree_QCD_Pt-15_7TeV-pythia6_Spring10-START3X_V26B-v1.root", "RECREATE");
 	
 	TBranch* event_br = 0;
 	TRootEvent* event = 0;
@@ -313,7 +312,7 @@ cout << endl;
 	Float_t Photon_Eta, Photon_Phi;
 	Int_t Photon_isEBorEE, Photon_isEB, Photon_isEE, Photon_isEEP, Photon_isEEM;
 
-	Int_t Photon_Multiplicity, Photon_hasPixelSeed, Photon_isAlsoElectron, Photon_Nclusters, Photon_nBasicClusters, Photon_nXtals;
+	Int_t Photon_hasPixelSeed, Photon_isAlsoElectron, Photon_Nclusters, Photon_nBasicClusters, Photon_nXtals;
 	Int_t Photon_isTightPhoton, Photon_isLoosePhoton;
 	Int_t Photon_convNTracks, Photon_isoNTracksSolidCone, Photon_isoNTracksHollowCone;
 	Float_t Photon_E, Photon_Et, Photon_E2x2, Photon_E3x3, Photon_E5x5, Photon_Emax, Photon_E2nd;
@@ -504,7 +503,6 @@ cout << endl;
 	miniTree->Branch("Photon_isEEP", &Photon_isEEP, "Photon_isEEP/I");
 	miniTree->Branch("Photon_isEEM", &Photon_isEEM, "Photon_isEEM/I");
 
-	miniTree->Branch("Photon_Multiplicity", &Photon_Multiplicity, "Photon_Multiplicity/I");
 	miniTree->Branch("Photon_hasPixelSeed", &Photon_hasPixelSeed, "Photon_hasPixelSeed/I");
 	miniTree->Branch("Photon_isAlsoElectron", &Photon_isAlsoElectron, "Photon_isAlsoElectron/I");
 	miniTree->Branch("Photon_Nclusters", &Photon_Nclusters, "Photon_Nclusters/I");
@@ -621,7 +619,7 @@ cout << endl;
 		Photon_Eta = Photon_Phi = -999;
 		Photon_isEBorEE = 1;
 		Photon_isEB = Photon_isEE = Photon_isEEP = Photon_isEEM = -999;
-		Photon_Multiplicity = Photon_hasPixelSeed = Photon_isAlsoElectron = Photon_Nclusters = Photon_nBasicClusters = Photon_nXtals = -999;
+		Photon_hasPixelSeed = Photon_isAlsoElectron = Photon_Nclusters = Photon_nBasicClusters = Photon_nXtals = -999;
 		Photon_isTightPhoton = Photon_isLoosePhoton = -999;
 		Photon_convNTracks = Photon_isoNTracksSolidCone = Photon_isoNTracksHollowCone = -999;
 		Photon_E = Photon_Et = Photon_E2x2 = Photon_E3x3 = Photon_E5x5 = Photon_Emax = Photon_E2nd = -999;
@@ -751,6 +749,7 @@ cout << endl;
 		double mumuInvMass = mumu.M();
 		cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
 		mumu.Clear();
+		Mmumu = mumuInvMass;
 		if(!( mumuInvMass >= 20.0 )){
 			cerr << "\tCUT: event " << ievt << " CUT at level I because of m(mumu)" << endl;
 			miniTree->Fill();
@@ -806,7 +805,6 @@ cout << endl;
 		Photon_isEE = MPtPhoton->isEEPho();
 		if( MPtPhoton->isEEPho() && MPtPhoton->Eta()<0 ){ Photon_isEEM = 1; }
 		if( MPtPhoton->isEEPho() && MPtPhoton->Eta()>0 ){ Photon_isEEP = 1; }
-		Photon_Multiplicity = photons->GetEntriesFast();
 		Photon_hasPixelSeed = MPtPhoton->hasPixelSeed();
 		Photon_isAlsoElectron = MPtPhoton->isAlsoElectron();
 		Photon_Nclusters = MPtPhoton->nbClusters();
@@ -849,6 +847,7 @@ cout << endl;
 		double mumugammaInvMass = mumugamma.M();
 		mumugamma.Clear();
 		cerr << "\t\tINFO: mumugamma invariant mass : Mmumugamma = " << mumugammaInvMass << endl;
+		Mmumugamma = mumugammaInvMass;
 
 		double phiPhoton = MPtPhoton->Phi();
 		double etaPhoton = MPtPhoton->Eta();
@@ -982,6 +981,15 @@ cout << endl;
 		MuonL_isoR05_nJets = lowMuon->isoR05_nJets();
 		MuonL_isoR05_nTracks = lowMuon->isoR05_nTracks();
 		MuonL_isoR05_sumPt = lowMuon->isoR05_sumPt();
+
+		deltaRNear = DeltaR(etaPhoton, phiPhoton, nearMuon->Eta(), nearMuon->Phi());
+		deltaRFar = DeltaR(etaPhoton, phiPhoton, farMuon->Eta(), farMuon->Phi());
+		deltaRMinus = DeltaR(etaPhoton, phiPhoton, minusMuon->Eta(), minusMuon->Phi());
+		deltaRPlus = DeltaR(etaPhoton, phiPhoton, plusMuon->Eta(), plusMuon->Phi());
+		deltaRHigh = DeltaR(etaPhoton, phiPhoton, highMuon->Eta(), highMuon->Phi());
+		deltaRLow = DeltaR(etaPhoton, phiPhoton, lowMuon->Eta(), lowMuon->Phi());
+		
+
 
 		// CUT 2c: DeltaR(photon, close muon) >= 0.05
 		if(!( deltaRmin>=0.05 )){
