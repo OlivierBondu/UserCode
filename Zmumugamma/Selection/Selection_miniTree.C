@@ -318,7 +318,7 @@ cout << endl;
 	// Photon variables
 	// ___________________________________________
 	Int_t NbPhotons;
-	Float_t Pt_allPhotons, Eta_allPhotons, Phi_allPhotons;
+	Float_t Pt_allPhotons, Eta_allPhotons, Phi_allPhotons, Cross_allPhotons;
 	Float_t Photon_Eta, Photon_Phi;
 	Int_t Photon_isEBorEE, Photon_isEB, Photon_isEE, Photon_isEEP, Photon_isEEM;
 
@@ -582,6 +582,7 @@ cout << endl;
 	miniTree_allphotons->Branch("Pt_allPhotons,", &Pt_allPhotons, "Pt_allPhotons/F");
 	miniTree_allphotons->Branch("Eta_allPhotons,", &Eta_allPhotons, "Eta_allPhotons/F");
 	miniTree_allphotons->Branch("Phi_allPhotons,", &Phi_allPhotons, "Phi_allPhotons/F");
+	miniTree_allphotons->Branch("Cross_allPhotons,", &Cross_allPhotons, "Cross_allPhotons/F");
 
 	miniTree->Branch("Photon_Eta", &Photon_Eta, "Photon_Eta/F");
 	miniTree->Branch("Photon_Phi", &Photon_Phi, "Photon_Phi/F");
@@ -750,6 +751,7 @@ cout << endl;
 					Pt_allPhotons = myphoton->Pt();
 					Eta_allPhotons = myphoton->Eta();
 					Phi_allPhotons = myphoton->Phi();
+					Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 					miniTree_allphotons->Fill();
 					myphoton->~TRootPhoton();
 				}
@@ -789,6 +791,7 @@ cout << endl;
 					Pt_allPhotons = myphoton->Pt();
 					Eta_allPhotons = myphoton->Eta();
 					Phi_allPhotons = myphoton->Phi();
+					Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 					miniTree_allphotons->Fill();
 					myphoton->~TRootPhoton();
 				}
@@ -817,6 +820,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -856,6 +860,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -915,6 +920,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -988,6 +994,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1015,6 +1022,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1042,6 +1050,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1082,6 +1091,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1277,6 +1287,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1304,6 +1315,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1332,6 +1344,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1359,6 +1372,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1391,6 +1405,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1418,6 +1433,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1445,6 +1461,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1472,6 +1489,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
@@ -1513,6 +1531,7 @@ cout << endl;
 				Pt_allPhotons = myphoton->Pt();
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
 				miniTree_allphotons->Fill();
 				myphoton->~TRootPhoton();
 			}
