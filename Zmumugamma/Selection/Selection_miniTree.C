@@ -671,6 +671,16 @@ cout << endl;
 	cout << "ZJet veto is: " << zjet_veto << endl;
 	int nBeforeAllCuts, nAfterCutCSA07ID, nAfterCutZJETVETO, nAfterCut1a, nAfterCut1b, nAfterCut1c, nAfterCut1d, nAfterCut1e, nAfterCut2a, nAfterCut2b, nAfterCut2c, nAfterCut3, nAfterCut4, nAfterCut5, nAfterCut6, nAfterCut7, nAfterCut8, nAfterCut9, nAfterCut10, nSelected;
 	nBeforeAllCuts = nAfterCutCSA07ID = nAfterCutZJETVETO = nAfterCut1a = nAfterCut1b = nAfterCut1c = nAfterCut1d = nAfterCut1e = nAfterCut2a = nAfterCut2b = nAfterCut2c = nAfterCut3 = nAfterCut4 = nAfterCut5 = nAfterCut6 = nAfterCut7 = nAfterCut8 = nAfterCut9 = nAfterCut10 = nSelected = 0;
+	vector<int> SelectedEvent_RunNumber;
+	vector<int> SelectedEvent_LumiNumber;
+	vector<int> SelectedEvent_EventNumber;
+	vector<int> SelectedEvent_mumugammaInvMass;
+	vector<int> SelectedEvent_Et_gamma;
+	SelectedEvent_RunNumber.clear();
+	SelectedEvent_LumiNumber.clear();
+	SelectedEvent_EventNumber.clear();
+	SelectedEvent_mumugammaInvMass.clear();
+	SelectedEvent_Et_gamma.clear();
 
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 	{
@@ -1244,7 +1254,7 @@ cout << endl;
 		Photon_hasPixelSeed = MPtPhoton->hasPixelSeed();
 		Photon_isAlsoElectron = MPtPhoton->isAlsoElectron();
 		Photon_Nclusters = MPtPhoton->nbClusters();
-		cout << "MPtPhoton->superCluster()=" << MPtPhoton->superCluster() << endl; // FIXME
+//		cout << "MPtPhoton->superCluster()=" << MPtPhoton->superCluster() << endl; // FIXME
 //		Photon_nBasicClusters = MPtPhoton->superCluster()->nBasicClusters();
 		Photon_isTightPhoton = MPtPhoton->isTightPhoton();
 		Photon_isLoosePhoton = MPtPhoton->isLoosePhoton();
@@ -1646,6 +1656,11 @@ cout << endl;
 		nAfterCut10++;
 		isSelected = 1;
 		nSelected++;
+		SelectedEvent_RunNumber.push_back(event->runId());
+		SelectedEvent_LumiNumber.push_back(event->luminosityBlock());
+		SelectedEvent_EventNumber.push_back(event->eventId());
+		SelectedEvent_mumugammaInvMass.push_back(mumugammaInvMass);
+		SelectedEvent_Et_gamma.push_back(PtPhoton);
 
 //		farMuon->~TRootMuon();
 //		nearMuon->~TRootMuon();
@@ -1687,6 +1702,13 @@ cout << endl;
 			}
 			outputEventTree->Fill();
 	} // fin boucle sur evts
+
+	cout << endl << "**************************************************************************" << endl;
+	cout << "DUMPING THE INFORMATION ABOUT SELECTED EVENTS:" << endl;
+	cout << "RUN\t\tLUMI SECTION\t\tEVENT NUMBER\t\t\t\tM(MUMUGAMMA)\t\tEt GAMMA" << endl;
+	for( int iselected=0 ; iselected<nSelected ; iselected++ ){
+		cout << SelectedEvent_RunNumber[iselected] << "\t\t" << SelectedEvent_LumiNumber[iselected] << "\t\t" << SelectedEvent_EventNumber[iselected] << "\t\t\t" << SelectedEvent_mumugammaInvMass[iselected] << "\t\t" << SelectedEvent_Et_gamma[iselected] << endl;
+	}
 
 	cout << endl << "**************************************************************************" << endl;
 	cout << "cut" << "\t\t" << "# events" << "\t\t" << "% rel"	<< "\t\t" << "% abs"<<endl;

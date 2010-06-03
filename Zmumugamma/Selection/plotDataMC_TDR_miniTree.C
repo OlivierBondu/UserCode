@@ -106,7 +106,11 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *MC_miniTree, s
 
 	// // Second: draw MC on the same canvas
 	Histo_MC->SetLineColor(kBlack);
-	Histo_MC->SetFillColor(kOrange-3);
+//	Histo_MC->SetFillColor(kOrange-3);
+//	Histo_MC->SetFillColor(kRed);
+//	Histo_MC->SetFillColor(kBlue);
+	Histo_MC->SetFillColor(kAzure+2);
+	Histo_MC->SetFillStyle(3001);
 	Histo_MC->SetMaximum(YMax_lin);
 	Histo_MC->SetMinimum(YMin_lin);
 	Histo_MC->Draw("same");
@@ -161,8 +165,8 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *MC_miniTree, s
 int main()
 {
 	gROOT->ProcessLine(".x setTDRStyle.C");
-	string Data = "miniTree_eventTree_MinimumBias_Commissioning10-May6thPDSkim2_SD_EG-v1_RECO.root"; 
-	string MC = "miniTree_eventTree_MinBias_TuneD6T_7TeV-pythia6_Spring10-START3X_V26B-v1.root"; 
+	string Data = "miniTree_eventTree_MinimumBias_Commissioning10-May6thPDSkim2_SD_EG-v1_RECO____MinimumBias_Commissioning10-SD_EG-v9_RECOToto.root"; 
+	string MC = "miniTree_eventTree_MinimumBias_Commissioning10-May6thPDSkim2_SD_EG-v1_RECO____MinimumBias_Commissioning10-SD_EG-v9_RECOToto.root"; 
 	
 	TFile *Data_File = new TFile(Data.c_str());
 	TFile *MC_File = new TFile(MC.c_str());
@@ -197,9 +201,26 @@ int main()
 	name.push_back("After2b");
 	set_of_cuts.push_back("isAfterCut2c");
 	name.push_back("After2c");
+	set_of_cuts.push_back("isAfterCut3");
+  name.push_back("After3");
+	set_of_cuts.push_back("isAfterCut4");
+  name.push_back("After4");
+	set_of_cuts.push_back("isAfterCut5");
+  name.push_back("After5");
+	set_of_cuts.push_back("isAfterCut6");
+  name.push_back("After6");
+	set_of_cuts.push_back("isAfterCut7");
+  name.push_back("After7");
+	set_of_cuts.push_back("isAfterCut8");
+  name.push_back("After8");
+	set_of_cuts.push_back("isSelected");
+  name.push_back("SELECTED");
+	set_of_cuts.push_back("isSelected && Mmumugamma < 95.2 && Mmumugamma > 87.2");
+  name.push_back("SELECTED_restrained_masswindow");
+
 
 	for(int i=0; i<set_of_cuts.size() ; i++){
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "NbMuons", "(10,0,10)", set_of_cuts[i], name[i], "# of muons", true, false, c1);
+/*		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "NbMuons", "(10,0,10)", set_of_cuts[i], name[i], "# of muons", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "NbPhotons", "(10,0,10)", set_of_cuts[i], name[i], "# of photons", true, false, c1);
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree_allmuons, MC_miniTree_allmuons, "Pt_allMuons", "(100,0,100)", set_of_cuts[i], name[i], "p_{T_{#mu}}", true, false, c1);
@@ -233,7 +254,8 @@ int main()
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonN_Charge", "(20,-2,2)", set_of_cuts[i], name[i], "charge #mu_{near}", true, false, c1);
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Mmumu", "(100,0,300)", set_of_cuts[i], name[i], "M_{#mu#mu}", true, false, c1);
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Mmumugamma", "(100,0,2500)", set_of_cuts[i], name[i], "M_{#mu#mu#gamma}", true, false, c1);
+	*/	DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Mmumugamma", "(100,70,110)", set_of_cuts[i], name[i], "M_{#mu#mu#gamma}", true, false, c1);
+/*	
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "deltaRNear", "(100,0,10)", set_of_cuts[i], name[i], "#Delta R(#gamma, #mu_{near})", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "deltaRFar", "(100,0,10)", set_of_cuts[i], name[i], "#Delta R(#gamma, #mu_{far})", true, false, c1);
@@ -252,9 +274,9 @@ int main()
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_E", "(100, 0, 100)", set_of_cuts[i], name[i], "Photon Energy", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_Et", "(100, 0, 100)", set_of_cuts[i], name[i], "Photon Et", true, false, c1);
-
+*/
 	}
-
+/*
 	set_of_cuts.clear();
 	name.clear();
 	set_of_cuts.push_back("isBeforeAllCuts && isEB_allPhotons");
@@ -335,7 +357,7 @@ int main()
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree_allphotons, MC_miniTree_allphotons, "Phi_allPhotons", "(50,-3.15,3.15)", set_of_cuts[i], name[i], "#phi_{#gamma}", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree_allphotons, MC_miniTree_allphotons, "Eta_allPhotons", "(50,-3.0,3.0)", set_of_cuts[i], name[i], "#eta_{#gamma}", true, false, c1);
 	}
-
+*/
 
 //	for(int i=0; i<set_of_cuts.size() ; i++){ // loop over different set of cuts
 	// ____________________________________________
