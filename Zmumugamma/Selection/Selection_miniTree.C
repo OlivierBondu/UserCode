@@ -76,11 +76,12 @@ int main(){
 	// DATASET	
 	TChain *inputEventTree = new TChain("eventTree");
 	inputEventTree->Add("/sps/cms/falkiewi/Data_MC_EG_filter_CMSSW_3_5_8_patch3/MinimumBias_Commissioning10-May6thPDSkim2_SD_EG-v1_RECO/MinimumBias_Commissioning10-May6thPDSkim2_SD_EG-v1_RECO*root");
+	inputEventTree->Add("/sps/cms/falkiewi/Data_MC_EG_filter_CMSSW_3_5_8_patch3/MinimumBias_Commissioning10-SD_EG-v9_RECOToto/MinimumBias_Commissioning10-SD_EG-v9_RECO*root");
 //	inputEventTree->Add("/sps/cms/falkiewi/Data_MC_EG_filter_CMSSW_3_5_8_patch3/MinBias_TuneD6T_7TeV-pythia6_Spring10-START3X_V26B-v1/MinBias_TuneD6T_7TeV-pythia6_Spring10-START3X_V26B-v1*root");
 //	inputEventTree->Add("/sps/cms/falkiewi/Data_MC_EG_filter_CMSSW_3_5_8_patch3/MinBias_TuneP0_7TeV-pythia6_Spring10-START3X_V26B-v1/MinBias_TuneP0_7TeV-pythia6_Spring10-START3X_V26B-v1*root");
 //	inputEventTree->Add("/sps/cms/falkiewi/Data_MC_EG_filter_CMSSW_3_5_8_patch3/MinBias_7TeV-pythia8_Spring10-START3X_V26B-v1/MinBias_7TeV-pythia8_Spring10-START3X_V26B-v1*root");
 //	inputEventTree->Add("/sps/cms/falkiewi/Data_MC_EG_filter_CMSSW_3_5_8_patch3/QCD_Pt-15_7TeV-pythia6_Spring10-START3X_V26B-v1/QCD_Pt-15_7TeV-pythia6_Spring10-START3X_V26B-v1*root");
-	string sample = "MinimumBias_Commissioning10-May6thPDSkim2_SD_EG-v1_RECO";
+	string sample = "MinimumBias_Commissioning10-May6thPDSkim2_SD_EG-v1_RECO____MinimumBias_Commissioning10-SD_EG-v9_RECOToto";
 //	string sample = "MinBias_TuneD6T_7TeV-pythia6_Spring10-START3X_V26B-v1";
 //	string sample = "MinBias_TuneP0_7TeV-pythia6_Spring10-START3X_V26B-v1";
 //	string sample = "MinBias_7TeV-pythia8_Spring10-START3X_V26B-v1";
@@ -291,7 +292,7 @@ cout << endl;
 	Int_t isAfterCut3, isAfterCut4, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
 	Int_t isSelected;
 	
-	Int_t isSpike;
+	Int_t isNotCommissionned;
 
 	// ____________________________________________
 	// Muon variables
@@ -342,7 +343,7 @@ cout << endl;
 	// ____________________________________________
 	
 	Float_t Mmumu, Mmumugamma;
-	Float_t deltaRNear, deltaRFar, deltaRMinus, deltaRPlus, deltaRHigh, deltaRLow;
+	Float_t deltaRNear, deltaRFar, deltaRMinus, deltaRPlus, deltaRLeading, deltaRSubleading;
  
 	// ____________________________________________
 	// preparing the tree
@@ -455,7 +456,7 @@ cout << endl;
 	miniTree_allphotons->Branch("isAfterCut10", &isAfterCut10, "isAfterCut10/I");
 
 	miniTree_allphotons->Branch("isSelected", &isSelected, "isSelected/I");
-	miniTree_allphotons->Branch("isSpike", &isSpike, "isSpike/I");
+	miniTree_allphotons->Branch("isNotCommissionned", &isNotCommissionned, "isNotCommissionned/I");
 
 	// ____________________________________________
 	// Muon variables
@@ -463,10 +464,10 @@ cout << endl;
 
 	miniTree->Branch("NbMuons", &NbMuons, "NbMuons/I");
 
-	miniTree_allmuons->Branch("Pt_allMuons,", &Pt_allMuons, "Pt_allMuons/F");
-	miniTree_allmuons->Branch("Eta_allMuons,", &Eta_allMuons, "Eta_allMuons/F");
-	miniTree_allmuons->Branch("Phi_allMuons,", &Phi_allMuons, "Phi_allMuons/F");
-	miniTree_allmuons->Branch("Charge_allMuons,", &Charge_allMuons, "Charge_allMuons/F");
+	miniTree_allmuons->Branch("Pt_allMuons", &Pt_allMuons, "Pt_allMuons/F");
+	miniTree_allmuons->Branch("Eta_allMuons", &Eta_allMuons, "Eta_allMuons/F");
+	miniTree_allmuons->Branch("Phi_allMuons", &Phi_allMuons, "Phi_allMuons/F");
+	miniTree_allmuons->Branch("Charge_allMuons", &Charge_allMuons, "Charge_allMuons/F");
 
 	miniTree->Branch("MuonM_Pt", &MuonM_Pt, "MuonM_Pt/F");
 	miniTree->Branch("MuonP_Pt", &MuonP_Pt, "MuonP_Pt/F");
@@ -584,16 +585,16 @@ cout << endl;
 
 	miniTree->Branch("NbPhotons", &NbPhotons, "NbPhotons/I");
 
-	miniTree_allphotons->Branch("Pt_allPhotons,", &Pt_allPhotons, "Pt_allPhotons/F");
-	miniTree_allphotons->Branch("Eta_allPhotons,", &Eta_allPhotons, "Eta_allPhotons/F");
-	miniTree_allphotons->Branch("Phi_allPhotons,", &Phi_allPhotons, "Phi_allPhotons/F");
-	miniTree_allphotons->Branch("Cross_allPhotons,", &Cross_allPhotons, "Cross_allPhotons/F");
+	miniTree_allphotons->Branch("Pt_allPhotons", &Pt_allPhotons, "Pt_allPhotons/F");
+	miniTree_allphotons->Branch("Eta_allPhotons", &Eta_allPhotons, "Eta_allPhotons/F");
+	miniTree_allphotons->Branch("Phi_allPhotons", &Phi_allPhotons, "Phi_allPhotons/F");
+	miniTree_allphotons->Branch("Cross_allPhotons", &Cross_allPhotons, "Cross_allPhotons/F");
 	
-	miniTree_allphotons->Branch("isEBorEE_allPhotons,", &isEBorEE_allPhotons, "isEBorEE_allPhotons/F");
-	miniTree_allphotons->Branch("isEB_allPhotons,", &isEB_allPhotons, "isEB_allPhotons/F");
-	miniTree_allphotons->Branch("isEE_allPhotons,", &isEE_allPhotons, "isEE_allPhotons/F");
-	miniTree_allphotons->Branch("isEEM_allPhotons,", &isEEM_allPhotons, "isEEM_allPhotons/F");
-	miniTree_allphotons->Branch("isEEP_allPhotons,", &isEEP_allPhotons, "isEEP_allPhotons/F");
+	miniTree_allphotons->Branch("isEBorEE_allPhotons", &isEBorEE_allPhotons, "isEBorEE_allPhotons/I");
+	miniTree_allphotons->Branch("isEB_allPhotons", &isEB_allPhotons, "isEB_allPhotons/I");
+	miniTree_allphotons->Branch("isEE_allPhotons", &isEE_allPhotons, "isEE_allPhotons/I");
+	miniTree_allphotons->Branch("isEEM_allPhotons", &isEEM_allPhotons, "isEEM_allPhotons/I");
+	miniTree_allphotons->Branch("isEEP_allPhotons", &isEEP_allPhotons, "isEEP_allPhotons/I");
 
 	miniTree->Branch("Photon_Eta", &Photon_Eta, "Photon_Eta/F");
 	miniTree->Branch("Photon_Phi", &Photon_Phi, "Photon_Phi/F");
@@ -655,8 +656,8 @@ cout << endl;
 	miniTree->Branch("deltaRFar", &deltaRFar, "deltaRFar/F");
 	miniTree->Branch("deltaRPlus", &deltaRPlus, "deltaRPlus/F");
 	miniTree->Branch("deltaRMinus", &deltaRMinus, "deltaRMinus/F");
-	miniTree->Branch("deltaRHigh", &deltaRHigh, "deltaRHigh/F");
-	miniTree->Branch("deltaRLow", &deltaRLow, "deltaRLow/F");
+	miniTree->Branch("deltaRLeading", &deltaRLeading, "deltaRLeading/F");
+	miniTree->Branch("deltaRSubleading", &deltaRSubleading, "deltaRSubleading/F");
 	
 	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
@@ -721,8 +722,9 @@ cout << endl;
 		// ___________________________________________
 		NbPhotons = photons->GetEntries();
 		Pt_allPhotons = Eta_allPhotons = Phi_allPhotons = Cross_allPhotons = -99;
-		isSpike = -99;
-		isEBorEE_allPhotons, isEB_allPhotons, isEE_allPhotons, isEEM_allPhotons, isEEP_allPhotons = -99;
+		isNotCommissionned = -99;
+		isEBorEE_allPhotons = 1;
+		isEB_allPhotons, isEE_allPhotons, isEEM_allPhotons, isEEP_allPhotons = -99;
 		Photon_Eta = Photon_Phi = -99;
 		Photon_isEBorEE = 1;
 		Photon_isEB = Photon_isEE = Photon_isEEP = Photon_isEEM = -99;
@@ -739,30 +741,49 @@ cout << endl;
 		// mugamma / mumu / mumugamma information
 		// ____________________________________________
 		Mmumu = Mmumugamma = -99;
-		deltaRNear = deltaRFar = deltaRPlus = deltaRMinus = deltaRHigh = deltaRLow = -99;
+		deltaRNear = deltaRFar = deltaRPlus = deltaRMinus = deltaRLeading = deltaRSubleading = -99;
 		// ____________________________________________
 		// END OF INITIALIZATION
 		// ____________________________________________
 		
-		// Cleaning 0.a: spike removal
+		// Cleaning: removing not commissionned superclusters and spikes
 		vector<int> photonsNoSpike;
 		photonsNoSpike.clear();
-		vector<int> photonIsSpike;
-		photonIsSpike.clear();
-		vector<double> crossValue;
-		crossValue.clear();
+		vector<int> photonIsNotCommissioned;
+		photonIsNotCommissioned.clear();
 		for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 			TRootPhoton *myphoton;
 			myphoton = (TRootPhoton*) photons->At(iphoton);
-			crossValue.push_back(1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax())));
-			if(myphoton->superCluster() != 0 && !( (1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()))>0.95)&&(myphoton->isEBPho()) )){
-				photonsNoSpike.push_back(iphoton);
-				photonIsSpike.push_back(0);
-			} else {
-				photonIsSpike.push_back(1);
+			if( (myphoton->superCluster()==0) ){ // 'broken' photon, there should be none
+				photonIsNotCommissioned.push_back(1);
+////				myphoton->~TRootPhoton();
+				continue;
 			}
-			myphoton->~TRootPhoton();
+			if( (1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()))>0.95) && (myphoton->isEBPho()) ){ // 'spike' photons
+				photonIsNotCommissioned.push_back(1);
+////				myphoton->~TRootPhoton();
+				continue;
+			}
+			if( ((myphoton->superCluster()->rawEnergy())*sin(myphoton->superCluster()->Theta()))<2.0 ){ // very low energy clusters, not commissionned
+				photonIsNotCommissioned.push_back(1);
+////				myphoton->~TRootPhoton();
+				continue;
+			}
+			if( (fabs(myphoton->superCluster()->Eta()))>2.5 ){ // high eta clusters, not commisionned
+				photonIsNotCommissioned.push_back(1);
+////				myphoton->~TRootPhoton();
+				continue;
+			}
+			if( fabs(myphoton->superCluster()->Eta())>1.4442 && fabs(myphoton->superCluster()->Eta())<1.566 ){// eta gap clusters, not commissionned
+				photonIsNotCommissioned.push_back(1);
+////				myphoton->~TRootPhoton();
+				continue;
+			}
+			photonsNoSpike.push_back(iphoton);
+			photonIsNotCommissioned.push_back(0);
+////			myphoton->~TRootPhoton();
 		}
+		
 		unsigned int NbPhotonsNoSpike = photonsNoSpike.size();		
 
 	
@@ -779,7 +800,7 @@ cout << endl;
 					Phi_allMuons = mymuon->Phi();
 					Charge_allMuons = mymuon->charge();
 					miniTree_allmuons->Fill();
-					mymuon->~TRootMuon();
+//					mymuon->~TRootMuon();
 				}
 				for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 					TRootPhoton *myphoton;
@@ -788,14 +809,14 @@ cout << endl;
 					Eta_allPhotons = myphoton->Eta();
 					Phi_allPhotons = myphoton->Phi();
 					isEBorEE_allPhotons = 1;
-					isEB_allPhotons = myphoton->isEBPho();
-					isEE_allPhotons = myphoton->isEEPho();
-					isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-					isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-					Cross_allPhotons = crossValue[iphoton];
-					isSpike = photonIsSpike[iphoton];
+					if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+					if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+					if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+					if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+					isNotCommissionned = photonIsNotCommissioned[iphoton];
 					miniTree_allphotons->Fill();
-					myphoton->~TRootPhoton();
+//					myphoton->~TRootPhoton();
 				}
 				continue;
 			}
@@ -813,7 +834,7 @@ cout << endl;
 						MCphotons_from_muons = true;
 					}
 				}
-				mcParticleCandidate->~TRootMCParticle();
+//				mcParticleCandidate->~TRootMCParticle();
 			}// end of loop over MC particles
 			if( MCphotons_from_muons ){
 				cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
@@ -826,7 +847,7 @@ cout << endl;
 					Phi_allMuons = mymuon->Phi();
 					Charge_allMuons = mymuon->charge();
 					miniTree_allmuons->Fill();
-					mymuon->~TRootMuon();
+//					mymuon->~TRootMuon();
 				}
 				for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 					TRootPhoton *myphoton;
@@ -835,14 +856,14 @@ cout << endl;
 					Eta_allPhotons = myphoton->Eta();
 					Phi_allPhotons = myphoton->Phi();
 					isEBorEE_allPhotons = 1;
-					isEB_allPhotons = myphoton->isEBPho();
-					isEE_allPhotons = myphoton->isEEPho();
-					isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-					isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-					Cross_allPhotons = crossValue[iphoton];
-					isSpike = photonIsSpike[iphoton];
+					if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+					if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+					if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+					if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+					isNotCommissionned = photonIsNotCommissioned[iphoton];
 					miniTree_allphotons->Fill();
-					myphoton->~TRootPhoton();
+//					myphoton->~TRootPhoton();
 				}
 				continue;
 			}
@@ -854,7 +875,7 @@ cout << endl;
 		// CUT 1a: nb of muons > 1
 		if(!( NbMuons>1 )){
 			cerr << "\tCUT: event " << ievt << " CUT at level I because "<< NbMuons	<< " muons only" << endl;
-//			miniTree->Fill();
+			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuons ; imuon++){
 				TRootMuon *mymuon;
 				mymuon = (TRootMuon*) muons->At(imuon);
@@ -863,24 +884,25 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
-				TRootPhoton *myphoton;
-				myphoton = (TRootPhoton*) photons->At(iphoton);
-				Pt_allPhotons = myphoton->Pt();
-				Eta_allPhotons = myphoton->Eta();
-				Phi_allPhotons = myphoton->Phi();
+				TRootPhoton *myphotonbis;
+				myphotonbis = (TRootPhoton*) photons->At(iphoton);
+				Pt_allPhotons = myphotonbis->Pt();
+				Eta_allPhotons = myphotonbis->Eta();
+				Phi_allPhotons = myphotonbis->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[iphoton];
+				if( myphotonbis->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphotonbis->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphotonbis->isEEPho()==1) && (myphotonbis->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphotonbis->isEEPho()==1) && (myphotonbis->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphotonbis->superCluster()->s4())/(myphotonbis->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[iphoton];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphotonbis->~TRootPhoton();
 			}
+
 			continue;
 		}
 		isAfterCut1a = 1;
@@ -896,7 +918,7 @@ cout << endl;
 				muonsValidEta.push_back(imuon);
 			}
 		}
-		muonValidEtaCandidate->~TRootMuon();
+//		muonValidEtaCandidate->~TRootMuon();
 		unsigned int NbMuonsValidEta = muonsValidEta.size();
 
 		if(!( NbMuonsValidEta>1 )) {
@@ -910,7 +932,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
@@ -919,14 +941,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[iphoton];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[iphoton];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 			continue;
 		}
@@ -948,7 +970,7 @@ cout << endl;
 				imuonValidEtaMPt = imuon;
 			}
 		}
-		MPtMuonCandidate->~TRootMuon();
+//		MPtMuonCandidate->~TRootMuon();
 		TRootMuon *MPtMuon_oppositeCharge;
 		double PtMuon_oppositeCharge = 0.0;
 		bool isThereOppositeCharge = false;
@@ -964,7 +986,7 @@ cout << endl;
 					}
 				}
 			}
-			MPtMuon_oppositeChargeCandidate->~TRootMuon();
+//			MPtMuon_oppositeChargeCandidate->~TRootMuon();
 		}
 		if(!( isThereOppositeCharge )){
 			cerr << "\tCUT: event " << ievt << " CUT at level I because of bad muons (charge)" << endl;
@@ -977,7 +999,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
@@ -986,14 +1008,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[iphoton];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[iphoton];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 			continue;
 		}
@@ -1058,7 +1080,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1067,14 +1089,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[iphoton];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[iphoton];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 			continue;
 		}
@@ -1093,7 +1115,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1102,14 +1124,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[iphoton];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[iphoton];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 			continue;
 		}
@@ -1128,7 +1150,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1137,14 +1159,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[iphoton];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[iphoton];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 			continue;
 		}
@@ -1163,7 +1185,7 @@ cout << endl;
 				photonsValidEta.push_back(photonsNoSpike[iphoton]);
 			}
 		}
-		photonValidEtaCandidate->~TRootPhoton();
+//		photonValidEtaCandidate->~TRootPhoton();
 		NbPhotonsValidEta = photonsValidEta.size();
 		if(!( NbPhotonsValidEta>0 )){
 			cerr << "\tCUT: event " << ievt << " CUT at level II because of bad gamma" << endl;
@@ -1176,7 +1198,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1185,14 +1207,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[photonsValidEta[iphoton]];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[photonsValidEta[iphoton]];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 			continue;
 		}
@@ -1210,19 +1232,20 @@ cout << endl;
 				MPtPhoton = MPtPhotonCandidate;
 				PtPhoton = MPtPhoton->Pt();
 			}
-			MPtPhotonCandidate->~TRootPhoton();
+//			MPtPhotonCandidate->~TRootPhoton();
 		}
 		// FILL THE MINITREE
 		Photon_Eta = MPtPhoton->Eta();
 		Photon_Phi = MPtPhoton->Phi();
-		Photon_isEB = MPtPhoton->isEBPho();
-		Photon_isEE = MPtPhoton->isEEPho();
-		if( MPtPhoton->isEEPho() && MPtPhoton->Eta()<0 ){ Photon_isEEM = 1; }
-		if( MPtPhoton->isEEPho() && MPtPhoton->Eta()>0 ){ Photon_isEEP = 1; }
+		if( MPtPhoton->isEBPho() ){ Photon_isEB=1; } else { Photon_isEB=0; }
+		if( MPtPhoton->isEEPho() ){ Photon_isEE=1; } else { Photon_isEE=0; }
+		if( MPtPhoton->isEEPho() && MPtPhoton->Eta()<0 ){ Photon_isEEM=1; } else { Photon_isEEM=0; }
+		if( MPtPhoton->isEEPho() && MPtPhoton->Eta()>0 ){ Photon_isEEP=1; } else { Photon_isEEP=0; }
 		Photon_hasPixelSeed = MPtPhoton->hasPixelSeed();
 		Photon_isAlsoElectron = MPtPhoton->isAlsoElectron();
 		Photon_Nclusters = MPtPhoton->nbClusters();
-		Photon_nBasicClusters = MPtPhoton->superCluster()->nBasicClusters();
+		cout << "MPtPhoton->superCluster()=" << MPtPhoton->superCluster() << endl; // FIXME
+//		Photon_nBasicClusters = MPtPhoton->superCluster()->nBasicClusters();
 		Photon_isTightPhoton = MPtPhoton->isTightPhoton();
 		Photon_isLoosePhoton = MPtPhoton->isLoosePhoton();
 		Photon_convNTracks = MPtPhoton->convNTracks();
@@ -1237,20 +1260,20 @@ cout << endl;
 		Photon_E2nd = MPtPhoton->e2nd();
 		Photon_r19 = MPtPhoton->r19();
 		Photon_r9 = MPtPhoton->r9();
-		Photon_cross = 1-((MPtPhoton->superCluster()->s4())/(MPtPhoton->superCluster()->eMax()));		
+//FIXME		Photon_cross = 1-((MPtPhoton->superCluster()->s4())/(MPtPhoton->superCluster()->eMax()));		
 		Photon_caloConeSize = MPtPhoton->caloConeSize();
 		Photon_PreshEnergy = MPtPhoton->preshowerEnergy();
 		Photon_HoE = MPtPhoton->hoe();
 		Photon_covIetaIeta = MPtPhoton->covIetaIeta();
 		Photon_covIphiIphi = MPtPhoton->covIphiIphi();
-		Photon_etaWidth = MPtPhoton->superCluster()->etaWidth();
-		Photon_phiWidth = MPtPhoton->superCluster()->phiWidth();
+//FIXME		Photon_etaWidth = MPtPhoton->superCluster()->etaWidth();
+//FIXME		Photon_phiWidth = MPtPhoton->superCluster()->phiWidth();
 		Photon_isoEcalRecHit = MPtPhoton->isolationEcalRecHit();
 		Photon_isoHcalRecHit = MPtPhoton->isolationHcalRecHit();
 		Photon_isoSolidTrkCone = MPtPhoton->isolationSolidTrkCone();
 		Photon_isoHollowTrkCone = MPtPhoton->isolationHollowTrkCone();
-		Photon_seedTime = MPtPhoton->superCluster()->hitAt(MPtPhoton->superCluster()->nRecHits()-1)->time();
-		Photon_seedFlag = MPtPhoton->superCluster()->hitAt(MPtPhoton->superCluster()->nRecHits()-1)->recoFlag();
+//FIXME		Photon_seedTime = MPtPhoton->superCluster()->hitAt(MPtPhoton->superCluster()->nRecHits()-1)->time();
+//FIXME		Photon_seedFlag = MPtPhoton->superCluster()->hitAt(MPtPhoton->superCluster()->nRecHits()-1)->recoFlag();
 
 
 		// ********************************************************************
@@ -1364,8 +1387,8 @@ cout << endl;
 		deltaRFar = DeltaR(etaPhoton, phiPhoton, farMuon->Eta(), farMuon->Phi());
 		deltaRMinus = DeltaR(etaPhoton, phiPhoton, minusMuon->Eta(), minusMuon->Phi());
 		deltaRPlus = DeltaR(etaPhoton, phiPhoton, plusMuon->Eta(), plusMuon->Phi());
-		deltaRHigh = DeltaR(etaPhoton, phiPhoton, leadingMuon->Eta(), leadingMuon->Phi());
-		deltaRLow = DeltaR(etaPhoton, phiPhoton, subleadingMuon->Eta(), subleadingMuon->Phi());
+		deltaRLeading = DeltaR(etaPhoton, phiPhoton, leadingMuon->Eta(), leadingMuon->Phi());
+		deltaRSubleading = DeltaR(etaPhoton, phiPhoton, subleadingMuon->Eta(), subleadingMuon->Phi());
 	
 		// CUT 2c: DeltaR(photon, close muon) >= 0.05
 		if(!( deltaRmin>=0.05 )){
@@ -1379,7 +1402,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1388,14 +1411,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[photonsValidEta[iphoton]];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[photonsValidEta[iphoton]];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 				continue;
 		}
@@ -1415,7 +1438,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1424,14 +1447,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[photonsValidEta[iphoton]];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[photonsValidEta[iphoton]];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 				continue;
 		}
@@ -1450,7 +1473,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1459,14 +1482,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[photonsValidEta[iphoton]];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[photonsValidEta[iphoton]];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 				continue;
 		}
@@ -1490,7 +1513,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1499,14 +1522,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[photonsValidEta[iphoton]];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[photonsValidEta[iphoton]];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 				continue;
 		}
@@ -1525,7 +1548,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1534,14 +1557,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[photonsValidEta[iphoton]];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[photonsValidEta[iphoton]];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 				continue;
 		}
@@ -1560,7 +1583,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1569,14 +1592,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[photonsValidEta[iphoton]];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[photonsValidEta[iphoton]];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 				continue;
 		}
@@ -1595,7 +1618,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1604,14 +1627,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[photonsValidEta[iphoton]];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[photonsValidEta[iphoton]];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 				continue;
 		}
@@ -1624,16 +1647,16 @@ cout << endl;
 		isSelected = 1;
 		nSelected++;
 
-		farMuon->~TRootMuon();
-		nearMuon->~TRootMuon();
-		minusMuon->~TRootMuon();
-		plusMuon->~TRootMuon();
-		leadingMuon->~TRootMuon();
-		subleadingMuon->~TRootMuon();
+//		farMuon->~TRootMuon();
+//		nearMuon->~TRootMuon();
+//		minusMuon->~TRootMuon();
+//		plusMuon->~TRootMuon();
+//		leadingMuon->~TRootMuon();
+//		subleadingMuon->~TRootMuon();
 
-		MPtMuon->~TRootMuon();
-		MPtMuon_oppositeCharge->~TRootMuon();
-		MPtPhoton->~TRootPhoton();
+//		MPtMuon->~TRootMuon();
+//		MPtMuon_oppositeCharge->~TRootMuon();
+//		MPtPhoton->~TRootPhoton();
 
 		miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
@@ -1644,7 +1667,7 @@ cout << endl;
 				Phi_allMuons = mymuon->Phi();
 				Charge_allMuons = mymuon->charge();
 				miniTree_allmuons->Fill();
-				mymuon->~TRootMuon();
+//				mymuon->~TRootMuon();
 			}
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
@@ -1653,14 +1676,14 @@ cout << endl;
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
-				isEB_allPhotons = myphoton->isEBPho();
-				isEE_allPhotons = myphoton->isEEPho();
-				isEEM_allPhotons = (myphoton->isEEPho() && myphoton->Eta()<0 );
-				isEEP_allPhotons = (myphoton->isEEPho() && myphoton->Eta()>0 );
-				Cross_allPhotons = crossValue[iphoton];
-				isSpike = photonIsSpike[photonsValidEta[iphoton]];
+				if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+				if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+				if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+				Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+				isNotCommissionned = photonIsNotCommissioned[photonsValidEta[iphoton]];
 				miniTree_allphotons->Fill();
-				myphoton->~TRootPhoton();
+//				myphoton->~TRootPhoton();
 			}
 			outputEventTree->Fill();
 	} // fin boucle sur evts
