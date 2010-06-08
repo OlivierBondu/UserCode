@@ -165,8 +165,8 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *MC_miniTree, s
 int main()
 {
 	gROOT->ProcessLine(".x setTDRStyle.C");
-	string Data = "miniTree_eventTree_MinimumBias_Commissioning10-May6thPDSkim2_SD_EG-v1_RECO____MinimumBias_Commissioning10-SD_EG-v9_RECOToto.root"; 
-	string MC = "miniTree_eventTree_MinimumBias_Commissioning10-May6thPDSkim2_SD_EG-v1_RECO____MinimumBias_Commissioning10-SD_EG-v9_RECOToto.root"; 
+	string Data = "miniTree_eventTree_DATA_MinimumBias_Commissioning10-May6thPDSkim_GOODCOLL-v1_RAW-RECO.root"; 
+	string MC = "miniTree_eventTree_MC_MinBias_TuneD6T_7TeV-pythia6_Spring10-START3X_V26B-v1_GEN-SIM-RECO.root"; 
 	
 	TFile *Data_File = new TFile(Data.c_str());
 	TFile *MC_File = new TFile(MC.c_str());
@@ -199,7 +199,7 @@ int main()
 	name.push_back("After2a");
 	set_of_cuts.push_back("isAfterCut2b");
 	name.push_back("After2b");
-	set_of_cuts.push_back("isAfterCut2c");
+/*	set_of_cuts.push_back("isAfterCut2c");
 	name.push_back("After2c");
 	set_of_cuts.push_back("isAfterCut3");
   name.push_back("After3");
@@ -217,10 +217,10 @@ int main()
   name.push_back("SELECTED");
 	set_of_cuts.push_back("isSelected && Mmumugamma < 95.2 && Mmumugamma > 87.2");
   name.push_back("SELECTED_restrained_masswindow");
-
+*/
 
 	for(int i=0; i<set_of_cuts.size() ; i++){
-/*		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "NbMuons", "(10,0,10)", set_of_cuts[i], name[i], "# of muons", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "NbMuons", "(10,0,10)", set_of_cuts[i], name[i], "# of muons", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "NbPhotons", "(10,0,10)", set_of_cuts[i], name[i], "# of photons", true, false, c1);
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree_allmuons, MC_miniTree_allmuons, "Pt_allMuons", "(100,0,100)", set_of_cuts[i], name[i], "p_{T_{#mu}}", true, false, c1);
@@ -239,23 +239,25 @@ int main()
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonL_Pt", "(50,0,100)", set_of_cuts[i], name[i], "p_{T} #mu_{leading}", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonS_Pt", "(50,0,100)", set_of_cuts[i], name[i], "p_{T} #mu_{subleading}", true, false, c1);
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonL_Eta", "(10,-3,3)", set_of_cuts[i], name[i], "#eta #mu_{leading}", true, false, c1);
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonS_Eta", "(10,-3,3)", set_of_cuts[i], name[i], "#eta #mu_{subleading}", true, false, c1);
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonL_Phi", "(100,-3.15,3.15)", set_of_cuts[i], name[i], "#phi #mu_{leading}", true, false, c1);
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonS_Phi", "(100,-3.15,3.15)", set_of_cuts[i], name[i], "#phi #mu_{subleading}", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonL_Eta", "(50,-3,3)", set_of_cuts[i], name[i], "#eta #mu_{leading}", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonS_Eta", "(50,-3,3)", set_of_cuts[i], name[i], "#eta #mu_{subleading}", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonL_Phi", "(50,-3.15,3.15)", set_of_cuts[i], name[i], "#phi #mu_{leading}", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonS_Phi", "(50,-3.15,3.15)", set_of_cuts[i], name[i], "#phi #mu_{subleading}", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonL_Charge", "(20,-2,2)", set_of_cuts[i], name[i], "charge #mu_{leading}", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonS_Charge", "(20,-2,2)", set_of_cuts[i], name[i], "charge #mu_{subleading}", true, false, c1);
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonF_Pt", "(50,0,100)", set_of_cuts[i], name[i], "p_{T} #mu_{far}", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonN_Pt", "(50,0,100)", set_of_cuts[i], name[i], "p_{T} #mu_{near}", true, false, c1);
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonF_Eta", "(10,-3,3)", set_of_cuts[i], name[i], "#eta #mu_{far}", true, false, c1);
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonN_Eta", "(10,-3,3)", set_of_cuts[i], name[i], "#eta #mu_{near}", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonF_Eta", "(50,-3,3)", set_of_cuts[i], name[i], "#eta #mu_{far}", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonN_Eta", "(50,-3,3)", set_of_cuts[i], name[i], "#eta #mu_{near}", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonF_Phi", "(50,-3.15,3.15)", set_of_cuts[i], name[i], "#phi #mu_{far}", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonN_Phi", "(50,-3.15,3.15)", set_of_cuts[i], name[i], "#phi #mu_{near}", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonF_Charge", "(20,-2,2)", set_of_cuts[i], name[i], "charge #mu_{far}", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "MuonN_Charge", "(20,-2,2)", set_of_cuts[i], name[i], "charge #mu_{near}", true, false, c1);
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Mmumu", "(100,0,300)", set_of_cuts[i], name[i], "M_{#mu#mu}", true, false, c1);
-	*/	DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Mmumugamma", "(100,70,110)", set_of_cuts[i], name[i], "M_{#mu#mu#gamma}", true, false, c1);
-/*	
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Mmumugamma", "(100,70,110)", set_of_cuts[i], name[i], "M_{#mu#mu#gamma}", true, false, c1);
+	
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "deltaRNear", "(100,0,10)", set_of_cuts[i], name[i], "#Delta R(#gamma, #mu_{near})", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "deltaRFar", "(100,0,10)", set_of_cuts[i], name[i], "#Delta R(#gamma, #mu_{far})", true, false, c1);
@@ -264,8 +266,8 @@ int main()
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "deltaRLeading", "(100,0,10)", set_of_cuts[i], name[i], "#Delta R(#gamma, #mu_{leading})", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "deltaRSubleading", "(100,0,10)", set_of_cuts[i], name[i], "#Delta R(#gamma, #mu_{subleading})", true, false, c1);
 
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_Eta", "(10,-3,3)", set_of_cuts[i], name[i], "#eta of photon", true, false, c1);
-		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_Phi", "(10,-3.15,3.15)", set_of_cuts[i], name[i], "#phi of photon", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_Eta", "(50,-3,3)", set_of_cuts[i], name[i], "#eta of photon", true, false, c1);
+		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_Phi", "(50,-3.15,3.15)", set_of_cuts[i], name[i], "#phi of photon", true, false, c1);
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_isEB", "(10,-1,2)", set_of_cuts[i], name[i], "photon is in barrel", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_isEE", "(10,-1,2)", set_of_cuts[i], name[i], "photon is in endcap", true, false, c1);
@@ -274,7 +276,7 @@ int main()
 
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_E", "(100, 0, 100)", set_of_cuts[i], name[i], "Photon Energy", true, false, c1);
 		DrawDataMCplot_NormEntries_Fast(Data_miniTree, MC_miniTree, "Photon_Et", "(100, 0, 100)", set_of_cuts[i], name[i], "Photon Et", true, false, c1);
-*/
+
 	}
 /*
 	set_of_cuts.clear();
