@@ -8,7 +8,7 @@
 #PBS -e ERRLOG.err
 
 export HOMEDIR=/afs/in2p3.fr/home/o/obondu
-source ${HOMEDIR}/357.sh
+source ${HOMEDIR}/361p4.sh
 
 echo "ROOTSYS :"
 echo ${ROOTSYS}
@@ -16,12 +16,12 @@ echo ${ROOTSYS}
 echo "LD_LIBRARY_PATH"
 echo ${LD_LIBRARY_PATH}
 
-WORKDIR=/sps/cms/obondu/CMSSW_3_5_7/src/Zmumugamma/Selection
+WORKDIR=EXEDIR
 echo "Move to WORKDIR ${WORKDIR}"
 cd ${WORKDIR}
 pwd
 
 
 echo "Running actual job"
-root -l -b -q MACRO.C
+./MACRO
 
