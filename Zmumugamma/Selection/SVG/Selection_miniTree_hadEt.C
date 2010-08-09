@@ -894,7 +894,11 @@ cout << endl;
       cout << ievt << "\t" << lastFile << endl;
     }
 
-		if (!((event->ptHat()>=minPtHat)&&(event->ptHat()<maxPtHat))) continue;
+		if (!((event->ptHat()>=minPtHat)&&(event->ptHat()<maxPtHat)))
+		{
+      cerr << "CUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << ")" << " CUT for pthat filtering" << endl;
+			continue;
+		}
 
 		// ____________________________________________
 		// Event information
