@@ -843,8 +843,8 @@ cout << endl;
 	cout << "Signal is: " << signal <<endl;
 	cout << "Stew is: " << stew << endl;
 	cout << "ZJet veto is: " << zjet_veto << endl;
-	int nBeforeAllCuts, nAfterCutCSA07ID, nAfterCutZJETVETO, nAfterCut1a, nAfterCut1b, nAfterCut1c, nAfterCut1d, nAfterCut1e, nAfterCut2a, nAfterCut2b, nAfterCut2c, nAfterCut3, nAfterCut4, nAfterCut5, nAfterCut6, nAfterCut7, nAfterCut8, nAfterCut9, nAfterCut10, nSelected;
-	nBeforeAllCuts = nAfterCutCSA07ID = nAfterCutZJETVETO = nAfterCut1a = nAfterCut1b = nAfterCut1c = nAfterCut1d = nAfterCut1e = nAfterCut2a = nAfterCut2b = nAfterCut2c = nAfterCut3 = nAfterCut4 = nAfterCut5 = nAfterCut6 = nAfterCut7 = nAfterCut8 = nAfterCut9 = nAfterCut10 = nSelected = 0;
+	int nBeforeAllCuts, nAfterCutPthatFilter, nAfterCutCSA07ID, nAfterCutZJETVETO, nAfterCut1a, nAfterCut1b, nAfterCut1c, nAfterCut1d, nAfterCut1e, nAfterCut2a, nAfterCut2b, nAfterCut2c, nAfterCut3, nAfterCut4, nAfterCut5, nAfterCut6, nAfterCut7, nAfterCut8, nAfterCut9, nAfterCut10, nSelected;
+	nBeforeAllCuts = nAfterCutPthatFilter = nAfterCutCSA07ID = nAfterCutZJETVETO = nAfterCut1a = nAfterCut1b = nAfterCut1c = nAfterCut1d = nAfterCut1e = nAfterCut2a = nAfterCut2b = nAfterCut2c = nAfterCut3 = nAfterCut4 = nAfterCut5 = nAfterCut6 = nAfterCut7 = nAfterCut8 = nAfterCut9 = nAfterCut10 = nSelected = 0;
 	vector<int> SelectedEvent_RunNumber;
 	vector<int> SelectedEvent_LumiNumber;
 	vector<int> SelectedEvent_EventNumber;
@@ -899,6 +899,7 @@ cout << endl;
       cerr << "CUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << ")" << " CUT for pthat filtering" << endl;
 			continue;
 		}
+		nAfterCutPthatFilter++;
 
 		// ____________________________________________
 		// Event information
@@ -1974,6 +1975,7 @@ cout << endl;
 	cout << endl << "**************************************************************************" << endl;
 	cout << "cut" << "\t\t" << "# events" << "\t\t" << "% rel"	<< "\t\t" << "% abs"<<endl;
 	cout << "nBeforeAllCuts=" << "\t\t" << nBeforeAllCuts << "\t\t" << "-" << "\t\t" << "-" << endl;
+	cout << "nAfterCutPthatFilter=" << "\t\t" << nAfterCutPthatFilter << "\t\t" << (double)nAfterCutPthatFilter/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCutPthatFilter/(double)nBeforeAllCuts*100.0 << endl;
 	cout << "nAfterCutCSA07ID=" << "\t\t" << nAfterCutCSA07ID << "\t\t" << (double)nAfterCutCSA07ID/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCutCSA07ID/(double)nBeforeAllCuts*100.0 << endl;
 	cout << "nAfterCutZJETVETO=" << "\t\t" << nAfterCutZJETVETO << "\t\t" << (double)nAfterCutZJETVETO/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCutZJETVETO/(double)nBeforeAllCuts*100.0 << endl;
 	cout << "nAfterCut1a=" << "\t\t" << nAfterCut1a << "\t\t" << (double)nAfterCut1a/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCut1a/(double)nBeforeAllCuts*100.0 << endl;
