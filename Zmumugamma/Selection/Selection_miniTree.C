@@ -234,12 +234,8 @@ int main(){
 	string sample = "";
 */
 
-  inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partI/partI__*root");
-  inputRunTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partI/partI__*root");
-  string sample = "partI";
-
-
-
+// INSERTFILES
+  string sample = "SAMPLEPART";
 
 	TFile* OutputRootFile = new TFile(Form("miniTree_%s.root", sample.c_str()), "RECREATE");
 	
@@ -448,7 +444,7 @@ cout << endl;
 	// ____________________________________________
 	// Event information
 	// ____________________________________________
-	Int_t iEvent, iEventID, iRunID;
+	Int_t iEvent, iEventID, iLumiID, iRunID;
 	Int_t isSignalApplied, isStewApplied, isZJetsApplied;
 
 	Int_t isBeforeAllCuts, isAfterCutCSA07ID, isAfterCutZJETVETO;
@@ -528,6 +524,7 @@ cout << endl;
 	
 	miniTree->Branch("iEvent", &iEvent, "iEvent/I");
 	miniTree->Branch("iEventID", &iEventID, "iEventID/I");
+	miniTree->Branch("iLumiID", &iLumiID, "iLumiID/I");
 	miniTree->Branch("iRunID", &iRunID, "iRunID/I");
 
 	miniTree->Branch("isSignalApplied", &isSignalApplied, "isSignalApplied/I");
@@ -561,6 +558,7 @@ cout << endl;
 
 	miniTree_allmuons->Branch("iEvent", &iEvent, "iEvent/I");
 	miniTree_allmuons->Branch("iEventID", &iEventID, "iEventID/I");
+	miniTree_allmuons->Branch("iLumiID", &iLumiID, "iLumiID/I");
 	miniTree_allmuons->Branch("iRunID", &iRunID, "iRunID/I");
 
 	miniTree_allmuons->Branch("isSignalApplied", &isSignalApplied, "isSignalApplied/I");
@@ -594,6 +592,7 @@ cout << endl;
 
 	miniTree_allphotons->Branch("iEvent", &iEvent, "iEvent/I");
 	miniTree_allphotons->Branch("iEventID", &iEventID, "iEventID/I");
+	miniTree_allphotons->Branch("iLumiID", &iLumiID, "iLumiID/I");
 	miniTree_allphotons->Branch("iRunID", &iRunID, "iRunID/I");
 
 	miniTree_allphotons->Branch("isSignalApplied", &isSignalApplied, "isSignalApplied/I");
@@ -844,8 +843,8 @@ cout << endl;
 	cout << "Signal is: " << signal <<endl;
 	cout << "Stew is: " << stew << endl;
 	cout << "ZJet veto is: " << zjet_veto << endl;
-	int nBeforeAllCuts, nAfterCutCSA07ID, nAfterCutZJETVETO, nAfterCut1a, nAfterCut1b, nAfterCut1c, nAfterCut1d, nAfterCut1e, nAfterCut2a, nAfterCut2b, nAfterCut2c, nAfterCut3, nAfterCut4, nAfterCut5, nAfterCut6, nAfterCut7, nAfterCut8, nAfterCut9, nAfterCut10, nSelected;
-	nBeforeAllCuts = nAfterCutCSA07ID = nAfterCutZJETVETO = nAfterCut1a = nAfterCut1b = nAfterCut1c = nAfterCut1d = nAfterCut1e = nAfterCut2a = nAfterCut2b = nAfterCut2c = nAfterCut3 = nAfterCut4 = nAfterCut5 = nAfterCut6 = nAfterCut7 = nAfterCut8 = nAfterCut9 = nAfterCut10 = nSelected = 0;
+	int nBeforeAllCuts, nAfterCutPthatFilter, nAfterCutCSA07ID, nAfterCutZJETVETO, nAfterCut1a, nAfterCut1b, nAfterCut1c, nAfterCut1d, nAfterCut1e, nAfterCut2a, nAfterCut2b, nAfterCut2c, nAfterCut3, nAfterCut4, nAfterCut5, nAfterCut6, nAfterCut7, nAfterCut8, nAfterCut9, nAfterCut10, nSelected;
+	nBeforeAllCuts = nAfterCutPthatFilter = nAfterCutCSA07ID = nAfterCutZJETVETO = nAfterCut1a = nAfterCut1b = nAfterCut1c = nAfterCut1d = nAfterCut1e = nAfterCut2a = nAfterCut2b = nAfterCut2c = nAfterCut3 = nAfterCut4 = nAfterCut5 = nAfterCut6 = nAfterCut7 = nAfterCut8 = nAfterCut9 = nAfterCut10 = nSelected = 0;
 	vector<int> SelectedEvent_RunNumber;
 	vector<int> SelectedEvent_LumiNumber;
 	vector<int> SelectedEvent_EventNumber;
@@ -879,6 +878,9 @@ cout << endl;
 
 	inputRunTree->GetEvent(0);
   string lastFile = "";
+	double minPtHat = -100;
+  double maxPtHat = 1000000;
+  int verbosity = 1;
 
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 	{
@@ -892,10 +894,18 @@ cout << endl;
       cout << ievt << "\t" << lastFile << endl;
     }
 
+		if (!((event->ptHat()>=minPtHat)&&(event->ptHat()<maxPtHat)))
+		{
+      cerr << "CUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT for pthat filtering" << endl;
+			continue;
+		}
+		nAfterCutPthatFilter++;
+
 		// ____________________________________________
 		// Event information
 		// ____________________________________________
 		iEventID = event->eventId();
+		iLumiID = event->luminosityBlock();
 		iRunID = event->runId();
 		isSignalApplied = signal;
 		isStewApplied = stew;
@@ -984,114 +994,131 @@ cout << endl;
       doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_L2Mu9);
 		}
 
-		// Cleaning: removing not commissionned superclusters and spikes
-		vector<int> photonsNoSpike;
-		photonsNoSpike.clear();
-		vector<int> photonIsNotCommissioned;
-		photonIsNotCommissioned.clear();
-		for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
-			TRootPhoton *myphoton;
-			myphoton = (TRootPhoton*) photons->At(iphoton);
-			if( (myphoton->superCluster()==0) ){ // 'broken' photon, there should be none
-				photonIsNotCommissioned.push_back(1);
-				continue;
-			}
+   // Cleaning: removing not commissionned superclusters and spikes
+    vector<int> photonsNoSpike;
+    photonsNoSpike.clear();
+    vector<int> photonIsNotCommissioned;
+    if(verbosity>0) cerr << "\t\tThere is " << NbPhotons << " photons in the photon collection" << endl;
+    photonIsNotCommissioned.clear();
+    for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
+      TRootPhoton *myphoton;
+      myphoton = (TRootPhoton*) photons->At(iphoton);
+      if( (myphoton->superCluster()==0) ){ // 'broken' photon, there should be none
+        photonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because no associated SC" << endl;
+        continue;
+      }
 /*
-			if( (1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()))>0.95) && (myphoton->isEBPho()) ){ // 'spike' photons
-				photonIsNotCommissioned.push_back(1);
-				continue;
-			}
-			if( ((myphoton->superCluster()->rawEnergy())*sin(myphoton->superCluster()->Theta()))<2.0 ){ // very low energy clusters, not commissionned
-				photonIsNotCommissioned.push_back(1);
-				continue;
-			}
+      if( (1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()))>0.95) && (myphoton->isEBPho()) ){ // 'spike' photons
+        photonIsNotCommissioned.push_back(1);
+        cerr << "\t\t\tphoton " << iphoton << " rejected because" << endl;
+        continue;
+      }
+      if( ((myphoton->superCluster()->rawEnergy())*sin(myphoton->superCluster()->Theta()))<2.0 ){ // very low energy clusters, not commissionned
+        photonIsNotCommissioned.push_back(1);
+        cerr << "\t\t\tphoton " << iphoton << " rejected because" << endl;
+        continue;
+      }
 */
-			if( myphoton->superCluster()->seedSeverity()==3 ){ // kWeird
-				photonIsNotCommissioned.push_back(1);
-				continue;
-			}
-			if( myphoton->superCluster()->seedRecoFlag()==2 ){ // kOutOfTime
-				photonIsNotCommissioned.push_back(1);
-				continue;
-			}
-			if( myphoton->superCluster()->seedSeverity()==4 ){ // kBad
-				photonIsNotCommissioned.push_back(1);
-				continue;
-			}
+      if( myphoton->superCluster()->seedSeverity()==3 ){ // kWeird
+        photonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because kWeird" << endl;
+        continue;
+      }
+      if( myphoton->superCluster()->seedRecoFlag()==2 ){ // kOutOfTime
+        photonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because kOutOfTime" << endl;
+        continue;
+      }
+      if( myphoton->superCluster()->seedSeverity()==4 ){ // kBad
+        photonIsNotCommissioned.push_back(1);
+        continue;
+        if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because kBad" << endl;
+      }
 
-			if( (fabs(myphoton->superCluster()->Eta()))>2.5 ){ // high eta clusters, not commisionned
-				photonIsNotCommissioned.push_back(1);
-				continue;
-			}
-			if( fabs(myphoton->superCluster()->Eta())>1.4442 && fabs(myphoton->superCluster()->Eta())<1.566 ){// eta gap clusters, not commissionned
-				photonIsNotCommissioned.push_back(1);
-				continue;
-			}
-/*			if ( myphoton->hoe() > 0.05){ // HoE cut is here for trigger issues
-				photonIsNotCommissioned.push_back(1);
-				continue;
-			}*/
-			photonsNoSpike.push_back(iphoton);
-			photonIsNotCommissioned.push_back(0);
-		}
-		unsigned int NbPhotonsNoSpike = photonsNoSpike.size();		
+      if( (fabs(myphoton->superCluster()->Eta()))>2.5 ){ // high eta clusters, not commisionned
+        photonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because high eta" << endl;
+        continue;
+      }
+      if( fabs(myphoton->superCluster()->Eta())>1.4442 && fabs(myphoton->superCluster()->Eta())<1.566 ){// eta gap clusters, not commissionned
+        photonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because eta gap" << endl;
+        continue;
+      }
+/*      if ( myphoton->hoe() > 0.05){ // HoE cut is here for trigger issues
+        photonIsNotCommissioned.push_back(1);
+        continue;
+      }*/
+      if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " accepted" << endl;
+      photonsNoSpike.push_back(iphoton);
+      photonIsNotCommissioned.push_back(0);
+    }
+    unsigned int NbPhotonsNoSpike = photonsNoSpike.size();
 
-		// Cleaning: muon quality
-		vector<int> muonIsNotCommissioned;
-		muonIsNotCommissioned.clear();
-		vector<int> muonIdentified;
-		muonIdentified.clear();
-		for(int imuon=0 ; imuon<NbMuons ; imuon++){
-			TRootMuon *mymuon;
-			mymuon = (TRootMuon*) muons->At(imuon);
-			if(! (mymuon->isGlobalMuon() && mymuon->isTrackerMuon()) ){// The muon must be identified both as Global Muon and Tracker Muon.
-				muonIsNotCommissioned.push_back(1);
-				continue;
-			}
-			if(! (mymuon->numberOfValidTrackerHits()>10) ){// #tracker hits > 10
-				muonIsNotCommissioned.push_back(1);
-				continue;
-			}
-			if(! (mymuon->normalizedChi2()<10) ){// chi2/ndof of the global muon fit < 10
-				muonIsNotCommissioned.push_back(1);
-				continue;
-			}
+    // Cleaning: muon quality
+    vector<int> muonIsNotCommissioned;
+    muonIsNotCommissioned.clear();
+    vector<int> muonIdentified;
+    muonIdentified.clear();
+    if(verbosity>0) cerr << "\t\tThere is " << NbMuons << " muons in the muon collection" << endl;
+    for(int imuon=0 ; imuon<NbMuons ; imuon++){
+      TRootMuon *mymuon;
+      mymuon = (TRootMuon*) muons->At(imuon);
+      if(! (mymuon->isGlobalMuon() && mymuon->isTrackerMuon()) ){// The muon must be identified both as Global Muon and Tracker Muon.
+        muonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because not global AND tracker muon" << endl;
+        continue;
+      }
+      if(! (mymuon->numberOfValidTrackerHits()>10) ){// #tracker hits > 10
+        muonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because less than 10 tracker hits" << endl;
+        continue;
+      }
+      if(! (mymuon->normalizedChi2()<10) ){// chi2/ndof of the global muon fit < 10
+        muonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because chi2/ndof of the global muon fit < 10" << endl;
+        continue;
+      }
 /*
-			if(! () ){// Number of valid muon-detector hits used in the global fit > 0
-				muonIsNotCommissioned.push_back(1);
-				continue;// FIXME
-			}
+      if(! () ){// Number of valid muon-detector hits used in the global fit > 0
+        muonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because " << endl;
+        continue;// FIXME
+      }
 */
-/*			if(! (mymuon->d0()<0.002) ){// Transverse impact parameter of the muon with respect to the beam spot < 2 mm
-				muonIsNotCommissioned.push_back(1);
-				continue;
-			}
+/*      if(! (mymuon->d0()<0.002) ){// Transverse impact parameter of the muon with respect to the beam spot < 2 mm
+        muonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because " << endl;
+        continue;
+      }
 */
-			if(! (fabs(mymuon->Eta())<2.1) ){// |eta_muon|< 2.1
-				muonIsNotCommissioned.push_back(1);
-				continue;
-			}
+      if(! (fabs(mymuon->Eta())<2.1) ){// |eta_muon|< 2.1
+        muonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because high eta" << endl;
+        continue;
+      }
 
-			if(! (Muon_eventPassHLT_L2Mu9==1) ){// HLT_L2Mu9
-				muonIsNotCommissioned.push_back(1);
-				continue;
-			}
-			
-/*
-			if(! (event->trigHLT()[] == true) ){// HLT_L2Mu9 path fired
-				muonIsNotCommissioned.push_back(1);
-				continue;// FIXME
-			}
-*/
-			if(! ((double)(mymuon->isoR03_sumPt() + mymuon->isoR03_emEt() + mymuon->isoR03_hadEt())/(double)(mymuon->Pt())<.15) ){// Relative combined isolation = (sumPt + emEt + hcalEt)/ptmu < 0.15 in a deltaR < 0.3 cone
-				muonIsNotCommissioned.push_back(1);
-				continue;
-			}
-			muonIsNotCommissioned.push_back(0);
-			muonIdentified.push_back(imuon);
-		}
-		unsigned int NbMuonsIdentified = muonIdentified.size();
-	
+      if(! (Muon_eventPassHLT_L2Mu9==1) ){// HLT_L2Mu9
+        muonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because not passing HLT_L2Mu9" << endl;
+        continue;
+      }
+
+      if(! ((double)(mymuon->isoR03_sumPt() + mymuon->isoR03_emEt() + mymuon->isoR03_hadEt())/(double)(mymuon->Pt())<.15) ){// Relative combined isolation = (sumPt + emEt + hcalEt)/ptmu < 0.15 in a deltaR < 0.3 cone
+        muonIsNotCommissioned.push_back(1);
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because relative combined isolation bad" << endl;
+        continue;
+      }
+      if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " accepted" << endl;
+      muonIsNotCommissioned.push_back(0);
+      muonIdentified.push_back(imuon);
+    }
+    unsigned int NbMuonsIdentified = muonIdentified.size();
+
+
+
+
 		// CSA07 ID
 		if( stew ){
 			if( (event->csa07id() != 62) && (event->csa07id() != 63) ){
@@ -1174,7 +1201,7 @@ cout << endl;
 
 		// CUT 1a: nb of muons > 1
 		if(!( NbMuonsIdentified>1 )){
-			cerr << "\tCUT: event " << ievt << " CUT at level I because "<< NbMuonsIdentified	<< " muons only" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because "<< NbMuonsIdentified	<< " muons only" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuons ; imuon++){
 				TRootMuon *mymuon;
@@ -1220,7 +1247,7 @@ cout << endl;
 
 		if(!( NbMuonsValidEta>1 )) {
 			miniTree->Fill();
-			cerr << "\tCUT: event " << ievt << " CUT at level I because of bad muons (eta)" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because of bad muons (eta)" << endl;
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
 				mymuon = (TRootMuon*) muons->At(muonsValidEta[imuon]);
@@ -1282,7 +1309,7 @@ cout << endl;
 			}
 		}
 		if(!( isThereOppositeCharge )){
-			cerr << "\tCUT: event " << ievt << " CUT at level I because of bad muons (charge)" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because of bad muons (charge)" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1361,7 +1388,7 @@ cout << endl;
 
 		// CUT 1d: two muons with correct eta with opposite charge AND pT>10 GeV
 		if(!( (PtMuon>10.0) && (PtMuon_oppositeCharge>10.0) )){
-			cerr << "\tCUT: event " << ievt << " CUT at level I because of bad muons (pt)" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because of bad muons (pt)" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1394,7 +1421,7 @@ cout << endl;
 
 		// CUT 1e: dimuon invariant mass >= 20 GeV
 		if(!( mumuInvMass >= 20.0 )){
-			cerr << "\tCUT: event " << ievt << " CUT at level I because of m(mumu)" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because of m(mumu)" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1427,7 +1454,7 @@ cout << endl;
 
 		// CUT 2a: nb of photons > 0
 		if(!( NbPhotonsNoSpike>0 )){
-			cerr << "\tCUT: event " << ievt << " CUT at level II because "<<	NbPhotonsNoSpike	<< " gamma" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level II because "<<	NbPhotonsNoSpike	<< " gamma" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1472,7 +1499,7 @@ cout << endl;
 		}
 		NbPhotonsValidEta = photonsValidEta.size();
 		if(!( NbPhotonsValidEta>0 )){
-			cerr << "\tCUT: event " << ievt << " CUT at level II because of bad gamma" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level II because of bad gamma" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1679,7 +1706,7 @@ cout << endl;
 	
 		// CUT 2c: DeltaR(photon, close muon) >= 0.05
 		if(!( deltaRmin>=0.05 )){
-			cerr << "\tCUT: event " << ievt	<< " CUT at level II for Photons (deltar)" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level II for Photons (deltar)" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1713,7 +1740,7 @@ cout << endl;
 
 		// CUT 3: 40GeV <= dimuon invariant mass <= 80GeV
 		if(!( (mumuInvMass>=40.0)&&(mumuInvMass<=80.0) )){
-			cerr << "\tCUT: event " << ievt	<< " CUT at level III for Drell-Yan " << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level III for Drell-Yan " << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1746,7 +1773,7 @@ cout << endl;
 
 		// CUT 4: photon_Et >= 12GeV && DeltaR(photon, close muon)<=0.8
 		if(!( (MPtPhoton->Et()>=12.0)&&(deltaRmin<=0.8) )){
-			cerr << "\tCUT: event " << ievt	<< " CUT at level IV for gamma momentum" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for gamma momentum" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1784,7 +1811,7 @@ cout << endl;
 		else {
 			cutMuMuGammaWindow = (mumugammaInvMass >=70.0) && (mumugammaInvMass <=110.0);} // in case of background
 		if(!( cutMuMuGammaWindow )){
-			cerr << "\tCUT: event " << ievt	<< " CUT at level V for Z Mass Window " << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level V for Z Mass Window " << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1817,7 +1844,7 @@ cout << endl;
 	
 		// CUT 6: farMuon->isoR03_emEt() <= 1.0
 		if(!( farMuon->isoR03_emEt()<=1.0 )) {
-			cerr << "\tCUT: event " << ievt	<< " CUT at level VI for large emEt " << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VI for large emEt " << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1850,7 +1877,7 @@ cout << endl;
 
 		// CUT 7: farMuon->Pt() >= 30.0
 		if(!( farMuon->Pt()>=30.0 )) {
-			cerr << "\tCUT: event " << ievt	<< " CUT at level VII for soft far muon " << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VII for soft far muon " << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1883,7 +1910,7 @@ cout << endl;
 
 		// CUT 8: nearMuon->isoR03_hadEt() < 1.0
 		if(!( nearMuon->isoR03_hadEt()<1.0 )){
-			cerr << "\tCUT: event " << ievt	<< " CUT at level VIII for large hadEt " << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VIII for large hadEt " << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1919,6 +1946,7 @@ cout << endl;
 		nAfterCut10++;
 		isSelected = 1;
 		nSelected++;
+		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;
 		SelectedEvent_RunNumber.push_back(event->runId());
 		SelectedEvent_LumiNumber.push_back(event->luminosityBlock());
 		SelectedEvent_EventNumber.push_back(event->eventId());
@@ -1964,6 +1992,7 @@ cout << endl;
 	cout << endl << "**************************************************************************" << endl;
 	cout << "cut" << "\t\t" << "# events" << "\t\t" << "% rel"	<< "\t\t" << "% abs"<<endl;
 	cout << "nBeforeAllCuts=" << "\t\t" << nBeforeAllCuts << "\t\t" << "-" << "\t\t" << "-" << endl;
+	cout << "nAfterCutPthatFilter=" << "\t\t" << nAfterCutPthatFilter << "\t\t" << (double)nAfterCutPthatFilter/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCutPthatFilter/(double)nBeforeAllCuts*100.0 << endl;
 	cout << "nAfterCutCSA07ID=" << "\t\t" << nAfterCutCSA07ID << "\t\t" << (double)nAfterCutCSA07ID/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCutCSA07ID/(double)nBeforeAllCuts*100.0 << endl;
 	cout << "nAfterCutZJETVETO=" << "\t\t" << nAfterCutZJETVETO << "\t\t" << (double)nAfterCutZJETVETO/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCutZJETVETO/(double)nBeforeAllCuts*100.0 << endl;
 	cout << "nAfterCut1a=" << "\t\t" << nAfterCut1a << "\t\t" << (double)nAfterCut1a/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCut1a/(double)nBeforeAllCuts*100.0 << endl;

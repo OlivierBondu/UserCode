@@ -155,7 +155,7 @@ time=4286000
 queue=T
 begin=1
 
-NumberOfIpnTreeFilesToRunInOneJob=100
+NumberOfIpnTreeFilesToRunInOneJob=50
 
 let "NumberOfJobs=NumberOfFiles/NumberOfIpnTreeFilesToRunInOneJob"
 let "NumberOfJobsMinus1=NumberOfJobs-1"

@@ -2,17 +2,17 @@
 # Small script to generate the file which will run the selection on all the samples that have not been run yet
 # Written by Olivier Bondu (March 2010)
 
-CMSSW_release="CMSSW_3_5_8_patch3"
+CMSSW_release="CMSSW_3_6_1_patch4"
 
 sampleDirectory=/sps/cms/obondu/${CMSSW_release}/src/Zmumugamma/RecoSamples
 
-for sample in `'ls' -l ${sampleDirectory} | grep drw | awk '{print $9}' | grep 7TeV`
+for sample in `'ls' -l ${sampleDirectory} | grep drw | awk '{print $9}' | grep -v CVS`
 do
 	if [[ `cat runAllSplittedOnBatch.sh | grep ${sample}` ]]
 	then
 		continue
 	fi
-	for selection in `echo "CUT5 CUT5-hadEt CUT5-hadEt01 CUT5-sumPt CUT5-sumPt01 NORMAL-hadEt NORMAL-sumPt"`
+	for selection in `echo "hadEt noMuIso-hadEt"`
 	do
 		echo "./runThisSplittedOnBatch.sh ${sample} ${selection}"
 	done
