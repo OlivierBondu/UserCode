@@ -16,7 +16,7 @@ SelectionVersion=${1}
 SELECTEDDIR=/sps/cms/obondu/${CMSSW_release}/src/Zmumugamma/Selection/Selected/${SelectionVersion}
 LaTeXdir="LaTeXTables"
 
-echo -e "*** SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt ***\n"
+echo -e "*** SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt ***"
 rm  SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt
 
 if [ ! -d ${LaTeXdir} ]
@@ -89,17 +89,42 @@ do
 
 done
 
-echo -e "\nTranspose"
+echo -e "Transpose"
 cp SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
 sed -i -e 's,_,,g' ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
 sed -i -e 's,rel eff,$\\epsilon_{rel}$,g' -e 's,abs eff,$\\epsilon_{abs}$,g' ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
+cutlegend=`head -n 1 ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp`
+sed -i -e '1d' ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
+cp ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp2
 
-./transpose.sh ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp > ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt
+for part in `cat ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp | grep -v abs | grep -v rel | awk '{print $1}'`
+do
+	echo ${cutlegend} > ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.tmp
+	head -n 3 ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp >> ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.tmp
+	sed -i -e '1,3d' ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
+	./transpose.sh ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.tmp > ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.txt
+	echo "\begin{tabular}{cccc}" > ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.tex
+	cat ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.txt | sed 's/^0/\\hline\n0/1' | sed 's/^/\\\\/g' |sed 's/ / \& /g' >> ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.tex
+	echo "\end{tabular}" >> ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.tex
+	rm ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.tmp
+	rm ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.txt
+done
 rm ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
 
-echo -e "\nPut LaTeX format"
+
+#cat ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt | sed 's/^0/\\hline\n0/1' | sed 's/^/\\\\/g' |sed 's/ / \& /g' >> ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tex
+
+
+
+
+#tail -n +5 ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp | sed -e "/abs/s/$/\n\\\end{tabular}\n\n\\\begin{tabular}{cccc}\n${cutlegend}/g"
+
+#./transpose.sh ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp > ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt
+#rm ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
+
+echo -e "Put LaTeX format"
 echo "
-\documentclass[landscape, 6pt, a4paper]{article}
+\documentclass[a4paper]{article}
 
 \topmargin = -1cm
 \textheight= 23.5cm
@@ -110,30 +135,20 @@ echo "
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
-%\usepackage{hepunits}
 \usepackage[english]{babel}
-\usepackage[colorlinks]{hyperref}
-\usepackage{color}
 
 \begin{document}
 " > ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tex
 
-columns=`head -n 1 ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt | wc -w`
-ccc=""
-for col in `seq 1 ${columns}`
+
+for part in `cat ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp2 | grep -v abs | grep -v rel | awk '{print $1}'`
 do
-	ccc=`echo "${ccc}c"`
+	echo "\input{SelectionCutsNumbersEfficiencies_${SelectionVersion}__${part}.tex}" >> ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tex
 done
 
 echo "
-\begin{tabular}{${ccc}}
-" >> ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tex
-
-
-cat ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt | sed 's/^0/\\hline\n0/1' | sed 's/^/\\\\/g' |sed 's/ / \& /g' >> ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tex
-echo "\end{tabular}
 \end{document}" >> ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tex
-
+rm ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp2
 
 
 
