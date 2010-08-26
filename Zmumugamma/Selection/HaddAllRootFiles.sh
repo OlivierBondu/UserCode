@@ -28,6 +28,8 @@ do
 	hadd Selected/${cutVersion}/${sample}/${summedRootFile} ${fileList}
 done
 
+
+fileList=""
 for data in `'ls' Selected/${cutVersion} | grep part`
 do
 	summedRootFile="miniTree_DATA_ALL.root"
@@ -36,13 +38,12 @@ do
 		echo "Removing Selected/${cutVersion}/${summedRootFile}"
     rm Selected/${cutVersion}/${summedRootFile}
 	fi
-	fileList=""
-  for file in `'ls' Selected/${cutVersion}/${data} | grep root`
+  for file in `'ls' Selected/${cutVersion}/${data} | grep ALL | grep root`
   do
     fileList=`echo "${fileList} Selected/${cutVersion}/${data}/${file}"`
   done
-  hadd Selected/${cutVersion}/${summedRootFile} ${fileList}
 done
+hadd Selected/${cutVersion}/${summedRootFile} ${fileList}
 
 
 exit 0
