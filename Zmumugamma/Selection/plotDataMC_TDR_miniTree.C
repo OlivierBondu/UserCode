@@ -373,13 +373,41 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	Histo_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt230to300) / (double)(InitialNumberZmumuJet_Pt230to300)) * (double)integratedLuminosity));
 	Histo_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt300toInf) / (double)(InitialNumberZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
 
+	// Adding histograms for binned samples
+	Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
+	Histo_QCD_Pt15->Add(Histo_QCD_Pt80);
+	Histo_QCD_Pt15->Add(Histo_QCD_Pt170);
+	Histo_QCD_Pt15->Add(Histo_QCD_Pt300);
+	Histo_QCD_Pt15->Add(Histo_QCD_Pt470);
+
+  Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt30to50);
+  Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt50to80);
+  Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt80to120);
+  Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt120to170);
+  Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt170toInf);
+
+  Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt30);
+  Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt80);
+  Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt170);
+  Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt300);
+
+  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt15to20);
+  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt20to30);
+  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt30to50);
+  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt50to80);
+  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt80to120);
+  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt120to170);
+  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt170to230);
+  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt230to300);
+  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt300toInf);
+
 
 	// Get the maxs and the mins to further correct the Y-axis
 	double dataMax = Histo_Data->GetMaximum();
 	double YMax = dataMax;
 	double PhotonJet_Pt15Max = Histo_PhotonJet_Pt15->GetMaximum();
 	YMax = max(YMax, PhotonJet_Pt15Max);
-	double PhotonJet_Pt30Max = Histo_PhotonJet_Pt30->GetMaximum();
+/*	double PhotonJet_Pt30Max = Histo_PhotonJet_Pt30->GetMaximum();
 	YMax = max(YMax, PhotonJet_Pt30Max);
 	double PhotonJet_Pt80Max = Histo_PhotonJet_Pt80->GetMaximum();
 	YMax = max(YMax, PhotonJet_Pt80Max);
@@ -387,9 +415,10 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	YMax = max(YMax, PhotonJet_Pt170Max);
 	double PhotonJet_Pt300Max = Histo_PhotonJet_Pt300->GetMaximum();
 	YMax = max(YMax, PhotonJet_Pt300Max);
+*/
 	double QCD_Pt15Max = Histo_QCD_Pt15->GetMaximum();
 	YMax = max(YMax, QCD_Pt15Max);
-	double QCD_Pt30Max = Histo_QCD_Pt30->GetMaximum();
+/*	double QCD_Pt30Max = Histo_QCD_Pt30->GetMaximum();
 	YMax = max(YMax, QCD_Pt30Max);
 	double QCD_Pt80Max = Histo_QCD_Pt80->GetMaximum();
 	YMax = max(YMax, QCD_Pt80Max);
@@ -399,6 +428,7 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	YMax = max(YMax, QCD_Pt300Max);
 	double QCD_Pt470Max = Histo_QCD_Pt470->GetMaximum();
 	YMax = max(YMax, QCD_Pt470Max);
+*/
 	double TTbarJets_TauolaMax = Histo_TTbarJets_Tauola->GetMaximum();
 	YMax = max(YMax, TTbarJets_TauolaMax);
 	double WJets_7TeVMax = Histo_WJets_7TeV->GetMaximum();
@@ -407,7 +437,7 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	YMax = max(YMax, ZJets_7TeVMax);
 	double QCD_Mu_Pt20to30Max = Histo_QCD_Mu_Pt20to30->GetMaximum();
 	YMax = max(YMax, QCD_Mu_Pt20to30Max);
-	double QCD_Mu_Pt30to50Max = Histo_QCD_Mu_Pt30to50->GetMaximum();
+/*	double QCD_Mu_Pt30to50Max = Histo_QCD_Mu_Pt30to50->GetMaximum();
 	YMax = max(YMax, QCD_Mu_Pt30to50Max);
 	double QCD_Mu_Pt50to80Max = Histo_QCD_Mu_Pt50to80->GetMaximum();
 	YMax = max(YMax, QCD_Mu_Pt50to80Max);
@@ -417,11 +447,12 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	YMax = max(YMax, QCD_Mu_Pt120to170Max);
 	double QCD_Mu_Pt170toInfMax = Histo_QCD_Mu_Pt170toInf->GetMaximum();
 	YMax = max(YMax, QCD_Mu_Pt170toInfMax);
+*/
 	double InclusiveMu15Max = Histo_InclusiveMu15->GetMaximum();
 	YMax = max(YMax, InclusiveMu15Max);
 	double ZmumuJet_Pt0to15Max = Histo_ZmumuJet_Pt0to15->GetMaximum();
 	YMax = max(YMax, ZmumuJet_Pt0to15Max);
-	double ZmumuJet_Pt15to20Max = Histo_ZmumuJet_Pt15to20->GetMaximum();
+/*	double ZmumuJet_Pt15to20Max = Histo_ZmumuJet_Pt15to20->GetMaximum();
 	YMax = max(YMax, ZmumuJet_Pt15to20Max);
 	double ZmumuJet_Pt20to30Max = Histo_ZmumuJet_Pt20to30->GetMaximum();
 	YMax = max(YMax, ZmumuJet_Pt20to30Max);
@@ -439,33 +470,35 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	YMax = max(YMax, ZmumuJet_Pt230to300Max);
 	double ZmumuJet_Pt300toInfMax = Histo_ZmumuJet_Pt300toInf->GetMaximum();
 	YMax = max(YMax, ZmumuJet_Pt300toInfMax);
+*/
 
-//	double YMax = max(dataMax, max(QCD_Pt15Max, max(QCD_Pt30Max, max(QCD_Pt80Max, max(QCD_Pt170Max, max(QCD_Pt300Max, max(QCD_Pt470Max, max(PhotonJet_Pt15Max, max(PhotonJet_Pt30Max, max(PhotonJet_Pt80Max, max(PhotonJet_Pt170Max, max(PhotonJet_Pt300Max, max(WJets_7TeVMax, QCD_Mu_Pt80to120Max)))))))))))));
-//	double YMax = max(dataMax, mcMax);
 	double dataMin = YMax;
 	double PhotonJet_Pt15Min = YMax;
-	double PhotonJet_Pt30Min = YMax;
+/*	double PhotonJet_Pt30Min = YMax;
 	double PhotonJet_Pt80Min = YMax;
 	double PhotonJet_Pt170Min = YMax;
 	double PhotonJet_Pt300Min = YMax;
+*/
 	double QCD_Pt15Min = YMax;
-	double QCD_Pt30Min = YMax;
+/*	double QCD_Pt30Min = YMax;
 	double QCD_Pt80Min = YMax;
 	double QCD_Pt170Min = YMax;
 	double QCD_Pt300Min = YMax;
 	double QCD_Pt470Min = YMax;
+*/
 	double TTbarJets_TauolaMin = YMax;
 	double WJets_7TeVMin = YMax;
 	double ZJets_7TeVMin = YMax;
 	double QCD_Mu_Pt20to30Min = YMax;
-	double QCD_Mu_Pt30to50Min = YMax;
+/*	double QCD_Mu_Pt30to50Min = YMax;
 	double QCD_Mu_Pt50to80Min = YMax;
 	double QCD_Mu_Pt80to120Min = YMax;
 	double QCD_Mu_Pt120to170Min = YMax;
 	double QCD_Mu_Pt170toInfMin = YMax;
+*/
 	double InclusiveMu15Min = YMax;
 	double ZmumuJet_Pt0to15Min = YMax;
-	double ZmumuJet_Pt15to20Min = YMax;
+/*	double ZmumuJet_Pt15to20Min = YMax;
 	double ZmumuJet_Pt20to30Min = YMax;
 	double ZmumuJet_Pt30to50Min = YMax;
 	double ZmumuJet_Pt50to80Min = YMax;
@@ -474,6 +507,7 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	double ZmumuJet_Pt170to230Min = YMax;
 	double ZmumuJet_Pt230to300Min = YMax;
 	double ZmumuJet_Pt300toInfMin = YMax;
+*/
 	double YMin = YMax;
 	// Gets the actual minimum for each histogram, and not the unfilled bin if any
 	for( int ibin=1 ; ibin<Histo_Data->GetNbinsX() ; ibin++ ){
@@ -488,7 +522,7 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 		}
 	}
 	YMin = min(YMin, PhotonJet_Pt15Min);
-	for( int ibin=1 ; ibin<Histo_PhotonJet_Pt30->GetNbinsX() ; ibin++ ){
+/*	for( int ibin=1 ; ibin<Histo_PhotonJet_Pt30->GetNbinsX() ; ibin++ ){
 		if( ((Histo_PhotonJet_Pt30->GetBinContent(ibin))!=0) && ((Histo_PhotonJet_Pt30->GetBinContent(ibin))<PhotonJet_Pt30Min) ){
 			PhotonJet_Pt30Min = Histo_PhotonJet_Pt30->GetBinContent(ibin);
 		}
@@ -512,13 +546,14 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 		}
 	}
 	YMin = min(YMin, PhotonJet_Pt300Min);
+*/
 	for( int ibin=1 ; ibin<Histo_QCD_Pt15->GetNbinsX() ; ibin++ ){
 		if( ((Histo_QCD_Pt15->GetBinContent(ibin))!=0) && ((Histo_QCD_Pt15->GetBinContent(ibin))<QCD_Pt15Min) ){
 			QCD_Pt15Min = Histo_QCD_Pt15->GetBinContent(ibin);
 		}
 	}
 	YMin = min(YMin, QCD_Pt15Min);
-	for( int ibin=1 ; ibin<Histo_QCD_Pt30->GetNbinsX() ; ibin++ ){
+/*	for( int ibin=1 ; ibin<Histo_QCD_Pt30->GetNbinsX() ; ibin++ ){
 		if( ((Histo_QCD_Pt30->GetBinContent(ibin))!=0) && ((Histo_QCD_Pt30->GetBinContent(ibin))<QCD_Pt30Min) ){
 			QCD_Pt30Min = Histo_QCD_Pt30->GetBinContent(ibin);
 		}
@@ -548,6 +583,7 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 		}
 	}
 	YMin = min(YMin, QCD_Pt470Min);
+*/
 	for( int ibin=1 ; ibin<Histo_TTbarJets_Tauola->GetNbinsX() ; ibin++ ){
 		if( ((Histo_TTbarJets_Tauola->GetBinContent(ibin))!=0) && ((Histo_TTbarJets_Tauola->GetBinContent(ibin))<TTbarJets_TauolaMin) ){
 			TTbarJets_TauolaMin = Histo_TTbarJets_Tauola->GetBinContent(ibin);
@@ -572,7 +608,7 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 		}
 	}
 	YMin = min(YMin, QCD_Mu_Pt20to30Min);
-	for( int ibin=1 ; ibin<Histo_QCD_Mu_Pt30to50->GetNbinsX() ; ibin++ ){
+/*	for( int ibin=1 ; ibin<Histo_QCD_Mu_Pt30to50->GetNbinsX() ; ibin++ ){
 		if( ((Histo_QCD_Mu_Pt30to50->GetBinContent(ibin))!=0) && ((Histo_QCD_Mu_Pt30to50->GetBinContent(ibin))<QCD_Mu_Pt30to50Min) ){
 			QCD_Mu_Pt30to50Min = Histo_QCD_Mu_Pt30to50->GetBinContent(ibin);
 		}
@@ -602,6 +638,7 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 		}
 	}
 	YMin = min(YMin, QCD_Mu_Pt170toInfMin);
+*/
 	for( int ibin=1 ; ibin<Histo_InclusiveMu15->GetNbinsX() ; ibin++ ){
 		if( ((Histo_InclusiveMu15->GetBinContent(ibin))!=0) && ((Histo_InclusiveMu15->GetBinContent(ibin))<InclusiveMu15Min) ){
 			InclusiveMu15Min = Histo_InclusiveMu15->GetBinContent(ibin);
@@ -614,7 +651,7 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 		}
 	}
 	YMin = min(YMin, ZmumuJet_Pt0to15Min);
-	for( int ibin=1 ; ibin<Histo_ZmumuJet_Pt15to20->GetNbinsX() ; ibin++ ){
+/*	for( int ibin=1 ; ibin<Histo_ZmumuJet_Pt15to20->GetNbinsX() ; ibin++ ){
 		if( ((Histo_ZmumuJet_Pt15to20->GetBinContent(ibin))!=0) && ((Histo_ZmumuJet_Pt15to20->GetBinContent(ibin))<ZmumuJet_Pt15to20Min) ){
 			ZmumuJet_Pt15to20Min = Histo_ZmumuJet_Pt15to20->GetBinContent(ibin);
 		}
@@ -668,12 +705,10 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 		}
 	}
 	YMin = min(YMin, ZmumuJet_Pt300toInfMin);
+*/
 
 
-
-//	double YMin = min(dataMin, min(QCD_Pt15Min, min(QCD_Pt30Min, min(QCD_Pt80Min, min(QCD_Pt170Min, min(QCD_Pt300Min, min(QCD_Pt470Min, min(PhotonJet_Pt15Min, min(PhotonJet_Pt30Min, min(PhotonJet_Pt80Min, min(PhotonJet_Pt170Min, min(PhotonJet_Pt300Min, min(WJets_7TeVMin, QCD_Mu_Pt80to120Min)))))))))))));
-//	double YMin = min(dataMin, mcMin);	
-	cout << "YMax= "<< YMax << "\t\tYMin= " << YMin << endl;
+//	cout << "YMax= "<< YMax << "\t\tYMin= " << YMin << endl;
 	double YMin_lin = (double)YMin / (double)10.0;
 //	double Range_lin = ((double)(YMax - YMin_lin)) / ((double)(0.8));
 	double Range_lin = ((double)(YMax - YMin_lin)) / ((double)(1.0));
@@ -684,11 +719,11 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
   double YMin_lin = max(YMin - 0.03*Range_lin, (double)YMin / (double)10.0);
 */
   double Range_log = ((double)(log10(YMax) - log10(YMin))) / ((double)(0.77));
-	cout << "Range_lin= " << Range_lin << "\t\tRange_log= " << Range_log << endl;
+//	cout << "Range_lin= " << Range_lin << "\t\tRange_log= " << Range_log << endl;
   double YMax_log = pow(10.0, 0.2*Range_log + log10(YMax));
   double YMin_log = pow(10.0, log10(YMin) - 0.03*Range_log);
-	cout << "YMin_lin= " << YMin_lin << "\t\tYMax_lin= " << YMax_lin << endl;
-	cout << "YMin_log= " << YMin_log << "\t\tYMax_log= " << YMax_log << endl;
+//	cout << "YMin_lin= " << YMin_lin << "\t\tYMax_lin= " << YMax_lin << endl;
+//	cout << "YMin_log= " << YMin_log << "\t\tYMax_log= " << YMax_log << endl;
 
 /*
 	double YMax_lin = YMax + (YMax)*.2;
@@ -727,7 +762,7 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	Histo_Data->SetMarkerStyle(20);
 	Histo_Data->SetMaximum(YMax_lin);
 	Histo_Data->SetMinimum(YMin_lin);
-	Histo_Data->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);
+//	Histo_Data->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);
 	Histo_Data->Draw("E1");
 
 	// // Second: draw MC on the same canvas
@@ -736,15 +771,12 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	Histo_QCD_Pt15->SetFillStyle(3001);
 	Histo_QCD_Pt15->SetMaximum(YMax_lin);
 	Histo_QCD_Pt15->SetMinimum(YMin_lin);
-	Histo_QCD_Pt15->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);	
-	Histo_QCD_Pt30->SetMaximum(YMax_lin);
-	Histo_QCD_Pt30->SetMinimum(YMin_lin);
-	Histo_QCD_Pt30->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);	
-	Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
-//	Histo_QCD_Pt15->Add(Histo_QCD_Pt80);
-//	Histo_QCD_Pt15->Add(Histo_QCD_Pt170);
-//	Histo_QCD_Pt15->Add(Histo_QCD_Pt300);
-//	Histo_QCD_Pt15->Add(Histo_QCD_Pt470);
+//	Histo_QCD_Pt15->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);	
+/*	Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
+	Histo_QCD_Pt15->Add(Histo_QCD_Pt80);
+	Histo_QCD_Pt15->Add(Histo_QCD_Pt170);
+	Histo_QCD_Pt15->Add(Histo_QCD_Pt300);
+	Histo_QCD_Pt15->Add(Histo_QCD_Pt470);*/
 	Histo_QCD_Pt15->Draw("same");
 
 
@@ -753,58 +785,27 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
   Histo_QCD_Mu_Pt20to30->SetFillStyle(3001);
   Histo_QCD_Mu_Pt20to30->SetMaximum(YMax_lin);
   Histo_QCD_Mu_Pt20to30->SetMinimum(YMin_lin);
-	Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt30to50);
+/*	Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt30to50);
 	Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt50to80);
 	Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt80to120);
 	Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt120to170);
 	Histo_QCD_Mu_Pt20to30->Add(Histo_QCD_Mu_Pt170toInf);
-//  Histo_QCD_Mu_Pt20to30->Draw("same");
+*/
+  Histo_QCD_Mu_Pt20to30->Draw("same");
 
 	Histo_InclusiveMu15->SetLineColor(kBlack);
 	Histo_InclusiveMu15->SetFillColor(kGreen-6);
 	Histo_InclusiveMu15->SetFillStyle(3001);
 	Histo_InclusiveMu15->SetMaximum(YMax_lin);
 	Histo_InclusiveMu15->SetMinimum(YMin_lin);
-//	Histo_InclusiveMu15->Draw("same");	
-
-  Histo_TTbarJets_Tauola->SetLineColor(kBlack);
-  Histo_TTbarJets_Tauola->SetFillColor(kBlue);
-  Histo_TTbarJets_Tauola->SetFillStyle(3001);
-  Histo_TTbarJets_Tauola->SetMaximum(YMax_lin);
-  Histo_TTbarJets_Tauola->SetMinimum(YMin_lin);
-//  Histo_TTbarJets_Tauola->Draw("same");
-
-  Histo_WJets_7TeV->SetLineColor(kBlack);
-  Histo_WJets_7TeV->SetFillColor(kCyan+2);
-  Histo_WJets_7TeV->SetFillStyle(3001);
-  Histo_WJets_7TeV->SetMaximum(YMax_lin);
-  Histo_WJets_7TeV->SetMinimum(YMin_lin);
-//  Histo_WJets_7TeV->Draw("same");
-
-  Histo_ZJets_7TeV->SetLineColor(kBlack);
-  Histo_ZJets_7TeV->SetFillColor(kOrange);
-  Histo_ZJets_7TeV->SetFillStyle(3001);
-  Histo_ZJets_7TeV->SetMaximum(YMax_lin);
-  Histo_ZJets_7TeV->SetMinimum(YMin_lin);
-//  Histo_ZJets_7TeV->Draw("same");
-
-	Histo_PhotonJet_Pt15->SetLineColor(kBlack);
-	Histo_PhotonJet_Pt15->SetFillColor(kMagenta);
-	Histo_PhotonJet_Pt15->SetFillStyle(3001);
-	Histo_PhotonJet_Pt15->SetMaximum(YMax_lin);
-	Histo_PhotonJet_Pt15->SetMinimum(YMin_lin);
-	Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt30);
-	Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt80);
-	Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt170);
-	Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt300);
-//	Histo_PhotonJet_Pt15->Draw("same");
+	Histo_InclusiveMu15->Draw("same");	
 
   Histo_ZmumuJet_Pt0to15->SetLineColor(kBlack);
   Histo_ZmumuJet_Pt0to15->SetFillColor(kRed);
   Histo_ZmumuJet_Pt0to15->SetFillStyle(3001);
   Histo_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
   Histo_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);
-	Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt15to20);
+/*	Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt15to20);
 	Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt20to30);
 	Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt30to50);
 	Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt50to80);
@@ -813,7 +814,41 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt170to230);
 	Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt230to300);
 	Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt300toInf);
-//  Histo_ZmumuJet_Pt0to15->Draw("same");
+*/
+  Histo_ZmumuJet_Pt0to15->Draw("same");
+
+  Histo_ZJets_7TeV->SetLineColor(kBlack);
+  Histo_ZJets_7TeV->SetFillColor(kOrange);
+  Histo_ZJets_7TeV->SetFillStyle(3001);
+  Histo_ZJets_7TeV->SetMaximum(YMax_lin);
+  Histo_ZJets_7TeV->SetMinimum(YMin_lin);
+  Histo_ZJets_7TeV->Draw("same");
+
+  Histo_WJets_7TeV->SetLineColor(kBlack);
+  Histo_WJets_7TeV->SetFillColor(kCyan+2);
+  Histo_WJets_7TeV->SetFillStyle(3001);
+  Histo_WJets_7TeV->SetMaximum(YMax_lin);
+  Histo_WJets_7TeV->SetMinimum(YMin_lin);
+  Histo_WJets_7TeV->Draw("same");
+
+ 	Histo_TTbarJets_Tauola->SetLineColor(kBlack);
+  Histo_TTbarJets_Tauola->SetFillColor(kBlue);
+  Histo_TTbarJets_Tauola->SetFillStyle(3001);
+  Histo_TTbarJets_Tauola->SetMaximum(YMax_lin);
+  Histo_TTbarJets_Tauola->SetMinimum(YMin_lin);
+  Histo_TTbarJets_Tauola->Draw("same");
+
+	Histo_PhotonJet_Pt15->SetLineColor(kBlack);
+	Histo_PhotonJet_Pt15->SetFillColor(kMagenta);
+	Histo_PhotonJet_Pt15->SetFillStyle(3001);
+	Histo_PhotonJet_Pt15->SetMaximum(YMax_lin);
+	Histo_PhotonJet_Pt15->SetMinimum(YMin_lin);
+/*	Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt30);
+	Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt80);
+	Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt170);
+	Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt300);
+*/
+	Histo_PhotonJet_Pt15->Draw("same");
 
 	// // Third: re-draw Data so that data appears in front of MC
 	Histo_Data->Draw("E1same");
@@ -831,11 +866,11 @@ void DrawDataMCplot_NormEntries_Fast(TTree *Data_miniTree, TTree *QCD_Pt15_miniT
 	legend->AddEntry(Histo_QCD_Pt15->GetName(), "QCD", "f");
 	legend->AddEntry(Histo_QCD_Mu_Pt20to30->GetName(), "QCD Mu", "f");
 	legend->AddEntry(Histo_InclusiveMu15->GetName(), "InclusiveMu15", "f");
-	legend->AddEntry(Histo_PhotonJet_Pt15->GetName(), "PhotonJet", "f");
-	legend->AddEntry(Histo_TTbarJets_Tauola->GetName(), "TTbarJets", "f");
-	legend->AddEntry(Histo_WJets_7TeV->GetName(), "WJets", "f");
-	legend->AddEntry(Histo_ZJets_7TeV->GetName(), "ZJets", "f");
 	legend->AddEntry(Histo_ZmumuJet_Pt0to15->GetName(), "ZmumuJet", "f");
+	legend->AddEntry(Histo_ZJets_7TeV->GetName(), "ZJets", "f");
+	legend->AddEntry(Histo_WJets_7TeV->GetName(), "WJets", "f");
+	legend->AddEntry(Histo_TTbarJets_Tauola->GetName(), "TTbarJets", "f");
+	legend->AddEntry(Histo_PhotonJet_Pt15->GetName(), "PhotonJet", "f");
 	legend->Draw();
 
 	TLatex latexLabel;
@@ -1086,11 +1121,11 @@ int main()
 // NO PHOTON/MUON INFORMATION IS FILLED IN BEFORE 2B
 	vector<string> set_of_cuts;
 	vector<string> name;
-	set_of_cuts.push_back("isBeforeAllCuts");
-	name.push_back("00Before");
+//	set_of_cuts.push_back("isBeforeAllCuts");
+//	name.push_back("00Before");
 //	set_of_cuts.push_back("isAfterCutPthatFilter");
 //	name.push_back("0AfterCutPthatFilter");
-/*	set_of_cuts.push_back("isAfterCut1a");
+	set_of_cuts.push_back("isAfterCut1a");
 	name.push_back("After1a");
 	set_of_cuts.push_back("isAfterCut1b");
 	name.push_back("After1b");
@@ -1118,7 +1153,7 @@ int main()
   name.push_back("After7");
 	set_of_cuts.push_back("isAfterCut8");
   name.push_back("After8");
-*/
+
 /*	set_of_cuts.push_back("isSelected");
   name.push_back("SELECTED");
 	set_of_cuts.push_back("isSelected && Mmumugamma < 95.2 && Mmumugamma > 87.2");
