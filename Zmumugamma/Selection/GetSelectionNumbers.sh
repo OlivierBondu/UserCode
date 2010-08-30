@@ -89,7 +89,7 @@ do
 
 done
 
-echo -e "Transpose"
+# Transpose
 cp SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
 sed -i -e 's,_,,g' ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
 sed -i -e 's,rel eff,$\\epsilon_{rel}$,g' -e 's,abs eff,$\\epsilon_{abs}$,g' ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
@@ -122,7 +122,8 @@ rm ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
 #./transpose.sh ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp > ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.txt
 #rm ${LaTeXdir}/SelectionCutsNumbersEfficiencies_${SelectionVersion}.tmp
 
-echo -e "Put LaTeX format"
+
+#Put LaTeX format
 echo "
 \documentclass[a4paper]{article}
 

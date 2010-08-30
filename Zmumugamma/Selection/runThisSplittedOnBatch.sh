@@ -111,6 +111,13 @@ else
 	maxPtHat="1000000"
 fi
 
+echo "${SampleName}" | grep part > /dev/null
+if [ "$?" = "0" ]
+then
+	verbosity="on"
+else
+	verbosity="off"
+fi
 
 #if [ "${SampleName}" = "3" ]
 #    then
@@ -170,6 +177,12 @@ sed -i -e "s/stew = false/stew = ${stew}/1" Selection_miniTree_${SampleName}.C
 sed -i -e "s/zjet_veto = false/zjet_veto = ${zjetveto}/1" Selection_miniTree_${SampleName}.C
 sed -i -e "s/minPtHat = -100;/minPtHat = ${minPtHat};/1" Selection_miniTree_${SampleName}.C
 sed -i -e "s/maxPtHat = 1000000;/maxPtHat = ${maxPtHat};/1" Selection_miniTree_${SampleName}.C
+if [ "${verbosity}" = "on" ]
+then
+	sed -i -e "/int verbosity = /s/verbosity = .*$/verbosity = 5;/g" Selection_miniTree_${SampleName}.C
+else
+	sed -i -e "/int verbosity = /s/verbosity = .*$/verbosity = 0;/g" Selection_miniTree_${SampleName}.C
+fi
 
 #exit 1
 

@@ -20,21 +20,14 @@ echo "*** RawSelectionCutsNumbers_${SelectionVersion}.txt ***"
 
 rm RawSelectionCutsNumbers_${SelectionVersion}.txt
 echo -e "*** RAW RESULTS ***" > RawSelectionCutsNumbers_${SelectionVersion}.txt
-#FIXME echo -e "Sample (files)\t0\tPthatFilter\tCSA07ID\tZJETVETO\t1.a\t1.b\t1.c\t1.d\t1.e\t2.a\t2.b\t2.c\t3\t4\t5\t6\t7\t8\t9\t10\tSelected" >> RawSelectionCutsNumbers_${SelectionVersion}.txt
 echo -e "Sample \t0\tPthatFilter\tCSA07ID\tZJETVETO\t1.a\t1.b\t1.c\t1.d\t1.e\t2.a\t2.b\t2.c\t3\t4\t5\t6\t7\t8\t9\t10\tSelected" >> RawSelectionCutsNumbers_${SelectionVersion}.txt
 echo "" >> RawSelectionCutsNumbers_${SelectionVersion}.txt
 
-NB=`'ls' ${SELECTEDDIR} | wc -l`
-echo "Processing .out files"
-for sample in `'ls' -r ${SELECTEDDIR}`
-#for sample in partI
+for sample in `'ls' -l -r ${SELECTEDDIR} | grep drw | awk '{print $9}'`
 do
-#				break
-	echo "Treating ${sample}..."
 	for file in `'ls' -r ${SELECTEDDIR}/${sample} | grep ${sample}_ | grep _${SelectionVersion}.out`
 	do
 		SAMPLEandNb=`echo ${file} | cut -d . -f -1 | rev | cut -d _ -f 2- | rev`
-#FIXME		NbOfFiles=`grep "Using" ${SELECTEDDIR}/${sample}/${file} | awk '{print $2}'`
 	  total=`grep "nBeforeAllCuts=" ${SELECTEDDIR}/${sample}/${file} | awk '{print $2}'`
 #		Pthat=`grep "nAfterCutPthatFilter=" ${SELECTEDDIR}/${sample}/${file} | awk '{print $2}'`
 #	  csa07id=`grep "nAfterCutCSA07ID=" ${SELECTEDDIR}/${sample}/${file} | awk '{print $2}'`
@@ -55,23 +48,17 @@ do
 #			fi
 #	  fi
 		# echo -e "${SAMPLEandNb}\t( ${NbOfFiles} )${allcuts}"
-#FIXME		echo -e  "${SAMPLEandNb}\t( ${NbOfFiles} )${allcuts}" >> TEMPRESULTS_${SelectionVersion}.txt
 		echo -e  "${SAMPLEandNb} \t${allcuts}" >> TEMPRESULTS_${SelectionVersion}.txt
-#		NbOfFiles=""
 		total=""
 #		Pthat=""
 #		csa07id=""
 		allcuts=""
 		cutvalue=""																								
 		done # end of loop over sample files
-#		break
 done # end of loop over samples
-#exit 4
 
-echo ""
-echo "Merging splitted results..."
 
-for sample in `'ls' -r ${SELECTEDDIR}`
+for sample in `'ls' -l -r ${SELECTEDDIR} | grep drw | awk '{print $9}'`
 do
 	cols=`cat TEMPRESULTS_${SelectionVersion}.txt | grep "${sample}_0" | wc -w`
   SubFiles=`cat TEMPRESULTS_${SelectionVersion}.txt | grep "${sample}_" | wc -l`
@@ -97,17 +84,12 @@ do
 #	fi
 #FIXME  echo -e "${sample}\t(${NbOfFiles})${allcuts}" >> TEMPRESULTSBIS_${SelectionVersion}.txt
   echo -e "${sample}\t${allcuts}" >> TEMPRESULTSBIS_${SelectionVersion}.txt
-  echo "${SubFiles} SubFiles of ${sample} merged"
   mv TEMPRESULTSBIS_${SelectionVersion}.txt TEMPRESULTS_${SelectionVersion}.txt
-#	break
 done # end of loop over samples
 
 cat TEMPRESULTS_${SelectionVersion}.txt | sort >> RawSelectionCutsNumbers_${SelectionVersion}.txt
 
 rm TEMPRESULTS_${SelectionVersion}.txt
-
-echo ""
-echo "All results are in RawSelectionCutsNumbers_${SelectionVersion}.txt"
 
 exit 0
 

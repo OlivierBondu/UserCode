@@ -8,15 +8,14 @@ sampleDirectory=/sps/cms/obondu/${CMSSW_release}/src/Zmumugamma/RecoSamples
 
 for sample in `'ls' -l ${sampleDirectory} | grep drw | awk '{print $9}' | grep -v CVS`
 do
-	if [[ `cat runAllSplittedOnBatch.sh | grep ${sample}` ]]
-	then
-		continue
-	fi
-	for selection in `echo "hadEt noMuIso-hadEt"`
+	for selection in `echo "hadEt noMuIso-hadEt sumPt noMuIso-sumPt"`
 	do
+		if [[ `cat runAllSplittedOnBatch.sh | grep ${sample} | grep -w ${selection}` ]]
+		then
+			continue
+		fi
 		echo "./runThisSplittedOnBatch.sh ${sample} ${selection}"
 	done
-	echo ""
 done
 
 

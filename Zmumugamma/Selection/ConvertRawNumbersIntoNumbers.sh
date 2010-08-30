@@ -20,7 +20,7 @@ echo -e "*** RESULTS ***" > SelectionCutsNumbers_${SelectionVersion}.txt
 echo -e "Sample \t0\tPthatFilter\tCSA07ID\tZJETVETO\t1.a\t1.b\t1.c\t1.d\t1.e\t2.a\t2.b\t2.c\t3\t4\t5\t6\t7\t8\t9\t10\tSelected" >> SelectionCutsNumbers_${SelectionVersion}.txt
 echo "" >> SelectionCutsNumbers_${SelectionVersion}.txt
 
-IntegratedLuminosity="301.213e-03"
+IntegratedLuminosity="1092.64e-03"
 
 QCD_Pt15="8.762e+08"
 QCD_Pt30="6.041e+07" 
@@ -33,9 +33,9 @@ PhotonJet_Pt30="2.007e+04"
 PhotonJet_Pt80="5.565e+02" 
 PhotonJet_Pt170="2.437e+01"
 PhotonJet_Pt300="1.636e+00"
-TTbarJets_Tauola="33.25"
-WJets_7TeV="11541.4"
-ZJets_7TeV="911.84"
+TTbarJets_Tauola="95.0"
+WJets_7TeV="25090.0"
+ZJets_7TeV="2224.0"
 QCD_Mu_Pt20to30="1208700.0"
 QCD_Mu_Pt30to50="654360.0"
 QCD_Mu_Pt50to80="138846.0"

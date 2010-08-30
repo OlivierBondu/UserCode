@@ -2,7 +2,7 @@
 # Small script to run CreateFoldersForSelectedAndAnalysis.sh for all selections in one shot
 # Written by Olivier Bondu (March 2010)
 
-for selection in `echo "hadEt noMuIso-hadEt"`
+for selection in `echo "hadEt noMuIso-hadEt sumPt noMuIso-sumPt"`
 do
 	./CreateFoldersForSelectedAndAnalysis.sh ${selection}
 done
