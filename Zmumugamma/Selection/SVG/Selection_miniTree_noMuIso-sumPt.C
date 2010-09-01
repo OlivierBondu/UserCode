@@ -1927,9 +1927,9 @@ cout << endl;
 		isAfterCut7 = 1;
 		nAfterCut7++;
 
-		// CUT 8: nearMuon->isoR03_hadEt() < 1.0
-		if(!( nearMuon->isoR03_hadEt()<1.0 )){
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VIII for large hadEt " << endl;
+		// CUT 8: farMuon->isoR03_sumPt() < 3.0
+		if(!( farMuon->isoR03_sumPt() < 3.0 )){
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VIII for large sumPt " << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;

@@ -75,11 +75,11 @@ int* InitializeHLTinfo(TChain* inputRunTree, TRootRun* runInfos, int nPaths, str
 	return ListHLT;
 }
 
-void doHLTInfo(TRootEvent* event, TRootRun* runInfos, int* ListHLT, int nPathWanted, int* Muon_eventPassHLT_L2Mu9){
+void doHLTInfo(TRootEvent* event, TRootRun* runInfos, int* ListHLT, int nPathWanted, int* Muon_eventPassHLT_Mu9){
 
 	for (int ipath=0; ipath<nPathWanted; ipath++){
 		//cout <<"HLTInfo numHLT="<<ListHLT[ipath]<<" decision="<<event->trigHLT(ListHLT[ipath])<<endl;
-		if (ipath==0) *Muon_eventPassHLT_L2Mu9 = (int)event->trigHLT(ListHLT[ipath]);
+		if (ipath==0) *Muon_eventPassHLT_Mu9 = (int)event->trigHLT(ListHLT[ipath]);
 	}
 
 	//for(unsigned int ipath=0; ipath<event->nHLTPaths(); ipath++) {
@@ -404,7 +404,7 @@ int main(){
   int* NumWantedHLTnames;
 
   string ListWantedHLTnames[1];
-	ListWantedHLTnames[0] = "HLT_L2Mu9";
+	ListWantedHLTnames[0] = "HLT_Mu9";
 	
 	
 	//cout << "runTree->GetEntries()="<<runTree->GetEntries()<<endl;MinimumBias__BeamCommissioning09-BSCNOBEAMHALO-Dec19thSkim_336p3_v1__TOTOANA_1.root
@@ -447,7 +447,7 @@ cout << endl;
 	Int_t iEvent, iEventID, iLumiID, iRunID;
 	Int_t isSignalApplied, isStewApplied, isZJetsApplied;
 
-	Int_t isBeforeAllCuts, isAfterCutCSA07ID, isAfterCutZJETVETO;
+	Int_t isBeforeAllCuts, isAfterCutPthatFilter, isAfterCutCSA07ID, isAfterCutZJETVETO;
 	Int_t isAfterCut1a, isAfterCut1b, isAfterCut1c, isAfterCut1d, isAfterCut1e;
 	Int_t isAfterCut2a, isAfterCut2b, isAfterCut2c;
 	Int_t isAfterCut3, isAfterCut4, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
@@ -455,7 +455,7 @@ cout << endl;
 	
 	Int_t isNotCommissionned;
 
-	Int_t Muon_eventPassHLT_L2Mu9;
+	Int_t Muon_eventPassHLT_Mu9;
 
 	// ____________________________________________
 	// Muon variables
@@ -532,6 +532,7 @@ cout << endl;
 	miniTree->Branch("isZJetsApplied", &isZJetsApplied, "isZJetsApplied/I");
 
 	miniTree->Branch("isBeforeAllCuts", &isBeforeAllCuts, "isBeforeAllCuts/I");
+	miniTree->Branch("isAfterCutPthatFilter", &isAfterCutPthatFilter, "isAfterCutPthatFilter/I");
 	miniTree->Branch("isAfterCutCSA07ID", &isAfterCutCSA07ID, "isAfterCutCSA07ID/I");
 	miniTree->Branch("isAfterCutZJETVETO", &isAfterCutZJETVETO, "isAfterCutZJETVETO/I");
 
@@ -566,6 +567,7 @@ cout << endl;
 	miniTree_allmuons->Branch("isZJetsApplied", &isZJetsApplied, "isZJetsApplied/I");
 
 	miniTree_allmuons->Branch("isBeforeAllCuts", &isBeforeAllCuts, "isBeforeAllCuts/I");
+	miniTree_allmuons->Branch("isAfterCutPthatFilter", &isAfterCutPthatFilter, "isAfterCutPthatFilter/I");
 	miniTree_allmuons->Branch("isAfterCutCSA07ID", &isAfterCutCSA07ID, "isAfterCutCSA07ID/I");
 	miniTree_allmuons->Branch("isAfterCutZJETVETO", &isAfterCutZJETVETO, "isAfterCutZJETVETO/I");
 
@@ -600,6 +602,7 @@ cout << endl;
 	miniTree_allphotons->Branch("isZJetsApplied", &isZJetsApplied, "isZJetsApplied/I");
 
 	miniTree_allphotons->Branch("isBeforeAllCuts", &isBeforeAllCuts, "isBeforeAllCuts/I");
+	miniTree_allphotons->Branch("isAfterCutPthatFilter", &isAfterCutPthatFilter, "isAfterCutPthatFilter/I");
 	miniTree_allphotons->Branch("isAfterCutCSA07ID", &isAfterCutCSA07ID, "isAfterCutCSA07ID/I");
 	miniTree_allphotons->Branch("isAfterCutZJETVETO", &isAfterCutZJETVETO, "isAfterCutZJETVETO/I");
 
@@ -850,11 +853,21 @@ cout << endl;
 	vector<int> SelectedEvent_EventNumber;
 	vector<double> SelectedEvent_mumugammaInvMass;
 	vector<double> SelectedEvent_Et_gamma;
+	vector<double> SelectedEvent_Pt_muonNear;
+	vector<double> SelectedEvent_Pt_muonFar;
+	vector<double> SelectedEvent_DeltaRNear;
+	vector<double> SelectedEvent_DeltaRFar;
+	vector<double> SelectedEvent_mumuInvMass;
 	SelectedEvent_RunNumber.clear();
 	SelectedEvent_LumiNumber.clear();
 	SelectedEvent_EventNumber.clear();
 	SelectedEvent_mumugammaInvMass.clear();
 	SelectedEvent_Et_gamma.clear();
+	SelectedEvent_Pt_muonNear.clear();
+	SelectedEvent_Pt_muonFar.clear();
+	SelectedEvent_DeltaRNear.clear();
+	SelectedEvent_DeltaRFar.clear();
+	SelectedEvent_mumuInvMass.clear();
 
 /*
 	vector<unsigned int> candidateRunID;
@@ -880,11 +893,12 @@ cout << endl;
   string lastFile = "";
 	double minPtHat = -100;
   double maxPtHat = 1000000;
-  int verbosity = 1;
+  int verbosity = 5;
 
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 	{
 		nBeforeAllCuts++;
+		isBeforeAllCuts = 1;
 		int nprint = (int)((double)NbEvents/(double)100.0);
 		if( (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEvents*100)<<" \% )"<<endl; }
 		iEvent = ievt;
@@ -899,6 +913,7 @@ cout << endl;
       cerr << "CUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT for pthat filtering" << endl;
 			continue;
 		}
+		isAfterCutPthatFilter = 1;
 		nAfterCutPthatFilter++;
 
 		// ____________________________________________
@@ -910,8 +925,7 @@ cout << endl;
 		isSignalApplied = signal;
 		isStewApplied = stew;
 		isZJetsApplied = zjet_veto;
-		isBeforeAllCuts = 1;
-		isAfterCutCSA07ID = isAfterCutZJETVETO = 0;
+		isAfterCutPthatFilter = isAfterCutCSA07ID = isAfterCutZJETVETO = 0;
 		isAfterCut1a = isAfterCut1b = isAfterCut1c = isAfterCut1d = isAfterCut1e = 0;
 		isAfterCut2a = isAfterCut2b = isAfterCut2c = 0;
 		isAfterCut3 = isAfterCut4 = isAfterCut5 = isAfterCut6 = isAfterCut7 = isAfterCut8 = isAfterCut9 = isAfterCut10 = 0;
@@ -991,7 +1005,7 @@ cout << endl;
      	  cout << ievt << "\t" << lastFile << endl;
      	 	NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);
      	}
-      doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_L2Mu9);
+      doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_Mu9);
 		}
 
    // Cleaning: removing not commissionned superclusters and spikes
@@ -1099,9 +1113,9 @@ cout << endl;
         continue;
       }
 
-      if(! (Muon_eventPassHLT_L2Mu9==1) ){// HLT_L2Mu9
+      if(! (Muon_eventPassHLT_Mu9==1) ){// HLT_Mu9
         muonIsNotCommissioned.push_back(1);
-        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because not passing HLT_L2Mu9" << endl;
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because not passing HLT_Mu9" << endl;
         continue;
       }
 
@@ -1233,13 +1247,13 @@ cout << endl;
 		isAfterCut1a = 1;
 		nAfterCut1a++;
 
-		// CUT 1b: (nb of muons with |eta| < 2.5) > 1
+		// CUT 1b: (nb of muons with |eta| < 2.4) > 1
 		vector<int> muonsValidEta;
 		muonsValidEta.clear();
 		TRootMuon *muonValidEtaCandidate;
 		for(int imuon=0 ; imuon<NbMuonsIdentified ; imuon++){
 			muonValidEtaCandidate = (TRootMuon*) muons->At(muonIdentified[imuon]);
-			if( fabs(muonValidEtaCandidate->Eta())<2.5 ){
+			if( fabs(muonValidEtaCandidate->Eta())<2.4 ){
 				muonsValidEta.push_back(muonIdentified[imuon]);
 			}
 		}
@@ -1952,6 +1966,12 @@ cout << endl;
 		SelectedEvent_EventNumber.push_back(event->eventId());
 		SelectedEvent_mumugammaInvMass.push_back(mumugammaInvMass);
 		SelectedEvent_Et_gamma.push_back(PtPhoton);
+		SelectedEvent_Pt_muonNear.push_back(MuonN_Pt);
+		SelectedEvent_Pt_muonFar.push_back(MuonF_Pt);
+		SelectedEvent_DeltaRNear.push_back(deltaRNear);
+		SelectedEvent_DeltaRFar.push_back(deltaRFar);
+		SelectedEvent_mumuInvMass.push_back(mumuInvMass);
+
 
 
 		miniTree->Fill();
@@ -1984,9 +2004,9 @@ cout << endl;
 
 	cout << endl << "**************************************************************************" << endl;
 	cout << "DUMPING THE INFORMATION ABOUT SELECTED EVENTS:" << endl;
-	cout << "RUN\t\tLUMI SECTION\t\tEVENT NUMBER\t\t\t\tM(MUMUGAMMA)\t\tEt GAMMA" << endl;
+	cout << "RUN\t\tLUMI SECTION\t\tEVENT NUMBER\t\t\t\tM(MUMUGAMMA)\t\tEt GAMMA\t\tPt MUON NEAR\t\tPt Muon FAR\t\tDELTAR MUON NEAR\t\tDELTAR MUON FAR\t\tM(MUMU)" << endl;
 	for( int iselected=0 ; iselected<nSelected ; iselected++ ){
-		cout << SelectedEvent_RunNumber[iselected] << "\t\t" << SelectedEvent_LumiNumber[iselected] << "\t\t" << SelectedEvent_EventNumber[iselected] << "\t\t\t" << SelectedEvent_mumugammaInvMass[iselected] << "\t\t" << SelectedEvent_Et_gamma[iselected] << endl;
+		cout << SelectedEvent_RunNumber[iselected] << "\t\t" << SelectedEvent_LumiNumber[iselected] << "\t\t" << SelectedEvent_EventNumber[iselected] << "\t\t\t" << SelectedEvent_mumugammaInvMass[iselected] << "\t\t" << SelectedEvent_Et_gamma[iselected] << "\t\t" << SelectedEvent_Pt_muonNear[iselected] << "\t\t" << SelectedEvent_Pt_muonFar[iselected] << "\t\t" << SelectedEvent_DeltaRNear[iselected] << "\t\t" << SelectedEvent_DeltaRFar[iselected] << "\t\t" << SelectedEvent_mumuInvMass[iselected] << endl;
 	}
 
 	cout << endl << "**************************************************************************" << endl;
