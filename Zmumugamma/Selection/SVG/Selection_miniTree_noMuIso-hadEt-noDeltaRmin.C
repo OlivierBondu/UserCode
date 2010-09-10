@@ -191,7 +191,7 @@ int main(){
 	gSystem->Load("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/src/libToto.so");
 	
 	bool doHLT										= true;
-	bool doMC										 = false;
+	bool doMC										 = true;
 	bool doJetMC									= false;
 	bool doMETMC									= false;
 	bool doPDFInfo								= true;
@@ -1181,16 +1181,51 @@ cout << endl;
 
 		// ZJET VETO
 		if( zjet_veto ){
-			bool MCphotons_from_muons = false;
+			bool MCphotons_from_muons_from_Z = false;
+			bool MC_first_muon_in_phase_space = false;
+			bool MC_second_muon_in_phase_space = false;
+			bool MCsignal_in_phase_space = false;
+			// ****
+			// First loop: look for a photon
 			for( int iMCparticle = 0 ; iMCparticle < mcParticles->GetEntries() ; iMCparticle++ ){
 				TRootMCParticle *mcParticleCandidate = (TRootMCParticle *)mcParticles->At(iMCparticle);
 				if( (mcParticleCandidate->status()==1) && (mcParticleCandidate->type() == 22) ){ // if the particle is a true MC photon
 					if( abs(mcParticleCandidate->motherType()) == 13 ){// if the true MC photon origins from a muon
-						MCphotons_from_muons = true;
+						if( abs(mcParticleCandidate->grannyType()) == 23 ){// photon coming from a muon coming from a Z
+							if( (mcParticleCandidate->Pt()>8.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
+								MCphotons_from_muons_from_Z = true;
+							}
+						}
 					}
+				} // end of origin of the photon
+			}// end of loop over MC particles
+			// ****
+			// Second loop: look for muons
+			for( int iMCparticle = 0 ; iMCparticle < mcParticles->GetEntries() ; iMCparticle++ ){
+        TRootMCParticle *mcParticleCandidate = (TRootMCParticle *)mcParticles->At(iMCparticle);
+				if( MCphotons_from_muons_from_Z == true ){ // if there is a photon coming from a muon coming from a Z and photon in MC phase space, THEN, look for muons in phase space
+					if( (MC_first_muon_in_phase_space == false) && (mcParticleCandidate->status()==1) && (abs(mcParticleCandidate->type()) == 13) ){// if the particle is a final state muon
+						if( abs(mcParticleCandidate->motherType()) == 13 ){
+							if( abs(mcParticleCandidate->grannyType()) == 23 ){// muon is coming from a Z
+								if( (mcParticleCandidate->Pt()>10.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
+									MC_first_muon_in_phase_space = true;
+								}
+							}
+						}
+					} // end of selecting first muon
+					if( (MC_first_muon_in_phase_space == true) && (mcParticleCandidate->status()==1) && (abs(mcParticleCandidate->type()) == 13) ){// if the particle is a final state muon
+            if( abs(mcParticleCandidate->motherType()) == 13 ){
+              if( abs(mcParticleCandidate->grannyType()) == 23 ){// muon is coming from a Z
+                if( (mcParticleCandidate->Pt()>10.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
+                 	MC_second_muon_in_phase_space = true;
+									MCsignal_in_phase_space = true;
+                }
+              }
+            }
+          }// end of selecting second muon
 				}
 			}// end of loop over MC particles
-			if( MCphotons_from_muons ){
+			if(   MCsignal_in_phase_space ){ // ***** WARNING *****  veto currently normal to consider background
 				cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
 				miniTree->Fill();
 				for(int imuon=0 ; imuon<NbMuons ; imuon++){
@@ -1731,7 +1766,7 @@ cout << endl;
 		deltaRSubleading = DeltaR(etaPhoton, phiPhoton, subleadingMuon->Eta(), subleadingMuon->Phi());
 	
 		// CUT 2c: DeltaR(photon, close muon) >= 0.05
-		if(!( deltaRmin>=0.05 )){
+		if(!( deltaRmin>=0.00 )){
 			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level II for Photons (deltar= " << deltaRmin << " )" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
@@ -1799,9 +1834,9 @@ cout << endl;
 
 		// CUT 4: photon_Et >= 10GeV && DeltaR(photon, close muon)<=0.8
 		if(!( (MPtPhoton->Et()>=10.0)&&(deltaRmin<=0.8) )){
-			if( (MPtPhoton->Et()>=10.0) ){
+			if( !(MPtPhoton->Et()>=10.0) ){
 				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for gamma momentum: MPtPhoton->Et()= " << MPtPhoton->Et() << endl;
-			} else if((deltaRmin<=0.8)) {
+			} else if(!(deltaRmin<=0.8)) {
 				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for large deltar: deltaRmin= " << deltaRmin << " )" << endl;
 			}
 			miniTree->Fill();
