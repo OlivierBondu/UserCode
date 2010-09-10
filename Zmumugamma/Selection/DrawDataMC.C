@@ -412,12 +412,12 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   double XSectionISR_ZmumuJet_Pt230to300 = 1.946e-01;
   double XSectionISR_ZmumuJet_Pt300toInf = 7.627e-02;
 
-  double InitialNumberQCD_Pt15 = 6196800;
+  double InitialNumberQCD_Pt15 = 6116800;
   double InitialNumberQCD_Pt30 = 5093840;
   double InitialNumberQCD_Pt80 = 3229000;
-  double InitialNumberQCD_Pt170 = 3162500;
+  double InitialNumberQCD_Pt170 = 3122500;
   double InitialNumberQCD_Pt300 = 3269645;
-  double InitialNumberQCD_Pt470 = 2093653;
+  double InitialNumberQCD_Pt470 = 2083653;
   double InitialNumberPhotonJet_Pt15 = 1221770;
   double InitialNumberPhotonJet_Pt30 = 1025300;
   double InitialNumberPhotonJet_Pt80 = 1287711;
@@ -426,8 +426,8 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   double InitialNumberTTbarJets_Tauola = 1463572;
   double InitialNumberWJets_7TeV = 10218854;
   double InitialNumberZJets_7TeV = 1047008;
-  double InitialNumberQCD_Mu_Pt20to30 = 11035188;
-  double InitialNumberQCD_Mu_Pt30to50 = 6951182;
+  double InitialNumberQCD_Mu_Pt20to30 = 10985188;
+  double InitialNumberQCD_Mu_Pt30to50 = 6931182;
   double InitialNumberQCD_Mu_Pt50to80 = 2542308;
   double InitialNumberQCD_Mu_Pt80to120 = 523053;
   double InitialNumberQCD_Mu_Pt120to170 = 316630;
@@ -1348,12 +1348,12 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double XSectionISR_ZmumuJet_Pt230to300 = 1.946e-01;
   double XSectionISR_ZmumuJet_Pt300toInf = 7.627e-02;
 
-  double InitialNumberQCD_Pt15 = 6196800;
+  double InitialNumberQCD_Pt15 = 6116800;
   double InitialNumberQCD_Pt30 = 5093840;
   double InitialNumberQCD_Pt80 = 3229000;
-  double InitialNumberQCD_Pt170 = 3162500;
+  double InitialNumberQCD_Pt170 = 3122500;
   double InitialNumberQCD_Pt300 = 3269645;
-  double InitialNumberQCD_Pt470 = 2093653;
+  double InitialNumberQCD_Pt470 = 2083653;
   double InitialNumberPhotonJet_Pt15 = 1221770;
   double InitialNumberPhotonJet_Pt30 = 1025300;
   double InitialNumberPhotonJet_Pt80 = 1287711;
@@ -1362,8 +1362,8 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double InitialNumberTTbarJets_Tauola = 1463572;
   double InitialNumberWJets_7TeV = 10218854;
   double InitialNumberZJets_7TeV = 1047008;
-  double InitialNumberQCD_Mu_Pt20to30 = 11035188;
-  double InitialNumberQCD_Mu_Pt30to50 = 6951182;
+  double InitialNumberQCD_Mu_Pt20to30 = 10985188;
+  double InitialNumberQCD_Mu_Pt30to50 = 6931182;
   double InitialNumberQCD_Mu_Pt50to80 = 2542308;
   double InitialNumberQCD_Mu_Pt80to120 = 523053;
   double InitialNumberQCD_Mu_Pt120to170 = 316630;
@@ -2256,12 +2256,12 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double XSectionISR_ZmumuJet_Pt230to300 = 1.946e-01;
   double XSectionISR_ZmumuJet_Pt300toInf = 7.627e-02;
 
-  double InitialNumberQCD_Pt15 = 6196800;
+  double InitialNumberQCD_Pt15 = 6116800;
   double InitialNumberQCD_Pt30 = 5093840;
   double InitialNumberQCD_Pt80 = 3229000;
-  double InitialNumberQCD_Pt170 = 3162500;
+  double InitialNumberQCD_Pt170 = 3122500;
   double InitialNumberQCD_Pt300 = 3269645;
-  double InitialNumberQCD_Pt470 = 2093653;
+  double InitialNumberQCD_Pt470 = 2083653;
   double InitialNumberPhotonJet_Pt15 = 1221770;
   double InitialNumberPhotonJet_Pt30 = 1025300;
   double InitialNumberPhotonJet_Pt80 = 1287711;
@@ -2270,8 +2270,8 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double InitialNumberTTbarJets_Tauola = 1463572;
   double InitialNumberWJets_7TeV = 10218854;
   double InitialNumberZJets_7TeV = 1047008;
-  double InitialNumberQCD_Mu_Pt20to30 = 11035188;
-  double InitialNumberQCD_Mu_Pt30to50 = 6951182;
+  double InitialNumberQCD_Mu_Pt20to30 = 10985188;
+  double InitialNumberQCD_Mu_Pt30to50 = 6931182;
   double InitialNumberQCD_Mu_Pt50to80 = 2542308;
   double InitialNumberQCD_Mu_Pt80to120 = 523053;
   double InitialNumberQCD_Mu_Pt120to170 = 316630;
