@@ -1,4 +1,4 @@
-#!/bin/bash
+#./bin/bash
 # Small script to run samples on batch
 # Written by Olivier Bondu (March 2010)
 
@@ -187,9 +187,49 @@
 #./runThisSplittedOnBatch.sh partVI sumPt
 #./runThisSplittedOnBatch.sh partVI noMuIso-sumPt
 
-./runThisSplittedOnBatch.sh partVII hadEt
-./runThisSplittedOnBatch.sh partVII noMuIso-hadEt
-./runThisSplittedOnBatch.sh partVII sumPt
-./runThisSplittedOnBatch.sh partVII noMuIso-sumPt
+#./runThisSplittedOnBatch.sh partVII hadEt
+#./runThisSplittedOnBatch.sh partVII noMuIso-hadEt
+#./runThisSplittedOnBatch.sh partVII sumPt
+#./runThisSplittedOnBatch.sh partVII noMuIso-sumPt
+
+#./runThisSplittedOnBatch.sh InclusiveMu15 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh PhotonJet_Pt15 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh PhotonJet_Pt170 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh PhotonJet_Pt30 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh PhotonJet_Pt300 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh PhotonJet_Pt80 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Mu_Pt120to170 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Mu_Pt170toInf noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Mu_Pt20to30 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Mu_Pt30to50 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Mu_Pt50to80 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Mu_Pt80to120 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Pt15 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Pt170 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Pt30 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Pt300 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Pt470 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh QCD_Pt80 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh TTbarJets_Tauola-madgraph noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh WJets_7TeV-madgraph-tauola noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZJets_7TeV-madgraph-tauola noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt0to15 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt120to170 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt15to20 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt170to230 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt20to30 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt230to300 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt300toInf noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt30to50 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt50to80 noMuIso-hadEt-noDeltaRmin
+#./runThisSplittedOnBatch.sh ZmumuJet_Pt80to120 noMuIso-hadEt-noDeltaRmin
+./runThisSplittedOnBatch.sh partI noMuIso-hadEt-noDeltaRmin
+./runThisSplittedOnBatch.sh partII noMuIso-hadEt-noDeltaRmin
+./runThisSplittedOnBatch.sh partIII noMuIso-hadEt-noDeltaRmin
+./runThisSplittedOnBatch.sh partIV noMuIso-hadEt-noDeltaRmin
+./runThisSplittedOnBatch.sh partV noMuIso-hadEt-noDeltaRmin
+./runThisSplittedOnBatch.sh partVI noMuIso-hadEt-noDeltaRmin
+./runThisSplittedOnBatch.sh partVII noMuIso-hadEt-noDeltaRmin
+
 
 exit 0

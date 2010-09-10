@@ -119,41 +119,43 @@ else
 	verbosity="off"
 fi
 
-#if [ "${SampleName}" = "3" ]
-#    then
-#	stew="true"
-#    else
-#	stew="false"
-#fi
-#
-#sample=`echo ${RawSampleName} | grep "alpgen" |rev| cut -d _ -f 2-|rev`
-#
-#if [ "${RawSampleName}" = "ZJets-madgraph" ]
-#	then
-#		zjetveto="true"
-#elif [ "${RawSampleName}" = "Z_0jet-alpgen" ]
-#	then
-#    zjetveto="true"
-#elif [ "${sample}" = "Z_1jet" ]
-#	then
-#    zjetveto="true"
-#elif [ "${sample}" = "Z_2jet" ]
-#then
-#    zjetveto="true"
-#elif [ "${sample}" = "Z_3jet" ]
-#then
-#    zjetveto="true"
-#elif [ "${sample}" = "Z_4jet" ]
-#then
-#    zjetveto="true"
-#elif [ "${sample}" = "Z_5jet" ]
-#then
-#    zjetveto="true"
-#else
-#	zjetveto="false"
-#fi
+if [ "${SampleName}" = "ZmumuJet_Pt0to15" ]
+then
+	zjetveto="true"
+elif [ "${SampleName}" = "ZmumuJet_Pt15to20" ]
+then
+  zjetveto="true"
+elif [ "${SampleName}" = "ZmumuJet_Pt20to30" ]
+then
+  zjetveto="true"
+elif [ "${SampleName}" = "ZmumuJet_Pt30to50" ]
+then
+  zjetveto="true"
+elif [ "${SampleName}" = "ZmumuJet_Pt50to80" ]
+then
+  zjetveto="true"
+elif [ "${SampleName}" = "ZmumuJet_Pt80to120" ]
+then
+  zjetveto="true"
+elif [ "${SampleName}" = "ZmumuJet_Pt120to170" ]
+then
+  zjetveto="true"
+elif [ "${SampleName}" = "ZmumuJet_Pt170to230" ]
+then
+  zjetveto="true"
+elif [ "${SampleName}" = "ZmumuJet_Pt230to300" ]
+then
+  zjetveto="true"
+elif [ "${SampleName}" = "ZmumuJet_Pt300toInf" ]
+then
+  zjetveto="true"
+else
+	zjetveto="false"
+fi
+
+
+
 stew="false"
-zjetveto="false"
 
 
 rm -f ${SampleName}${version}*

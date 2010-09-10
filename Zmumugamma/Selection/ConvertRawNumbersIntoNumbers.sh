@@ -160,34 +160,64 @@ do
     elif [[ ${sample} = "InclusiveMu15" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${InclusiveMu15}"' / '"${InitialNumberInclusiveMu15}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt0to15" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt0to15" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt0to15}"' / '"${InitialNumberZmumuJet_Pt0to15}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt15to20" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt15to20" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt15to20}"' / '"${InitialNumberZmumuJet_Pt15to20}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt20to30" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt20to30" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt20to30}"' / '"${InitialNumberZmumuJet_Pt20to30}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt30to50" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt30to50" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt30to50}"' / '"${InitialNumberZmumuJet_Pt30to50}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt50to80" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt50to80" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt50to80}"' / '"${InitialNumberZmumuJet_Pt50to80}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt80to120" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt80to120" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt80to120}"' / '"${InitialNumberZmumuJet_Pt80to120}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt120to170" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt120to170" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt120to170}"' / '"${InitialNumberZmumuJet_Pt120to170}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt170to230" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt170to230" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt170to230}"' / '"${InitialNumberZmumuJet_Pt170to230}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt230to300" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt230to300" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt230to300}"' / '"${InitialNumberZmumuJet_Pt230to300}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ZmumuJet_Pt300toInf" ]]
+    elif [[ ${sample} = "FSR_ZmumuJet_Pt300toInf" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt300toInf}"' / '"${InitialNumberZmumuJet_Pt300toInf}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt0to15" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt0to15}"' / '"${InitialNumberZmumuJet_Pt0to15}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt15to20" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt15to20}"' / '"${InitialNumberZmumuJet_Pt15to20}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt20to30" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt20to30}"' / '"${InitialNumberZmumuJet_Pt20to30}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt30to50" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt30to50}"' / '"${InitialNumberZmumuJet_Pt30to50}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt50to80" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt50to80}"' / '"${InitialNumberZmumuJet_Pt50to80}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt80to120" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt80to120}"' / '"${InitialNumberZmumuJet_Pt80to120}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt120to170" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt120to170}"' / '"${InitialNumberZmumuJet_Pt120to170}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt170to230" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt170to230}"' / '"${InitialNumberZmumuJet_Pt170to230}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt230to300" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt230to300}"' / '"${InitialNumberZmumuJet_Pt230to300}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "ISR_ZmumuJet_Pt300toInf" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${ZmumuJet_Pt300toInf}"' / '"${InitialNumberZmumuJet_Pt300toInf}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
 #    elif [[ ${sample} = "SAMPLE" ]]

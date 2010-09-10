@@ -23,7 +23,7 @@ echo -e "*** RAW RESULTS ***" > RawSelectionCutsNumbers_${SelectionVersion}.txt
 echo -e "Sample \t0\tPthatFilter\tCSA07ID\tZJETVETO\t1.a\t1.b\t1.c\t1.d\t1.e\t2.a\t2.b\t2.c\t3\t4\t5\t6\t7\t8\t9\t10\tSelected" >> RawSelectionCutsNumbers_${SelectionVersion}.txt
 echo "" >> RawSelectionCutsNumbers_${SelectionVersion}.txt
 
-for sample in `'ls' -l -r ${SELECTEDDIR} | grep drw | awk '{print $9}'`
+for sample in `'ls' -l -r ${SELECTEDDIR} | grep drw | awk '{print $9}' | grep -v OLD`
 do
 	for file in `'ls' -r ${SELECTEDDIR}/${sample} | grep ${sample}_ | grep _${SelectionVersion}.out`
 	do
@@ -58,7 +58,7 @@ do
 done # end of loop over samples
 
 
-for sample in `'ls' -l -r ${SELECTEDDIR} | grep drw | awk '{print $9}'`
+for sample in `'ls' -l -r ${SELECTEDDIR} | grep drw | awk '{print $9}' | grep -v OLD`
 do
 	cols=`cat TEMPRESULTS_${SelectionVersion}.txt | grep "${sample}_0" | wc -w`
   SubFiles=`cat TEMPRESULTS_${SelectionVersion}.txt | grep "${sample}_" | wc -l`

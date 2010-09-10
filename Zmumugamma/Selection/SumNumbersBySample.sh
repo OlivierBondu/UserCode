@@ -19,7 +19,7 @@ echo -e "Sample \t0\tPthatFilter\tCSA07ID\tZJETVETO\t1.a\t1.b\t1.c\t1.d\t1.e\t2.
 echo "" >> SelectionCutsNumbersSummed_${SelectionVersion}.txt
 
 
-for sample in `echo "part QCD_Pt PhotonJet WJets QCD_Mu InclusiveMu15 TTbarJets ZJets ZmumuJet"`
+for sample in `echo "part QCD_Pt PhotonJet WJets QCD_Mu InclusiveMu15 TTbarJets ZJets FSR_ZmumuJet ISR_ZmumuJet"`
 do
 	allcuts=""
 #	cat SelectionCutsNumbers_${SelectionVersion}.txt | grep ${sample}

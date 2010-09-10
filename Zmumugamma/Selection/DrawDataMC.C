@@ -26,6 +26,9 @@
 #include <iomanip>
 #include <sstream>
 #include <TLatex.h>
+#include <THStack.h>
+#include <TLegendEntry.h>
+#include <TMinuit.h>
 
 #include "DrawDataMC.h"
 
@@ -52,7 +55,7 @@
 
 using namespace std;
 
-void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_Pt30_miniTree, TTree *QCD_Pt80_miniTree, TTree *QCD_Pt170_miniTree, TTree *QCD_Pt300_miniTree, TTree *QCD_Pt470_miniTree, TTree *PhotonJet_Pt15_miniTree, TTree *PhotonJet_Pt30_miniTree, TTree *PhotonJet_Pt80_miniTree, TTree *PhotonJet_Pt170_miniTree, TTree *PhotonJet_Pt300_miniTree, TTree *TTbarJets_Tauola_miniTree, TTree *WJets_7TeV_miniTree, TTree *ZJets_7TeV_miniTree, TTree *QCD_Mu_Pt20to30_miniTree, TTree *QCD_Mu_Pt30to50_miniTree, TTree *QCD_Mu_Pt50to80_miniTree, TTree *QCD_Mu_Pt80to120_miniTree, TTree *QCD_Mu_Pt120to170_miniTree, TTree *QCD_Mu_Pt170toInf_miniTree, TTree *InclusiveMu15_miniTree, TTree *ZmumuJet_Pt0to15_miniTree, TTree *ZmumuJet_Pt15to20_miniTree, TTree *ZmumuJet_Pt20to30_miniTree, TTree *ZmumuJet_Pt30to50_miniTree, TTree *ZmumuJet_Pt50to80_miniTree, TTree *ZmumuJet_Pt80to120_miniTree, TTree *ZmumuJet_Pt120to170_miniTree, TTree *ZmumuJet_Pt170to230_miniTree, TTree *ZmumuJet_Pt230to300_miniTree, TTree *ZmumuJet_Pt300toInf_miniTree, string var, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1){
+void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_Pt30_miniTree, TTree *QCD_Pt80_miniTree, TTree *QCD_Pt170_miniTree, TTree *QCD_Pt300_miniTree, TTree *QCD_Pt470_miniTree, TTree *PhotonJet_Pt15_miniTree, TTree *PhotonJet_Pt30_miniTree, TTree *PhotonJet_Pt80_miniTree, TTree *PhotonJet_Pt170_miniTree, TTree *PhotonJet_Pt300_miniTree, TTree *TTbarJets_Tauola_miniTree, TTree *WJets_7TeV_miniTree, TTree *ZJets_7TeV_miniTree, TTree *QCD_Mu_Pt20to30_miniTree, TTree *QCD_Mu_Pt30to50_miniTree, TTree *QCD_Mu_Pt50to80_miniTree, TTree *QCD_Mu_Pt80to120_miniTree, TTree *QCD_Mu_Pt120to170_miniTree, TTree *QCD_Mu_Pt170toInf_miniTree, TTree *InclusiveMu15_miniTree, TTree *FSR_ZmumuJet_Pt0to15_miniTree, TTree *FSR_ZmumuJet_Pt15to20_miniTree, TTree *FSR_ZmumuJet_Pt20to30_miniTree, TTree *FSR_ZmumuJet_Pt30to50_miniTree, TTree *FSR_ZmumuJet_Pt50to80_miniTree, TTree *FSR_ZmumuJet_Pt80to120_miniTree, TTree *FSR_ZmumuJet_Pt120to170_miniTree, TTree *FSR_ZmumuJet_Pt170to230_miniTree, TTree *FSR_ZmumuJet_Pt230to300_miniTree, TTree *FSR_ZmumuJet_Pt300toInf_miniTree, TTree *ISR_ZmumuJet_Pt0to15_miniTree, TTree *ISR_ZmumuJet_Pt15to20_miniTree, TTree *ISR_ZmumuJet_Pt20to30_miniTree, TTree *ISR_ZmumuJet_Pt30to50_miniTree, TTree *ISR_ZmumuJet_Pt50to80_miniTree, TTree *ISR_ZmumuJet_Pt80to120_miniTree, TTree *ISR_ZmumuJet_Pt120to170_miniTree, TTree *ISR_ZmumuJet_Pt170to230_miniTree, TTree *ISR_ZmumuJet_Pt230to300_miniTree, TTree *ISR_ZmumuJet_Pt300toInf_miniTree, string var, string pic, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1, bool doFit){
 
   // Get Histo_Data from eventTree
   TH1F *Histo_Data_temp = new TH1F();
@@ -207,75 +210,147 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   TH1F *Histo_InclusiveMu15 = (TH1F*)gDirectory->Get("Histo_InclusiveMu15_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt0to15 from eventTree
-  TH1F *Histo_ZmumuJet_Pt0to15_temp = new TH1F();
-  string variable_ZmumuJet_Pt0to15 = var + ">>Histo_ZmumuJet_Pt0to15_temp" + limits;
-  ZmumuJet_Pt0to15_miniTree->Draw(variable_ZmumuJet_Pt0to15.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt0to15 = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt0to15_temp");
+  // Get Histo_FSR_ZmumuJet_Pt0to15 from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt0to15_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt0to15 = var + ">>Histo_FSR_ZmumuJet_Pt0to15_temp" + limits;
+  FSR_ZmumuJet_Pt0to15_miniTree->Draw(variable_FSR_ZmumuJet_Pt0to15.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt0to15 = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt0to15_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt15to20 from eventTree
-  TH1F *Histo_ZmumuJet_Pt15to20_temp = new TH1F();
-  string variable_ZmumuJet_Pt15to20 = var + ">>Histo_ZmumuJet_Pt15to20_temp" + limits;
-  ZmumuJet_Pt15to20_miniTree->Draw(variable_ZmumuJet_Pt15to20.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt15to20 = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt15to20_temp");
+  // Get Histo_FSR_ZmumuJet_Pt15to20 from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt15to20_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt15to20 = var + ">>Histo_FSR_ZmumuJet_Pt15to20_temp" + limits;
+  FSR_ZmumuJet_Pt15to20_miniTree->Draw(variable_FSR_ZmumuJet_Pt15to20.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt15to20 = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt15to20_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt20to30 from eventTree
-  TH1F *Histo_ZmumuJet_Pt20to30_temp = new TH1F();
-  string variable_ZmumuJet_Pt20to30 = var + ">>Histo_ZmumuJet_Pt20to30_temp" + limits;
-  ZmumuJet_Pt20to30_miniTree->Draw(variable_ZmumuJet_Pt20to30.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt20to30 = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt20to30_temp");
+  // Get Histo_FSR_ZmumuJet_Pt20to30 from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt20to30_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt20to30 = var + ">>Histo_FSR_ZmumuJet_Pt20to30_temp" + limits;
+  FSR_ZmumuJet_Pt20to30_miniTree->Draw(variable_FSR_ZmumuJet_Pt20to30.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt20to30 = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt20to30_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt30to50 from eventTree
-  TH1F *Histo_ZmumuJet_Pt30to50_temp = new TH1F();
-  string variable_ZmumuJet_Pt30to50 = var + ">>Histo_ZmumuJet_Pt30to50_temp" + limits;
-  ZmumuJet_Pt30to50_miniTree->Draw(variable_ZmumuJet_Pt30to50.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt30to50 = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt30to50_temp");
+  // Get Histo_FSR_ZmumuJet_Pt30to50 from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt30to50_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt30to50 = var + ">>Histo_FSR_ZmumuJet_Pt30to50_temp" + limits;
+  FSR_ZmumuJet_Pt30to50_miniTree->Draw(variable_FSR_ZmumuJet_Pt30to50.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt30to50 = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt30to50_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt50to80 from eventTree
-  TH1F *Histo_ZmumuJet_Pt50to80_temp = new TH1F();
-  string variable_ZmumuJet_Pt50to80 = var + ">>Histo_ZmumuJet_Pt50to80_temp" + limits;
-  ZmumuJet_Pt50to80_miniTree->Draw(variable_ZmumuJet_Pt50to80.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt50to80 = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt50to80_temp");
+  // Get Histo_FSR_ZmumuJet_Pt50to80 from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt50to80_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt50to80 = var + ">>Histo_FSR_ZmumuJet_Pt50to80_temp" + limits;
+  FSR_ZmumuJet_Pt50to80_miniTree->Draw(variable_FSR_ZmumuJet_Pt50to80.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt50to80 = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt50to80_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt80to120 from eventTree
-  TH1F *Histo_ZmumuJet_Pt80to120_temp = new TH1F();
-  string variable_ZmumuJet_Pt80to120 = var + ">>Histo_ZmumuJet_Pt80to120_temp" + limits;
-  ZmumuJet_Pt80to120_miniTree->Draw(variable_ZmumuJet_Pt80to120.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt80to120 = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt80to120_temp");
+  // Get Histo_FSR_ZmumuJet_Pt80to120 from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt80to120_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt80to120 = var + ">>Histo_FSR_ZmumuJet_Pt80to120_temp" + limits;
+  FSR_ZmumuJet_Pt80to120_miniTree->Draw(variable_FSR_ZmumuJet_Pt80to120.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt80to120 = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt80to120_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt120to170 from eventTree
-  TH1F *Histo_ZmumuJet_Pt120to170_temp = new TH1F();
-  string variable_ZmumuJet_Pt120to170 = var + ">>Histo_ZmumuJet_Pt120to170_temp" + limits;
-  ZmumuJet_Pt120to170_miniTree->Draw(variable_ZmumuJet_Pt120to170.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt120to170 = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt120to170_temp");
+  // Get Histo_FSR_ZmumuJet_Pt120to170 from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt120to170_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt120to170 = var + ">>Histo_FSR_ZmumuJet_Pt120to170_temp" + limits;
+  FSR_ZmumuJet_Pt120to170_miniTree->Draw(variable_FSR_ZmumuJet_Pt120to170.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt120to170 = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt120to170_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt170to230 from eventTree
-  TH1F *Histo_ZmumuJet_Pt170to230_temp = new TH1F();
-  string variable_ZmumuJet_Pt170to230 = var + ">>Histo_ZmumuJet_Pt170to230_temp" + limits;
-  ZmumuJet_Pt170to230_miniTree->Draw(variable_ZmumuJet_Pt170to230.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt170to230 = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt170to230_temp");
+  // Get Histo_FSR_ZmumuJet_Pt170to230 from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt170to230_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt170to230 = var + ">>Histo_FSR_ZmumuJet_Pt170to230_temp" + limits;
+  FSR_ZmumuJet_Pt170to230_miniTree->Draw(variable_FSR_ZmumuJet_Pt170to230.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt170to230 = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt170to230_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt230to300 from eventTree
-  TH1F *Histo_ZmumuJet_Pt230to300_temp = new TH1F();
-  string variable_ZmumuJet_Pt230to300 = var + ">>Histo_ZmumuJet_Pt230to300_temp" + limits;
-  ZmumuJet_Pt230to300_miniTree->Draw(variable_ZmumuJet_Pt230to300.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt230to300 = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt230to300_temp");
+  // Get Histo_FSR_ZmumuJet_Pt230to300 from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt230to300_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt230to300 = var + ">>Histo_FSR_ZmumuJet_Pt230to300_temp" + limits;
+  FSR_ZmumuJet_Pt230to300_miniTree->Draw(variable_FSR_ZmumuJet_Pt230to300.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt230to300 = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt230to300_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt300toInf from eventTree
-  TH1F *Histo_ZmumuJet_Pt300toInf_temp = new TH1F();
-  string variable_ZmumuJet_Pt300toInf = var + ">>Histo_ZmumuJet_Pt300toInf_temp" + limits;
-  ZmumuJet_Pt300toInf_miniTree->Draw(variable_ZmumuJet_Pt300toInf.c_str(), cut.c_str());
-  TH1F *Histo_ZmumuJet_Pt300toInf = (TH1F*)gDirectory->Get("Histo_ZmumuJet_Pt300toInf_temp");
+  // Get Histo_FSR_ZmumuJet_Pt300toInf from eventTree
+  TH1F *Histo_FSR_ZmumuJet_Pt300toInf_temp = new TH1F();
+  string variable_FSR_ZmumuJet_Pt300toInf = var + ">>Histo_FSR_ZmumuJet_Pt300toInf_temp" + limits;
+  FSR_ZmumuJet_Pt300toInf_miniTree->Draw(variable_FSR_ZmumuJet_Pt300toInf.c_str(), cut.c_str());
+  TH1F *Histo_FSR_ZmumuJet_Pt300toInf = (TH1F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt300toInf_temp");
   c1->Clear();
+
+
+  // Get Histo_ISR_ZmumuJet_Pt0to15 from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt0to15_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt0to15 = var + ">>Histo_ISR_ZmumuJet_Pt0to15_temp" + limits;
+  ISR_ZmumuJet_Pt0to15_miniTree->Draw(variable_ISR_ZmumuJet_Pt0to15.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt0to15 = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt0to15_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt15to20 from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt15to20_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt15to20 = var + ">>Histo_ISR_ZmumuJet_Pt15to20_temp" + limits;
+  ISR_ZmumuJet_Pt15to20_miniTree->Draw(variable_ISR_ZmumuJet_Pt15to20.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt15to20 = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt15to20_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt20to30 from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt20to30_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt20to30 = var + ">>Histo_ISR_ZmumuJet_Pt20to30_temp" + limits;
+  ISR_ZmumuJet_Pt20to30_miniTree->Draw(variable_ISR_ZmumuJet_Pt20to30.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt20to30 = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt20to30_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt30to50 from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt30to50_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt30to50 = var + ">>Histo_ISR_ZmumuJet_Pt30to50_temp" + limits;
+  ISR_ZmumuJet_Pt30to50_miniTree->Draw(variable_ISR_ZmumuJet_Pt30to50.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt30to50 = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt30to50_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt50to80 from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt50to80_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt50to80 = var + ">>Histo_ISR_ZmumuJet_Pt50to80_temp" + limits;
+  ISR_ZmumuJet_Pt50to80_miniTree->Draw(variable_ISR_ZmumuJet_Pt50to80.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt50to80 = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt50to80_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt80to120 from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt80to120_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt80to120 = var + ">>Histo_ISR_ZmumuJet_Pt80to120_temp" + limits;
+  ISR_ZmumuJet_Pt80to120_miniTree->Draw(variable_ISR_ZmumuJet_Pt80to120.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt80to120 = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt80to120_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt120to170 from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt120to170_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt120to170 = var + ">>Histo_ISR_ZmumuJet_Pt120to170_temp" + limits;
+  ISR_ZmumuJet_Pt120to170_miniTree->Draw(variable_ISR_ZmumuJet_Pt120to170.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt120to170 = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt120to170_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt170to230 from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt170to230_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt170to230 = var + ">>Histo_ISR_ZmumuJet_Pt170to230_temp" + limits;
+  ISR_ZmumuJet_Pt170to230_miniTree->Draw(variable_ISR_ZmumuJet_Pt170to230.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt170to230 = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt170to230_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt230to300 from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt230to300_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt230to300 = var + ">>Histo_ISR_ZmumuJet_Pt230to300_temp" + limits;
+  ISR_ZmumuJet_Pt230to300_miniTree->Draw(variable_ISR_ZmumuJet_Pt230to300.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt230to300 = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt230to300_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt300toInf from eventTree
+  TH1F *Histo_ISR_ZmumuJet_Pt300toInf_temp = new TH1F();
+  string variable_ISR_ZmumuJet_Pt300toInf = var + ">>Histo_ISR_ZmumuJet_Pt300toInf_temp" + limits;
+  ISR_ZmumuJet_Pt300toInf_miniTree->Draw(variable_ISR_ZmumuJet_Pt300toInf.c_str(), cut.c_str());
+  TH1F *Histo_ISR_ZmumuJet_Pt300toInf = (TH1F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt300toInf_temp");
+  c1->Clear();
+
 
   // TODO: implement drawUnderOverFsubleading
 
@@ -316,16 +391,26 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   double XSectionQCD_Mu_Pt120to170 = 6095.0;
   double XSectionQCD_Mu_Pt170toInf = 1612.8;
   double XSectionInclusiveMu15 = 79687.96;
-  double XSectionZmumuJet_Pt0to15 = 4.434e+03;
-  double XSectionZmumuJet_Pt15to20 = 1.454e+02;
-  double XSectionZmumuJet_Pt20to30 = 1.318e+02;
-  double XSectionZmumuJet_Pt30to50 = 8.438e+01;
-  double XSectionZmumuJet_Pt50to80 = 3.235e+01;
-  double XSectionZmumuJet_Pt80to120 = 9.981e+00;
-  double XSectionZmumuJet_Pt120to170 = 2.760e+00;
-  double XSectionZmumuJet_Pt170to230 = 7.241e-01;
-  double XSectionZmumuJet_Pt230to300 = 1.946e-01;
-  double XSectionZmumuJet_Pt300toInf = 7.627e-02;
+  double XSectionFSR_ZmumuJet_Pt0to15 = 4.434e+03;
+  double XSectionFSR_ZmumuJet_Pt15to20 = 1.454e+02;
+  double XSectionFSR_ZmumuJet_Pt20to30 = 1.318e+02;
+  double XSectionFSR_ZmumuJet_Pt30to50 = 8.438e+01;
+  double XSectionFSR_ZmumuJet_Pt50to80 = 3.235e+01;
+  double XSectionFSR_ZmumuJet_Pt80to120 = 9.981e+00;
+  double XSectionFSR_ZmumuJet_Pt120to170 = 2.760e+00;
+  double XSectionFSR_ZmumuJet_Pt170to230 = 7.241e-01;
+  double XSectionFSR_ZmumuJet_Pt230to300 = 1.946e-01;
+  double XSectionFSR_ZmumuJet_Pt300toInf = 7.627e-02;
+  double XSectionISR_ZmumuJet_Pt0to15 = 4.434e+03;
+  double XSectionISR_ZmumuJet_Pt15to20 = 1.454e+02;
+  double XSectionISR_ZmumuJet_Pt20to30 = 1.318e+02;
+  double XSectionISR_ZmumuJet_Pt30to50 = 8.438e+01;
+  double XSectionISR_ZmumuJet_Pt50to80 = 3.235e+01;
+  double XSectionISR_ZmumuJet_Pt80to120 = 9.981e+00;
+  double XSectionISR_ZmumuJet_Pt120to170 = 2.760e+00;
+  double XSectionISR_ZmumuJet_Pt170to230 = 7.241e-01;
+  double XSectionISR_ZmumuJet_Pt230to300 = 1.946e-01;
+  double XSectionISR_ZmumuJet_Pt300toInf = 7.627e-02;
 
   double InitialNumberQCD_Pt15 = 6196800;
   double InitialNumberQCD_Pt30 = 5093840;
@@ -348,16 +433,26 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   double InitialNumberQCD_Mu_Pt120to170 = 316630;
   double InitialNumberQCD_Mu_Pt170toInf = 262036;
   double InitialNumberInclusiveMu15 = 5120334;
-  double InitialNumberZmumuJet_Pt0to15 = 235420;
-  double InitialNumberZmumuJet_Pt15to20 = 222730;
-  double InitialNumberZmumuJet_Pt20to30 = 164190;
-  double InitialNumberZmumuJet_Pt30to50 = 163920;
-  double InitialNumberZmumuJet_Pt50to80 = 106016;
-  double InitialNumberZmumuJet_Pt80to120 = 107759;
-  double InitialNumberZmumuJet_Pt120to170 = 177408;
-  double InitialNumberZmumuJet_Pt170to230 = 178400;
-  double InitialNumberZmumuJet_Pt230to300 = 176485;
-  double InitialNumberZmumuJet_Pt300toInf = 109316;
+  double InitialNumberFSR_ZmumuJet_Pt0to15 = 235420;
+  double InitialNumberFSR_ZmumuJet_Pt15to20 = 222730;
+  double InitialNumberFSR_ZmumuJet_Pt20to30 = 164190;
+  double InitialNumberFSR_ZmumuJet_Pt30to50 = 163920;
+  double InitialNumberFSR_ZmumuJet_Pt50to80 = 106016;
+  double InitialNumberFSR_ZmumuJet_Pt80to120 = 107759;
+  double InitialNumberFSR_ZmumuJet_Pt120to170 = 177408;
+  double InitialNumberFSR_ZmumuJet_Pt170to230 = 178400;
+  double InitialNumberFSR_ZmumuJet_Pt230to300 = 176485;
+  double InitialNumberFSR_ZmumuJet_Pt300toInf = 109316;
+  double InitialNumberISR_ZmumuJet_Pt0to15 = 235420;
+  double InitialNumberISR_ZmumuJet_Pt15to20 = 222730;
+  double InitialNumberISR_ZmumuJet_Pt20to30 = 164190;
+  double InitialNumberISR_ZmumuJet_Pt30to50 = 163920;
+  double InitialNumberISR_ZmumuJet_Pt50to80 = 106016;
+  double InitialNumberISR_ZmumuJet_Pt80to120 = 107759;
+  double InitialNumberISR_ZmumuJet_Pt120to170 = 177408;
+  double InitialNumberISR_ZmumuJet_Pt170to230 = 178400;
+  double InitialNumberISR_ZmumuJet_Pt230to300 = 176485;
+  double InitialNumberISR_ZmumuJet_Pt300toInf = 109316;
 
   Histo_PhotonJet_Pt15->Scale((double)(  (double)((double)(XSectionPhotonJet_Pt15) / (double)(InitialNumberPhotonJet_Pt15)) * (double)integratedLuminosity));
   Histo_PhotonJet_Pt30->Scale((double)(  (double)((double)(XSectionPhotonJet_Pt30) / (double)(InitialNumberPhotonJet_Pt30)) * (double)integratedLuminosity));
@@ -380,16 +475,26 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   Histo_QCD_Mu_Pt120to170->Scale((double)(  (double)((double)(XSectionQCD_Mu_Pt120to170) / (double)(InitialNumberQCD_Mu_Pt120to170)) * (double)integratedLuminosity));
   Histo_QCD_Mu_Pt170toInf->Scale((double)(  (double)((double)(XSectionQCD_Mu_Pt170toInf) / (double)(InitialNumberQCD_Mu_Pt170toInf)) * (double)integratedLuminosity));
   Histo_InclusiveMu15->Scale((double)(  (double)((double)(XSectionInclusiveMu15) / (double)(InitialNumberInclusiveMu15)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt0to15->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt0to15) / (double)(InitialNumberZmumuJet_Pt0to15)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt15to20->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt15to20) / (double)(InitialNumberZmumuJet_Pt15to20)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt20to30->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt20to30) / (double)(InitialNumberZmumuJet_Pt20to30)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt30to50->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt30to50) / (double)(InitialNumberZmumuJet_Pt30to50)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt50to80->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt50to80) / (double)(InitialNumberZmumuJet_Pt50to80)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt80to120->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt80to120) / (double)(InitialNumberZmumuJet_Pt80to120)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt120to170->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt120to170) / (double)(InitialNumberZmumuJet_Pt120to170)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt170to230) / (double)(InitialNumberZmumuJet_Pt170to230)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt230to300) / (double)(InitialNumberZmumuJet_Pt230to300)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt300toInf) / (double)(InitialNumberZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt0to15->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt0to15) / (double)(InitialNumberFSR_ZmumuJet_Pt0to15)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt15to20->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt15to20) / (double)(InitialNumberFSR_ZmumuJet_Pt15to20)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt20to30->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt20to30) / (double)(InitialNumberFSR_ZmumuJet_Pt20to30)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt30to50->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt30to50) / (double)(InitialNumberFSR_ZmumuJet_Pt30to50)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt50to80->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt50to80) / (double)(InitialNumberFSR_ZmumuJet_Pt50to80)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt80to120->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt80to120) / (double)(InitialNumberFSR_ZmumuJet_Pt80to120)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt120to170->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt120to170) / (double)(InitialNumberFSR_ZmumuJet_Pt120to170)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt170to230) / (double)(InitialNumberFSR_ZmumuJet_Pt170to230)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt230to300) / (double)(InitialNumberFSR_ZmumuJet_Pt230to300)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt300toInf) / (double)(InitialNumberFSR_ZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt0to15->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt0to15) / (double)(InitialNumberISR_ZmumuJet_Pt0to15)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt15to20->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt15to20) / (double)(InitialNumberISR_ZmumuJet_Pt15to20)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt20to30->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt20to30) / (double)(InitialNumberISR_ZmumuJet_Pt20to30)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt30to50->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt30to50) / (double)(InitialNumberISR_ZmumuJet_Pt30to50)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt50to80->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt50to80) / (double)(InitialNumberISR_ZmumuJet_Pt50to80)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt80to120->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt80to120) / (double)(InitialNumberISR_ZmumuJet_Pt80to120)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt120to170->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt120to170) / (double)(InitialNumberISR_ZmumuJet_Pt120to170)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt170to230) / (double)(InitialNumberISR_ZmumuJet_Pt170to230)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt230to300) / (double)(InitialNumberISR_ZmumuJet_Pt230to300)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt300toInf) / (double)(InitialNumberISR_ZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
 
   // Adding histograms for binned samples
   Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
@@ -409,21 +514,60 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt170);
   Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt300);
 
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt15to20);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt20to30);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt30to50);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt50to80);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt80to120);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt120to170);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt170to230);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt230to300);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt300toInf);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt15to20);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt20to30);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt30to50);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt50to80);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt80to120);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt120to170);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt170to230);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt230to300);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt300toInf);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt15to20);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt20to30);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt30to50);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt50to80);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt80to120);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt120to170);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt170to230);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt230to300);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt300toInf);
+
+// ttbar
+	Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_TTbarJets_Tauola);
+// *** stacked
+	Histo_PhotonJet_Pt15->Add(Histo_ISR_ZmumuJet_Pt0to15);
+// *** stacked
+	Histo_WJets_7TeV->Add(Histo_PhotonJet_Pt15);
+// *** stacked
+	Histo_QCD_Pt15->Add(Histo_WJets_7TeV);
+	Histo_QCD_Mu_Pt20to30->Add(Histo_WJets_7TeV);
+	Histo_InclusiveMu15->Add(Histo_WJets_7TeV);
+// *** stacked
+//	Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_QCD_Pt15);
+	Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_QCD_Mu_Pt20to30);
+//	Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_InclusiveMu15);
+// *** stacked
+	Histo_ZJets_7TeV->Add(Histo_QCD_Pt15);
+	Histo_ZJets_7TeV->Add(Histo_QCD_Mu_Pt20to30);
+	Histo_ZJets_7TeV->Add(Histo_InclusiveMu15);
+
+
+	// Total MC histo for comupting min/max
+//	TH1F *Histo_allMC = new TH1F(*Histo_QCD_Mu_Pt20to30);
+//	Histo_allMC->Add(Histo_QCD_Pt15);
+//	Histo_allMC->Add(Histo_InclusiveMu15);
+//	Histo_allMC->Add(Histo_FSR_ZmumuJet_Pt0to15);
+//	Histo_allMC->Add(Histo_ZJets_7TeV);
+//	Histo_allMC->Add(Histo_WJets_7TeV);
+//	Histo_allMC->Add(Histo_TTbarJets_Tauola);
+//	Histo_allMC->Add(Histo_PhotonJet_Pt15);
 
 
   // Get the maxs and the mins to further correct the Y-axis
   double dataMax = Histo_Data->GetMaximum();
   double YMax = dataMax;
-  double PhotonJet_Pt15Max = Histo_PhotonJet_Pt15->GetMaximum();
+/*  double PhotonJet_Pt15Max = Histo_PhotonJet_Pt15->GetMaximum();
   YMax = max(YMax, PhotonJet_Pt15Max);
   double QCD_Pt15Max = Histo_QCD_Pt15->GetMaximum();
   YMax = max(YMax, QCD_Pt15Max);
@@ -431,26 +575,37 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   YMax = max(YMax, TTbarJets_TauolaMax);
   double WJets_7TeVMax = Histo_WJets_7TeV->GetMaximum();
   YMax = max(YMax, WJets_7TeVMax);
-  double ZJets_7TeVMax = Histo_ZJets_7TeV->GetMaximum();
-  YMax = max(YMax, ZJets_7TeVMax);
   double QCD_Mu_Pt20to30Max = Histo_QCD_Mu_Pt20to30->GetMaximum();
   YMax = max(YMax, QCD_Mu_Pt20to30Max);
   double InclusiveMu15Max = Histo_InclusiveMu15->GetMaximum();
   YMax = max(YMax, InclusiveMu15Max);
-  double ZmumuJet_Pt0to15Max = Histo_ZmumuJet_Pt0to15->GetMaximum();
-  YMax = max(YMax, ZmumuJet_Pt0to15Max);
+*/
+
+//  double ZJets_7TeVMax = Histo_ZJets_7TeV->GetMaximum();
+//  YMax = max(YMax, ZJets_7TeVMax);
+  double FSR_ZmumuJet_Pt0to15Max = Histo_FSR_ZmumuJet_Pt0to15->GetMaximum();
+  YMax = max(YMax, FSR_ZmumuJet_Pt0to15Max);
+
+//	double allMCMax = Histo_allMC->GetMaximum();
+//	YMax = max(YMax, allMCMax);
 
   double dataMin = YMax;
   double PhotonJet_Pt15Min = YMax;
-  double QCD_Pt15Min = YMax;
+//  double QCD_Pt15Min = YMax;
   double TTbarJets_TauolaMin = YMax;
   double WJets_7TeVMin = YMax;
   double ZJets_7TeVMin = YMax;
   double QCD_Mu_Pt20to30Min = YMax;
-  double InclusiveMu15Min = YMax;
-  double ZmumuJet_Pt0to15Min = YMax;
+//  double InclusiveMu15Min = YMax;
+  double ISR_ZmumuJet_Pt0to15Min = YMax;
+  double FSR_ZmumuJet_Pt0to15Min = YMax;
+
+	double allMCMin = YMax;
+
   double YMin = YMax;
+
   // Gets the actual minimum for each histogram, and not the unfilled bin if any
+
   for( int ibin=1 ; ibin<Histo_Data->GetNbinsX() ; ibin++ ){
     if( ((Histo_Data->GetBinContent(ibin))!=0) && ((Histo_Data->GetBinContent(ibin))<dataMin) ){
       dataMin = Histo_Data->GetBinContent(ibin);
@@ -463,12 +618,12 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
     }
   }
   YMin = min(YMin, PhotonJet_Pt15Min);
-  for( int ibin=1 ; ibin<Histo_QCD_Pt15->GetNbinsX() ; ibin++ ){
+/*  for( int ibin=1 ; ibin<Histo_QCD_Pt15->GetNbinsX() ; ibin++ ){
     if( ((Histo_QCD_Pt15->GetBinContent(ibin))!=0) && ((Histo_QCD_Pt15->GetBinContent(ibin))<QCD_Pt15Min) ){
       QCD_Pt15Min = Histo_QCD_Pt15->GetBinContent(ibin);
     }
   }
-  YMin = min(YMin, QCD_Pt15Min);
+  YMin = min(YMin, QCD_Pt15Min);*/
   for( int ibin=1 ; ibin<Histo_TTbarJets_Tauola->GetNbinsX() ; ibin++ ){
     if( ((Histo_TTbarJets_Tauola->GetBinContent(ibin))!=0) && ((Histo_TTbarJets_Tauola->GetBinContent(ibin))<TTbarJets_TauolaMin) ){
       TTbarJets_TauolaMin = Histo_TTbarJets_Tauola->GetBinContent(ibin);
@@ -486,25 +641,40 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
       ZJets_7TeVMin = Histo_ZJets_7TeV->GetBinContent(ibin);
     }
   }
-  YMin = min(YMin, ZJets_7TeVMin);
+//  YMin = min(YMin, ZJets_7TeVMin);
   for( int ibin=1 ; ibin<Histo_QCD_Mu_Pt20to30->GetNbinsX() ; ibin++ ){
     if( ((Histo_QCD_Mu_Pt20to30->GetBinContent(ibin))!=0) && ((Histo_QCD_Mu_Pt20to30->GetBinContent(ibin))<QCD_Mu_Pt20to30Min) ){
       QCD_Mu_Pt20to30Min = Histo_QCD_Mu_Pt20to30->GetBinContent(ibin);
     }
   }
   YMin = min(YMin, QCD_Mu_Pt20to30Min);
-  for( int ibin=1 ; ibin<Histo_InclusiveMu15->GetNbinsX() ; ibin++ ){
+/*  for( int ibin=1 ; ibin<Histo_InclusiveMu15->GetNbinsX() ; ibin++ ){
     if( ((Histo_InclusiveMu15->GetBinContent(ibin))!=0) && ((Histo_InclusiveMu15->GetBinContent(ibin))<InclusiveMu15Min) ){
       InclusiveMu15Min = Histo_InclusiveMu15->GetBinContent(ibin);
     }
   }
-  YMin = min(YMin, InclusiveMu15Min);
-  for( int ibin=1 ; ibin<Histo_ZmumuJet_Pt0to15->GetNbinsX() ; ibin++ ){
-    if( ((Histo_ZmumuJet_Pt0to15->GetBinContent(ibin))!=0) && ((Histo_ZmumuJet_Pt0to15->GetBinContent(ibin))<ZmumuJet_Pt0to15Min) ){
-      ZmumuJet_Pt0to15Min = Histo_ZmumuJet_Pt0to15->GetBinContent(ibin);
+  YMin = min(YMin, InclusiveMu15Min);*/
+  for( int ibin=1 ; ibin<Histo_FSR_ZmumuJet_Pt0to15->GetNbinsX() ; ibin++ ){
+    if( ((Histo_FSR_ZmumuJet_Pt0to15->GetBinContent(ibin))!=0) && ((Histo_FSR_ZmumuJet_Pt0to15->GetBinContent(ibin))<FSR_ZmumuJet_Pt0to15Min) ){
+      FSR_ZmumuJet_Pt0to15Min = Histo_FSR_ZmumuJet_Pt0to15->GetBinContent(ibin);
     }
   }
-  YMin = min(YMin, ZmumuJet_Pt0to15Min);
+  YMin = min(YMin, FSR_ZmumuJet_Pt0to15Min);
+  for( int ibin=1 ; ibin<Histo_ISR_ZmumuJet_Pt0to15->GetNbinsX() ; ibin++ ){
+    if( ((Histo_ISR_ZmumuJet_Pt0to15->GetBinContent(ibin))!=0) && ((Histo_ISR_ZmumuJet_Pt0to15->GetBinContent(ibin))<ISR_ZmumuJet_Pt0to15Min) ){
+      ISR_ZmumuJet_Pt0to15Min = Histo_ISR_ZmumuJet_Pt0to15->GetBinContent(ibin);
+    }
+  }
+  YMin = min(YMin, ISR_ZmumuJet_Pt0to15Min);
+
+/*	for( int ibin=1 ; ibin<Histo_allMC->GetNbinsX() ; ibin++ ){
+    if( ((Histo_allMC->GetBinContent(ibin))!=0) && ((Histo_allMC->GetBinContent(ibin))<allMCMin) ){
+      allMCMin = Histo_allMC->GetBinContent(ibin);
+    }
+  }
+  YMin = min(YMin, allMCMin);
+*/
+
 
 //  cout << "YMax= "<< YMax << "\t\tYMin= " << YMin << endl;
   double YMin_lin = (double)YMin / (double)10.0;
@@ -525,9 +695,9 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
 
 
   // Setup the histo and canvas names and title
-  string data_name = "Data_" + var + "_" + name;
-  string mc_name = "MC_" + var + "_" + name;
-  string canvas_name = "DataMC_" + var + "_" + name;
+  string data_name = "Data_" + pic + "_" + name;
+  string mc_name = "MC_" + pic + "_" + name;
+  string canvas_name = "DataMC_" + pic + "_" + name;
   std::ostringstream binWidthOSS;
   binWidthOSS << (double)Histo_Data->GetBinWidth(1);
   string binWidth = binWidthOSS.str();
@@ -546,7 +716,11 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   // Draw the comparison plots
 
   TLegend *legend = new TLegend(0.75, 0.80, 0.90, 0.93, "");
-  legend->SetTextSize(0.025);
+	if( doFit ){
+		legend->SetX1(0.50);
+		legend->SetX2(0.65);
+	}
+legend->SetTextSize(0.025);
   legend->SetFillColor(kWhite);
   legend->SetLineColor(kWhite);
   legend->SetShadowColor(kWhite);
@@ -578,8 +752,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   Histo_QCD_Mu_Pt20to30->SetFillStyle(3001);
   Histo_QCD_Mu_Pt20to30->SetMaximum(YMax_lin);
   Histo_QCD_Mu_Pt20to30->SetMinimum(YMin_lin);
-  Histo_QCD_Mu_Pt20to30->Draw("same");
-  legend->AddEntry(Histo_QCD_Mu_Pt20to30->GetName(), "QCD Mu", "f");
+//  Histo_QCD_Mu_Pt20to30->Draw("same");
 
   Histo_InclusiveMu15->SetLineColor(kBlack);
   Histo_InclusiveMu15->SetFillColor(kGreen-6);
@@ -589,54 +762,82 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
 //  Histo_InclusiveMu15->Draw("same");  
 //  legend->AddEntry(Histo_InclusiveMu15->GetName(), "InclusiveMu15", "f");
 
-  Histo_ZmumuJet_Pt0to15->SetLineColor(kBlack);
-  Histo_ZmumuJet_Pt0to15->SetFillColor(kRed);
-  Histo_ZmumuJet_Pt0to15->SetFillStyle(3001);
-  Histo_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
-  Histo_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);
-  Histo_ZmumuJet_Pt0to15->Draw("same");
-  legend->AddEntry(Histo_ZmumuJet_Pt0to15->GetName(), "ZmumuJet", "f");
-
-  Histo_ZJets_7TeV->SetLineColor(kBlack);
-  Histo_ZJets_7TeV->SetFillColor(kOrange);
-  Histo_ZJets_7TeV->SetFillStyle(3001);
-  Histo_ZJets_7TeV->SetMaximum(YMax_lin);
-  Histo_ZJets_7TeV->SetMinimum(YMin_lin);
-  Histo_ZJets_7TeV->Draw("same");
-  legend->AddEntry(Histo_ZJets_7TeV->GetName(), "ZJets", "f");
-
   Histo_WJets_7TeV->SetLineColor(kBlack);
   Histo_WJets_7TeV->SetFillColor(kMagenta+3);
   Histo_WJets_7TeV->SetFillStyle(3001);
   Histo_WJets_7TeV->SetMaximum(YMax_lin);
   Histo_WJets_7TeV->SetMinimum(YMin_lin);
-  Histo_WJets_7TeV->Draw("same");
-  legend->AddEntry(Histo_WJets_7TeV->GetName(), "WJets", "f");
 
   Histo_TTbarJets_Tauola->SetLineColor(kBlack);
   Histo_TTbarJets_Tauola->SetFillColor(kBlue);
   Histo_TTbarJets_Tauola->SetFillStyle(3001);
   Histo_TTbarJets_Tauola->SetMaximum(YMax_lin);
   Histo_TTbarJets_Tauola->SetMinimum(YMin_lin);
-  Histo_TTbarJets_Tauola->Draw("same");
-  legend->AddEntry(Histo_TTbarJets_Tauola->GetName(), "TTbarJets", "f");
 
   Histo_PhotonJet_Pt15->SetLineColor(kBlack);
   Histo_PhotonJet_Pt15->SetFillColor(kMagenta);
   Histo_PhotonJet_Pt15->SetFillStyle(3001);
   Histo_PhotonJet_Pt15->SetMaximum(YMax_lin);
   Histo_PhotonJet_Pt15->SetMinimum(YMin_lin);
+
+  Histo_FSR_ZmumuJet_Pt0to15->SetLineColor(kBlack);
+  Histo_FSR_ZmumuJet_Pt0to15->SetFillColor(kRed);
+  Histo_FSR_ZmumuJet_Pt0to15->SetFillStyle(3001);
+  Histo_FSR_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
+  Histo_FSR_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);
+
+	Histo_ISR_ZmumuJet_Pt0to15->SetLineColor(kBlack);
+  Histo_ISR_ZmumuJet_Pt0to15->SetFillColor(kOrange);
+  Histo_ISR_ZmumuJet_Pt0to15->SetFillStyle(3001);
+  Histo_ISR_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
+  Histo_ISR_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);
+
+  Histo_ZJets_7TeV->SetLineColor(kBlack);
+  Histo_ZJets_7TeV->SetFillColor(kOrange);
+  Histo_ZJets_7TeV->SetFillStyle(3001);
+  Histo_ZJets_7TeV->SetMaximum(YMax_lin);
+  Histo_ZJets_7TeV->SetMinimum(YMin_lin);
+
+  Histo_FSR_ZmumuJet_Pt0to15->Draw("same");
+//  Histo_ZJets_7TeV->Draw("same");
+	Histo_QCD_Mu_Pt20to30->Draw("same");
+  Histo_WJets_7TeV->Draw("same");
   Histo_PhotonJet_Pt15->Draw("same");
+  Histo_ISR_ZmumuJet_Pt0to15->Draw("same");
+  Histo_TTbarJets_Tauola->Draw("same");
+  legend->AddEntry(Histo_TTbarJets_Tauola->GetName(), "TTbarJets", "f");
+  legend->AddEntry(Histo_ISR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet (no FSR)", "f");
   legend->AddEntry(Histo_PhotonJet_Pt15->GetName(), "PhotonJet", "f");
+  legend->AddEntry(Histo_WJets_7TeV->GetName(), "WJets", "f");
+  legend->AddEntry(Histo_QCD_Mu_Pt20to30->GetName(), "QCD Mu", "f");
+//  legend->AddEntry(Histo_ZJets_7TeV->GetName(), "ZJets madgraph", "f");
+  legend->AddEntry(Histo_FSR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet FSR", "f");
 
   // // Third: re-draw Data so that data appears in front of MC
   Histo_Data->Draw("E1same");
+	cout << "doFit= " << doFit << endl;
+if( doFit ){
+	string fitOpts = "OQ";
+	TF1* f = new TF1("f", "gaus");
+	Histo_Data->Fit("f", fitOpts.c_str());
+	gStyle->SetOptStat(00002210);
+	
+  Histo_FSR_ZmumuJet_Pt0to15->Draw("same");
+	//  Histo_ZJets_7TeV->Draw("same");
+  Histo_QCD_Mu_Pt20to30->Draw("same");
+  Histo_WJets_7TeV->Draw("same");
+  Histo_PhotonJet_Pt15->Draw("same");
+  Histo_ISR_ZmumuJet_Pt0to15->Draw("same");
+  Histo_TTbarJets_Tauola->Draw("same");
+  Histo_Data->Draw("E1same");
+}
 
   // // Fourth: redraw axis so that axis appears in front of everything
   gPad->RedrawAxis();
 
   // // Fifth: draw legend
   legend->Draw();
+	c1->Update();
 
   TLatex latexLabel;
   std::ostringstream intLumiString;
@@ -653,11 +854,11 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   c1->Draw();
 
   // Print the canvas
-  string PicName="Plots_TEST/gif/DataMC_" + var + "_" + name + ".gif";
+  string PicName="gif/DataMC_" + pic + "_" + name + ".gif";
   c1->Print(PicName.c_str());
-  PicName="Plots_TEST/eps/DataMC_" + var + "_" + name + ".eps";
+  PicName="eps/DataMC_" + pic + "_" + name + ".eps";
   c1->Print(PicName.c_str());
-  string convert = "convert Plots_TEST/eps/DataMC_" + var + "_" + name + ".eps" + " Plots_TEST/pdf/DataMC_" + var + "_" + name + ".pdf";
+  string convert = "convert eps/DataMC_" + pic + "_" + name + ".eps" + " pdf/DataMC_" + pic + "_" + name + ".pdf";
   system(convert.c_str());
   if (inlog==true) {
     c1->cd(1);
@@ -685,17 +886,20 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
     Histo_InclusiveMu15->SetMaximum(YMax_log);
     Histo_InclusiveMu15->SetMinimum(YMin_log);
     Histo_InclusiveMu15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
-    Histo_ZmumuJet_Pt0to15->SetMaximum(YMax_log);
-    Histo_ZmumuJet_Pt0to15->SetMinimum(YMin_log);
-    Histo_ZmumuJet_Pt0to15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
+    Histo_ISR_ZmumuJet_Pt0to15->SetMaximum(YMax_log);
+    Histo_ISR_ZmumuJet_Pt0to15->SetMinimum(YMin_log);
+    Histo_ISR_ZmumuJet_Pt0to15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
+    Histo_FSR_ZmumuJet_Pt0to15->SetMaximum(YMax_log);
+    Histo_FSR_ZmumuJet_Pt0to15->SetMinimum(YMin_log);
+    Histo_FSR_ZmumuJet_Pt0to15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
     c1->SetLogy(1);
     c1->Update();
     c1->Draw();
-    string PicName_log="Plots_TEST/gif/DataMC_" + var + "_" + name + "_log.gif";
+    string PicName_log="gif/DataMC_" + pic + "_" + name + "_log.gif";
     c1->Print(PicName_log.c_str());
-    PicName="Plots_TEST/eps/DataMC_" + var + "_" + name + "_log.eps";
+    PicName="eps/DataMC_" + pic + "_" + name + "_log.eps";
     c1->Print(PicName.c_str());
-    string convert = "convert Plots_TEST/eps/DataMC_" + var + "_" + name + "_log.eps" + " Plots_TEST/pdf/DataMC_" + var + "_" + name + "_log.pdf";
+    string convert = "convert eps/DataMC_" + pic + "_" + name + "_log.eps" + " pdf/DataMC_" + pic + "_" + name + "_log.pdf";
     system(convert.c_str());
     c1->SetLogy(0);
     c1->Update();
@@ -746,30 +950,50 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   Histo_QCD_Mu_Pt170toInf->Delete();
   Histo_InclusiveMu15_temp->Delete();
   Histo_InclusiveMu15->Delete();
-  Histo_ZmumuJet_Pt0to15_temp->Delete();
-  Histo_ZmumuJet_Pt0to15->Delete();
-  Histo_ZmumuJet_Pt15to20_temp->Delete();
-  Histo_ZmumuJet_Pt15to20->Delete();
-  Histo_ZmumuJet_Pt20to30_temp->Delete();
-  Histo_ZmumuJet_Pt20to30->Delete();
-  Histo_ZmumuJet_Pt30to50_temp->Delete();
-  Histo_ZmumuJet_Pt30to50->Delete();
-  Histo_ZmumuJet_Pt50to80_temp->Delete();
-  Histo_ZmumuJet_Pt50to80->Delete();
-  Histo_ZmumuJet_Pt80to120_temp->Delete();
-  Histo_ZmumuJet_Pt80to120->Delete();
-  Histo_ZmumuJet_Pt120to170_temp->Delete();
-  Histo_ZmumuJet_Pt120to170->Delete();
-  Histo_ZmumuJet_Pt170to230_temp->Delete();
-  Histo_ZmumuJet_Pt170to230->Delete();
-  Histo_ZmumuJet_Pt230to300_temp->Delete();
-  Histo_ZmumuJet_Pt230to300->Delete();
-  Histo_ZmumuJet_Pt300toInf_temp->Delete();
-  Histo_ZmumuJet_Pt300toInf->Delete();
+  Histo_ISR_ZmumuJet_Pt0to15_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt0to15->Delete();
+  Histo_ISR_ZmumuJet_Pt15to20_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt15to20->Delete();
+  Histo_ISR_ZmumuJet_Pt20to30_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt20to30->Delete();
+  Histo_ISR_ZmumuJet_Pt30to50_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt30to50->Delete();
+  Histo_ISR_ZmumuJet_Pt50to80_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt50to80->Delete();
+  Histo_ISR_ZmumuJet_Pt80to120_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt80to120->Delete();
+  Histo_ISR_ZmumuJet_Pt120to170_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt120to170->Delete();
+  Histo_ISR_ZmumuJet_Pt170to230_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt170to230->Delete();
+  Histo_ISR_ZmumuJet_Pt230to300_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt230to300->Delete();
+  Histo_ISR_ZmumuJet_Pt300toInf_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt300toInf->Delete();
+  Histo_FSR_ZmumuJet_Pt0to15_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt0to15->Delete();
+  Histo_FSR_ZmumuJet_Pt15to20_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt15to20->Delete();
+  Histo_FSR_ZmumuJet_Pt20to30_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt20to30->Delete();
+  Histo_FSR_ZmumuJet_Pt30to50_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt30to50->Delete();
+  Histo_FSR_ZmumuJet_Pt50to80_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt50to80->Delete();
+  Histo_FSR_ZmumuJet_Pt80to120_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt80to120->Delete();
+  Histo_FSR_ZmumuJet_Pt120to170_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt120to170->Delete();
+  Histo_FSR_ZmumuJet_Pt170to230_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt170to230->Delete();
+  Histo_FSR_ZmumuJet_Pt230to300_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt230to300->Delete();
+  Histo_FSR_ZmumuJet_Pt300toInf_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt300toInf->Delete();
 
 }
 
-void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_Pt30_miniTree, TTree *QCD_Pt80_miniTree, TTree *QCD_Pt170_miniTree, TTree *QCD_Pt300_miniTree, TTree *QCD_Pt470_miniTree, TTree *PhotonJet_Pt15_miniTree, TTree *PhotonJet_Pt30_miniTree, TTree *PhotonJet_Pt80_miniTree, TTree *PhotonJet_Pt170_miniTree, TTree *PhotonJet_Pt300_miniTree, TTree *TTbarJets_Tauola_miniTree, TTree *WJets_7TeV_miniTree, TTree *ZJets_7TeV_miniTree, TTree *QCD_Mu_Pt20to30_miniTree, TTree *QCD_Mu_Pt30to50_miniTree, TTree *QCD_Mu_Pt50to80_miniTree, TTree *QCD_Mu_Pt80to120_miniTree, TTree *QCD_Mu_Pt120to170_miniTree, TTree *QCD_Mu_Pt170toInf_miniTree, TTree *InclusiveMu15_miniTree, TTree *ZmumuJet_Pt0to15_miniTree, TTree *ZmumuJet_Pt15to20_miniTree, TTree *ZmumuJet_Pt20to30_miniTree, TTree *ZmumuJet_Pt30to50_miniTree, TTree *ZmumuJet_Pt50to80_miniTree, TTree *ZmumuJet_Pt80to120_miniTree, TTree *ZmumuJet_Pt120to170_miniTree, TTree *ZmumuJet_Pt170to230_miniTree, TTree *ZmumuJet_Pt230to300_miniTree, TTree *ZmumuJet_Pt300toInf_miniTree, string var, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1){
+void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_Pt30_miniTree, TTree *QCD_Pt80_miniTree, TTree *QCD_Pt170_miniTree, TTree *QCD_Pt300_miniTree, TTree *QCD_Pt470_miniTree, TTree *PhotonJet_Pt15_miniTree, TTree *PhotonJet_Pt30_miniTree, TTree *PhotonJet_Pt80_miniTree, TTree *PhotonJet_Pt170_miniTree, TTree *PhotonJet_Pt300_miniTree, TTree *TTbarJets_Tauola_miniTree, TTree *WJets_7TeV_miniTree, TTree *ZJets_7TeV_miniTree, TTree *QCD_Mu_Pt20to30_miniTree, TTree *QCD_Mu_Pt30to50_miniTree, TTree *QCD_Mu_Pt50to80_miniTree, TTree *QCD_Mu_Pt80to120_miniTree, TTree *QCD_Mu_Pt120to170_miniTree, TTree *QCD_Mu_Pt170toInf_miniTree, TTree *InclusiveMu15_miniTree, TTree *FSR_ZmumuJet_Pt0to15_miniTree, TTree *FSR_ZmumuJet_Pt15to20_miniTree, TTree *FSR_ZmumuJet_Pt20to30_miniTree, TTree *FSR_ZmumuJet_Pt30to50_miniTree, TTree *FSR_ZmumuJet_Pt50to80_miniTree, TTree *FSR_ZmumuJet_Pt80to120_miniTree, TTree *FSR_ZmumuJet_Pt120to170_miniTree, TTree *FSR_ZmumuJet_Pt170to230_miniTree, TTree *FSR_ZmumuJet_Pt230to300_miniTree, TTree *FSR_ZmumuJet_Pt300toInf_miniTree, TTree *ISR_ZmumuJet_Pt0to15_miniTree, TTree *ISR_ZmumuJet_Pt15to20_miniTree, TTree *ISR_ZmumuJet_Pt20to30_miniTree, TTree *ISR_ZmumuJet_Pt30to50_miniTree, TTree *ISR_ZmumuJet_Pt50to80_miniTree, TTree *ISR_ZmumuJet_Pt80to120_miniTree, TTree *ISR_ZmumuJet_Pt120to170_miniTree, TTree *ISR_ZmumuJet_Pt170to230_miniTree, TTree *ISR_ZmumuJet_Pt230to300_miniTree, TTree *ISR_ZmumuJet_Pt300toInf_miniTree, string var, string pic, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1, bool doFit){
 
   // Get Histo_Data from eventTree
   TH1I *Histo_Data_temp = new TH1I();
@@ -924,74 +1148,144 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   TH1I *Histo_InclusiveMu15 = (TH1I*)gDirectory->Get("Histo_InclusiveMu15_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt0to15 from eventTree
-  TH1I *Histo_ZmumuJet_Pt0to15_temp = new TH1I();
-  string variable_ZmumuJet_Pt0to15 = var + ">>Histo_ZmumuJet_Pt0to15_temp" + limits;
-  ZmumuJet_Pt0to15_miniTree->Draw(variable_ZmumuJet_Pt0to15.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt0to15 = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt0to15_temp");
+  // Get Histo_FSR_ZmumuJet_Pt0to15 from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt0to15_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt0to15 = var + ">>Histo_FSR_ZmumuJet_Pt0to15_temp" + limits;
+  FSR_ZmumuJet_Pt0to15_miniTree->Draw(variable_FSR_ZmumuJet_Pt0to15.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt0to15 = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt0to15_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt15to20 from eventTree
-  TH1I *Histo_ZmumuJet_Pt15to20_temp = new TH1I();
-  string variable_ZmumuJet_Pt15to20 = var + ">>Histo_ZmumuJet_Pt15to20_temp" + limits;
-  ZmumuJet_Pt15to20_miniTree->Draw(variable_ZmumuJet_Pt15to20.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt15to20 = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt15to20_temp");
+  // Get Histo_FSR_ZmumuJet_Pt15to20 from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt15to20_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt15to20 = var + ">>Histo_FSR_ZmumuJet_Pt15to20_temp" + limits;
+  FSR_ZmumuJet_Pt15to20_miniTree->Draw(variable_FSR_ZmumuJet_Pt15to20.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt15to20 = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt15to20_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt20to30 from eventTree
-  TH1I *Histo_ZmumuJet_Pt20to30_temp = new TH1I();
-  string variable_ZmumuJet_Pt20to30 = var + ">>Histo_ZmumuJet_Pt20to30_temp" + limits;
-  ZmumuJet_Pt20to30_miniTree->Draw(variable_ZmumuJet_Pt20to30.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt20to30 = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt20to30_temp");
+  // Get Histo_FSR_ZmumuJet_Pt20to30 from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt20to30_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt20to30 = var + ">>Histo_FSR_ZmumuJet_Pt20to30_temp" + limits;
+  FSR_ZmumuJet_Pt20to30_miniTree->Draw(variable_FSR_ZmumuJet_Pt20to30.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt20to30 = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt20to30_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt30to50 from eventTree
-  TH1I *Histo_ZmumuJet_Pt30to50_temp = new TH1I();
-  string variable_ZmumuJet_Pt30to50 = var + ">>Histo_ZmumuJet_Pt30to50_temp" + limits;
-  ZmumuJet_Pt30to50_miniTree->Draw(variable_ZmumuJet_Pt30to50.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt30to50 = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt30to50_temp");
+  // Get Histo_FSR_ZmumuJet_Pt30to50 from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt30to50_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt30to50 = var + ">>Histo_FSR_ZmumuJet_Pt30to50_temp" + limits;
+  FSR_ZmumuJet_Pt30to50_miniTree->Draw(variable_FSR_ZmumuJet_Pt30to50.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt30to50 = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt30to50_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt50to80 from eventTree
-  TH1I *Histo_ZmumuJet_Pt50to80_temp = new TH1I();
-  string variable_ZmumuJet_Pt50to80 = var + ">>Histo_ZmumuJet_Pt50to80_temp" + limits;
-  ZmumuJet_Pt50to80_miniTree->Draw(variable_ZmumuJet_Pt50to80.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt50to80 = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt50to80_temp");
+  // Get Histo_FSR_ZmumuJet_Pt50to80 from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt50to80_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt50to80 = var + ">>Histo_FSR_ZmumuJet_Pt50to80_temp" + limits;
+  FSR_ZmumuJet_Pt50to80_miniTree->Draw(variable_FSR_ZmumuJet_Pt50to80.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt50to80 = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt50to80_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt80to120 from eventTree
-  TH1I *Histo_ZmumuJet_Pt80to120_temp = new TH1I();
-  string variable_ZmumuJet_Pt80to120 = var + ">>Histo_ZmumuJet_Pt80to120_temp" + limits;
-  ZmumuJet_Pt80to120_miniTree->Draw(variable_ZmumuJet_Pt80to120.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt80to120 = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt80to120_temp");
+  // Get Histo_FSR_ZmumuJet_Pt80to120 from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt80to120_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt80to120 = var + ">>Histo_FSR_ZmumuJet_Pt80to120_temp" + limits;
+  FSR_ZmumuJet_Pt80to120_miniTree->Draw(variable_FSR_ZmumuJet_Pt80to120.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt80to120 = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt80to120_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt120to170 from eventTree
-  TH1I *Histo_ZmumuJet_Pt120to170_temp = new TH1I();
-  string variable_ZmumuJet_Pt120to170 = var + ">>Histo_ZmumuJet_Pt120to170_temp" + limits;
-  ZmumuJet_Pt120to170_miniTree->Draw(variable_ZmumuJet_Pt120to170.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt120to170 = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt120to170_temp");
+  // Get Histo_FSR_ZmumuJet_Pt120to170 from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt120to170_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt120to170 = var + ">>Histo_FSR_ZmumuJet_Pt120to170_temp" + limits;
+  FSR_ZmumuJet_Pt120to170_miniTree->Draw(variable_FSR_ZmumuJet_Pt120to170.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt120to170 = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt120to170_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt170to230 from eventTree
-  TH1I *Histo_ZmumuJet_Pt170to230_temp = new TH1I();
-  string variable_ZmumuJet_Pt170to230 = var + ">>Histo_ZmumuJet_Pt170to230_temp" + limits;
-  ZmumuJet_Pt170to230_miniTree->Draw(variable_ZmumuJet_Pt170to230.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt170to230 = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt170to230_temp");
+  // Get Histo_FSR_ZmumuJet_Pt170to230 from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt170to230_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt170to230 = var + ">>Histo_FSR_ZmumuJet_Pt170to230_temp" + limits;
+  FSR_ZmumuJet_Pt170to230_miniTree->Draw(variable_FSR_ZmumuJet_Pt170to230.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt170to230 = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt170to230_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt230to300 from eventTree
-  TH1I *Histo_ZmumuJet_Pt230to300_temp = new TH1I();
-  string variable_ZmumuJet_Pt230to300 = var + ">>Histo_ZmumuJet_Pt230to300_temp" + limits;
-  ZmumuJet_Pt230to300_miniTree->Draw(variable_ZmumuJet_Pt230to300.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt230to300 = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt230to300_temp");
+  // Get Histo_FSR_ZmumuJet_Pt230to300 from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt230to300_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt230to300 = var + ">>Histo_FSR_ZmumuJet_Pt230to300_temp" + limits;
+  FSR_ZmumuJet_Pt230to300_miniTree->Draw(variable_FSR_ZmumuJet_Pt230to300.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt230to300 = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt230to300_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt300toInf from eventTree
-  TH1I *Histo_ZmumuJet_Pt300toInf_temp = new TH1I();
-  string variable_ZmumuJet_Pt300toInf = var + ">>Histo_ZmumuJet_Pt300toInf_temp" + limits;
-  ZmumuJet_Pt300toInf_miniTree->Draw(variable_ZmumuJet_Pt300toInf.c_str(), cut.c_str());
-  TH1I *Histo_ZmumuJet_Pt300toInf = (TH1I*)gDirectory->Get("Histo_ZmumuJet_Pt300toInf_temp");
+  // Get Histo_FSR_ZmumuJet_Pt300toInf from eventTree
+  TH1I *Histo_FSR_ZmumuJet_Pt300toInf_temp = new TH1I();
+  string variable_FSR_ZmumuJet_Pt300toInf = var + ">>Histo_FSR_ZmumuJet_Pt300toInf_temp" + limits;
+  FSR_ZmumuJet_Pt300toInf_miniTree->Draw(variable_FSR_ZmumuJet_Pt300toInf.c_str(), cut.c_str());
+  TH1I *Histo_FSR_ZmumuJet_Pt300toInf = (TH1I*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt300toInf_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt0to15 from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt0to15_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt0to15 = var + ">>Histo_ISR_ZmumuJet_Pt0to15_temp" + limits;
+  ISR_ZmumuJet_Pt0to15_miniTree->Draw(variable_ISR_ZmumuJet_Pt0to15.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt0to15 = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt0to15_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt15to20 from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt15to20_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt15to20 = var + ">>Histo_ISR_ZmumuJet_Pt15to20_temp" + limits;
+  ISR_ZmumuJet_Pt15to20_miniTree->Draw(variable_ISR_ZmumuJet_Pt15to20.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt15to20 = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt15to20_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt20to30 from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt20to30_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt20to30 = var + ">>Histo_ISR_ZmumuJet_Pt20to30_temp" + limits;
+  ISR_ZmumuJet_Pt20to30_miniTree->Draw(variable_ISR_ZmumuJet_Pt20to30.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt20to30 = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt20to30_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt30to50 from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt30to50_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt30to50 = var + ">>Histo_ISR_ZmumuJet_Pt30to50_temp" + limits;
+  ISR_ZmumuJet_Pt30to50_miniTree->Draw(variable_ISR_ZmumuJet_Pt30to50.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt30to50 = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt30to50_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt50to80 from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt50to80_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt50to80 = var + ">>Histo_ISR_ZmumuJet_Pt50to80_temp" + limits;
+  ISR_ZmumuJet_Pt50to80_miniTree->Draw(variable_ISR_ZmumuJet_Pt50to80.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt50to80 = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt50to80_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt80to120 from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt80to120_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt80to120 = var + ">>Histo_ISR_ZmumuJet_Pt80to120_temp" + limits;
+  ISR_ZmumuJet_Pt80to120_miniTree->Draw(variable_ISR_ZmumuJet_Pt80to120.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt80to120 = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt80to120_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt120to170 from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt120to170_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt120to170 = var + ">>Histo_ISR_ZmumuJet_Pt120to170_temp" + limits;
+  ISR_ZmumuJet_Pt120to170_miniTree->Draw(variable_ISR_ZmumuJet_Pt120to170.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt120to170 = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt120to170_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt170to230 from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt170to230_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt170to230 = var + ">>Histo_ISR_ZmumuJet_Pt170to230_temp" + limits;
+  ISR_ZmumuJet_Pt170to230_miniTree->Draw(variable_ISR_ZmumuJet_Pt170to230.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt170to230 = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt170to230_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt230to300 from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt230to300_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt230to300 = var + ">>Histo_ISR_ZmumuJet_Pt230to300_temp" + limits;
+  ISR_ZmumuJet_Pt230to300_miniTree->Draw(variable_ISR_ZmumuJet_Pt230to300.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt230to300 = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt230to300_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt300toInf from eventTree
+  TH1I *Histo_ISR_ZmumuJet_Pt300toInf_temp = new TH1I();
+  string variable_ISR_ZmumuJet_Pt300toInf = var + ">>Histo_ISR_ZmumuJet_Pt300toInf_temp" + limits;
+  ISR_ZmumuJet_Pt300toInf_miniTree->Draw(variable_ISR_ZmumuJet_Pt300toInf.c_str(), cut.c_str());
+  TH1I *Histo_ISR_ZmumuJet_Pt300toInf = (TH1I*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt300toInf_temp");
   c1->Clear();
 
   // TODO: implement drawUnderOverFsubleading
@@ -1033,16 +1327,26 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double XSectionQCD_Mu_Pt120to170 = 6095.0;
   double XSectionQCD_Mu_Pt170toInf = 1612.8;
   double XSectionInclusiveMu15 = 79687.96;
-  double XSectionZmumuJet_Pt0to15 = 4.434e+03;
-  double XSectionZmumuJet_Pt15to20 = 1.454e+02;
-  double XSectionZmumuJet_Pt20to30 = 1.318e+02;
-  double XSectionZmumuJet_Pt30to50 = 8.438e+01;
-  double XSectionZmumuJet_Pt50to80 = 3.235e+01;
-  double XSectionZmumuJet_Pt80to120 = 9.981e+00;
-  double XSectionZmumuJet_Pt120to170 = 2.760e+00;
-  double XSectionZmumuJet_Pt170to230 = 7.241e-01;
-  double XSectionZmumuJet_Pt230to300 = 1.946e-01;
-  double XSectionZmumuJet_Pt300toInf = 7.627e-02;
+  double XSectionFSR_ZmumuJet_Pt0to15 = 4.434e+03;
+  double XSectionFSR_ZmumuJet_Pt15to20 = 1.454e+02;
+  double XSectionFSR_ZmumuJet_Pt20to30 = 1.318e+02;
+  double XSectionFSR_ZmumuJet_Pt30to50 = 8.438e+01;
+  double XSectionFSR_ZmumuJet_Pt50to80 = 3.235e+01;
+  double XSectionFSR_ZmumuJet_Pt80to120 = 9.981e+00;
+  double XSectionFSR_ZmumuJet_Pt120to170 = 2.760e+00;
+  double XSectionFSR_ZmumuJet_Pt170to230 = 7.241e-01;
+  double XSectionFSR_ZmumuJet_Pt230to300 = 1.946e-01;
+  double XSectionFSR_ZmumuJet_Pt300toInf = 7.627e-02;
+  double XSectionISR_ZmumuJet_Pt0to15 = 4.434e+03;
+  double XSectionISR_ZmumuJet_Pt15to20 = 1.454e+02;
+  double XSectionISR_ZmumuJet_Pt20to30 = 1.318e+02;
+  double XSectionISR_ZmumuJet_Pt30to50 = 8.438e+01;
+  double XSectionISR_ZmumuJet_Pt50to80 = 3.235e+01;
+  double XSectionISR_ZmumuJet_Pt80to120 = 9.981e+00;
+  double XSectionISR_ZmumuJet_Pt120to170 = 2.760e+00;
+  double XSectionISR_ZmumuJet_Pt170to230 = 7.241e-01;
+  double XSectionISR_ZmumuJet_Pt230to300 = 1.946e-01;
+  double XSectionISR_ZmumuJet_Pt300toInf = 7.627e-02;
 
   double InitialNumberQCD_Pt15 = 6196800;
   double InitialNumberQCD_Pt30 = 5093840;
@@ -1065,16 +1369,26 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double InitialNumberQCD_Mu_Pt120to170 = 316630;
   double InitialNumberQCD_Mu_Pt170toInf = 262036;
   double InitialNumberInclusiveMu15 = 5120334;
-  double InitialNumberZmumuJet_Pt0to15 = 235420;
-  double InitialNumberZmumuJet_Pt15to20 = 222730;
-  double InitialNumberZmumuJet_Pt20to30 = 164190;
-  double InitialNumberZmumuJet_Pt30to50 = 163920;
-  double InitialNumberZmumuJet_Pt50to80 = 106016;
-  double InitialNumberZmumuJet_Pt80to120 = 107759;
-  double InitialNumberZmumuJet_Pt120to170 = 177408;
-  double InitialNumberZmumuJet_Pt170to230 = 178400;
-  double InitialNumberZmumuJet_Pt230to300 = 176485;
-  double InitialNumberZmumuJet_Pt300toInf = 109316;
+  double InitialNumberFSR_ZmumuJet_Pt0to15 = 235420;
+  double InitialNumberFSR_ZmumuJet_Pt15to20 = 222730;
+  double InitialNumberFSR_ZmumuJet_Pt20to30 = 164190;
+  double InitialNumberFSR_ZmumuJet_Pt30to50 = 163920;
+  double InitialNumberFSR_ZmumuJet_Pt50to80 = 106016;
+  double InitialNumberFSR_ZmumuJet_Pt80to120 = 107759;
+  double InitialNumberFSR_ZmumuJet_Pt120to170 = 177408;
+  double InitialNumberFSR_ZmumuJet_Pt170to230 = 178400;
+  double InitialNumberFSR_ZmumuJet_Pt230to300 = 176485;
+  double InitialNumberFSR_ZmumuJet_Pt300toInf = 109316;
+  double InitialNumberISR_ZmumuJet_Pt0to15 = 235420;
+  double InitialNumberISR_ZmumuJet_Pt15to20 = 222730;
+  double InitialNumberISR_ZmumuJet_Pt20to30 = 164190;
+  double InitialNumberISR_ZmumuJet_Pt30to50 = 163920;
+  double InitialNumberISR_ZmumuJet_Pt50to80 = 106016;
+  double InitialNumberISR_ZmumuJet_Pt80to120 = 107759;
+  double InitialNumberISR_ZmumuJet_Pt120to170 = 177408;
+  double InitialNumberISR_ZmumuJet_Pt170to230 = 178400;
+  double InitialNumberISR_ZmumuJet_Pt230to300 = 176485;
+  double InitialNumberISR_ZmumuJet_Pt300toInf = 109316;
 
   Histo_PhotonJet_Pt15->Scale((double)(  (double)((double)(XSectionPhotonJet_Pt15) / (double)(InitialNumberPhotonJet_Pt15)) * (double)integratedLuminosity));
   Histo_PhotonJet_Pt30->Scale((double)(  (double)((double)(XSectionPhotonJet_Pt30) / (double)(InitialNumberPhotonJet_Pt30)) * (double)integratedLuminosity));
@@ -1097,16 +1411,26 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_QCD_Mu_Pt120to170->Scale((double)(  (double)((double)(XSectionQCD_Mu_Pt120to170) / (double)(InitialNumberQCD_Mu_Pt120to170)) * (double)integratedLuminosity));
   Histo_QCD_Mu_Pt170toInf->Scale((double)(  (double)((double)(XSectionQCD_Mu_Pt170toInf) / (double)(InitialNumberQCD_Mu_Pt170toInf)) * (double)integratedLuminosity));
   Histo_InclusiveMu15->Scale((double)(  (double)((double)(XSectionInclusiveMu15) / (double)(InitialNumberInclusiveMu15)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt0to15->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt0to15) / (double)(InitialNumberZmumuJet_Pt0to15)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt15to20->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt15to20) / (double)(InitialNumberZmumuJet_Pt15to20)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt20to30->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt20to30) / (double)(InitialNumberZmumuJet_Pt20to30)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt30to50->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt30to50) / (double)(InitialNumberZmumuJet_Pt30to50)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt50to80->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt50to80) / (double)(InitialNumberZmumuJet_Pt50to80)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt80to120->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt80to120) / (double)(InitialNumberZmumuJet_Pt80to120)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt120to170->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt120to170) / (double)(InitialNumberZmumuJet_Pt120to170)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt170to230) / (double)(InitialNumberZmumuJet_Pt170to230)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt230to300) / (double)(InitialNumberZmumuJet_Pt230to300)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt300toInf) / (double)(InitialNumberZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt0to15->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt0to15) / (double)(InitialNumberFSR_ZmumuJet_Pt0to15)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt15to20->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt15to20) / (double)(InitialNumberFSR_ZmumuJet_Pt15to20)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt20to30->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt20to30) / (double)(InitialNumberFSR_ZmumuJet_Pt20to30)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt30to50->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt30to50) / (double)(InitialNumberFSR_ZmumuJet_Pt30to50)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt50to80->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt50to80) / (double)(InitialNumberFSR_ZmumuJet_Pt50to80)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt80to120->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt80to120) / (double)(InitialNumberFSR_ZmumuJet_Pt80to120)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt120to170->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt120to170) / (double)(InitialNumberFSR_ZmumuJet_Pt120to170)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt170to230) / (double)(InitialNumberFSR_ZmumuJet_Pt170to230)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt230to300) / (double)(InitialNumberFSR_ZmumuJet_Pt230to300)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt300toInf) / (double)(InitialNumberFSR_ZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt0to15->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt0to15) / (double)(InitialNumberISR_ZmumuJet_Pt0to15)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt15to20->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt15to20) / (double)(InitialNumberISR_ZmumuJet_Pt15to20)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt20to30->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt20to30) / (double)(InitialNumberISR_ZmumuJet_Pt20to30)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt30to50->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt30to50) / (double)(InitialNumberISR_ZmumuJet_Pt30to50)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt50to80->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt50to80) / (double)(InitialNumberISR_ZmumuJet_Pt50to80)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt80to120->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt80to120) / (double)(InitialNumberISR_ZmumuJet_Pt80to120)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt120to170->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt120to170) / (double)(InitialNumberISR_ZmumuJet_Pt120to170)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt170to230) / (double)(InitialNumberISR_ZmumuJet_Pt170to230)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt230to300) / (double)(InitialNumberISR_ZmumuJet_Pt230to300)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt300toInf) / (double)(InitialNumberISR_ZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
 
   // Adding histograms for binned samples
   Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
@@ -1126,21 +1450,59 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt170);
   Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt300);
 
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt15to20);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt20to30);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt30to50);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt50to80);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt80to120);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt120to170);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt170to230);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt230to300);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt300toInf);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt15to20);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt20to30);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt30to50);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt50to80);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt80to120);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt120to170);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt170to230);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt230to300);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt300toInf);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt15to20);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt20to30);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt30to50);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt50to80);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt80to120);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt120to170);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt170to230);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt230to300);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt300toInf);
 
+// ttbar
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_TTbarJets_Tauola);
+// *** stacked
+  Histo_PhotonJet_Pt15->Add(Histo_ISR_ZmumuJet_Pt0to15);
+// *** stacked
+  Histo_WJets_7TeV->Add(Histo_PhotonJet_Pt15);
+// *** stacked
+  Histo_QCD_Pt15->Add(Histo_WJets_7TeV);
+  Histo_QCD_Mu_Pt20to30->Add(Histo_WJets_7TeV);
+  Histo_InclusiveMu15->Add(Histo_WJets_7TeV);
+// *** stacked
+//  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_QCD_Pt15);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_QCD_Mu_Pt20to30);
+//  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_InclusiveMu15);
+// *** stacked
+  Histo_ZJets_7TeV->Add(Histo_QCD_Pt15);
+  Histo_ZJets_7TeV->Add(Histo_QCD_Mu_Pt20to30);
+  Histo_ZJets_7TeV->Add(Histo_InclusiveMu15);
+
+
+	// Total MC histo for comupting min/max
+//  TH1I *Histo_allMC = new TH1I(*Histo_QCD_Mu_Pt20to30);
+//  Histo_allMC->Add(Histo_QCD_Pt15);
+//  Histo_allMC->Add(Histo_InclusiveMu15);
+//  Histo_allMC->Add(Histo_FSR_ZmumuJet_Pt0to15);
+//  Histo_allMC->Add(Histo_ZJets_7TeV);
+//  Histo_allMC->Add(Histo_WJets_7TeV);
+//  Histo_allMC->Add(Histo_TTbarJets_Tauola);
+//  Histo_allMC->Add(Histo_PhotonJet_Pt15);
 
   // Get the maxs and the mins to further correct the Y-axis
   double dataMax = Histo_Data->GetMaximum();
   double YMax = dataMax;
-  double PhotonJet_Pt15Max = Histo_PhotonJet_Pt15->GetMaximum();
+/*  double PhotonJet_Pt15Max = Histo_PhotonJet_Pt15->GetMaximum();
   YMax = max(YMax, PhotonJet_Pt15Max);
   double QCD_Pt15Max = Histo_QCD_Pt15->GetMaximum();
   YMax = max(YMax, QCD_Pt15Max);
@@ -1148,26 +1510,36 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   YMax = max(YMax, TTbarJets_TauolaMax);
   double WJets_7TeVMax = Histo_WJets_7TeV->GetMaximum();
   YMax = max(YMax, WJets_7TeVMax);
-  double ZJets_7TeVMax = Histo_ZJets_7TeV->GetMaximum();
-  YMax = max(YMax, ZJets_7TeVMax);
   double QCD_Mu_Pt20to30Max = Histo_QCD_Mu_Pt20to30->GetMaximum();
   YMax = max(YMax, QCD_Mu_Pt20to30Max);
   double InclusiveMu15Max = Histo_InclusiveMu15->GetMaximum();
   YMax = max(YMax, InclusiveMu15Max);
-  double ZmumuJet_Pt0to15Max = Histo_ZmumuJet_Pt0to15->GetMaximum();
-  YMax = max(YMax, ZmumuJet_Pt0to15Max);
-
+*/
+//  double ZJets_7TeVMax = Histo_ZJets_7TeV->GetMaximum();
+//  YMax = max(YMax, ZJets_7TeVMax);
+  double FSR_ZmumuJet_Pt0to15Max = Histo_FSR_ZmumuJet_Pt0to15->GetMaximum();
+  YMax = max(YMax, FSR_ZmumuJet_Pt0to15Max);
+/*
+	double allMCMax = Histo_allMC->GetMaximum();
+  YMax = max(YMax, allMCMax);
+*/
   double dataMin = YMax;
   double PhotonJet_Pt15Min = YMax;
-  double QCD_Pt15Min = YMax;
+//  double QCD_Pt15Min = YMax;
   double TTbarJets_TauolaMin = YMax;
   double WJets_7TeVMin = YMax;
   double ZJets_7TeVMin = YMax;
   double QCD_Mu_Pt20to30Min = YMax;
-  double InclusiveMu15Min = YMax;
-  double ZmumuJet_Pt0to15Min = YMax;
+//  double InclusiveMu15Min = YMax;
+  double FSR_ZmumuJet_Pt0to15Min = YMax;
+  double ISR_ZmumuJet_Pt0to15Min = YMax;
+
+	double allMCMin = YMax;
+
   double YMin = YMax;
+
   // Gets the actual minimum for each histogram, and not the unfilled bin if any
+
   for( int ibin=1 ; ibin<Histo_Data->GetNbinsX() ; ibin++ ){
     if( ((Histo_Data->GetBinContent(ibin))!=0) && ((Histo_Data->GetBinContent(ibin))<dataMin) ){
       dataMin = Histo_Data->GetBinContent(ibin);
@@ -1180,12 +1552,12 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
     }
   }
   YMin = min(YMin, PhotonJet_Pt15Min);
-  for( int ibin=1 ; ibin<Histo_QCD_Pt15->GetNbinsX() ; ibin++ ){
+/*  for( int ibin=1 ; ibin<Histo_QCD_Pt15->GetNbinsX() ; ibin++ ){
     if( ((Histo_QCD_Pt15->GetBinContent(ibin))!=0) && ((Histo_QCD_Pt15->GetBinContent(ibin))<QCD_Pt15Min) ){
       QCD_Pt15Min = Histo_QCD_Pt15->GetBinContent(ibin);
     }
   }
-  YMin = min(YMin, QCD_Pt15Min);
+  YMin = min(YMin, QCD_Pt15Min);*/
   for( int ibin=1 ; ibin<Histo_TTbarJets_Tauola->GetNbinsX() ; ibin++ ){
     if( ((Histo_TTbarJets_Tauola->GetBinContent(ibin))!=0) && ((Histo_TTbarJets_Tauola->GetBinContent(ibin))<TTbarJets_TauolaMin) ){
       TTbarJets_TauolaMin = Histo_TTbarJets_Tauola->GetBinContent(ibin);
@@ -1203,26 +1575,39 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
       ZJets_7TeVMin = Histo_ZJets_7TeV->GetBinContent(ibin);
     }
   }
-  YMin = min(YMin, ZJets_7TeVMin);
+//  YMin = min(YMin, ZJets_7TeVMin);
   for( int ibin=1 ; ibin<Histo_QCD_Mu_Pt20to30->GetNbinsX() ; ibin++ ){
     if( ((Histo_QCD_Mu_Pt20to30->GetBinContent(ibin))!=0) && ((Histo_QCD_Mu_Pt20to30->GetBinContent(ibin))<QCD_Mu_Pt20to30Min) ){
       QCD_Mu_Pt20to30Min = Histo_QCD_Mu_Pt20to30->GetBinContent(ibin);
     }
   }
   YMin = min(YMin, QCD_Mu_Pt20to30Min);
-  for( int ibin=1 ; ibin<Histo_InclusiveMu15->GetNbinsX() ; ibin++ ){
+/*  for( int ibin=1 ; ibin<Histo_InclusiveMu15->GetNbinsX() ; ibin++ ){
     if( ((Histo_InclusiveMu15->GetBinContent(ibin))!=0) && ((Histo_InclusiveMu15->GetBinContent(ibin))<InclusiveMu15Min) ){
       InclusiveMu15Min = Histo_InclusiveMu15->GetBinContent(ibin);
     }
   }
-  YMin = min(YMin, InclusiveMu15Min);
-  for( int ibin=1 ; ibin<Histo_ZmumuJet_Pt0to15->GetNbinsX() ; ibin++ ){
-    if( ((Histo_ZmumuJet_Pt0to15->GetBinContent(ibin))!=0) && ((Histo_ZmumuJet_Pt0to15->GetBinContent(ibin))<ZmumuJet_Pt0to15Min) ){
-      ZmumuJet_Pt0to15Min = Histo_ZmumuJet_Pt0to15->GetBinContent(ibin);
+  YMin = min(YMin, InclusiveMu15Min);*/
+  for( int ibin=1 ; ibin<Histo_FSR_ZmumuJet_Pt0to15->GetNbinsX() ; ibin++ ){
+    if( ((Histo_FSR_ZmumuJet_Pt0to15->GetBinContent(ibin))!=0) && ((Histo_FSR_ZmumuJet_Pt0to15->GetBinContent(ibin))<FSR_ZmumuJet_Pt0to15Min) ){
+      FSR_ZmumuJet_Pt0to15Min = Histo_FSR_ZmumuJet_Pt0to15->GetBinContent(ibin);
     }
   }
-  YMin = min(YMin, ZmumuJet_Pt0to15Min);
-
+  YMin = min(YMin, FSR_ZmumuJet_Pt0to15Min);
+  for( int ibin=1 ; ibin<Histo_ISR_ZmumuJet_Pt0to15->GetNbinsX() ; ibin++ ){
+    if( ((Histo_ISR_ZmumuJet_Pt0to15->GetBinContent(ibin))!=0) && ((Histo_ISR_ZmumuJet_Pt0to15->GetBinContent(ibin))<ISR_ZmumuJet_Pt0to15Min) ){
+      ISR_ZmumuJet_Pt0to15Min = Histo_ISR_ZmumuJet_Pt0to15->GetBinContent(ibin);
+    }
+  }
+  YMin = min(YMin, ISR_ZmumuJet_Pt0to15Min);
+/*
+	for( int ibin=1 ; ibin<Histo_allMC->GetNbinsX() ; ibin++ ){
+    if( ((Histo_allMC->GetBinContent(ibin))!=0) && ((Histo_allMC->GetBinContent(ibin))<allMCMin) ){
+      allMCMin = Histo_allMC->GetBinContent(ibin);
+    }
+  }
+  YMin = min(YMin, allMCMin);
+*/
 //  cout << "YMax= "<< YMax << "\t\tYMin= " << YMin << endl;
   double YMin_lin = (double)YMin / (double)10.0;
 //  double Range_lin = ((double)(YMax - YMin_lin)) / ((double)(0.8));
@@ -1242,9 +1627,9 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
 
 
   // Setup the histo and canvas names and title
-  string data_name = "Data_" + var + "_" + name;
-  string mc_name = "MC_" + var + "_" + name;
-  string canvas_name = "DataMC_" + var + "_" + name;
+  string data_name = "Data_" + pic + "_" + name;
+  string mc_name = "MC_" + pic + "_" + name;
+  string canvas_name = "DataMC_" + pic + "_" + name;
   std::ostringstream binWidthOSS;
   binWidthOSS << (double)Histo_Data->GetBinWidth(1);
   string binWidth = binWidthOSS.str();
@@ -1263,7 +1648,11 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   // Draw the comparison plots
 
   TLegend *legend = new TLegend(0.75, 0.80, 0.90, 0.93, "");
-  legend->SetTextSize(0.025);
+	if( doFit ){
+		legend->SetX1(0.55);
+		legend->SetX2(0.70);
+	}
+	legend->SetTextSize(0.025);
   legend->SetFillColor(kWhite);
   legend->SetLineColor(kWhite);
   legend->SetShadowColor(kWhite);
@@ -1277,9 +1666,6 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_Data->SetMarkerStyle(20);
   Histo_Data->SetMaximum(YMax_lin);
   Histo_Data->SetMinimum(YMin_lin);
-//  Histo_Data->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);
-  Histo_Data->Draw("E1");
-  legend->AddEntry(Histo_Data->GetName(), "Data", "lp");
 
   // // Second: draw MC on the same canvas
   Histo_QCD_Pt15->SetLineColor(kBlack);
@@ -1295,8 +1681,6 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_QCD_Mu_Pt20to30->SetFillStyle(3001);
   Histo_QCD_Mu_Pt20to30->SetMaximum(YMax_lin);
   Histo_QCD_Mu_Pt20to30->SetMinimum(YMin_lin);
-  Histo_QCD_Mu_Pt20to30->Draw("same");
-  legend->AddEntry(Histo_QCD_Mu_Pt20to30->GetName(), "QCD Mu", "f");
 
   Histo_InclusiveMu15->SetLineColor(kBlack);
   Histo_InclusiveMu15->SetFillColor(kGreen-6);
@@ -1306,45 +1690,58 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
 //  Histo_InclusiveMu15->Draw("same");  
 //  legend->AddEntry(Histo_InclusiveMu15->GetName(), "InclusiveMu15", "f");
 
-  Histo_ZmumuJet_Pt0to15->SetLineColor(kBlack);
-  Histo_ZmumuJet_Pt0to15->SetFillColor(kRed);
-  Histo_ZmumuJet_Pt0to15->SetFillStyle(3001);
-  Histo_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
-  Histo_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);
-  Histo_ZmumuJet_Pt0to15->Draw("same");
-  legend->AddEntry(Histo_ZmumuJet_Pt0to15->GetName(), "ZmumuJet", "f");
-
-  Histo_ZJets_7TeV->SetLineColor(kBlack);
-  Histo_ZJets_7TeV->SetFillColor(kOrange);
-  Histo_ZJets_7TeV->SetFillStyle(3001);
-  Histo_ZJets_7TeV->SetMaximum(YMax_lin);
-  Histo_ZJets_7TeV->SetMinimum(YMin_lin);
-  Histo_ZJets_7TeV->Draw("same");
-  legend->AddEntry(Histo_ZJets_7TeV->GetName(), "ZJets", "f");
-
   Histo_WJets_7TeV->SetLineColor(kBlack);
   Histo_WJets_7TeV->SetFillColor(kMagenta+3);
   Histo_WJets_7TeV->SetFillStyle(3001);
   Histo_WJets_7TeV->SetMaximum(YMax_lin);
   Histo_WJets_7TeV->SetMinimum(YMin_lin);
-  Histo_WJets_7TeV->Draw("same");
-  legend->AddEntry(Histo_WJets_7TeV->GetName(), "WJets", "f");
 
   Histo_TTbarJets_Tauola->SetLineColor(kBlack);
   Histo_TTbarJets_Tauola->SetFillColor(kBlue);
   Histo_TTbarJets_Tauola->SetFillStyle(3001);
   Histo_TTbarJets_Tauola->SetMaximum(YMax_lin);
   Histo_TTbarJets_Tauola->SetMinimum(YMin_lin);
-  Histo_TTbarJets_Tauola->Draw("same");
-  legend->AddEntry(Histo_TTbarJets_Tauola->GetName(), "TTbarJets", "f");
 
   Histo_PhotonJet_Pt15->SetLineColor(kBlack);
   Histo_PhotonJet_Pt15->SetFillColor(kMagenta);
   Histo_PhotonJet_Pt15->SetFillStyle(3001);
   Histo_PhotonJet_Pt15->SetMaximum(YMax_lin);
   Histo_PhotonJet_Pt15->SetMinimum(YMin_lin);
+
+  Histo_FSR_ZmumuJet_Pt0to15->SetLineColor(kBlack);
+  Histo_FSR_ZmumuJet_Pt0to15->SetFillColor(kRed);
+  Histo_FSR_ZmumuJet_Pt0to15->SetFillStyle(3001);
+  Histo_FSR_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
+  Histo_FSR_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);
+
+  Histo_ISR_ZmumuJet_Pt0to15->SetLineColor(kBlack);
+  Histo_ISR_ZmumuJet_Pt0to15->SetFillColor(kOrange);
+  Histo_ISR_ZmumuJet_Pt0to15->SetFillStyle(3001);
+  Histo_ISR_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
+  Histo_ISR_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);
+
+  Histo_ZJets_7TeV->SetLineColor(kBlack);
+  Histo_ZJets_7TeV->SetFillColor(kOrange);
+  Histo_ZJets_7TeV->SetFillStyle(3001);
+  Histo_ZJets_7TeV->SetMaximum(YMax_lin);
+  Histo_ZJets_7TeV->SetMinimum(YMin_lin);
+
+  Histo_Data->Draw("E1");
+  legend->AddEntry(Histo_Data->GetName(), "Data", "lp");
+  Histo_FSR_ZmumuJet_Pt0to15->Draw("same");
+//  Histo_ZJets_7TeV->Draw("same");
+  Histo_QCD_Mu_Pt20to30->Draw("same");
+  Histo_WJets_7TeV->Draw("same");
   Histo_PhotonJet_Pt15->Draw("same");
+  Histo_ISR_ZmumuJet_Pt0to15->Draw("same");
+  Histo_TTbarJets_Tauola->Draw("same");
+  legend->AddEntry(Histo_TTbarJets_Tauola->GetName(), "TTbarJets", "f");
+  legend->AddEntry(Histo_ISR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet (no FSR)", "f");
   legend->AddEntry(Histo_PhotonJet_Pt15->GetName(), "PhotonJet", "f");
+  legend->AddEntry(Histo_WJets_7TeV->GetName(), "WJets", "f");
+  legend->AddEntry(Histo_QCD_Mu_Pt20to30->GetName(), "QCD Mu", "f");
+//  legend->AddEntry(Histo_ZJets_7TeV->GetName(), "ZJets madgraph", "f");
+  legend->AddEntry(Histo_FSR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet FSR", "f");
 
   // // Third: re-draw Data so that data appears in front of MC
   Histo_Data->Draw("E1same");
@@ -1370,11 +1767,11 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   c1->Draw();
 
   // Print the canvas
-  string PicName="Plots_TEST/gif/DataMC_" + var + "_" + name + ".gif";
+  string PicName="gif/DataMC_" + pic + "_" + name + ".gif";
   c1->Print(PicName.c_str());
-  PicName="Plots_TEST/eps/DataMC_" + var + "_" + name + ".eps";
+  PicName="eps/DataMC_" + pic + "_" + name + ".eps";
   c1->Print(PicName.c_str());
-  string convert = "convert Plots_TEST/eps/DataMC_" + var + "_" + name + ".eps" + " Plots_TEST/pdf/DataMC_" + var + "_" + name + ".pdf";
+  string convert = "convert eps/DataMC_" + pic + "_" + name + ".eps" + " pdf/DataMC_" + pic + "_" + name + ".pdf";
   system(convert.c_str());
   if (inlog==true) {
     c1->cd(1);
@@ -1402,17 +1799,20 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
     Histo_InclusiveMu15->SetMaximum(YMax_log);
     Histo_InclusiveMu15->SetMinimum(YMin_log);
     Histo_InclusiveMu15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
-    Histo_ZmumuJet_Pt0to15->SetMaximum(YMax_log);
-    Histo_ZmumuJet_Pt0to15->SetMinimum(YMin_log);
-    Histo_ZmumuJet_Pt0to15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
+    Histo_FSR_ZmumuJet_Pt0to15->SetMaximum(YMax_log);
+    Histo_FSR_ZmumuJet_Pt0to15->SetMinimum(YMin_log);
+    Histo_FSR_ZmumuJet_Pt0to15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
+    Histo_ISR_ZmumuJet_Pt0to15->SetMaximum(YMax_log);
+    Histo_ISR_ZmumuJet_Pt0to15->SetMinimum(YMin_log);
+    Histo_ISR_ZmumuJet_Pt0to15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
     c1->SetLogy(1);
     c1->Update();
     c1->Draw();
-    string PicName_log="Plots_TEST/gif/DataMC_" + var + "_" + name + "_log.gif";
+    string PicName_log="gif/DataMC_" + pic + "_" + name + "_log.gif";
     c1->Print(PicName_log.c_str());
-    PicName="Plots_TEST/eps/DataMC_" + var + "_" + name + "_log.eps";
+    PicName="eps/DataMC_" + pic + "_" + name + "_log.eps";
     c1->Print(PicName.c_str());
-    string convert = "convert Plots_TEST/eps/DataMC_" + var + "_" + name + "_log.eps" + " Plots_TEST/pdf/DataMC_" + var + "_" + name + "_log.pdf";
+    string convert = "convert eps/DataMC_" + pic + "_" + name + "_log.eps" + " pdf/DataMC_" + pic + "_" + name + "_log.pdf";
     system(convert.c_str());
     c1->SetLogy(0);
     c1->Update();
@@ -1420,7 +1820,7 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
 
   // Clean the memory
   c1->Clear();
-  legend->Clear();
+  legend->Delete();
   Histo_Data_temp->Delete();
   Histo_Data->Delete();
   Histo_PhotonJet_Pt15_temp->Delete();
@@ -1463,31 +1863,51 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_QCD_Mu_Pt170toInf->Delete();
   Histo_InclusiveMu15_temp->Delete();
   Histo_InclusiveMu15->Delete();
-  Histo_ZmumuJet_Pt0to15_temp->Delete();
-  Histo_ZmumuJet_Pt0to15->Delete();
-  Histo_ZmumuJet_Pt15to20_temp->Delete();
-  Histo_ZmumuJet_Pt15to20->Delete();
-  Histo_ZmumuJet_Pt20to30_temp->Delete();
-  Histo_ZmumuJet_Pt20to30->Delete();
-  Histo_ZmumuJet_Pt30to50_temp->Delete();
-  Histo_ZmumuJet_Pt30to50->Delete();
-  Histo_ZmumuJet_Pt50to80_temp->Delete();
-  Histo_ZmumuJet_Pt50to80->Delete();
-  Histo_ZmumuJet_Pt80to120_temp->Delete();
-  Histo_ZmumuJet_Pt80to120->Delete();
-  Histo_ZmumuJet_Pt120to170_temp->Delete();
-  Histo_ZmumuJet_Pt120to170->Delete();
-  Histo_ZmumuJet_Pt170to230_temp->Delete();
-  Histo_ZmumuJet_Pt170to230->Delete();
-  Histo_ZmumuJet_Pt230to300_temp->Delete();
-  Histo_ZmumuJet_Pt230to300->Delete();
-  Histo_ZmumuJet_Pt300toInf_temp->Delete();
-  Histo_ZmumuJet_Pt300toInf->Delete();
+  Histo_FSR_ZmumuJet_Pt0to15_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt0to15->Delete();
+  Histo_FSR_ZmumuJet_Pt15to20_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt15to20->Delete();
+  Histo_FSR_ZmumuJet_Pt20to30_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt20to30->Delete();
+  Histo_FSR_ZmumuJet_Pt30to50_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt30to50->Delete();
+  Histo_FSR_ZmumuJet_Pt50to80_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt50to80->Delete();
+  Histo_FSR_ZmumuJet_Pt80to120_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt80to120->Delete();
+  Histo_FSR_ZmumuJet_Pt120to170_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt120to170->Delete();
+  Histo_FSR_ZmumuJet_Pt170to230_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt170to230->Delete();
+  Histo_FSR_ZmumuJet_Pt230to300_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt230to300->Delete();
+  Histo_FSR_ZmumuJet_Pt300toInf_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt300toInf->Delete();
+  Histo_ISR_ZmumuJet_Pt0to15_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt0to15->Delete();
+  Histo_ISR_ZmumuJet_Pt15to20_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt15to20->Delete();
+  Histo_ISR_ZmumuJet_Pt20to30_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt20to30->Delete();
+  Histo_ISR_ZmumuJet_Pt30to50_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt30to50->Delete();
+  Histo_ISR_ZmumuJet_Pt50to80_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt50to80->Delete();
+  Histo_ISR_ZmumuJet_Pt80to120_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt80to120->Delete();
+  Histo_ISR_ZmumuJet_Pt120to170_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt120to170->Delete();
+  Histo_ISR_ZmumuJet_Pt170to230_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt170to230->Delete();
+  Histo_ISR_ZmumuJet_Pt230to300_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt230to300->Delete();
+  Histo_ISR_ZmumuJet_Pt300toInf_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt300toInf->Delete();
 
 }
 
 
-void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_Pt30_miniTree, TTree *QCD_Pt80_miniTree, TTree *QCD_Pt170_miniTree, TTree *QCD_Pt300_miniTree, TTree *QCD_Pt470_miniTree, TTree *PhotonJet_Pt15_miniTree, TTree *PhotonJet_Pt30_miniTree, TTree *PhotonJet_Pt80_miniTree, TTree *PhotonJet_Pt170_miniTree, TTree *PhotonJet_Pt300_miniTree, TTree *TTbarJets_Tauola_miniTree, TTree *WJets_7TeV_miniTree, TTree *ZJets_7TeV_miniTree, TTree *QCD_Mu_Pt20to30_miniTree, TTree *QCD_Mu_Pt30to50_miniTree, TTree *QCD_Mu_Pt50to80_miniTree, TTree *QCD_Mu_Pt80to120_miniTree, TTree *QCD_Mu_Pt120to170_miniTree, TTree *QCD_Mu_Pt170toInf_miniTree, TTree *InclusiveMu15_miniTree, TTree *ZmumuJet_Pt0to15_miniTree, TTree *ZmumuJet_Pt15to20_miniTree, TTree *ZmumuJet_Pt20to30_miniTree, TTree *ZmumuJet_Pt30to50_miniTree, TTree *ZmumuJet_Pt50to80_miniTree, TTree *ZmumuJet_Pt80to120_miniTree, TTree *ZmumuJet_Pt120to170_miniTree, TTree *ZmumuJet_Pt170to230_miniTree, TTree *ZmumuJet_Pt230to300_miniTree, TTree *ZmumuJet_Pt300toInf_miniTree, string var1, string var2, string limits, string cut, string name, string Title_var1, string Title_var2, bool inlog_var1, bool inlog_var2, TCanvas *c1){
+void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_Pt30_miniTree, TTree *QCD_Pt80_miniTree, TTree *QCD_Pt170_miniTree, TTree *QCD_Pt300_miniTree, TTree *QCD_Pt470_miniTree, TTree *PhotonJet_Pt15_miniTree, TTree *PhotonJet_Pt30_miniTree, TTree *PhotonJet_Pt80_miniTree, TTree *PhotonJet_Pt170_miniTree, TTree *PhotonJet_Pt300_miniTree, TTree *TTbarJets_Tauola_miniTree, TTree *WJets_7TeV_miniTree, TTree *ZJets_7TeV_miniTree, TTree *QCD_Mu_Pt20to30_miniTree, TTree *QCD_Mu_Pt30to50_miniTree, TTree *QCD_Mu_Pt50to80_miniTree, TTree *QCD_Mu_Pt80to120_miniTree, TTree *QCD_Mu_Pt120to170_miniTree, TTree *QCD_Mu_Pt170toInf_miniTree, TTree *InclusiveMu15_miniTree, TTree *FSR_ZmumuJet_Pt0to15_miniTree, TTree *FSR_ZmumuJet_Pt15to20_miniTree, TTree *FSR_ZmumuJet_Pt20to30_miniTree, TTree *FSR_ZmumuJet_Pt30to50_miniTree, TTree *FSR_ZmumuJet_Pt50to80_miniTree, TTree *FSR_ZmumuJet_Pt80to120_miniTree, TTree *FSR_ZmumuJet_Pt120to170_miniTree, TTree *FSR_ZmumuJet_Pt170to230_miniTree, TTree *FSR_ZmumuJet_Pt230to300_miniTree, TTree *FSR_ZmumuJet_Pt300toInf_miniTree, TTree *ISR_ZmumuJet_Pt0to15_miniTree, TTree *ISR_ZmumuJet_Pt15to20_miniTree, TTree *ISR_ZmumuJet_Pt20to30_miniTree, TTree *ISR_ZmumuJet_Pt30to50_miniTree, TTree *ISR_ZmumuJet_Pt50to80_miniTree, TTree *ISR_ZmumuJet_Pt80to120_miniTree, TTree *ISR_ZmumuJet_Pt120to170_miniTree, TTree *ISR_ZmumuJet_Pt170to230_miniTree, TTree *ISR_ZmumuJet_Pt230to300_miniTree, TTree *ISR_ZmumuJet_Pt300toInf_miniTree, string var1, string var2, string limits, string cut, string name, string Title_var1, string Title_var2, string pic, bool inlog_var1, bool inlog_var2, TCanvas *c1, bool doFit){
 
   // Get Histo_Data from eventTree
   TH2F *Histo_Data_temp = new TH2F();
@@ -1642,74 +2062,144 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   TH2F *Histo_InclusiveMu15 = (TH2F*)gDirectory->Get("Histo_InclusiveMu15_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt0to15 from eventTree
-  TH2F *Histo_ZmumuJet_Pt0to15_temp = new TH2F();
-  string variable_ZmumuJet_Pt0to15 = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt0to15_temp" + limits;
-  ZmumuJet_Pt0to15_miniTree->Draw(variable_ZmumuJet_Pt0to15.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt0to15 = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt0to15_temp");
+  // Get Histo_FSR_ZmumuJet_Pt0to15 from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt0to15_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt0to15 = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt0to15_temp" + limits;
+  FSR_ZmumuJet_Pt0to15_miniTree->Draw(variable_FSR_ZmumuJet_Pt0to15.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt0to15 = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt0to15_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt15to20 from eventTree
-  TH2F *Histo_ZmumuJet_Pt15to20_temp = new TH2F();
-  string variable_ZmumuJet_Pt15to20 = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt15to20_temp" + limits;
-  ZmumuJet_Pt15to20_miniTree->Draw(variable_ZmumuJet_Pt15to20.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt15to20 = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt15to20_temp");
+  // Get Histo_FSR_ZmumuJet_Pt15to20 from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt15to20_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt15to20 = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt15to20_temp" + limits;
+  FSR_ZmumuJet_Pt15to20_miniTree->Draw(variable_FSR_ZmumuJet_Pt15to20.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt15to20 = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt15to20_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt20to30 from eventTree
-  TH2F *Histo_ZmumuJet_Pt20to30_temp = new TH2F();
-  string variable_ZmumuJet_Pt20to30 = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt20to30_temp" + limits;
-  ZmumuJet_Pt20to30_miniTree->Draw(variable_ZmumuJet_Pt20to30.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt20to30 = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt20to30_temp");
+  // Get Histo_FSR_ZmumuJet_Pt20to30 from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt20to30_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt20to30 = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt20to30_temp" + limits;
+  FSR_ZmumuJet_Pt20to30_miniTree->Draw(variable_FSR_ZmumuJet_Pt20to30.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt20to30 = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt20to30_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt30to50 from eventTree
-  TH2F *Histo_ZmumuJet_Pt30to50_temp = new TH2F();
-  string variable_ZmumuJet_Pt30to50 = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt30to50_temp" + limits;
-  ZmumuJet_Pt30to50_miniTree->Draw(variable_ZmumuJet_Pt30to50.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt30to50 = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt30to50_temp");
+  // Get Histo_FSR_ZmumuJet_Pt30to50 from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt30to50_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt30to50 = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt30to50_temp" + limits;
+  FSR_ZmumuJet_Pt30to50_miniTree->Draw(variable_FSR_ZmumuJet_Pt30to50.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt30to50 = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt30to50_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt50to80 from eventTree
-  TH2F *Histo_ZmumuJet_Pt50to80_temp = new TH2F();
-  string variable_ZmumuJet_Pt50to80 = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt50to80_temp" + limits;
-  ZmumuJet_Pt50to80_miniTree->Draw(variable_ZmumuJet_Pt50to80.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt50to80 = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt50to80_temp");
+  // Get Histo_FSR_ZmumuJet_Pt50to80 from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt50to80_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt50to80 = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt50to80_temp" + limits;
+  FSR_ZmumuJet_Pt50to80_miniTree->Draw(variable_FSR_ZmumuJet_Pt50to80.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt50to80 = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt50to80_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt80to120 from eventTree
-  TH2F *Histo_ZmumuJet_Pt80to120_temp = new TH2F();
-  string variable_ZmumuJet_Pt80to120 = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt80to120_temp" + limits;
-  ZmumuJet_Pt80to120_miniTree->Draw(variable_ZmumuJet_Pt80to120.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt80to120 = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt80to120_temp");
+  // Get Histo_FSR_ZmumuJet_Pt80to120 from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt80to120_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt80to120 = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt80to120_temp" + limits;
+  FSR_ZmumuJet_Pt80to120_miniTree->Draw(variable_FSR_ZmumuJet_Pt80to120.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt80to120 = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt80to120_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt120to170 from eventTree
-  TH2F *Histo_ZmumuJet_Pt120to170_temp = new TH2F();
-  string variable_ZmumuJet_Pt120to170 = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt120to170_temp" + limits;
-  ZmumuJet_Pt120to170_miniTree->Draw(variable_ZmumuJet_Pt120to170.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt120to170 = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt120to170_temp");
+  // Get Histo_FSR_ZmumuJet_Pt120to170 from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt120to170_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt120to170 = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt120to170_temp" + limits;
+  FSR_ZmumuJet_Pt120to170_miniTree->Draw(variable_FSR_ZmumuJet_Pt120to170.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt120to170 = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt120to170_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt170to230 from eventTree
-  TH2F *Histo_ZmumuJet_Pt170to230_temp = new TH2F();
-  string variable_ZmumuJet_Pt170to230 = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt170to230_temp" + limits;
-  ZmumuJet_Pt170to230_miniTree->Draw(variable_ZmumuJet_Pt170to230.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt170to230 = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt170to230_temp");
+  // Get Histo_FSR_ZmumuJet_Pt170to230 from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt170to230_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt170to230 = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt170to230_temp" + limits;
+  FSR_ZmumuJet_Pt170to230_miniTree->Draw(variable_FSR_ZmumuJet_Pt170to230.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt170to230 = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt170to230_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt230to300 from eventTree
-  TH2F *Histo_ZmumuJet_Pt230to300_temp = new TH2F();
-  string variable_ZmumuJet_Pt230to300 = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt230to300_temp" + limits;
-  ZmumuJet_Pt230to300_miniTree->Draw(variable_ZmumuJet_Pt230to300.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt230to300 = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt230to300_temp");
+  // Get Histo_FSR_ZmumuJet_Pt230to300 from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt230to300_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt230to300 = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt230to300_temp" + limits;
+  FSR_ZmumuJet_Pt230to300_miniTree->Draw(variable_FSR_ZmumuJet_Pt230to300.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt230to300 = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt230to300_temp");
   c1->Clear();
 
-  // Get Histo_ZmumuJet_Pt300toInf from eventTree
-  TH2F *Histo_ZmumuJet_Pt300toInf_temp = new TH2F();
-  string variable_ZmumuJet_Pt300toInf = var2 + ":" + var1 + ">>Histo_ZmumuJet_Pt300toInf_temp" + limits;
-  ZmumuJet_Pt300toInf_miniTree->Draw(variable_ZmumuJet_Pt300toInf.c_str(), cut.c_str());
-  TH2F *Histo_ZmumuJet_Pt300toInf = (TH2F*)gDirectory->Get("Histo_ZmumuJet_Pt300toInf_temp");
+  // Get Histo_FSR_ZmumuJet_Pt300toInf from eventTree
+  TH2F *Histo_FSR_ZmumuJet_Pt300toInf_temp = new TH2F();
+  string variable_FSR_ZmumuJet_Pt300toInf = var2 + ":" + var1 + ">>Histo_FSR_ZmumuJet_Pt300toInf_temp" + limits;
+  FSR_ZmumuJet_Pt300toInf_miniTree->Draw(variable_FSR_ZmumuJet_Pt300toInf.c_str(), cut.c_str());
+  TH2F *Histo_FSR_ZmumuJet_Pt300toInf = (TH2F*)gDirectory->Get("Histo_FSR_ZmumuJet_Pt300toInf_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt0to15 from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt0to15_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt0to15 = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt0to15_temp" + limits;
+  ISR_ZmumuJet_Pt0to15_miniTree->Draw(variable_ISR_ZmumuJet_Pt0to15.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt0to15 = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt0to15_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt15to20 from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt15to20_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt15to20 = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt15to20_temp" + limits;
+  ISR_ZmumuJet_Pt15to20_miniTree->Draw(variable_ISR_ZmumuJet_Pt15to20.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt15to20 = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt15to20_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt20to30 from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt20to30_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt20to30 = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt20to30_temp" + limits;
+  ISR_ZmumuJet_Pt20to30_miniTree->Draw(variable_ISR_ZmumuJet_Pt20to30.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt20to30 = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt20to30_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt30to50 from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt30to50_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt30to50 = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt30to50_temp" + limits;
+  ISR_ZmumuJet_Pt30to50_miniTree->Draw(variable_ISR_ZmumuJet_Pt30to50.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt30to50 = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt30to50_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt50to80 from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt50to80_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt50to80 = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt50to80_temp" + limits;
+  ISR_ZmumuJet_Pt50to80_miniTree->Draw(variable_ISR_ZmumuJet_Pt50to80.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt50to80 = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt50to80_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt80to120 from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt80to120_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt80to120 = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt80to120_temp" + limits;
+  ISR_ZmumuJet_Pt80to120_miniTree->Draw(variable_ISR_ZmumuJet_Pt80to120.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt80to120 = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt80to120_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt120to170 from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt120to170_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt120to170 = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt120to170_temp" + limits;
+  ISR_ZmumuJet_Pt120to170_miniTree->Draw(variable_ISR_ZmumuJet_Pt120to170.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt120to170 = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt120to170_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt170to230 from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt170to230_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt170to230 = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt170to230_temp" + limits;
+  ISR_ZmumuJet_Pt170to230_miniTree->Draw(variable_ISR_ZmumuJet_Pt170to230.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt170to230 = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt170to230_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt230to300 from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt230to300_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt230to300 = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt230to300_temp" + limits;
+  ISR_ZmumuJet_Pt230to300_miniTree->Draw(variable_ISR_ZmumuJet_Pt230to300.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt230to300 = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt230to300_temp");
+  c1->Clear();
+
+  // Get Histo_ISR_ZmumuJet_Pt300toInf from eventTree
+  TH2F *Histo_ISR_ZmumuJet_Pt300toInf_temp = new TH2F();
+  string variable_ISR_ZmumuJet_Pt300toInf = var2 + ":" + var1 + ">>Histo_ISR_ZmumuJet_Pt300toInf_temp" + limits;
+  ISR_ZmumuJet_Pt300toInf_miniTree->Draw(variable_ISR_ZmumuJet_Pt300toInf.c_str(), cut.c_str());
+  TH2F *Histo_ISR_ZmumuJet_Pt300toInf = (TH2F*)gDirectory->Get("Histo_ISR_ZmumuJet_Pt300toInf_temp");
   c1->Clear();
 
   // TODO: implement drawUnderOverFsubleading
@@ -1745,16 +2235,26 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double XSectionQCD_Mu_Pt120to170 = 6095.0;
   double XSectionQCD_Mu_Pt170toInf = 1612.8;
   double XSectionInclusiveMu15 = 79687.96;
-  double XSectionZmumuJet_Pt0to15 = 4.434e+03;
-  double XSectionZmumuJet_Pt15to20 = 1.454e+02;
-  double XSectionZmumuJet_Pt20to30 = 1.318e+02;
-  double XSectionZmumuJet_Pt30to50 = 8.438e+01;
-  double XSectionZmumuJet_Pt50to80 = 3.235e+01;
-  double XSectionZmumuJet_Pt80to120 = 9.981e+00;
-  double XSectionZmumuJet_Pt120to170 = 2.760e+00;
-  double XSectionZmumuJet_Pt170to230 = 7.241e-01;
-  double XSectionZmumuJet_Pt230to300 = 1.946e-01;
-  double XSectionZmumuJet_Pt300toInf = 7.627e-02;
+  double XSectionFSR_ZmumuJet_Pt0to15 = 4.434e+03;
+  double XSectionFSR_ZmumuJet_Pt15to20 = 1.454e+02;
+  double XSectionFSR_ZmumuJet_Pt20to30 = 1.318e+02;
+  double XSectionFSR_ZmumuJet_Pt30to50 = 8.438e+01;
+  double XSectionFSR_ZmumuJet_Pt50to80 = 3.235e+01;
+  double XSectionFSR_ZmumuJet_Pt80to120 = 9.981e+00;
+  double XSectionFSR_ZmumuJet_Pt120to170 = 2.760e+00;
+  double XSectionFSR_ZmumuJet_Pt170to230 = 7.241e-01;
+  double XSectionFSR_ZmumuJet_Pt230to300 = 1.946e-01;
+  double XSectionFSR_ZmumuJet_Pt300toInf = 7.627e-02;
+  double XSectionISR_ZmumuJet_Pt0to15 = 4.434e+03;
+  double XSectionISR_ZmumuJet_Pt15to20 = 1.454e+02;
+  double XSectionISR_ZmumuJet_Pt20to30 = 1.318e+02;
+  double XSectionISR_ZmumuJet_Pt30to50 = 8.438e+01;
+  double XSectionISR_ZmumuJet_Pt50to80 = 3.235e+01;
+  double XSectionISR_ZmumuJet_Pt80to120 = 9.981e+00;
+  double XSectionISR_ZmumuJet_Pt120to170 = 2.760e+00;
+  double XSectionISR_ZmumuJet_Pt170to230 = 7.241e-01;
+  double XSectionISR_ZmumuJet_Pt230to300 = 1.946e-01;
+  double XSectionISR_ZmumuJet_Pt300toInf = 7.627e-02;
 
   double InitialNumberQCD_Pt15 = 6196800;
   double InitialNumberQCD_Pt30 = 5093840;
@@ -1777,16 +2277,26 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double InitialNumberQCD_Mu_Pt120to170 = 316630;
   double InitialNumberQCD_Mu_Pt170toInf = 262036;
   double InitialNumberInclusiveMu15 = 5120334;
-  double InitialNumberZmumuJet_Pt0to15 = 235420;
-  double InitialNumberZmumuJet_Pt15to20 = 222730;
-  double InitialNumberZmumuJet_Pt20to30 = 164190;
-  double InitialNumberZmumuJet_Pt30to50 = 163920;
-  double InitialNumberZmumuJet_Pt50to80 = 106016;
-  double InitialNumberZmumuJet_Pt80to120 = 107759;
-  double InitialNumberZmumuJet_Pt120to170 = 177408;
-  double InitialNumberZmumuJet_Pt170to230 = 178400;
-  double InitialNumberZmumuJet_Pt230to300 = 176485;
-  double InitialNumberZmumuJet_Pt300toInf = 109316;
+  double InitialNumberFSR_ZmumuJet_Pt0to15 = 235420;
+  double InitialNumberFSR_ZmumuJet_Pt15to20 = 222730;
+  double InitialNumberFSR_ZmumuJet_Pt20to30 = 164190;
+  double InitialNumberFSR_ZmumuJet_Pt30to50 = 163920;
+  double InitialNumberFSR_ZmumuJet_Pt50to80 = 106016;
+  double InitialNumberFSR_ZmumuJet_Pt80to120 = 107759;
+  double InitialNumberFSR_ZmumuJet_Pt120to170 = 177408;
+  double InitialNumberFSR_ZmumuJet_Pt170to230 = 178400;
+  double InitialNumberFSR_ZmumuJet_Pt230to300 = 176485;
+  double InitialNumberFSR_ZmumuJet_Pt300toInf = 109316;
+  double InitialNumberISR_ZmumuJet_Pt0to15 = 235420;
+  double InitialNumberISR_ZmumuJet_Pt15to20 = 222730;
+  double InitialNumberISR_ZmumuJet_Pt20to30 = 164190;
+  double InitialNumberISR_ZmumuJet_Pt30to50 = 163920;
+  double InitialNumberISR_ZmumuJet_Pt50to80 = 106016;
+  double InitialNumberISR_ZmumuJet_Pt80to120 = 107759;
+  double InitialNumberISR_ZmumuJet_Pt120to170 = 177408;
+  double InitialNumberISR_ZmumuJet_Pt170to230 = 178400;
+  double InitialNumberISR_ZmumuJet_Pt230to300 = 176485;
+  double InitialNumberISR_ZmumuJet_Pt300toInf = 109316;
 
   Histo_PhotonJet_Pt15->Scale((double)(  (double)((double)(XSectionPhotonJet_Pt15) / (double)(InitialNumberPhotonJet_Pt15)) * (double)integratedLuminosity));
   Histo_PhotonJet_Pt30->Scale((double)(  (double)((double)(XSectionPhotonJet_Pt30) / (double)(InitialNumberPhotonJet_Pt30)) * (double)integratedLuminosity));
@@ -1809,16 +2319,26 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_QCD_Mu_Pt120to170->Scale((double)(  (double)((double)(XSectionQCD_Mu_Pt120to170) / (double)(InitialNumberQCD_Mu_Pt120to170)) * (double)integratedLuminosity));
   Histo_QCD_Mu_Pt170toInf->Scale((double)(  (double)((double)(XSectionQCD_Mu_Pt170toInf) / (double)(InitialNumberQCD_Mu_Pt170toInf)) * (double)integratedLuminosity));
   Histo_InclusiveMu15->Scale((double)(  (double)((double)(XSectionInclusiveMu15) / (double)(InitialNumberInclusiveMu15)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt0to15->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt0to15) / (double)(InitialNumberZmumuJet_Pt0to15)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt15to20->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt15to20) / (double)(InitialNumberZmumuJet_Pt15to20)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt20to30->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt20to30) / (double)(InitialNumberZmumuJet_Pt20to30)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt30to50->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt30to50) / (double)(InitialNumberZmumuJet_Pt30to50)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt50to80->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt50to80) / (double)(InitialNumberZmumuJet_Pt50to80)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt80to120->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt80to120) / (double)(InitialNumberZmumuJet_Pt80to120)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt120to170->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt120to170) / (double)(InitialNumberZmumuJet_Pt120to170)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt170to230) / (double)(InitialNumberZmumuJet_Pt170to230)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt230to300) / (double)(InitialNumberZmumuJet_Pt230to300)) * (double)integratedLuminosity));
-  Histo_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionZmumuJet_Pt300toInf) / (double)(InitialNumberZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt0to15->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt0to15) / (double)(InitialNumberFSR_ZmumuJet_Pt0to15)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt15to20->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt15to20) / (double)(InitialNumberFSR_ZmumuJet_Pt15to20)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt20to30->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt20to30) / (double)(InitialNumberFSR_ZmumuJet_Pt20to30)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt30to50->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt30to50) / (double)(InitialNumberFSR_ZmumuJet_Pt30to50)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt50to80->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt50to80) / (double)(InitialNumberFSR_ZmumuJet_Pt50to80)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt80to120->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt80to120) / (double)(InitialNumberFSR_ZmumuJet_Pt80to120)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt120to170->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt120to170) / (double)(InitialNumberFSR_ZmumuJet_Pt120to170)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt170to230) / (double)(InitialNumberFSR_ZmumuJet_Pt170to230)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt230to300) / (double)(InitialNumberFSR_ZmumuJet_Pt230to300)) * (double)integratedLuminosity));
+  Histo_FSR_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionFSR_ZmumuJet_Pt300toInf) / (double)(InitialNumberFSR_ZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt0to15->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt0to15) / (double)(InitialNumberISR_ZmumuJet_Pt0to15)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt15to20->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt15to20) / (double)(InitialNumberISR_ZmumuJet_Pt15to20)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt20to30->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt20to30) / (double)(InitialNumberISR_ZmumuJet_Pt20to30)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt30to50->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt30to50) / (double)(InitialNumberISR_ZmumuJet_Pt30to50)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt50to80->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt50to80) / (double)(InitialNumberISR_ZmumuJet_Pt50to80)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt80to120->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt80to120) / (double)(InitialNumberISR_ZmumuJet_Pt80to120)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt120to170->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt120to170) / (double)(InitialNumberISR_ZmumuJet_Pt120to170)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt170to230) / (double)(InitialNumberISR_ZmumuJet_Pt170to230)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt230to300) / (double)(InitialNumberISR_ZmumuJet_Pt230to300)) * (double)integratedLuminosity));
+  Histo_ISR_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt300toInf) / (double)(InitialNumberISR_ZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
 
   // Adding histograms for binned samples
   Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
@@ -1838,15 +2358,24 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt170);
   Histo_PhotonJet_Pt15->Add(Histo_PhotonJet_Pt300);
 
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt15to20);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt20to30);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt30to50);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt50to80);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt80to120);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt120to170);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt170to230);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt230to300);
-  Histo_ZmumuJet_Pt0to15->Add(Histo_ZmumuJet_Pt300toInf);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt15to20);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt20to30);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt30to50);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt50to80);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt80to120);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt120to170);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt170to230);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt230to300);
+  Histo_FSR_ZmumuJet_Pt0to15->Add(Histo_FSR_ZmumuJet_Pt300toInf);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt15to20);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt20to30);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt30to50);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt50to80);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt80to120);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt120to170);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt170to230);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt230to300);
+  Histo_ISR_ZmumuJet_Pt0to15->Add(Histo_ISR_ZmumuJet_Pt300toInf);
 
 
   // Get the maxs and the mins to further correct the Y-axis
@@ -1866,8 +2395,8 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   YMax = max(YMax, QCD_Mu_Pt20to30Max);
   double InclusiveMu15Max = Histo_InclusiveMu15->GetMaximum();
   YMax = max(YMax, InclusiveMu15Max);
-  double ZmumuJet_Pt0to15Max = Histo_ZmumuJet_Pt0to15->GetMaximum();
-  YMax = max(YMax, ZmumuJet_Pt0to15Max);
+  double FSR_ZmumuJet_Pt0to15Max = Histo_FSR_ZmumuJet_Pt0to15->GetMaximum();
+  YMax = max(YMax, FSR_ZmumuJet_Pt0to15Max);
 
   double dataMin = YMax;
   double PhotonJet_Pt15Min = YMax;
@@ -1877,7 +2406,7 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double ZJets_7TeVMin = YMax;
   double QCD_Mu_Pt20to30Min = YMax;
   double InclusiveMu15Min = YMax;
-  double ZmumuJet_Pt0to15Min = YMax;
+  double FSR_ZmumuJet_Pt0to15Min = YMax;
   double YMin = YMax;
   // Gets the actual minimum for each histogram, and not the unfilled bin if any
   for( int ibin=1 ; ibin<Histo_Data->GetNbinsX() ; ibin++ ){
@@ -1928,12 +2457,12 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
     }
   }
   YMin = min(YMin, InclusiveMu15Min);
-  for( int ibin=1 ; ibin<Histo_ZmumuJet_Pt0to15->GetNbinsX() ; ibin++ ){
-    if( ((Histo_ZmumuJet_Pt0to15->GetBinContent(ibin))!=0) && ((Histo_ZmumuJet_Pt0to15->GetBinContent(ibin))<ZmumuJet_Pt0to15Min) ){
-      ZmumuJet_Pt0to15Min = Histo_ZmumuJet_Pt0to15->GetBinContent(ibin);
+  for( int ibin=1 ; ibin<Histo_FSR_ZmumuJet_Pt0to15->GetNbinsX() ; ibin++ ){
+    if( ((Histo_FSR_ZmumuJet_Pt0to15->GetBinContent(ibin))!=0) && ((Histo_FSR_ZmumuJet_Pt0to15->GetBinContent(ibin))<FSR_ZmumuJet_Pt0to15Min) ){
+      FSR_ZmumuJet_Pt0to15Min = Histo_FSR_ZmumuJet_Pt0to15->GetBinContent(ibin);
     }
   }
-  YMin = min(YMin, ZmumuJet_Pt0to15Min);
+  YMin = min(YMin, FSR_ZmumuJet_Pt0to15Min);
 
 //  cout << "YMax= "<< YMax << "\t\tYMin= " << YMin << endl;
   double YMin_lin = (double)YMin / (double)10.0;
@@ -1948,9 +2477,9 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
 */
 
   // Setup the histo and canvas names and title
-  string data_name = "Data_" + var1 + "_VS_" + var2 + "_" + name;
-  string mc_name = "MC_" + var1 + "_VS_" + var2 + "_" + name;
-  string canvas_name = "DataMC_" + var1 + "_VS_" + var2 + "_" + name;
+  string data_name = "Data_" + pic + "_" + name;
+  string mc_name = "MC_" + pic + "_" + name;
+  string canvas_name = "DataMC_" + pic + "_" + name;
 /*
   std::ostringstream binWidthOSS;
   binWidthOSS << (double)Histo_Data->GetBinWidth(1);
@@ -1971,6 +2500,10 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   // Draw the comparison plots
 
   TLegend *legend = new TLegend(0.75, 0.80, 0.90, 0.93, "");
+	if( doFit ){
+		legend->SetX1(0.55);
+		legend->SetX2(0.70);
+	}
   legend->SetTextSize(0.025);
   legend->SetFillColor(kWhite);
   legend->SetLineColor(kWhite);
@@ -1981,8 +2514,8 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_Data->GetYaxis()->SetTitle(Title_var2.c_str());
   Histo_Data->SetLineColor(kBlack);
   Histo_Data->SetMarkerColor(kBlack);
-//  Histo_Data->SetMarkerSize(0.7);
-//  Histo_Data->SetMarkerStyle(20);
+//  Histo_Data->SetMarkerSize(15);
+  Histo_Data->SetMarkerStyle(20);
   Histo_Data->Draw("SCAT");
   legend->AddEntry(Histo_Data->GetName(), "Data", "lp");
 
@@ -2015,19 +2548,26 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_TTbarJets_Tauola->Draw("SCATsame");
   legend->AddEntry(Histo_TTbarJets_Tauola->GetName(), "TTbarJets", "f");
 
-  Histo_ZmumuJet_Pt0to15->SetLineColor(kBlack);
-  Histo_ZmumuJet_Pt0to15->SetFillColor(kRed);
-	Histo_ZmumuJet_Pt0to15->SetMarkerColor(kRed);
-  Histo_ZmumuJet_Pt0to15->SetFillStyle(3001);
-  Histo_ZmumuJet_Pt0to15->Draw("SCATsame");
-  legend->AddEntry(Histo_ZmumuJet_Pt0to15->GetName(), "ZmumuJet", "f");
+  Histo_FSR_ZmumuJet_Pt0to15->SetLineColor(kBlack);
+  Histo_FSR_ZmumuJet_Pt0to15->SetFillColor(kRed);
+	Histo_FSR_ZmumuJet_Pt0to15->SetMarkerColor(kRed);
+  Histo_FSR_ZmumuJet_Pt0to15->SetFillStyle(3001);
+  Histo_FSR_ZmumuJet_Pt0to15->Draw("SCATsame");
+  legend->AddEntry(Histo_FSR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet (FSR)", "f");
+
+  Histo_ISR_ZmumuJet_Pt0to15->SetLineColor(kBlack);
+  Histo_ISR_ZmumuJet_Pt0to15->SetFillColor(kOrange);
+	Histo_ISR_ZmumuJet_Pt0to15->SetMarkerColor(kOrange);
+  Histo_ISR_ZmumuJet_Pt0to15->SetFillStyle(3001);
+  Histo_ISR_ZmumuJet_Pt0to15->Draw("SCATsame");
+  legend->AddEntry(Histo_ISR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet (no FSR)", "f");
 
   Histo_ZJets_7TeV->SetLineColor(kBlack);
   Histo_ZJets_7TeV->SetFillColor(kOrange);
 	Histo_ZJets_7TeV->SetMarkerColor(kOrange);
   Histo_ZJets_7TeV->SetFillStyle(3001);
-  Histo_ZJets_7TeV->Draw("SCATsame");
-  legend->AddEntry(Histo_ZJets_7TeV->GetName(), "ZJets", "f");
+//  Histo_ZJets_7TeV->Draw("SCATsame");
+//  legend->AddEntry(Histo_ZJets_7TeV->GetName(), "ZJets", "f");
 
   Histo_WJets_7TeV->SetLineColor(kBlack);
   Histo_WJets_7TeV->SetFillColor(kMagenta+3);
@@ -2048,6 +2588,26 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
 
   // // Fourth: redraw axis so that axis appears in front of everything
   gPad->RedrawAxis();
+if( doFit ){
+	string fitOpts = "OQ";
+	//TMinuit *gMinuit = new TMinuit();
+	//gMinuit->SetGraphicsMode(kFALSE);
+	//gStyle->SetOptStat(111110);
+	//gStyle->SetOptFit(1111);
+	TF1* f = new TF1("f", "pol1");
+	//TF1* f = gROOT->GetFunction("pol1");
+	f->SetParameter(0, 0); // ordonnee a l'origine est 0 si correction parfaite
+	f->SetParameter(1, 1); // coeff dir 1 si pas de correction
+	//gMinuit->SetFCN(f);
+	Histo_Data->Fit("f", fitOpts.c_str());
+	Histo_WJets_7TeV->Draw("SCATsame");
+	Histo_PhotonJet_Pt15->Draw("SCATsame");
+	Histo_ISR_ZmumuJet_Pt0to15->Draw("SCATsame");
+	Histo_FSR_ZmumuJet_Pt0to15->Draw("SCATsame");
+	Histo_TTbarJets_Tauola->Draw("SCATsame");
+	Histo_QCD_Mu_Pt20to30->Draw("SCATsame");
+}
+
 
   // // Fifth: draw legend
   legend->Draw();
@@ -2067,11 +2627,11 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   c1->Draw();
 
   // Print the canvas
-  string PicName="Plots_TEST/gif/DataMC_" + var1 + "_VS_" + var2 + "_" + name + ".gif";
+  string PicName="gif/DataMC_" + pic + "_" + name + ".gif";
   c1->Print(PicName.c_str());
-  PicName="Plots_TEST/eps/DataMC_" + var1 + "_VS_" + var2 + "_" + name + ".eps";
+  PicName="eps/DataMC_" + pic + "_" + name + ".eps";
   c1->Print(PicName.c_str());
-  string convert = "convert Plots_TEST/eps/DataMC_" + var1 + "_VS_" + var2 + "_" + name + ".eps" + " Plots_TEST/pdf/DataMC_" + var1 + "_VS_" + var2 + "_" + name + ".pdf";
+  string convert = "convert eps/DataMC_" + pic + "_" + name + ".eps" + " pdf/DataMC_" + pic + "_" + name + ".pdf";
   system(convert.c_str());
 /*
   if (inlog==true) {
@@ -2100,17 +2660,17 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
     Histo_InclusiveMu15->SetMaximum(YMax_log);
     Histo_InclusiveMu15->SetMinimum(YMin_log);
     Histo_InclusiveMu15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
-    Histo_ZmumuJet_Pt0to15->SetMaximum(YMax_log);
-    Histo_ZmumuJet_Pt0to15->SetMinimum(YMin_log);
-    Histo_ZmumuJet_Pt0to15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
+    Histo_FSR_ZmumuJet_Pt0to15->SetMaximum(YMax_log);
+    Histo_FSR_ZmumuJet_Pt0to15->SetMinimum(YMin_log);
+    Histo_FSR_ZmumuJet_Pt0to15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
     c1->SetLogy(1);
     c1->Update();
     c1->Draw();
-    string PicName_log="Plots_TEST/gif/DataMC_" + var + "_" + name + "_log.gif";
+    string PicName_log="Plots_TEST/gif/DataMC_" + pic + "_" + name + "_log.gif";
     c1->Print(PicName_log.c_str());
-    PicName="Plots_TEST/eps/DataMC_" + var + "_" + name + "_log.eps";
+    PicName="Plots_TEST/eps/DataMC_" + pic + "_" + name + "_log.eps";
     c1->Print(PicName.c_str());
-    string convert = "convert Plots_TEST/eps/DataMC_" + var + "_" + name + "_log.eps" + " Plots_TEST/pdf/DataMC_" + var + "_" + name + "_log.pdf";
+    string convert = "convert Plots_TEST/eps/DataMC_" + pic + "_" + name + "_log.eps" + " Plots_TEST/pdf/DataMC_" + pic + "_" + name + "_log.pdf";
     system(convert.c_str());
     c1->SetLogy(0);
     c1->Update();
@@ -2161,26 +2721,46 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_QCD_Mu_Pt170toInf->Delete();
   Histo_InclusiveMu15_temp->Delete();
   Histo_InclusiveMu15->Delete();
-  Histo_ZmumuJet_Pt0to15_temp->Delete();
-  Histo_ZmumuJet_Pt0to15->Delete();
-  Histo_ZmumuJet_Pt15to20_temp->Delete();
-  Histo_ZmumuJet_Pt15to20->Delete();
-  Histo_ZmumuJet_Pt20to30_temp->Delete();
-  Histo_ZmumuJet_Pt20to30->Delete();
-  Histo_ZmumuJet_Pt30to50_temp->Delete();
-  Histo_ZmumuJet_Pt30to50->Delete();
-  Histo_ZmumuJet_Pt50to80_temp->Delete();
-  Histo_ZmumuJet_Pt50to80->Delete();
-  Histo_ZmumuJet_Pt80to120_temp->Delete();
-  Histo_ZmumuJet_Pt80to120->Delete();
-  Histo_ZmumuJet_Pt120to170_temp->Delete();
-  Histo_ZmumuJet_Pt120to170->Delete();
-  Histo_ZmumuJet_Pt170to230_temp->Delete();
-  Histo_ZmumuJet_Pt170to230->Delete();
-  Histo_ZmumuJet_Pt230to300_temp->Delete();
-  Histo_ZmumuJet_Pt230to300->Delete();
-  Histo_ZmumuJet_Pt300toInf_temp->Delete();
-  Histo_ZmumuJet_Pt300toInf->Delete();
+  Histo_FSR_ZmumuJet_Pt0to15_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt0to15->Delete();
+  Histo_FSR_ZmumuJet_Pt15to20_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt15to20->Delete();
+  Histo_FSR_ZmumuJet_Pt20to30_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt20to30->Delete();
+  Histo_FSR_ZmumuJet_Pt30to50_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt30to50->Delete();
+  Histo_FSR_ZmumuJet_Pt50to80_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt50to80->Delete();
+  Histo_FSR_ZmumuJet_Pt80to120_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt80to120->Delete();
+  Histo_FSR_ZmumuJet_Pt120to170_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt120to170->Delete();
+  Histo_FSR_ZmumuJet_Pt170to230_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt170to230->Delete();
+  Histo_FSR_ZmumuJet_Pt230to300_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt230to300->Delete();
+  Histo_FSR_ZmumuJet_Pt300toInf_temp->Delete();
+  Histo_FSR_ZmumuJet_Pt300toInf->Delete();
+  Histo_ISR_ZmumuJet_Pt0to15_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt0to15->Delete();
+  Histo_ISR_ZmumuJet_Pt15to20_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt15to20->Delete();
+  Histo_ISR_ZmumuJet_Pt20to30_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt20to30->Delete();
+  Histo_ISR_ZmumuJet_Pt30to50_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt30to50->Delete();
+  Histo_ISR_ZmumuJet_Pt50to80_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt50to80->Delete();
+  Histo_ISR_ZmumuJet_Pt80to120_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt80to120->Delete();
+  Histo_ISR_ZmumuJet_Pt120to170_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt120to170->Delete();
+  Histo_ISR_ZmumuJet_Pt170to230_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt170to230->Delete();
+  Histo_ISR_ZmumuJet_Pt230to300_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt230to300->Delete();
+  Histo_ISR_ZmumuJet_Pt300toInf_temp->Delete();
+  Histo_ISR_ZmumuJet_Pt300toInf->Delete();
 
 }
 

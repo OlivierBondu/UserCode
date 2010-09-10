@@ -11,7 +11,7 @@ fi
 
 cutVersion=${1}
 
-for sample in `'ls' Selected/${cutVersion}`
+for sample in `'ls' -l Selected/${cutVersion} | grep drw | awk '{print $9}' | grep -v OLD`
 do
 	echo "Processing ${cutVersion} ${sample}"
 	summedRootFile=`'ls' Selected/${cutVersion}/${sample} | grep _0.root | sed -e "s/_0/_ALL/g"`
