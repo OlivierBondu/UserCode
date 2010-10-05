@@ -20,7 +20,7 @@ echo -e "*** RESULTS ***" > SelectionCutsNumbers_${SelectionVersion}.txt
 echo -e "Sample \t0\tPthatFilter\tCSA07ID\tZJETVETO\t1.a\t1.b\t1.c\t1.d\t1.e\t2.a\t2.b\t2.c\t3\t4\t5\t6\t7\t8\t9\t10\tSelected" >> SelectionCutsNumbers_${SelectionVersion}.txt
 echo "" >> SelectionCutsNumbers_${SelectionVersion}.txt
 
-IntegratedLuminosity="1092.64e-03"
+IntegratedLuminosity="2859492.190e-06"
 
 QCD_Pt15="8.762e+08"
 QCD_Pt30="6.041e+07" 

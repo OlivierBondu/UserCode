@@ -10,6 +10,7 @@
 #include <TStyle.h>
 #include <TFormula.h>
 #include <TF1.h>
+#include <TF2.h>
 #include <TSystem.h>
 #include <TClonesArray.h>
 #include <TLeaf.h>
@@ -29,6 +30,7 @@
 #include <THStack.h>
 #include <TLegendEntry.h>
 #include <TMinuit.h>
+#include <TPaveStats.h>
 
 #include "DrawDataMC.h"
 
@@ -54,6 +56,10 @@
 
 
 using namespace std;
+
+double fonction_affine(double *x, double *par){
+	return x[0]*par[0] - x[1]*par[1];
+}
 
 void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_Pt30_miniTree, TTree *QCD_Pt80_miniTree, TTree *QCD_Pt170_miniTree, TTree *QCD_Pt300_miniTree, TTree *QCD_Pt470_miniTree, TTree *PhotonJet_Pt15_miniTree, TTree *PhotonJet_Pt30_miniTree, TTree *PhotonJet_Pt80_miniTree, TTree *PhotonJet_Pt170_miniTree, TTree *PhotonJet_Pt300_miniTree, TTree *TTbarJets_Tauola_miniTree, TTree *WJets_7TeV_miniTree, TTree *ZJets_7TeV_miniTree, TTree *QCD_Mu_Pt20to30_miniTree, TTree *QCD_Mu_Pt30to50_miniTree, TTree *QCD_Mu_Pt50to80_miniTree, TTree *QCD_Mu_Pt80to120_miniTree, TTree *QCD_Mu_Pt120to170_miniTree, TTree *QCD_Mu_Pt170toInf_miniTree, TTree *InclusiveMu15_miniTree, TTree *FSR_ZmumuJet_Pt0to15_miniTree, TTree *FSR_ZmumuJet_Pt15to20_miniTree, TTree *FSR_ZmumuJet_Pt20to30_miniTree, TTree *FSR_ZmumuJet_Pt30to50_miniTree, TTree *FSR_ZmumuJet_Pt50to80_miniTree, TTree *FSR_ZmumuJet_Pt80to120_miniTree, TTree *FSR_ZmumuJet_Pt120to170_miniTree, TTree *FSR_ZmumuJet_Pt170to230_miniTree, TTree *FSR_ZmumuJet_Pt230to300_miniTree, TTree *FSR_ZmumuJet_Pt300toInf_miniTree, TTree *ISR_ZmumuJet_Pt0to15_miniTree, TTree *ISR_ZmumuJet_Pt15to20_miniTree, TTree *ISR_ZmumuJet_Pt20to30_miniTree, TTree *ISR_ZmumuJet_Pt30to50_miniTree, TTree *ISR_ZmumuJet_Pt50to80_miniTree, TTree *ISR_ZmumuJet_Pt80to120_miniTree, TTree *ISR_ZmumuJet_Pt120to170_miniTree, TTree *ISR_ZmumuJet_Pt170to230_miniTree, TTree *ISR_ZmumuJet_Pt230to300_miniTree, TTree *ISR_ZmumuJet_Pt300toInf_miniTree, string var, string pic, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1, bool doFit){
 
@@ -368,7 +374,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   //Histo_Data->Scale((double)((double)1.0/(double)a));
   //Histo_MC->Scale((double)((double)1.0/(double)b));
   // // Normalize MC to Data number of entries
-  double integratedLuminosity = 1092.64e-03;
+  double integratedLuminosity = 2859492.190e-06;
 
   double XSectionQCD_Pt15 = 8.762e+08;
   double XSectionQCD_Pt30 = 6.041e+07;
@@ -714,18 +720,35 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *QCD_P
   c1->SetTitle(canvas_name.c_str());
 
   // Draw the comparison plots
+//	// Template empty histo
+//	TH1F *Histo_template = new TH1F("Histo_template", "Histo_template", Histo_Data->GetNbinsX(), Histo_Data->GetXaxis()->GetXmin(),  Histo_Data->GetXaxis()->GetXmax());
+//	Histo_template->SetAxisRange(Histo_Data->GetXaxis()->GetXmin(),  Histo_Data->GetXaxis()->GetXmax(), "X");
+//	Histo_template->SetAxisRange(YMin_lin, YMax_lin,"Y");
+//	Histo_template->SetMaximum(YMax_lin);
+//	Histo_template->SetMinimum(YMin_lin);
+//	Histo_template->Draw();
+//	c1->Update();
+//	c1->Draw();
 
-  TLegend *legend = new TLegend(0.75, 0.80, 0.90, 0.93, "");
+  TLegend *legend = new TLegend(0.65, 0.80, 0.90, 0.93, "");
 	if( doFit ){
-		legend->SetX1(0.50);
+/*
+		legend->SetX1(0.47);
 		legend->SetX2(0.65);
+*/
+		legend->SetX1(0.15);
+		legend->SetX2(0.40);
+		legend->SetY1(0.65);
+		legend->SetY2(0.78);
+
 	}
-legend->SetTextSize(0.025);
+	legend->SetTextSize(0.025);
   legend->SetFillColor(kWhite);
   legend->SetLineColor(kWhite);
   legend->SetShadowColor(kWhite);
 
   // // First: draw the data to get correct Y-axis scale
+	gPad->Update();
   Histo_Data->GetXaxis()->SetTitle(Title.c_str());
   Histo_Data->GetYaxis()->SetTitle(YaxisTitle.c_str());
   Histo_Data->SetLineColor(kBlack);
@@ -735,6 +758,7 @@ legend->SetTextSize(0.025);
   Histo_Data->SetMaximum(YMax_lin);
   Histo_Data->SetMinimum(YMin_lin);
 //  Histo_Data->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);
+//  Histo_Data->Draw("E1sames");
   Histo_Data->Draw("E1");
   legend->AddEntry(Histo_Data->GetName(), "Data", "lp");
 
@@ -785,6 +809,8 @@ legend->SetTextSize(0.025);
   Histo_FSR_ZmumuJet_Pt0to15->SetFillStyle(3001);
   Histo_FSR_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
   Histo_FSR_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);
+  Histo_FSR_ZmumuJet_Pt0to15->GetXaxis()->SetTitle(Title.c_str());
+  Histo_FSR_ZmumuJet_Pt0to15->GetYaxis()->SetTitle(YaxisTitle.c_str());
 
 	Histo_ISR_ZmumuJet_Pt0to15->SetLineColor(kBlack);
   Histo_ISR_ZmumuJet_Pt0to15->SetFillColor(kOrange);
@@ -815,23 +841,114 @@ legend->SetTextSize(0.025);
 
   // // Third: re-draw Data so that data appears in front of MC
   Histo_Data->Draw("E1same");
-	cout << "doFit= " << doFit << endl;
-if( doFit ){
-	string fitOpts = "OQ";
-	TF1* f = new TF1("f", "gaus");
-	Histo_Data->Fit("f", fitOpts.c_str());
-	gStyle->SetOptStat(00002210);
-	
-  Histo_FSR_ZmumuJet_Pt0to15->Draw("same");
-	//  Histo_ZJets_7TeV->Draw("same");
-  Histo_QCD_Mu_Pt20to30->Draw("same");
-  Histo_WJets_7TeV->Draw("same");
-  Histo_PhotonJet_Pt15->Draw("same");
-  Histo_ISR_ZmumuJet_Pt0to15->Draw("same");
-  Histo_TTbarJets_Tauola->Draw("same");
-  Histo_Data->Draw("E1same");
-}
 
+if( doFit ){
+	Histo_Data->SetName("DATA");
+	Histo_FSR_ZmumuJet_Pt0to15->SetName("MC");
+	gStyle->SetOptStat(2201);
+	string fitOpts = "MQ+";
+
+	TF1* f_Data = new TF1("f_Data", "gaus");
+	TF1* f_MC = new TF1("f_MC", "gaus");
+	f_Data->SetLineColor(kBlue);
+	f_MC->SetLineColor(kGreen+2);
+	f_Data->SetLineWidth(2);
+	f_MC->SetLineWidth(2);
+	Histo_Data->Fit("f_Data", fitOpts.c_str());
+	Histo_FSR_ZmumuJet_Pt0to15->Fit("f_MC", fitOpts.c_str());
+
+	Histo_FSR_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
+	Histo_FSR_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);	
+	Histo_QCD_Mu_Pt20to30->SetMaximum(YMax_lin);
+	Histo_QCD_Mu_Pt20to30->SetMinimum(YMin_lin);	
+	Histo_WJets_7TeV->SetMaximum(YMax_lin);
+	Histo_WJets_7TeV->SetMinimum(YMin_lin);	
+	Histo_PhotonJet_Pt15->SetMaximum(YMax_lin);
+	Histo_PhotonJet_Pt15->SetMinimum(YMin_lin);	
+	Histo_ISR_ZmumuJet_Pt0to15->SetMaximum(YMax_lin);
+	Histo_ISR_ZmumuJet_Pt0to15->SetMinimum(YMin_lin);	
+	Histo_TTbarJets_Tauola->SetMaximum(YMax_lin);
+	Histo_TTbarJets_Tauola->SetMinimum(YMin_lin);	
+	Histo_Data->SetMaximum(YMax_lin);
+	Histo_Data->SetMinimum(YMin_lin);	
+  Histo_FSR_ZmumuJet_Pt0to15->Draw("sames");
+	//  Histo_ZJets_7TeV->Draw("sames");
+  Histo_QCD_Mu_Pt20to30->Draw("sames");
+  Histo_WJets_7TeV->Draw("sames");
+  Histo_PhotonJet_Pt15->Draw("sames");
+  Histo_ISR_ZmumuJet_Pt0to15->Draw("sames");
+  Histo_TTbarJets_Tauola->Draw("sames");
+  Histo_Data->GetXaxis()->SetTitle(Title.c_str());
+  Histo_Data->GetYaxis()->SetTitle(YaxisTitle.c_str());
+  Histo_Data->Draw("E1sames");
+//	Histo_Data->SetMaximum(YMax_lin);
+//	Histo_Data->SetMinimum(YMin_lin);	
+//	c1->Update();	
+
+/*
+	TPaveStats* statsHisto_MC = (TPaveStats*) Histo_ZJets_7TeV->GetListOfFunctions()->FindObject("stats");
+  statsHisto_ZJets_7TeV->SetLineColor(kWhite);
+  statsHisto_ZJets_7TeV->SetTextColor(kWhite);
+	statsHisto_ZJets_7TeV->Draw();
+*/
+
+	gPad->Update();
+ 	TPaveStats* statsHisto_QCD_Mu_Pt20to30 = (TPaveStats*) Histo_QCD_Mu_Pt20to30->GetListOfFunctions()->FindObject("stats");
+  statsHisto_QCD_Mu_Pt20to30->SetLineColor(kWhite);
+  statsHisto_QCD_Mu_Pt20to30->SetTextColor(kWhite);
+	statsHisto_QCD_Mu_Pt20to30->Draw();
+ 
+	gPad->Update();
+ 	TPaveStats* statsHisto_WJets_7TeV = (TPaveStats*) Histo_WJets_7TeV->GetListOfFunctions()->FindObject("stats");
+  statsHisto_WJets_7TeV->SetLineColor(kWhite);
+  statsHisto_WJets_7TeV->SetTextColor(kWhite);
+	statsHisto_WJets_7TeV->Draw();
+  
+	gPad->Update();
+	TPaveStats* statsHisto_PhotonJet_Pt15 = (TPaveStats*) Histo_PhotonJet_Pt15->GetListOfFunctions()->FindObject("stats");
+  statsHisto_PhotonJet_Pt15->SetLineColor(kWhite);
+  statsHisto_PhotonJet_Pt15->SetTextColor(kWhite);
+	statsHisto_PhotonJet_Pt15->Draw();
+  
+	gPad->Update();
+	TPaveStats* statsHisto_ISR_ZmumuJet_Pt0to15 = (TPaveStats*) Histo_ISR_ZmumuJet_Pt0to15->GetListOfFunctions()->FindObject("stats");
+  statsHisto_ISR_ZmumuJet_Pt0to15->SetLineColor(kWhite);
+  statsHisto_ISR_ZmumuJet_Pt0to15->SetTextColor(kWhite);
+	statsHisto_ISR_ZmumuJet_Pt0to15->Draw();
+  
+	gPad->Update();
+	TPaveStats* statsHisto_TTbarJets_Tauola = (TPaveStats*) Histo_TTbarJets_Tauola->GetListOfFunctions()->FindObject("stats");
+  statsHisto_TTbarJets_Tauola->SetLineColor(kWhite);
+  statsHisto_TTbarJets_Tauola->SetTextColor(kWhite);
+	statsHisto_TTbarJets_Tauola->Draw();
+ 
+
+	gPad->Update();
+	TPaveStats* statsHisto_Data = (TPaveStats*) Histo_Data->GetListOfFunctions()->FindObject("stats");
+	statsHisto_Data->SetLineColor(kBlue);
+	statsHisto_Data->SetTextColor(kBlue);
+	statsHisto_Data->SetTextSize(0.020);
+	statsHisto_Data->SetX1NDC(0.68);
+	statsHisto_Data->SetX2NDC(0.93);
+	statsHisto_Data->SetY1NDC(0.80);
+	statsHisto_Data->SetY2NDC(0.93);
+	statsHisto_Data->Draw();
+
+
+	gPad->Update();
+	TPaveStats* statsHisto_FSR_ZmumuJet_Pt0to15 = (TPaveStats*) Histo_FSR_ZmumuJet_Pt0to15->GetListOfFunctions()->FindObject("stats");
+	statsHisto_FSR_ZmumuJet_Pt0to15->SetLineColor(kGreen+2);
+	statsHisto_FSR_ZmumuJet_Pt0to15->SetTextColor(kGreen+2);
+	statsHisto_FSR_ZmumuJet_Pt0to15->SetTextSize(0.020);
+	statsHisto_FSR_ZmumuJet_Pt0to15->SetX1NDC(0.68);
+	statsHisto_FSR_ZmumuJet_Pt0to15->SetX2NDC(0.93);
+	statsHisto_FSR_ZmumuJet_Pt0to15->SetY1NDC(0.67);
+	statsHisto_FSR_ZmumuJet_Pt0to15->SetY2NDC(0.80);
+	statsHisto_FSR_ZmumuJet_Pt0to15->Draw();
+
+//	c1->Update();	
+
+}
   // // Fourth: redraw axis so that axis appears in front of everything
   gPad->RedrawAxis();
 
@@ -908,6 +1025,7 @@ if( doFit ){
   // Clean the memory
   c1->Clear();
   legend->Clear();
+//	Histo_template->Delete();
   Histo_Data_temp->Delete();
   Histo_Data->Delete();
   Histo_PhotonJet_Pt15_temp->Delete();
@@ -1304,7 +1422,7 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   //Histo_Data->Scale((double)((double)1.0/(double)a));
   //Histo_MC->Scale((double)((double)1.0/(double)b));
   // // Normalize MC to Data number of entries
-  double integratedLuminosity = 1092.64e-03;
+  double integratedLuminosity = 2859492.190e-06;
 
   double XSectionQCD_Pt15 = 8.762e+08;
   double XSectionQCD_Pt30 = 6.041e+07;
@@ -1647,10 +1765,10 @@ void DrawDataMCplot_TH1I(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
 
   // Draw the comparison plots
 
-  TLegend *legend = new TLegend(0.75, 0.80, 0.90, 0.93, "");
+  TLegend *legend = new TLegend(0.65, 0.80, 0.90, 0.93, "");
 	if( doFit ){
-		legend->SetX1(0.55);
-		legend->SetX2(0.70);
+		legend->SetX1(0.47);
+		legend->SetX2(0.65);
 	}
 	legend->SetTextSize(0.025);
   legend->SetFillColor(kWhite);
@@ -2212,7 +2330,7 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   //Histo_Data->Scale((double)((double)1.0/(double)a));
   //Histo_MC->Scale((double)((double)1.0/(double)b));
   // // Normalize MC to Data number of entries
-  double integratedLuminosity = 1092.64e-03;
+  double integratedLuminosity = 2859492.190e-06;
 
   double XSectionQCD_Pt15 = 8.762e+08;
   double XSectionQCD_Pt30 = 6.041e+07;
@@ -2297,7 +2415,7 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   double InitialNumberISR_ZmumuJet_Pt170to230 = 178400;
   double InitialNumberISR_ZmumuJet_Pt230to300 = 176485;
   double InitialNumberISR_ZmumuJet_Pt300toInf = 109316;
-
+/*
   Histo_PhotonJet_Pt15->Scale((double)(  (double)((double)(XSectionPhotonJet_Pt15) / (double)(InitialNumberPhotonJet_Pt15)) * (double)integratedLuminosity));
   Histo_PhotonJet_Pt30->Scale((double)(  (double)((double)(XSectionPhotonJet_Pt30) / (double)(InitialNumberPhotonJet_Pt30)) * (double)integratedLuminosity));
   Histo_PhotonJet_Pt80->Scale((double)(  (double)((double)(XSectionPhotonJet_Pt80) / (double)(InitialNumberPhotonJet_Pt80)) * (double)integratedLuminosity));
@@ -2339,7 +2457,7 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_ISR_ZmumuJet_Pt170to230->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt170to230) / (double)(InitialNumberISR_ZmumuJet_Pt170to230)) * (double)integratedLuminosity));
   Histo_ISR_ZmumuJet_Pt230to300->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt230to300) / (double)(InitialNumberISR_ZmumuJet_Pt230to300)) * (double)integratedLuminosity));
   Histo_ISR_ZmumuJet_Pt300toInf->Scale((double)(  (double)((double)(XSectionISR_ZmumuJet_Pt300toInf) / (double)(InitialNumberISR_ZmumuJet_Pt300toInf)) * (double)integratedLuminosity));
-
+*/
   // Adding histograms for binned samples
   Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
   Histo_QCD_Pt15->Add(Histo_QCD_Pt80);
@@ -2501,8 +2619,8 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
 
   TLegend *legend = new TLegend(0.75, 0.80, 0.90, 0.93, "");
 	if( doFit ){
-		legend->SetX1(0.55);
-		legend->SetX2(0.70);
+		legend->SetX1(0.50);
+		legend->SetX2(0.65);
 	}
   legend->SetTextSize(0.025);
   legend->SetFillColor(kWhite);
@@ -2510,6 +2628,9 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   legend->SetShadowColor(kWhite);
 
   // // First: draw the data to get correct Y-axis scale
+	cout << "Title_var1.c_str = " << Title_var1.c_str() << endl;
+	cout << "Title_var2.c_str = " << Title_var2.c_str() << endl;
+
   Histo_Data->GetXaxis()->SetTitle(Title_var1.c_str());
   Histo_Data->GetYaxis()->SetTitle(Title_var2.c_str());
   Histo_Data->SetLineColor(kBlack);
@@ -2531,8 +2652,6 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_QCD_Mu_Pt20to30->SetFillColor(kGreen);
 	Histo_QCD_Mu_Pt20to30->SetMarkerColor(kGreen);
   Histo_QCD_Mu_Pt20to30->SetFillStyle(3001);
-  Histo_QCD_Mu_Pt20to30->Draw("SCATsame");
-  legend->AddEntry(Histo_QCD_Mu_Pt20to30->GetName(), "QCD Mu", "f");
 
   Histo_InclusiveMu15->SetLineColor(kBlack);
   Histo_InclusiveMu15->SetFillColor(kGreen-6);
@@ -2545,22 +2664,16 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_TTbarJets_Tauola->SetFillColor(kBlue);
 	Histo_TTbarJets_Tauola->SetMarkerColor(kBlue);
   Histo_TTbarJets_Tauola->SetFillStyle(3001);
-  Histo_TTbarJets_Tauola->Draw("SCATsame");
-  legend->AddEntry(Histo_TTbarJets_Tauola->GetName(), "TTbarJets", "f");
 
   Histo_FSR_ZmumuJet_Pt0to15->SetLineColor(kBlack);
   Histo_FSR_ZmumuJet_Pt0to15->SetFillColor(kRed);
 	Histo_FSR_ZmumuJet_Pt0to15->SetMarkerColor(kRed);
   Histo_FSR_ZmumuJet_Pt0to15->SetFillStyle(3001);
-  Histo_FSR_ZmumuJet_Pt0to15->Draw("SCATsame");
-  legend->AddEntry(Histo_FSR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet (FSR)", "f");
 
   Histo_ISR_ZmumuJet_Pt0to15->SetLineColor(kBlack);
   Histo_ISR_ZmumuJet_Pt0to15->SetFillColor(kOrange);
 	Histo_ISR_ZmumuJet_Pt0to15->SetMarkerColor(kOrange);
   Histo_ISR_ZmumuJet_Pt0to15->SetFillStyle(3001);
-  Histo_ISR_ZmumuJet_Pt0to15->Draw("SCATsame");
-  legend->AddEntry(Histo_ISR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet (no FSR)", "f");
 
   Histo_ZJets_7TeV->SetLineColor(kBlack);
   Histo_ZJets_7TeV->SetFillColor(kOrange);
@@ -2573,39 +2686,83 @@ void DrawDataMCplot_TH2F(TTree *Data_miniTree, TTree *QCD_Pt15_miniTree, TTree *
   Histo_WJets_7TeV->SetFillColor(kMagenta+3);
 	Histo_WJets_7TeV->SetMarkerColor(kMagenta+3);
   Histo_WJets_7TeV->SetFillStyle(3001);
-  Histo_WJets_7TeV->Draw("SCATsame");
-  legend->AddEntry(Histo_WJets_7TeV->GetName(), "WJets", "f");
 
   Histo_PhotonJet_Pt15->SetLineColor(kBlack);
   Histo_PhotonJet_Pt15->SetFillColor(kMagenta);
 	Histo_PhotonJet_Pt15->SetMarkerColor(kMagenta);
   Histo_PhotonJet_Pt15->SetFillStyle(3001);
-  Histo_PhotonJet_Pt15->Draw("SCATsame");
-  legend->AddEntry(Histo_PhotonJet_Pt15->GetName(), "PhotonJet", "f");
 
   // // Third: re-draw Data so that data appears in front of MC
+  Histo_TTbarJets_Tauola->Draw("SCATsame");
+  Histo_ISR_ZmumuJet_Pt0to15->Draw("SCATsame");
+  Histo_PhotonJet_Pt15->Draw("SCATsame");
+  Histo_WJets_7TeV->Draw("SCATsame");
+  Histo_QCD_Mu_Pt20to30->Draw("SCATsame");
+  Histo_FSR_ZmumuJet_Pt0to15->Draw("SCATsame");
   Histo_Data->Draw("SCATsame");
+  legend->AddEntry(Histo_TTbarJets_Tauola->GetName(), "TTbarJets", "f");
+  legend->AddEntry(Histo_ISR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet (no FSR)", "f");
+  legend->AddEntry(Histo_PhotonJet_Pt15->GetName(), "PhotonJet", "f");
+  legend->AddEntry(Histo_WJets_7TeV->GetName(), "WJets", "f");
+  legend->AddEntry(Histo_QCD_Mu_Pt20to30->GetName(), "QCD Mu", "f");
+  legend->AddEntry(Histo_FSR_ZmumuJet_Pt0to15->GetName(), "ZmumuJet (FSR)", "f");
 
   // // Fourth: redraw axis so that axis appears in front of everything
   gPad->RedrawAxis();
 if( doFit ){
-	string fitOpts = "OQ";
+	string fitOpts = "RMQB+";
 	//TMinuit *gMinuit = new TMinuit();
 	//gMinuit->SetGraphicsMode(kFALSE);
-	//gStyle->SetOptStat(111110);
-	//gStyle->SetOptFit(1111);
-	TF1* f = new TF1("f", "pol1");
-	//TF1* f = gROOT->GetFunction("pol1");
-	f->SetParameter(0, 0); // ordonnee a l'origine est 0 si correction parfaite
+	gStyle->SetOptStat(10);
+//	gStyle->SetOptFit(1111);
+//	cout << "max= " << Histo_Data->GetXaxis()->GetXmax() << endl;
+//	cout << "min= " << Histo_Data->GetXaxis()->GetXmin() << endl;
+	TF1* f = new TF1("f", "pol1",  Histo_Data->GetXaxis()->GetXmin(), Histo_Data->GetXaxis()->GetXmax());
+	f->SetLineColor(kBlue);
+	f->SetLineWidth(2);
+//	TF2* f2 = new TF2("f2", "x-y", Histo_Data->GetXaxis()->GetXmin(), Histo_Data->GetXaxis()->GetXmax(), Histo_Data->GetYaxis()->GetXmin(), Histo_Data->GetYaxis()->GetXmax(), (Int_t)2);
+//	TF2* f2 = new TF2("f2", "x[0]", 0, 100, 0, 100, 1);
+//	double pars[2] = {0, 1};
+//	TF2* f2 = new TF2("f2", fonction_affine, 0, 100, 0, 100, 2);
+//	f2->SetParameters(pars);
+//	Histo_Data->Fit("f2", fitOpts.c_str());
 	f->SetParameter(1, 1); // coeff dir 1 si pas de correction
+//	TProfile *prof = Histo_Data->ProfileX();
+//	f->SetParameter(0, 0); // ordonnee a l'origine est 0 si correction parfaite
+	f->FixParameter(0, 0); // ordonnee a l'origine est 0 si correction parfaite
+//	prof->Fit("f", fitOpts.c_str());
+//	prof->Fit("f", fitOpts.c_str());
+//	prof->Draw();
+//	f2->Draw();
+//	Histo_Data->Fit("f2", fitOpts.c_str());
+	//TF1* f = gROOT->GetFunction("pol1");
 	//gMinuit->SetFCN(f);
 	Histo_Data->Fit("f", fitOpts.c_str());
+//	Histo_FSR_ZmumuJet_Pt0to15->Fit("f", fitOpts.c_str());
+
 	Histo_WJets_7TeV->Draw("SCATsame");
 	Histo_PhotonJet_Pt15->Draw("SCATsame");
 	Histo_ISR_ZmumuJet_Pt0to15->Draw("SCATsame");
-	Histo_FSR_ZmumuJet_Pt0to15->Draw("SCATsame");
 	Histo_TTbarJets_Tauola->Draw("SCATsame");
 	Histo_QCD_Mu_Pt20to30->Draw("SCATsame");
+	Histo_FSR_ZmumuJet_Pt0to15->Draw("SCATsame");
+  Histo_Data->Draw("SCATsame");
+  Histo_Data->GetXaxis()->SetTitle(Title_var1.c_str());
+  Histo_Data->GetYaxis()->SetTitle(Title_var2.c_str());
+//  gPad->RedrawAxis();
+ 
+	TPaveStats* statsHisto_Data = (TPaveStats*) Histo_Data->GetListOfFunctions()->FindObject("stats");
+//	statsHisto_Data->SetLineColor(kBlue);
+//	statsHisto_Data->SetTextColor(kBlue);
+	statsHisto_Data->SetTextSize(0.020);
+	statsHisto_Data->SetX1NDC(0.73);
+	statsHisto_Data->SetX2NDC(0.93);
+	statsHisto_Data->SetY1NDC(0.20);
+	statsHisto_Data->SetY2NDC(0.33);
+	Histo_Data->SetName("DATA");
+	statsHisto_Data->Draw();
+
+
 }
 
 
@@ -2629,6 +2786,7 @@ if( doFit ){
   // Print the canvas
   string PicName="gif/DataMC_" + pic + "_" + name + ".gif";
   c1->Print(PicName.c_str());
+//	c1->SaveAs("plaf.C");
   PicName="eps/DataMC_" + pic + "_" + name + ".eps";
   c1->Print(PicName.c_str());
   string convert = "convert eps/DataMC_" + pic + "_" + name + ".eps" + " pdf/DataMC_" + pic + "_" + name + ".pdf";

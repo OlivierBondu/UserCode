@@ -497,7 +497,10 @@ cout << endl;
 	Int_t Photon_convNTracks;
 	Float_t Photon_E, Photon_Et, Photon_E2x2, Photon_E3x3, Photon_E5x5, Photon_Emax, Photon_E2nd;
 	Float_t Photon_r19, Photon_r9, Photon_cross;
-	Float_t Photon_caloConeSize, Photon_PreshEnergy, Photon_HoE, Photon_covEtaEta, Photon_covPhiPhi, Photon_etaWidth, Photon_phiWidth;
+	Float_t Photon_caloConeSize, Photon_PreshEnergy, Photon_HoE;
+	Float_t Photon_sigmaEtaEta, Photon_sigmaIetaIeta;
+	Float_t Photon_covEtaEta, Photon_covPhiPhi, Photon_covEtaPhi;
+	Float_t Photon_etaWidth, Photon_phiWidth;
 	Float_t Photon_dR03isoEcalRecHit, Photon_dR03isoHcalRecHit, Photon_dR03isoSolidTrkCone, Photon_dR03isoHollowTrkCone, Photon_dR03isoNTracksSolidCone, Photon_dR03isoNTracksHollowCone;
 	Float_t Photon_dR04isoEcalRecHit, Photon_dR04isoHcalRecHit, Photon_dR04isoSolidTrkCone, Photon_dR04isoHollowTrkCone, Photon_dR04isoNTracksSolidCone, Photon_dR04isoNTracksHollowCone;
 	Float_t Photon_seedTime, Photon_seedFlag;
@@ -799,8 +802,11 @@ cout << endl;
 	miniTree->Branch("Photon_caloConeSize", &Photon_caloConeSize, "Photon_caloConeSize/F");
 	miniTree->Branch("Photon_PreshEnergy", &Photon_PreshEnergy, "Photon_PreshEnergy/F");
 	miniTree->Branch("Photon_HoE", &Photon_HoE, "Photon_HoE/F");
+	miniTree->Branch("Photon_sigmaEtaEta", &Photon_sigmaEtaEta, "Photon_sigmaEtaEta/F");
+  miniTree->Branch("Photon_sigmaIetaIeta", &Photon_sigmaIetaIeta, "Photon_sigmaIetaIeta/F");
 	miniTree->Branch("Photon_covEtaEta", &Photon_covEtaEta, "Photon_covEtaEta/F");
 	miniTree->Branch("Photon_covPhiPhi", &Photon_covPhiPhi, "Photon_covPhiPhi/F");
+  miniTree->Branch("Photon_covEtaPhi", &Photon_covEtaPhi, "Photon_covEtaPhi/F");
 	miniTree->Branch("Photon_convNTracks", &Photon_convNTracks, "Photon_convNTracks/I");
 	miniTree->Branch("Photon_etaWidth", &Photon_etaWidth, "Photon_etaWidth/F");
 	miniTree->Branch("Photon_phiWidth", &Photon_phiWidth, "Photon_phiWidth/F");
@@ -988,7 +994,7 @@ cout << endl;
 		Photon_convNTracks = -99;
 		Photon_E = Photon_Et = Photon_E2x2 = Photon_E3x3 = Photon_E5x5 = Photon_Emax = Photon_E2nd = -99;
 		Photon_r19 = Photon_r9 = Photon_cross = -99;
-		Photon_caloConeSize = Photon_PreshEnergy = Photon_HoE = Photon_covEtaEta = Photon_covPhiPhi = Photon_etaWidth = Photon_phiWidth = -99;
+		Photon_caloConeSize = Photon_PreshEnergy = Photon_HoE = Photon_sigmaEtaEta = Photon_sigmaIetaIeta = Photon_covEtaEta = Photon_covPhiPhi = Photon_covEtaPhi = Photon_etaWidth = Photon_phiWidth = -99;
 		Photon_dR03isoEcalRecHit = Photon_dR03isoHcalRecHit = Photon_dR03isoSolidTrkCone = Photon_dR03isoHollowTrkCone = Photon_dR03isoNTracksSolidCone = Photon_dR03isoNTracksHollowCone = -99;
 		Photon_dR04isoEcalRecHit = Photon_dR04isoHcalRecHit = Photon_dR04isoSolidTrkCone = Photon_dR04isoHollowTrkCone = Photon_dR04isoNTracksSolidCone = Photon_dR04isoNTracksHollowCone = -99;
 		Photon_seedTime = Photon_seedFlag = -99;
@@ -1092,12 +1098,12 @@ cout << endl;
       }
       if(! (mymuon->numberOfValidTrackerHits()>10) ){// #tracker hits > 10
         muonIsNotCommissioned.push_back(1);
-        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because less than 10 tracker hits" << endl;
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because less than 10 tracker hits (" << mymuon->numberOfValidTrackerHits() << ")" << endl;
         continue;
       }
       if(! (mymuon->normalizedChi2()<10) ){// chi2/ndof of the global muon fit < 10
         muonIsNotCommissioned.push_back(1);
-        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because chi2/ndof of the global muon fit < 10" << endl;
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because chi2/ndof of the global muon fit < 10 (" << mymuon->normalizedChi2() << ")" << endl;
         continue;
       }
 /*
@@ -1115,7 +1121,7 @@ cout << endl;
 */
       if(! (fabs(mymuon->Eta())<2.1) ){// |eta_muon|< 2.1
         muonIsNotCommissioned.push_back(1);
-        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because high eta" << endl;
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because high eta (" << mymuon->Eta() << ")" << endl;
         continue;
       }
 
@@ -1134,6 +1140,11 @@ cout << endl;
       }
 */
 
+			if(! ((double)(mymuon->isoR03_sumPt()) < 3.0) ){// tracker isolation
+				muonIsNotCommissioned.push_back(1);
+				if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because tracker isolation high (" << mymuon->isoR03_sumPt() << " GeV)" << endl;
+				continue;
+			}
 
       if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " accepted" << endl;
       muonIsNotCommissioned.push_back(0);
@@ -1225,8 +1236,8 @@ cout << endl;
           }// end of selecting second muon
 				}
 			}// end of loop over MC particles
-//			if(   MCsignal_in_phase_space ){ // ***** WARNING *****  veto currently normal to consider background
-			if( !  MCsignal_in_phase_space ){ // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
+			if(   MCsignal_in_phase_space ){ // ***** WARNING *****  veto currently normal to consider background
+//			if( !  MCsignal_in_phase_space ){ // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
 				cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
 				miniTree->Fill();
 				for(int imuon=0 ; imuon<NbMuons ; imuon++){
@@ -1448,8 +1459,8 @@ cout << endl;
 
 
 		// CUT 1d: two muons with correct eta with opposite charge AND pT>10 GeV
-		if(!( (PtMuon>10.0) && (PtMuon_oppositeCharge>10.0) )){
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because of bad muons (ptmu1= " << PtMuon << " ; ptmu2= " << PtMuon_oppositeCharge << " )" << endl;
+		if(!( (PtMuon>15.0) && (PtMuon_oppositeCharge>15.0) )){
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because of bad muons (ptmu1= " << PtMuon << " GeV; ptmu2= " << PtMuon_oppositeCharge << " GeV)" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1482,7 +1493,7 @@ cout << endl;
 
 		// CUT 1e: dimuon invariant mass >= 20 GeV
 		if(!( mumuInvMass >= 20.0 )){
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because of m(mumu)= " << mumuInvMass << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because of m(mumu)= " << mumuInvMass << " GeV" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1515,7 +1526,7 @@ cout << endl;
 
 		// CUT 2a: nb of photons > 0
 		if(!( NbPhotonsNoSpike>0 )){
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level II because "<<	NbPhotonsNoSpike	<< " gamma" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level II because "<<	NbPhotonsNoSpike	<< " photon" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1561,7 +1572,7 @@ cout << endl;
 		}
 		NbPhotonsValidEta = photonsValidEta.size();
 		if(!( NbPhotonsValidEta>0 )){
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level II because of bad gamma" << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level II because of bad photon" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1632,8 +1643,11 @@ cout << endl;
 		Photon_caloConeSize = MPtPhoton->caloConeSize();
 		Photon_PreshEnergy = MPtPhoton->preshowerEnergy();
 		Photon_HoE = MPtPhoton->hoe();
+		Photon_sigmaEtaEta = MPtPhoton->sigmaEtaEta();
+    Photon_sigmaIetaIeta = MPtPhoton->sigmaIetaIeta();
 		Photon_covEtaEta = MPtPhoton->covEtaEta();
 		Photon_covPhiPhi = MPtPhoton->covPhiPhi();
+		Photon_covEtaPhi = MPtPhoton->covEtaPhi();
 //FIXME		Photon_etaWidth = MPtPhoton->superCluster()->etaWidth();
 //FIXME		Photon_phiWidth = MPtPhoton->superCluster()->phiWidth();
 		Photon_dR03isoEcalRecHit = MPtPhoton->dR03IsolationEcalRecHit();
@@ -1802,7 +1816,7 @@ cout << endl;
 
 		// CUT 3: 40GeV <= dimuon invariant mass <= 80GeV
 		if(!( (mumuInvMass>=40.0)&&(mumuInvMass<=80.0) )){
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level III for Drell-Yan: mumuInvMass= " << mumuInvMass << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level III for Drell-Yan: mumuInvMass= " << mumuInvMass << " GeV" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1833,12 +1847,12 @@ cout << endl;
 		isAfterCut3 = 1;
 		nAfterCut3++;
 
-		// CUT 4: photon_Et >= 10GeV && DeltaR(photon, close muon)<=0.8
+		// CUT 4: photon_Et >= 10 GeV && DeltaR(photon, close muon)<=0.8
 		if(!( (MPtPhoton->Et()>=10.0)&&(deltaRmin<=0.8) )){
 			if( !(MPtPhoton->Et()>=10.0) ){
-				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for gamma momentum: MPtPhoton->Et()= " << MPtPhoton->Et() << endl;
+				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for gamma momentum: MPtPhoton->Et()= " << MPtPhoton->Et() << " GeV" << endl;
 			} else if(!(deltaRmin<=0.8)) {
-				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for large deltar: deltaRmin= " << deltaRmin << " )" << endl;
+				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for large deltar: deltaRmin= " << deltaRmin << endl;
 			}
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
@@ -1877,7 +1891,7 @@ cout << endl;
 		else {
 			cutMuMuGammaWindow = (mumugammaInvMass >=70.0) && (mumugammaInvMass <=110.0);} // in case of background
 		if(!( cutMuMuGammaWindow )){
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level V for Z Mass Window: mumugammaInvMass= " << mumugammaInvMass << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level V for Z Mass Window: mumugammaInvMass= " << mumugammaInvMass << " GeV" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1910,7 +1924,7 @@ cout << endl;
 	
 		// CUT 6: farMuon->isoR03_emEt() <= 1.0
 		if(!( farMuon->isoR03_emEt()<=1.0 )) {
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VI for large emEt: farMuon->isoR03_emEt()= " << farMuon->isoR03_emEt() << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VI for large emEt: farMuon->isoR03_emEt()= " << farMuon->isoR03_emEt() << " GeV" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1943,7 +1957,7 @@ cout << endl;
 
 		// CUT 7: farMuon->Pt() >= 30.0
 		if(!( farMuon->Pt()>=30.0 )) {
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VII for soft far muon: farMuon->Pt()= " << farMuon->Pt() << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VII for soft far muon: farMuon->Pt()= " << farMuon->Pt() << " GeV" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;
@@ -1976,7 +1990,7 @@ cout << endl;
 
 		// CUT 8: nearMuon->isoR03_hadEt() < 1.0
 		if(!( nearMuon->isoR03_hadEt()<1.0 )){
-			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VIII for large hadEt: nearMuon->isoR03_hadEt()= " << nearMuon->isoR03_hadEt() << endl;
+			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level VIII for large hadEt: nearMuon->isoR03_hadEt()= " << nearMuon->isoR03_hadEt() << " GeV" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
 				TRootMuon *mymuon;

@@ -51,12 +51,12 @@ if [ ${?} = 0 ]
 then
 	signal="true"
 else 
-	signal="false"
+#	signal="false"
 # **********************************
 # *** WARNING ! just for test !! ***
 # **********************************
-#	echo "WARNING : BACKGROUND passed as SIGNAL !!"
-#	signal="true"
+	echo "WARNING: EVERYTHING passed as SIGNAL !!"
+	signal="true"
 # **********************************
 # *** WARNING ! just for test !! ***
 # **********************************

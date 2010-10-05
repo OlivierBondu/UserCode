@@ -2,13 +2,12 @@
 # Script to launch plots on batch
 # Written by O. Bondu (August 2010)
 
-time=428600
+time=828600
 queue=T
 memory="4096MB"
 
-
-
-for selection in `echo "noMuIso-hadEt-noDeltaRmin"`
+for selection in `echo "hadEt-noDeltaRmin-relaxedMuEta hadEt-noDeltaRmin-relaxedpT hadEt-noDeltaRmin-tightedPtMu hadEt-lowDeltaRmin"`
+#for selection in `echo "hadEt-lowDeltaRmin"`
 do
 	if [[ ! -d Plots_${selection} ]]
 	then
@@ -78,6 +77,7 @@ do
 
 #cleaning
 	rm batch_plots_${selection}.sh
+	cd ..
 done
 
 exit 0

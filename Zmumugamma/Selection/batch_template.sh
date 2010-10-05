@@ -3,7 +3,7 @@
 #PBS -l T=TIME              # Nombre d'unite normalisee (consommation cpu)
 #PBS -q QUEUE
 #PBS -l M=MEMORY
-#PBS -N NAME               # Job Name
+########PBS -N NAME               # Job Name
 #PBS -o OUTLOG.out
 #PBS -e ERRLOG.err
 
