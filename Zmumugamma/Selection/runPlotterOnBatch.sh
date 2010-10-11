@@ -6,8 +6,8 @@ time=828600
 queue=T
 memory="4096MB"
 
-for selection in `echo "hadEt-noDeltaRmin-relaxedMuEta hadEt-noDeltaRmin-relaxedpT hadEt-noDeltaRmin-tightedPtMu hadEt-lowDeltaRmin"`
-#for selection in `echo "hadEt-lowDeltaRmin"`
+#for selection in `echo "hadEt-noDeltaRmin-relaxedMuEta hadEt-noDeltaRmin-relaxedpT hadEt-noDeltaRmin-tightedPtMu hadEt-lowDeltaRmin"`
+for selection in `echo "hadEt-noDeltaRmin-relaxedpT-looseWindow"`
 do
 	if [[ ! -d Plots_${selection} ]]
 	then

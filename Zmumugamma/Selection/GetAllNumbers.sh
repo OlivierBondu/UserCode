@@ -8,7 +8,8 @@
 #for selection in `echo "hadEt-noDeltaRmin-relaxedMuEta"`
 #for selection in `echo "hadEt-noDeltaRmin-relaxedpT"`
 #for selection in `echo "hadEt-noDeltaRmin-tightedPtMu"`
-for selection in `echo "hadEt-noDeltaRmin-relaxedpT-looseWindow"`
+#for selection in `echo "hadEt-noDeltaRmin-relaxedpT-looseWindow"`
+for selection in `echo "hadEt-noDeltaRmin-singleTightedPtMu-0.950EScale"`
 do
 	./GetRawSelectionCutsNumbers.sh ${selection}
 	./ConvertRawNumbersIntoNumbers.sh ${selection}

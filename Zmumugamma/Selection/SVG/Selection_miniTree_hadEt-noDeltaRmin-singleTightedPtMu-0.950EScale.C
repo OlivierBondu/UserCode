@@ -1236,8 +1236,8 @@ cout << endl;
           }// end of selecting second muon
 				}
 			}// end of loop over MC particles
-			if(   MCsignal_in_phase_space ){ // ***** WARNING *****  veto currently normal to consider background
-//			if( !  MCsignal_in_phase_space ){ // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
+//			if(   MCsignal_in_phase_space ){ // ***** WARNING *****  veto currently normal to consider background
+			if( !  MCsignal_in_phase_space ){  // // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
 				cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
 				miniTree->Fill();
 				for(int imuon=0 ; imuon<NbMuons ; imuon++){
@@ -1459,7 +1459,7 @@ cout << endl;
 
 
 		// CUT 1d: two muons with correct eta with opposite charge AND pT>10 GeV
-		if(!( (PtMuon>10.0) && (PtMuon_oppositeCharge>10.0) )){
+		if(!( ((PtMuon>10.0) && (PtMuon_oppositeCharge>10.0)) && ((PtMuon>15.0) || (PtMuon_oppositeCharge>15.0)) )){
 			cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT at level I because of bad muons (ptmu1= " << PtMuon << " GeV; ptmu2= " << PtMuon_oppositeCharge << " GeV)" << endl;
 			miniTree->Fill();
 			for(int imuon=0 ; imuon<NbMuonsValidEta ; imuon++){
@@ -1557,7 +1557,7 @@ cout << endl;
 		isAfterCut2a = 1;
 		nAfterCut2a++;
 
-		// CUT 2b: one photon with |eta| < 2.5 and pT>5GeV AND no spike
+		// CUT 2b: one photon with |eta| < 2.5 and pT>10GeV AND no spike
 		unsigned int NbPhotonsValidEta = 0;
 		vector<int> photonsValidEta;
 		photonsValidEta.clear();
@@ -1565,7 +1565,7 @@ cout << endl;
 		for(int iphoton=0 ; iphoton<NbPhotonsNoSpike ; iphoton++){
 			photonValidEtaCandidate = (TRootPhoton*) photons->At(photonsNoSpike[iphoton]);
 			cerr << "\t\tINFO: Photon " << photonsNoSpike[iphoton] << "\tPt= " << photonValidEtaCandidate->Pt() << "\tEta= " << photonValidEtaCandidate->Eta() << endl;
-			if( (photonValidEtaCandidate->Pt()>5.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){
+			if( (photonValidEtaCandidate->Pt()>10.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){
 //			if( (photonValidEtaCandidate->Pt()>0.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){ // FIXME
 				photonsValidEta.push_back(photonsNoSpike[iphoton]);
 			}
@@ -1847,9 +1847,9 @@ cout << endl;
 		isAfterCut3 = 1;
 		nAfterCut3++;
 
-		// CUT 4: photon_Et >= 5GeV && DeltaR(photon, close muon)<=0.8
-		if(!( (MPtPhoton->Et()>=5.0)&&(deltaRmin<=0.8) )){
-			if( !(MPtPhoton->Et()>=5.0) ){
+		// CUT 4: photon_Et >= 10 GeV && DeltaR(photon, close muon)<=0.8
+		if(!( (MPtPhoton->Et()>=10.0)&&(deltaRmin<=0.8) )){
+			if( !(MPtPhoton->Et()>=10.0) ){
 				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for gamma momentum: MPtPhoton->Et()= " << MPtPhoton->Et() << " GeV" << endl;
 			} else if(!(deltaRmin<=0.8)) {
 				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for large deltar: deltaRmin= " << deltaRmin << endl;
@@ -1886,7 +1886,7 @@ cout << endl;
 
 		// CUT 5: 87.2GeV <= mumugamma invariant mass <= 95.2GeV *** *** *** 70GeV <= mumugamma invariant mass <= 110GeV
 		bool cutMuMuGammaWindow = false;
-		if(false){
+		if(signal){
 			cutMuMuGammaWindow = (mumugammaInvMass >=87.2) && (mumugammaInvMass <=95.2);} // in case of signal
 		else {
 			cutMuMuGammaWindow = (mumugammaInvMass >=70.0) && (mumugammaInvMass <=110.0);} // in case of background
@@ -2018,6 +2018,20 @@ cout << endl;
 			}
 				continue;
 		}
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// WARNING!! changing manually the Energy Scale
+// RECOMPUTE Mmumugamma !!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		Double_t EScale = 0.950;
+		TLorentzVector *ModifiedPhoton = (TLorentzVector*)MPtPhoton;
+		ModifiedPhoton->SetE( (MPtPhoton->E()) * EScale);
+		mumugamma = (*leadingMuon) + (*subleadingMuon) + (*ModifiedPhoton);
+		mumugammaInvMass = mumugamma.M();
+		cerr << "\t\tINFO: NEW MODIFIED mumugamma invariant mass : Mmumugamma = " << mumugammaInvMass << endl;
+		Mmumugamma = mumugammaInvMass;
+		mumugamma.Clear();
+
 		isAfterCut8 = 1;
 		nAfterCut8++;
 		isAfterCut9 = 1;
