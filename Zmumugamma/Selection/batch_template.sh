@@ -8,7 +8,7 @@
 #PBS -e ERRLOG.err
 
 export HOMEDIR=/afs/in2p3.fr/home/o/obondu
-source ${HOMEDIR}/361p4.sh
+source ${HOMEDIR}/383v2.sh
 
 echo "ROOTSYS :"
 echo ${ROOTSYS}
