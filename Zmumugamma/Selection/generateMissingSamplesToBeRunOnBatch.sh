@@ -2,7 +2,7 @@
 # Small script to generate the file which will run the selection on all the samples that have not been run yet
 # Written by Olivier Bondu (March 2010)
 
-CMSSW_release="CMSSW_3_6_1_patch4"
+CMSSW_release="CMSSW_3_8_3_v2"
 
 sampleDirectory=/sps/cms/obondu/${CMSSW_release}/src/Zmumugamma/RecoSamples
 
