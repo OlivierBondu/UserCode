@@ -14,26 +14,26 @@
 #include "TSystem.h"
 #pragma optimize 0
 
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootDummyEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
-#include "/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootDummyEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
+#include "/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
 
 
 double DeltaR( double eta1, double phi1, double eta2, double phi2){
@@ -45,6 +45,7 @@ double DeltaR( double eta1, double phi1, double eta2, double phi2){
 	return sqrt(DeltaEta*DeltaEta + DeltaPhi*DeltaPhi);
 }
 
+/*
 int* InitializeHLTinfo(TChain* inputRunTree, TRootRun* runInfos, int nPaths, string* ListWantedHLTnames, int nPathWanted){
 
 	cout << "Initializing HLT info"<<endl;
@@ -75,6 +76,10 @@ int* InitializeHLTinfo(TChain* inputRunTree, TRootRun* runInfos, int nPaths, str
 	return ListHLT;
 }
 
+*/
+/*
+*/
+/*
 void doHLTInfo(TRootEvent* event, TRootRun* runInfos, int* ListHLT, int nPathWanted, int* Muon_eventPassHLT_Mu9){
 
 	for (int ipath=0; ipath<nPathWanted; ipath++){
@@ -88,6 +93,8 @@ void doHLTInfo(TRootEvent* event, TRootRun* runInfos, int* ListHLT, int nPathWan
 	//for(unsigned int ipath=0; ipath<5; ipath++) cout << "	" << runInfos->hltNames(ipath) << " decision=" << event->trigHLT(ipath) <<endl;
 	return;
 }
+
+*/
 
 void doGenInfo(TRootPhoton* myphoton, TClonesArray* mcParticles, Int_t* Photon_GenId, Int_t* Photon_MotherId, Int_t* Photon_isGenElectron, Int_t* Photon_isPromptGenPho, Int_t* Photon_isFromQuarkGen, Int_t* Photon_isPi0Gen, Int_t* Photon_isEtaGen, Int_t* Photon_isRhoGen, Int_t* Photon_isOmegaGen, Float_t* Photon_PromptGenIsoEnergyStatus1, Float_t* Photon_PromptGenIsoEnergyStatus2, double dRcone){
 //	cout << "doing gen info" << endl;
@@ -188,7 +195,7 @@ void doGenInfo(TRootPhoton* myphoton, TClonesArray* mcParticles, Int_t* Photon_G
 
 //int Selection_miniTree(){
 int main(){
-	gSystem->Load("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/UserCode/IpnTreeProducer/src/libToto.so");
+	gSystem->Load("/sps/cms/obondu/CMSSW_3_8_3/src/UserCode/IpnTreeProducer/src/libToto.so");
 	
 	bool doHLT										= true;
 	bool doMC										 = true;
@@ -217,15 +224,15 @@ int main(){
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partI/partI__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partII/partII__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partIII/partIII__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partIV/partIV__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partV/partV__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partIV/partIV__run_140059_IpnTree_*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partIV/partIV__run_140126_IpnTree_*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partIV/partIV__run_140124_IpnTree_*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_6_1_patch4/src/Zmumugamma/RecoSamples/partIII/partIII__run_139100_IpnTree_*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_3/src/Zmumugamma/RecoSamples/partI/partI__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_3/src/Zmumugamma/RecoSamples/partII/partII__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_3/src/Zmumugamma/RecoSamples/partIII/partIII__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_3/src/Zmumugamma/RecoSamples/partIV/partIV__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_3/src/Zmumugamma/RecoSamples/partV/partV__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_3/src/Zmumugamma/RecoSamples/partIV/partIV__run_140059_IpnTree_*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_3/src/Zmumugamma/RecoSamples/partIV/partIV__run_140126_IpnTree_*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_3/src/Zmumugamma/RecoSamples/partIV/partIV__run_140124_IpnTree_*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_3/src/Zmumugamma/RecoSamples/partIII/partIII__run_139100_IpnTree_*root");
 //	string sample = "JanCandidates_139100";
 
 /*
@@ -340,24 +347,24 @@ int main(){
 		TClonesArray* muons = new TClonesArray("TRootMuon", 0);
 	if(doMuon)
 	{
-		inputEventTree->SetBranchAddress("Muons", &muons, &muons_br);
-		inputEventTree->SetBranchStatus("Muons", 1);
+		inputEventTree->SetBranchAddress("muons", &muons, &muons_br);
+		inputEventTree->SetBranchStatus("muons", 1);
 	}
 	
 		TBranch* electrons_br = 0;
 		TClonesArray* electrons = new TClonesArray("TRootElectron", 0);
 	if(doElectron)
 	{
-		inputEventTree->SetBranchAddress("Electrons", &electrons, &electrons_br);
-		inputEventTree->SetBranchStatus("Electrons", 1);
+		inputEventTree->SetBranchAddress("gsfElectrons", &electrons, &electrons_br);
+		inputEventTree->SetBranchStatus("gsfElectrons", 1);
 	}
 	
 		TBranch* photons_br = 0;
 		TClonesArray* photons = new TClonesArray("TRootPhoton", 0);
 	if(doPhoton)
 	{
-		inputEventTree->SetBranchAddress("Photons", &photons, &photons_br);
-		inputEventTree->SetBranchStatus("Photons", 1);
+		inputEventTree->SetBranchAddress("photons", &photons, &photons_br);
+		inputEventTree->SetBranchStatus("photons", 1);
 	}
 	
 		TBranch* clusters_br = 0;
@@ -1010,6 +1017,7 @@ cout << endl;
 
 		// HLT information		
 		if(doHLT){
+/*
 			if( ievt==0 ){ inputRunTree->GetEvent(ievt); NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);  }
 			if ( string(inputEventTree->GetCurrentFile()->GetName()) != lastFile ){
 				inputRunTree->GetEntry(inputEventTree->GetTreeNumber());
@@ -1018,6 +1026,8 @@ cout << endl;
      	 	NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);
      	}
       doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_Mu9);
+*/
+			Muon_eventPassHLT_Mu9 = event->hltAccept("HLT_Mu9");
 		}
 
    // Cleaning: removing not commissionned superclusters and spikes
