@@ -2,13 +2,18 @@
 # script to relink data processed elsewhere in this directory
 # Written by Olivier Bondu (July 2010)
 
-MCrelease="CMSSW_3_8_3"
-syntax="Syntax ${0} {sample}"
+MCrelease="CMSSW_3_8_5_patch3"
+syntax="Syntax ${0} {sample} ({release})"
 
 if [[ -z ${1} ]]
 then
 	echo ${syntax}
 	exit 1
+fi
+if [[ ! -z ${2} ]]
+then
+	echo "wouhou"
+	MCrelease=`echo "${2}"`
 fi
 
 sample=${1}
