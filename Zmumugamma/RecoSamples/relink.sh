@@ -12,7 +12,6 @@ then
 fi
 if [[ ! -z ${2} ]]
 then
-	echo "wouhou"
 	MCrelease=`echo "${2}"`
 fi
 
