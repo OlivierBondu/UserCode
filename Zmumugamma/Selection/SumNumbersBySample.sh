@@ -2,7 +2,7 @@
 # Script to sum Numbers by sample
 # Written by O. Bondu (August 2010)
 
-CMSSW_release="CMSSW_3_6_1_patch4"
+CMSSW_release="CMSSW_3_8_5_patch3"
 
 syntax="${0} {SelectionVersion}"
 
@@ -19,7 +19,7 @@ echo -e "Sample \t0\tPthatFilter\tCSA07ID\tZJETVETO\t1.a\t1.b\t1.c\t1.d\t1.e\t2.
 echo "" >> SelectionCutsNumbersSummed_${SelectionVersion}.txt
 
 
-for sample in `echo "part QCD_Pt PhotonJet WJets QCD_Mu InclusiveMu15 TTbarJets ZJets FSR_ZmumuJet ISR_ZmumuJet"`
+for sample in `echo "part"`
 do
 	allcuts=""
 #	cat SelectionCutsNumbers_${SelectionVersion}.txt | grep ${sample}

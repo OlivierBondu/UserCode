@@ -3,13 +3,7 @@
 # Written by Olivier Bondu (March 2010)
 
 #for selection in `echo "hadEt noMuIso-hadEt sumPt noMuIso-sumPt noMuIso-hadEt-noDeltaRmin hadEt-noDeltaRmin hadEt-noDeltaRmin-relaxedpT hadEt-lowDeltaRmin hadEt-noDeltaRmin-tightedPtMu hadEt-noDeltaRmin-relaxedMuEta"`
-#for selection in `echo "hadEt-noDeltaRmin-relaxedpT-looseWindow"`
-EScaleList=""
-for scale in `seq -w 0.95 0.005 1.05`
-do
-	EScaleList=`echo "${EScaleList}hadEt-noDeltaRmin-singleTightedPtMu-${scale}EScale "`
-done
-for selection in `echo "${EScaleList} hadEt-noDeltaRmin-singleTightedPtMu"`
+for selection in `echo "hadEt-noDeltaRmin-relaxedMuEta"`
 do
 	./CreateFoldersForSelectedAndAnalysis.sh ${selection}
 done

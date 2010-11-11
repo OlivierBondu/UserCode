@@ -75,11 +75,11 @@ int* InitializeHLTinfo(TChain* inputRunTree, TRootRun* runInfos, int nPaths, str
 	return ListHLT;
 }
 
-void doHLTInfo(TRootEvent* event, TRootRun* runInfos, int* ListHLT, int nPathWanted, int* Muon_eventPassHLT_Mu9){
+void doHLTInfo(TRootEvent* event, TRootRun* runInfos, int* ListHLT, int nPathWanted, int* Muon_eventPassHLT_Mu11){
 
 	for (int ipath=0; ipath<nPathWanted; ipath++){
 		//cout <<"HLTInfo numHLT="<<ListHLT[ipath]<<" decision="<<event->trigHLT(ListHLT[ipath])<<endl;
-		if (ipath==0) *Muon_eventPassHLT_Mu9 = (int)event->trigHLT(ListHLT[ipath]);
+		if (ipath==0) *Muon_eventPassHLT_Mu11 = (int)event->trigHLT(ListHLT[ipath]);
 	}
 
 	//for(unsigned int ipath=0; ipath<event->nHLTPaths(); ipath++) {
@@ -404,7 +404,7 @@ int main(){
   int* NumWantedHLTnames;
 
   string ListWantedHLTnames[1];
-	ListWantedHLTnames[0] = "HLT_Mu9";
+	ListWantedHLTnames[0] = "HLT_Mu11";
 	
 	
 	//cout << "runTree->GetEntries()="<<runTree->GetEntries()<<endl;MinimumBias__BeamCommissioning09-BSCNOBEAMHALO-Dec19thSkim_336p3_v1__TOTOANA_1.root
@@ -455,7 +455,7 @@ cout << endl;
 	
 	Int_t isNotCommissionned;
 
-	Int_t Muon_eventPassHLT_Mu9;
+	Int_t Muon_eventPassHLT_Mu11;
 
 	// ____________________________________________
 	// Muon variables
@@ -1009,7 +1009,7 @@ cout << endl;
      	  cout << ievt << "\t" << lastFile << endl;
      	 	NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);
      	}
-      doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_Mu9);
+      doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_Mu11);
 		}
 
 		if (!((event->ptHat()>=minPtHat)&&(event->ptHat()<maxPtHat)))
@@ -1124,13 +1124,13 @@ cout << endl;
         if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because high eta (" << mymuon->Eta() << ")" << endl;
         continue;
       }
-
-      if(! (Muon_eventPassHLT_Mu9==1) ){// HLT_Mu9
+/*
+      if(! (Muon_eventPassHLT_Mu11==1) ){// HLT_Mu11
         muonIsNotCommissioned.push_back(1);
-        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because not passing HLT_Mu9" << endl;
+        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because not passing HLT_Mu11" << endl;
         continue;
       }
-
+*/
 
 /*
       if(! ((double)(mymuon->isoR03_sumPt() + mymuon->isoR03_emEt() + mymuon->isoR03_hadEt())/(double)(mymuon->Pt())<.15) ){// Relative combined isolation = (sumPt + emEt + hcalEt)/ptmu < 0.15 in a deltaR < 0.3 cone

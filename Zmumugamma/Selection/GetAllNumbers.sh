@@ -5,11 +5,11 @@
 #for selection in `echo "hadEt noMuIso-hadEt sumPt noMuIso-sumPt"`
 #for selection in `echo "hadEt-lowDeltaRmin hadEt-noDeltaRmin-relaxedMuEta hadEt-noDeltaRmin-relaxedpT hadEt-noDeltaRmin-tightedPtMu"`
 #for selection in `echo "hadEt-lowDeltaRmin"`
-#for selection in `echo "hadEt-noDeltaRmin-relaxedMuEta"`
+for selection in `echo "hadEt-noDeltaRmin-relaxedMuEta"`
 #for selection in `echo "hadEt-noDeltaRmin-relaxedpT"`
 #for selection in `echo "hadEt-noDeltaRmin-tightedPtMu"`
 #for selection in `echo "hadEt-noDeltaRmin-relaxedpT-looseWindow"`
-for selection in `echo "hadEt-noDeltaRmin-singleTightedPtMu-0.950EScale"`
+#for selection in `echo "hadEt-noDeltaRmin-singleTightedPtMu-0.950EScale"`
 do
 	./GetRawSelectionCutsNumbers.sh ${selection}
 	./ConvertRawNumbersIntoNumbers.sh ${selection}

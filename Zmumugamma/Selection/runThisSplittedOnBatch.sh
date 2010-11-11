@@ -1,7 +1,7 @@
 #!/usr/local/bin/bash
 # Small script to run the selection code on the anastasie CC IN2P3 batch cluster
 # Written by Olivier Bondu (January 2010) for CMSSW 3_1_4
-CMSSWversion=CMSSW_3_8_3_v2
+CMSSWversion=CMSSW_3_8_5_patch3
 
 HOME=/afs/in2p3.fr/home/o/obondu
 WORKINGDIR=/sps/cms/obondu/${CMSSWversion}/src/Zmumugamma/Selection
@@ -46,245 +46,60 @@ if [ "${NumberOfFiles}" = "0" ]
 fi
 
 echo "Cleaning working area and setting parameters..."
-echo ${SampleName} | grep "Zmumugamma" &> /dev/null
-if [ ${?} = 0 ]
-then
-	signal="true"
-else 
-#	signal="false"
-# **********************************
-# *** WARNING ! just for test !! ***
-# **********************************
-	echo "WARNING: EVERYTHING passed in SIGNAL tight Mmumugamma window !!"
-	signal="true"
-# **********************************
-# *** WARNING ! just for test !! ***
-# **********************************
-fi
 
-NumberOfIpnTreeFilesToRunInOneJob=50
+
+NumberOfIpnTreeFilesToRunInOneJob=100
 time=680000
 memory="1024MB"
 queue=G
+zjetveto="false"
+minPtHat="-100"
+maxPtHat="1000000"
+verbosity="off"
+stew="false"
+signal="true"
 
-if [ "${SampleName}" = "QCD_Pt15" ]
+if [ "${SampleName}" = "2010B-partIv2_IpnTree" ]
 then
-	minPtHat="15"
-	maxPtHat="30"
-	time=2916
-elif [ "${SampleName}" = "QCD_Pt30" ]
+	time=175255
+elif [ "${SampleName}" = "2010B-partII_IpnTree" ]
 then
-  minPtHat="30"
-  maxPtHat="80"
-	time=7776
-elif [ "${SampleName}" = "QCD_Pt80" ]
+	time=138090
+elif [ "${SampleName}" = "2010B-partIII_IpnTree" ]
 then
-  minPtHat="80"
-  maxPtHat="170"
-	time=12513
-elif [ "${SampleName}" = "QCD_Pt170" ]
+	time=213476
+elif [ "${SampleName}" = "2010B-partIV_IpnTree" ]
 then
-  minPtHat="170"
-  maxPtHat="300"
-	time=22962
-elif [ "${SampleName}" = "QCD_Pt300" ]
+	time=135252
+elif [ "${SampleName}" = "2010B-partV_IpnTree" ]
 then
-  minPtHat="300"
-  maxPtHat="1000000"
-	time=62165
-elif [ "${SampleName}" = "PhotonJet_Pt15" ]
+	time=166325
+elif [ "${SampleName}" = "2010B-partVI_IpnTree" ]
 then
-	NumberOfIpnTreeFilesToRunInOneJob=150
-  minPtHat="15"
-  maxPtHat="30"
-	time=5589
-elif [ "${SampleName}" = "PhotonJet_Pt30" ]
+	time=176790
+elif [ "${SampleName}" = "2010B-partVII_IpnTree" ]
 then
-	NumberOfIpnTreeFilesToRunInOneJob=150
-  minPtHat="30"
-  maxPtHat="80"
-	time=12384
-elif [ "${SampleName}" = "PhotonJet_Pt80" ]
+	time=240894
+elif [ "${SampleName}" = "2010B-partVIII_IpnTree" ]
 then
-	NumberOfIpnTreeFilesToRunInOneJob=150
-  minPtHat="80"
-  maxPtHat="170"
-	time=18225
-elif [ "${SampleName}" = "PhotonJet_Pt170" ]
+	time=240003
+elif [ "${SampleName}" = "2010B-partIX_IpnTree" ]
 then
-	NumberOfIpnTreeFilesToRunInOneJob=150
-  minPtHat="170"
-  maxPtHat="300"
-	time=48843
-elif [ "${SampleName}" = "PhotonJet_Pt300" ]
-then
-	NumberOfIpnTreeFilesToRunInOneJob=150
-  minPtHat="300"
-  maxPtHat="470"
-	time=53019
-elif [ "${SampleName}" = "PhotonJet_Pt470" ]
-then
-	NumberOfIpnTreeFilesToRunInOneJob=150
-  minPtHat="470"
-  maxPtHat="1000000"
-	time=70000
-elif [ "${SampleName}" = "partVIII" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=108156
-elif [ "${SampleName}" = "partVII" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=90630
-elif [ "${SampleName}" = "partVI" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=32346
-elif [ "${SampleName}" = "partV" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=179091
-elif [ "${SampleName}" = "partIV" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=122679
-elif [ "${SampleName}" = "partIII" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=119583
-elif [ "${SampleName}" = "partII" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=115182
-elif [ "${SampleName}" = "partI" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=19380
-elif [ "${SampleName}" = "ZJets_7TeV-madgraph-tauola" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=22515
-elif [ "${SampleName}" = "WJets_7TeV-madgraph-tauola" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=21141
-elif [ "${SampleName}" = "TTbarJets_Tauola-madgraph" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=57000
-elif [ "${SampleName}" = "QCD_Mu_Pt120to170" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=61560
-elif [ "${SampleName}" = "QCD_Mu_Pt170toInf" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=119070
-elif [ "${SampleName}" = "QCD_Mu_Pt20to30" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=79218
-elif [ "${SampleName}" = "QCD_Mu_Pt30to50" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=68541
-elif [ "${SampleName}" = "QCD_Mu_Pt50to80" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=80226
-elif [ "${SampleName}" = "QCD_Mu_Pt80to120" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=80085
-elif [ "${SampleName}" = "InclusiveMu15" ]
-then
-  minPtHat="-100"
-  maxPtHat="1000000"
-	time=150903
+	time=146121
 #elif [ "${SampleName}" = "" ]
 #then
-#  minPtHat="-100"
-#  maxPtHat="1000000"
-#	time=
+#	time=680000
 else
-	minPtHat="-100"
-	maxPtHat="1000000"
-	time=4286000
-	memory="1024MB"
+	time=680000
 fi
 
 echo "${SampleName}" | grep part > /dev/null
 if [ "$?" = "0" ]
 then
 	verbosity="on"
-else
-	verbosity="off"
-fi
-
-if [ "${SampleName}" = "ZmumuJet_Pt0to15" ]
-then
-	zjetveto="true"
-	time=21990
-elif [ "${SampleName}" = "ZmumuJet_Pt15to20" ]
-then
-  zjetveto="true"
-	time=27579
-elif [ "${SampleName}" = "ZmumuJet_Pt20to30" ]
-then
-  zjetveto="true"
-	time=26121
-elif [ "${SampleName}" = "ZmumuJet_Pt30to50" ]
-then
-  zjetveto="true"
-	time=24057
-elif [ "${SampleName}" = "ZmumuJet_Pt50to80" ]
-then
-  zjetveto="true"
-	time=22560
-elif [ "${SampleName}" = "ZmumuJet_Pt80to120" ]
-then
-  zjetveto="true"
-	time=21747
-elif [ "${SampleName}" = "ZmumuJet_Pt120to170" ]
-then
-  zjetveto="true"
-	time=37179
-elif [ "${SampleName}" = "ZmumuJet_Pt170to230" ]
-then
-  zjetveto="true"
-	time=48843
-elif [ "${SampleName}" = "ZmumuJet_Pt230to300" ]
-then
-  zjetveto="true"
-	time=45666
-elif [ "${SampleName}" = "ZmumuJet_Pt300toInf" ]
-then
-  zjetveto="true"
-	time=28794
-else
-	zjetveto="false"
 fi
 
 
-
-stew="false"
 
 
 rm -f ${SampleName}${version}*
@@ -397,7 +212,6 @@ then
     echo "Submitting job..."
     qsub ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
 		
-		echo "Sleeping 5 seconds"
 fi
 
 
