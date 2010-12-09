@@ -332,32 +332,32 @@ int main(){
 		TBranch* jets_br = 0;
 		TClonesArray* jets = new TClonesArray("TRootJet", 0);
 	if(doJet)	{
-		inputEventTree->SetBranchAddress("Jets", &jets, &jets_br);
-		inputEventTree->SetBranchStatus("Jets", 1);
+		inputEventTree->SetBranchAddress("ak5CaloJets", &jets, &jets_br);
+		inputEventTree->SetBranchStatus("ak5CaloJets", 1);
 	}
 	
 		TBranch* muons_br = 0;
 		TClonesArray* muons = new TClonesArray("TRootMuon", 0);
 	if(doMuon)
 	{
-		inputEventTree->SetBranchAddress("Muons", &muons, &muons_br);
-		inputEventTree->SetBranchStatus("Muons", 1);
+		inputEventTree->SetBranchAddress("muons", &muons, &muons_br);
+		inputEventTree->SetBranchStatus("muons", 1);
 	}
 	
 		TBranch* electrons_br = 0;
 		TClonesArray* electrons = new TClonesArray("TRootElectron", 0);
 	if(doElectron)
 	{
-		inputEventTree->SetBranchAddress("Electrons", &electrons, &electrons_br);
-		inputEventTree->SetBranchStatus("Electrons", 1);
+		inputEventTree->SetBranchAddress("gsfElectrons", &electrons, &electrons_br);
+		inputEventTree->SetBranchStatus("gsfElectrons", 1);
 	}
 	
 		TBranch* photons_br = 0;
 		TClonesArray* photons = new TClonesArray("TRootPhoton", 0);
 	if(doPhoton)
 	{
-		inputEventTree->SetBranchAddress("Photons", &photons, &photons_br);
-		inputEventTree->SetBranchStatus("Photons", 1);
+		inputEventTree->SetBranchAddress("photons", &photons, &photons_br);
+		inputEventTree->SetBranchStatus("photons", 1);
 	}
 	
 		TBranch* clusters_br = 0;
@@ -388,16 +388,16 @@ int main(){
 		TClonesArray* met = new TClonesArray("TRootMET", 0);
 	if(doMET)
 	{
-		inputEventTree->SetBranchAddress("MET", &met, &met_br);
-		inputEventTree->SetBranchStatus("MET", 1);
+		inputEventTree->SetBranchAddress("met", &met, &met_br);
+		inputEventTree->SetBranchStatus("met", 1);
 	}
 	
 		TBranch* bardak_br = 0;
 		TRootBardak* bardak = 0;
 	if(doBardak)
 	{
-		inputEventTree->SetBranchAddress("bardak", &bardak, &bardak_br);
-		inputEventTree->SetBranchStatus("bardak", 1);
+		inputEventTree->SetBranchAddress("Bardak", &bardak, &bardak_br);
+		inputEventTree->SetBranchStatus("Bardak", 1);
 	}
 
 

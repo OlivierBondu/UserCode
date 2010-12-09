@@ -16,7 +16,7 @@ echo "*** Selected_${selection}.txt ***"
 rm Selected_${selection}.txt
 
 selectedOutfilesList=""
-for outfiles in `'ls' Selected/${selection}/part*/*out`
+for outfiles in `'ls' Selected/${selection}/2010B-part*/*out`
 #for outfiles in `echo "Selected/noMuIso-hadEt/partVII/partVII_2_noMuIso-hadEt.out"`
 do
 	nSelected=`grep "nSelected=" ${outfiles} | awk '{print $2}'`
