@@ -1,6 +1,7 @@
 #!/usr/local/bin/bash
 #PBS -l platform=LINUX,u_sps_cmsf     # Plateforme d'execution
 #PBS -l T=TIME              # Nombre d'unite normalisee (consommation cpu)
+#PBS -l scratch=SCRATCHSPACE
 #PBS -q QUEUE
 #PBS -l M=MEMORY
 ########PBS -N NAME               # Job Name
@@ -27,3 +28,4 @@ uname -r
 echo "Running actual job"
 ./MACRO
 
+exit 0

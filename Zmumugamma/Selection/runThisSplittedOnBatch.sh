@@ -48,9 +48,10 @@ fi
 echo "Cleaning working area and setting parameters..."
 
 
-NumberOfIpnTreeFilesToRunInOneJob=100
+NumberOfIpnTreeFilesToRunInOneJob=40
 time=680000
-memory="1024MB"
+memory="2GB"
+scratchspace="2GB"
 queue=G
 zjetveto="false"
 minPtHat="-100"
@@ -166,9 +167,10 @@ then
         sed -i -e "s/TIME/${time}/1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
         sed -i -e "s/QUEUE/${queue}/1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
         sed -i -e "s/MEMORY/${memory}/1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
+        sed -i -e "s/SCRATCHSPACE/${scratchspace}/1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
 	
 	echo "Submitting job..."
-        qsub ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
+        qsub -p u=60 ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
     done
 fi
 
@@ -208,9 +210,10 @@ then
     sed -i -e "s/TIME/${time}/1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
     sed -i -e "s/QUEUE/${queue}/1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
     sed -i -e "s/MEMORY/${memory}/1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
+    sed -i -e "s/SCRATCHSPACE/${scratchspace}/1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
 
     echo "Submitting job..."
-    qsub ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
+    qsub -p u=60 ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
 		
 fi
 
