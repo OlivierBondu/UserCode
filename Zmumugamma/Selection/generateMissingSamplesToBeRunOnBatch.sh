@@ -2,7 +2,7 @@
 # Small script to generate the file which will run the selection on all the samples that have not been run yet
 # Written by Olivier Bondu (March 2010)
 
-CMSSW_release="CMSSW_3_8_5_patch3"
+CMSSW_release="CMSSW_3_8_6_v6"
 
 sampleDirectory=/sps/cms/obondu/${CMSSW_release}/src/Zmumugamma/RecoSamples
 
@@ -21,11 +21,4 @@ done
 
 exit 0
 
-#./runThisSplittedOnBatch.sh 7TeV_Zmumugamma CUT5
-#./runThisSplittedOnBatch.sh 7TeV_Zmumugamma CUT5-hadEt
-#./runThisSplittedOnBatch.sh 7TeV_Zmumugamma CUT5-hadEt01
-#./runThisSplittedOnBatch.sh 7TeV_Zmumugamma CUT5-sumPt
-#./runThisSplittedOnBatch.sh 7TeV_Zmumugamma CUT5-sumPt01
-#./runThisSplittedOnBatch.sh 7TeV_Zmumugamma NORMAL-hadEt
-#./runThisSplittedOnBatch.sh 7TeV_Zmumugamma NORMAL-sumPt
 

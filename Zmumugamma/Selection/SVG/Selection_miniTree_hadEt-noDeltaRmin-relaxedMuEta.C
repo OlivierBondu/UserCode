@@ -14,26 +14,26 @@
 #include "TSystem.h"
 #pragma optimize 0
 
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootDummyEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
-#include "/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootDummyEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
+#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
 
 
 double DeltaR( double eta1, double phi1, double eta2, double phi2){
@@ -188,7 +188,7 @@ void doGenInfo(TRootPhoton* myphoton, TClonesArray* mcParticles, Int_t* Photon_G
 
 //int Selection_miniTree(){
 int main(){
-	gSystem->Load("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/UserCode/IpnTreeProducer/src/libToto.so");
+	gSystem->Load("/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/src/libToto.so");
 	
 	bool doHLT										= true;
 	bool doMC										 = true;
@@ -217,15 +217,15 @@ int main(){
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/Zmumugamma/RecoSamples/partI/partI__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/Zmumugamma/RecoSamples/partII/partII__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/Zmumugamma/RecoSamples/partIII/partIII__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/Zmumugamma/RecoSamples/partIV/partIV__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/Zmumugamma/RecoSamples/partV/partV__*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/Zmumugamma/RecoSamples/partIV/partIV__run_140059_IpnTree_*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/Zmumugamma/RecoSamples/partIV/partIV__run_140126_IpnTree_*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/Zmumugamma/RecoSamples/partIV/partIV__run_140124_IpnTree_*root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_5_patch3/src/Zmumugamma/RecoSamples/partIII/partIII__run_139100_IpnTree_*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_6_v6/src/Zmumugamma/RecoSamples/partI/partI__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_6_v6/src/Zmumugamma/RecoSamples/partII/partII__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_6_v6/src/Zmumugamma/RecoSamples/partIII/partIII__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_6_v6/src/Zmumugamma/RecoSamples/partIV/partIV__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_6_v6/src/Zmumugamma/RecoSamples/partV/partV__*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_6_v6/src/Zmumugamma/RecoSamples/partIV/partIV__run_140059_IpnTree_*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_6_v6/src/Zmumugamma/RecoSamples/partIV/partIV__run_140126_IpnTree_*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_6_v6/src/Zmumugamma/RecoSamples/partIV/partIV__run_140124_IpnTree_*root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_3_8_6_v6/src/Zmumugamma/RecoSamples/partIII/partIII__run_139100_IpnTree_*root");
 //	string sample = "JanCandidates_139100";
 
 /*
