@@ -89,103 +89,6 @@ void doHLTInfo(TRootEvent* event, TRootRun* runInfos, int* ListHLT, int nPathWan
 	return;
 }
 
-void doGenInfo(TRootPhoton* myphoton, TClonesArray* mcParticles, Int_t* Photon_GenId, Int_t* Photon_MotherId, Int_t* Photon_isGenElectron, Int_t* Photon_isPromptGenPho, Int_t* Photon_isFromQuarkGen, Int_t* Photon_isPi0Gen, Int_t* Photon_isEtaGen, Int_t* Photon_isRhoGen, Int_t* Photon_isOmegaGen, Float_t* Photon_PromptGenIsoEnergyStatus1, Float_t* Photon_PromptGenIsoEnergyStatus2, double dRcone){
-//	cout << "doing gen info" << endl;
-
-	double etsumStatus1 = -1;
-	double etsumStatus2 = -1;
-
-	TRootMCParticle* mygenparticle;
-	int NbMCpartInCone=0;
-	double bestPtdiff=500.0;
-	int igpsl=-1;
-	for (int igp=0; igp<mcParticles->GetEntriesFast(); igp++) {
-		mygenparticle = (TRootMCParticle*) mcParticles->At(igp);
-		if (DeltaR(mygenparticle->Phi(), myphoton->Phi(), mygenparticle->Eta(), myphoton->Eta())<0.1){
-			if (mygenparticle->status()==1){
-				//HistoMCpartStatus1InConeId->Fill(mygenparticle->type());
-				NbMCpartInCone++;
-				if (fabs(mygenparticle->Pt()-myphoton->Pt())<bestPtdiff){
-					bestPtdiff=fabs(mygenparticle->Pt()-myphoton->Pt());
-					igpsl=igp;
-				}
-			}
-		}
-	}
-	if (igpsl!=-1){
-		TRootMCParticle* mygenparticle;
-
-		*Photon_isFromQuarkGen = 0;
-		*Photon_isPi0Gen = 0;
-		*Photon_isEtaGen = 0;
-		*Photon_isRhoGen = 0;
-		*Photon_isOmegaGen = 0;
-
-		mygenparticle = (TRootMCParticle*) mcParticles->At(igpsl);
-		*Photon_GenId = mygenparticle->type();
-		*Photon_MotherId = mygenparticle->motherType();
-		if (abs(mygenparticle->type())==11) *Photon_isGenElectron = 1;
-		else *Photon_isGenElectron = 0;
-
-		if (mygenparticle->type()==22 && mygenparticle->motherType()==22) *Photon_isPromptGenPho = 1;
-		else *Photon_isPromptGenPho = 0;
-
-		if (mygenparticle->type()==22 && mygenparticle->motherType()!=22) {
-
-			if (mygenparticle->motherType()==21 || abs(mygenparticle->motherType())==1 || abs(mygenparticle->motherType())==2 || abs(mygenparticle->motherType())==3 || abs(mygenparticle->motherType())==4 || abs(mygenparticle->motherType())==5 || abs(mygenparticle->motherType())==6 ) *Photon_isFromQuarkGen = 1;
-			if (mygenparticle->motherType()==111) *Photon_isPi0Gen = 1;
-			if (mygenparticle->motherType()==221) *Photon_isEtaGen = 1;
-			if (mygenparticle->motherType()==113) *Photon_isRhoGen = 1;
-			if (mygenparticle->motherType()==223) *Photon_isOmegaGen = 1;
-
-		}
-
-		if (*Photon_isFromQuarkGen==1 || *Photon_isPromptGenPho==1){
-				etsumStatus1 = 0;
-				etsumStatus2 = 0;
-				//Isolated ?
-				double dR, dR2;
-				TRootMCParticle* photon = (TRootMCParticle*) mcParticles->At(igpsl);
-				for (int igp=0; igp<mcParticles->GetEntriesFast(); igp++) {
-					if (igp!=igpsl){
-						TRootMCParticle* mygenpart = (TRootMCParticle*) mcParticles->At(igp);
-						if (mygenpart->status()==1){
-							if (mygenpart->type()!=22 || (fabs(mygenpart->Pt()-photon->Pt())>0.1 && mygenpart->type()==22)){
-								dR = DeltaR(photon->Phi(), mygenpart->Phi(), photon->Eta(), mygenpart->Eta());
-								if (dR<dRcone){
-									etsumStatus1 += mygenpart->Et();
-								}
-							}
-						}
-
-						if (mygenpart->status()==2){
-							if (mygenpart->type()!=22 || (fabs(mygenpart->Pt()-photon->Pt())>0.1 && mygenpart->type()==22)){
-								if	(abs(mygenpart->type())>6 && mygenparticle->motherType()!=21){
-									dR2 = DeltaR(photon->Phi(), mygenpart->Phi(), photon->Eta(), mygenpart->Eta());
-									if (dR2<dRcone){
-										etsumStatus2 += mygenpart->Et();
-									}
-								}
-							}
-						}
-
-
-					}
-				}
-
-			}
-
-
-
-	}
-
-	*Photon_PromptGenIsoEnergyStatus1 = etsumStatus1;
-	*Photon_PromptGenIsoEnergyStatus2 = etsumStatus2;
-
-	return;
-}
-
-
 //int Selection_miniTree(){
 int main(){
 	gSystem->Load("/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/src/libToto.so");
@@ -1204,7 +1107,7 @@ cout << endl;
 				if( (mcParticleCandidate->status()==1) && (mcParticleCandidate->type() == 22) ){ // if the particle is a true MC photon
 					if( abs(mcParticleCandidate->motherType()) == 13 ){// if the true MC photon origins from a muon
 						if( abs(mcParticleCandidate->grannyType()) == 23 ){// photon coming from a muon coming from a Z
-							if( (mcParticleCandidate->Pt()>8.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
+							if( (mcParticleCandidate->Pt()>3.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
 								MCphotons_from_muons_from_Z = true;
 							}
 						}
@@ -1558,7 +1461,7 @@ cout << endl;
 		isAfterCut2a = 1;
 		nAfterCut2a++;
 
-		// CUT 2b: one photon with |eta| < 2.5 and pT>10GeV AND no spike
+		// CUT 2b: one photon with |eta| < 2.5 and pT>5GeV AND no spike
 		unsigned int NbPhotonsValidEta = 0;
 		vector<int> photonsValidEta;
 		photonsValidEta.clear();
@@ -1566,7 +1469,7 @@ cout << endl;
 		for(int iphoton=0 ; iphoton<NbPhotonsNoSpike ; iphoton++){
 			photonValidEtaCandidate = (TRootPhoton*) photons->At(photonsNoSpike[iphoton]);
 			cerr << "\t\tINFO: Photon " << photonsNoSpike[iphoton] << "\tPt= " << photonValidEtaCandidate->Pt() << "\tEta= " << photonValidEtaCandidate->Eta() << endl;
-			if( (photonValidEtaCandidate->Pt()>10.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){
+			if( (photonValidEtaCandidate->Pt()>5.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){
 //			if( (photonValidEtaCandidate->Pt()>0.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){ // FIXME
 				photonsValidEta.push_back(photonsNoSpike[iphoton]);
 			}
@@ -1848,9 +1751,9 @@ cout << endl;
 		isAfterCut3 = 1;
 		nAfterCut3++;
 
-		// CUT 4: photon_Et >= 10 GeV && DeltaR(photon, close muon)<=0.8
-		if(!( (MPtPhoton->Et()>=10.0)&&(deltaRmin<=0.8) )){
-			if( !(MPtPhoton->Et()>=10.0) ){
+		// CUT 4: photon_Et >= 5 GeV && DeltaR(photon, close muon)<=0.8
+		if(!( (MPtPhoton->Et()>=5.0)&&(deltaRmin<=0.8) )){
+			if( !(MPtPhoton->Et()>=5.0) ){
 				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for gamma momentum: MPtPhoton->Et()= " << MPtPhoton->Et() << " GeV" << endl;
 			} else if(!(deltaRmin<=0.8)) {
 				cerr << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for large deltar: deltaRmin= " << deltaRmin << endl;

@@ -4,7 +4,7 @@
 
 # Adapted for miniTree only (August 2010)
 
-CMSSW_release="CMSSW_3_8_5_patch3"
+CMSSW_release="CMSSW_3_8_6_v6"
 
 syntax="Syntax is: ${0} {Selection Version}"
 if [[ -z ${1} ]]
