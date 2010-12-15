@@ -53,6 +53,7 @@ time=680000
 memory="2GB"
 scratchspace="2GB"
 queue=G
+powheg="false"
 zjetveto="false"
 minPtHat="-100"
 maxPtHat="1000000"
@@ -87,6 +88,11 @@ then
 elif [ "${SampleName}" = "2010B-partIX_IpnTree" ]
 then
 	time=146121
+elif [ "${SampleName}" = "DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia" ]
+then
+	powheg="true"
+	zjetveto="true"
+	time=680000
 #elif [ "${SampleName}" = "" ]
 #then
 #	time=680000
@@ -118,6 +124,8 @@ echo "Preparing pre-macro file..."
 sed -e "s/signal = false/signal = ${signal}/1" ${versionpath}Selection_miniTree${version}.C > Selection_miniTree_${SampleName}.C
 sed -i -e "s/stew = false/stew = ${stew}/1" Selection_miniTree_${SampleName}.C
 sed -i -e "s/zjet_veto = false/zjet_veto = ${zjetveto}/1" Selection_miniTree_${SampleName}.C
+sed -i -e "s/powheg = false/powheg = ${zjetveto}/1" Selection_miniTree_${SampleName}.C
+sed -i -e "s/bool doSignalMuMuGamma        = false/bool doSignalMuMuGamma        = ${zjetveto}/1" Selection_miniTree_${SampleName}.C
 sed -i -e "s/minPtHat = -100;/minPtHat = ${minPtHat};/1" Selection_miniTree_${SampleName}.C
 sed -i -e "s/maxPtHat = 1000000;/maxPtHat = ${maxPtHat};/1" Selection_miniTree_${SampleName}.C
 if [ "${verbosity}" = "on" ]
@@ -155,7 +163,15 @@ then
 		sed -i -e '1d' TEMP_FileList_${SampleName} 
 	done
 
-	g++ ${RESULTSDIR}/Selection_miniTree_${SampleName}_${i}${version}.C `root-config --libs --cflags` -m32 -o ${RESULTSDIR}/Selection_miniTree_${SampleName}_${i}${version}
+	if [[ ! -d ${RESULTSDIR}/interface ]]
+  then
+    mkdir ${RESULTSDIR}/lib
+		cp ${WORKINGDIR}/libToto.so ${RESULTSDIR}/
+    cp ${WORKINGDIR}/libToto.so ${RESULTSDIR}/lib/
+    mkdir ${RESULTSDIR}/interface
+    cp ${WORKINGDIR}/interface/* ${RESULTSDIR}/interface/
+  fi
+	g++ ${RESULTSDIR}/Selection_miniTree_${SampleName}_${i}${version}.C -L${WORKINGDIR} -lToto `root-config --libs --cflags` -m32 -o ${RESULTSDIR}/Selection_miniTree_${SampleName}_${i}${version}
 
     
 	echo "Preparing batch file..."
@@ -199,7 +215,16 @@ then
     sed -i -e '1d' TEMP_FileList_${SampleName}
   done
 
-	g++ ${RESULTSDIR}/Selection_miniTree_${SampleName}_${i}${version}.C `root-config --libs --cflags` -m32 -o ${RESULTSDIR}/Selection_miniTree_${SampleName}_${i}${version}
+	if [[ ! -d ${RESULTSDIR}/interface ]]
+  then
+    mkdir ${RESULTSDIR}/lib
+		cp ${WORKINGDIR}/libToto.so ${RESULTSDIR}/
+    cp ${WORKINGDIR}/libToto.so ${RESULTSDIR}/lib/
+    mkdir ${RESULTSDIR}/interface
+    cp ${WORKINGDIR}/interface/* ${RESULTSDIR}/interface/
+  fi
+
+	g++ ${RESULTSDIR}/Selection_miniTree_${SampleName}_${i}${version}.C -L${WORKINGDIR} -lToto `root-config --libs --cflags` -m32 -o ${RESULTSDIR}/Selection_miniTree_${SampleName}_${i}${version}
 
     echo "Preparing batch file..."
     sed -e "s/NAME/${RawSampleName}_${i}${version}/1" batch_template.sh > ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh

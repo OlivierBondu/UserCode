@@ -8,24 +8,78 @@
 #PBS -o OUTLOG.out
 #PBS -e ERRLOG.err
 
+# LOAD CORRECT ENVIRONMENT VARIABLES FROM SPS
+echo "LOAD CORRECT ENVIRONMENT VARIABLES FROM SPS"
 export HOMEDIR=/afs/in2p3.fr/home/o/obondu
 source ${HOMEDIR}/385p3.sh
+SPSDIR=`pwd`
+WORKDIR=${TMPBATCH}
 
+# CHECK THE ENVIRONMENT VARIABLES
+echo "CHECK THE ENVIRONMENT VARIABLES"
 echo "ROOTSYS :"
 echo ${ROOTSYS}
+echo ""
 
+cd ${TMPBATCH}/
+echo "pwd; ls -als"
+pwd; ls -als
+echo ""
+
+# COPY HEADER FILES TO WORKER
+echo "COPY HEADER FILES TO WORKER"
+if [[ ! -e ${TMPBATCH}/interface ]]
+then
+  mkdir ${TMPBATCH}/interface
+  cp ${SPSDIR}/UserCode/IpnTreeProducer/interface/*h ${TMPBATCH}/interface/
+fi
+
+# COPY IpnTree LIB FILE TO WORKER
+echo "COPY IpnTree LIB FILE TO WORKER"
+if [[ ! -e ${TMPBATCH}/lib ]]
+then
+  mkdir ${TMPBATCH}/lib
+  cp ${SPSDIR}/UserCode/IpnTreeProducer/src/libToto.so ${TMPBATCH}/lib/
+	cp ${SPSDIR}/UserCode/IpnTreeProducer/src/libToto.so ${TMPBATCH}/
+fi
+
+# ADD CURRENT DIRECTORY AND LIB TO LIRARY PATH
+LD_LIBRARY_PATH=`echo "${LD_LIBRARY_PATH}:${WORKDIR}/lib:${WORKDIR}"`
 echo "LD_LIBRARY_PATH"
 echo ${LD_LIBRARY_PATH}
+echo ""
 
-WORKDIR=EXEDIR
-echo "Move to WORKDIR ${WORKDIR}"
-cd ${WORKDIR}
-pwd
+# COPY EXECUTABLE TO WORKER
+echo "COPY EXECUTABLE TO WORKER"
+#cp ${SPSDIR}/Zmumugamma/Selection/LOCATION/MACRO ${TMPBATCH}/
+cp EXEDIR/MACRO ${TMPBATCH}/
 
-echo "Kernel version : uname -r"
-uname -r
+echo "pwd; ls -als"
+pwd; ls -als
+echo ""
 
-echo "Running actual job"
+# EXECUTE JOB
+echo "EXECUTE JOB"
+cd ${TMPBATCH}/
 ./MACRO
 
+echo "pwd; ls -als"
+pwd; ls -als
+echo ""
+
+# GET BACK OUTPUT FILES TO SPS
+echo "GET BACK OUTPUT FILES TO SPS AND REMOVE THEM FROM DISTANT DIR"
+mv ${TMPBATCH}/miniTree*root EXEDIR/
+mv ${TMPBATCH}/SAMPLEPART*out EXEDIR/
+mv ${TMPBATCH}/SAMPLEPART*err EXEDIR/
+rm ${TMPBATCH}/MACRO
+
+echo "cd EXEDIR/"
+cd EXEDIR/
+
+echo "pwd; ls -als"
+pwd; ls -als
+echo ""
+
 exit 0
+

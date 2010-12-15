@@ -2,7 +2,7 @@
 # Script to apply cross sections on  Numbers
 # Written by O. Bondu (August 2010)
 
-CMSSW_release="CMSSW_3_8_5_patch3"
+CMSSW_release="CMSSW_3_8_6_v6"
 
 syntax="${0} {SelectionVersion}"
 
@@ -22,6 +22,13 @@ echo "" >> SelectionCutsNumbers_${SelectionVersion}.txt
 
 IntegratedLuminosity="1"
 
+G_Pt_0to15_TuneZ2_7TeV_pythia6="84200000.0"
+G_Pt_15to30_TuneZ2_7TeV_pythia6="171700.0"
+TTJets_TuneZ2_7TeV_madgraph_tauola_v2="121.0"
+
+InitialNumberG_Pt_0to15_TuneZ2_7TeV_pythia6="1057100"
+InitialNumberG_Pt_15to30_TuneZ2_7TeV_pythia6="1025840"
+InitialNumberTTJets_TuneZ2_7TeV_madgraph_tauola_v2="1164732"
 QCD_Pt15="8.762e+08"
 InitialNumberQCD_Pt15="6116800"
 
@@ -38,6 +45,15 @@ do
 		if [[ ${sample} = "QCD_Pt15" ]]
 		then
 			cut=`echo ${line} | awk '{printf "%4.5f", ('"${QCD_Pt15}"' / '"${InitialNumberQCD_Pt15}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "G_Pt_0to15_TuneZ2_7TeV_pythia6" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${G_Pt_0to15_TuneZ2_7TeV_pythia6}"' / '"${InitialNumberG_Pt_0to15_TuneZ2_7TeV_pythia6}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "G_Pt_15to30_TuneZ2_7TeV_pythia6" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${G_Pt_15to30_TuneZ2_7TeV_pythia6}"' / '"${InitialNumberG_Pt_15to30_TuneZ2_7TeV_pythia6}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "TTJets_TuneZ2_7TeV-madgraph-tauola_v2" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${TTJets_TuneZ2_7TeV_madgraph_tauola_v2}"' / '"${InitialNumberTTJets_TuneZ2_7TeV_madgraph_tauola_v2}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
 #    elif [[ ${sample} = "SAMPLE" ]]
 #    then
 #      cut=`echo ${line} | awk '{printf "%4.5f", ('"${SAMPLE}"' / '"${InitialNumberSAMPLE}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`

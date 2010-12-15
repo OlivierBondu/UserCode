@@ -2,7 +2,7 @@
 # Script to compute percentages and create LaTeX tables
 # Rewritten by O.Bondu for CMSSW 361p4 (August 2010)
 
-CMSSW_release="CMSSW_3_8_5_patch3"
+CMSSW_release="CMSSW_3_8_6_v6"
 
 syntax="${0} {SelectionVersion}"
 
