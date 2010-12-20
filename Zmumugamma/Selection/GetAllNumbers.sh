@@ -15,10 +15,13 @@ do
 	./ConvertRawNumbersIntoNumbers.sh ${selection}
 	./SumNumbersBySample.sh ${selection}
 	./GetSelectionNumbers.sh ${selection}
-	echo "HaddAllRootFiles.sh ${selection}"
-	eval `./HaddAllRootFiles.sh ${selection}`
+#	echo "HaddAllRootFiles.sh ${selection}"
+#	eval `./HaddAllRootFiles.sh ${selection}`
+	./GetPurityAndEfficiency.sh ${selection}
 	cd LaTeXTables/
 	eval `pdflatex SelectionCutsNumbersEfficiencies_${selection}.tex`
+	cd ..
+	echo -e "\n\n"
 done
 
 exit 0

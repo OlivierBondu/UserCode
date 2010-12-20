@@ -1052,8 +1052,8 @@ int main()
           }// end of selecting second muon
         }
       }// end of loop over MC particles
-//      if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
-      if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
+      if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
+//      if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
       {
         cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
         miniTree->Fill();
@@ -1117,8 +1117,8 @@ int main()
             }
           } // end of cuts on muons coming from the Z
         }// end of check if the event is a mc fsr passing acceptance cuts
-//        if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
-        if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
+        if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
+//        if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
         {
           cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
           miniTree->Fill();

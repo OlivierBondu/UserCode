@@ -19,7 +19,7 @@ echo -e "Sample \t0\tPthatFilter\tCSA07ID\tZJETVETO\t1.a\t1.b\t1.c\t1.d\t1.e\t2.
 echo "" >> SelectionCutsNumbersSummed_${SelectionVersion}.txt
 
 
-for sample in `echo "Run2010 G_Pt_ TTJets_TuneZ2_7TeV-madgraph-tauola"`
+for sample in `echo "Run2010 G_Pt_ TTJets_TuneZ2_7TeV-madgraph-tauola FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia ISR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia WJetsToLNu_TuneZ2_7TeV-madgraph-tauola"`
 do
 	allcuts=""
 #	cat SelectionCutsNumbers_${SelectionVersion}.txt | grep ${sample}
