@@ -176,6 +176,7 @@ then
     
 	echo "Preparing batch file..."
         sed -e "s/NAME/${RawSampleName}_${i}${version}/1" batch_template.sh > ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
+				sed -i -e "s/SAMPLEPART/${SampleName}_${i}/g" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
 				sed -i -e "s,EXEDIR,${RESULTSDIR},1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
         sed -i -e "s,OUTLOG,${RESULTSDIR}/${SampleName}_${i}${version},1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
         sed -i -e "s,ERRLOG,${RESULTSDIR}/${SampleName}_${i}${version},1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
@@ -228,6 +229,7 @@ then
 
     echo "Preparing batch file..."
     sed -e "s/NAME/${RawSampleName}_${i}${version}/1" batch_template.sh > ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
+		sed -i -e "s/SAMPLEPART/${SampleName}_${i}/g" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
 		sed -i -e "s,EXEDIR,${RESULTSDIR},1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
     sed -i -e "s,OUTLOG,${RESULTSDIR}/${SampleName}_${i}${version},1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh
     sed -i -e "s,ERRLOG,${RESULTSDIR}/${SampleName}_${i}${version},1" ${RESULTSDIR}/${SampleName}_${i}${version}_batch.sh

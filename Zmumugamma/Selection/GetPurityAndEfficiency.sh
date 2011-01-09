@@ -20,13 +20,13 @@ IntegratedLuminosity="36.145000992"
 
 G_Pt_0to15_TuneZ2_7TeV_pythia6="84200000.0"
 G_Pt_15to30_TuneZ2_7TeV_pythia6="171700.0"
-TTJets_TuneZ2_7TeV_madgraph_tauola_v2="121.0"
+TTJets_TuneZ2_7TeV_madgraph_tauola="121.0"
 DYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia="1614.0"
 WJetsToLNu_TuneZ2_7TeV_madgraph_tauola="24640.0"
 
 InitialNumberG_Pt_0to15_TuneZ2_7TeV_pythia6="1057100"
 InitialNumberG_Pt_15to30_TuneZ2_7TeV_pythia6="1025840"
-InitialNumberTTJets_TuneZ2_7TeV_madgraph_tauola_v2="1164732"
+InitialNumberTTJets_TuneZ2_7TeV_madgraph_tauola="1164732"
 InitialNumberDYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia="1998931"
 InitialNumberWJetsToLNu_TuneZ2_7TeV_madgraph_tauola="15123740"
 
@@ -69,7 +69,7 @@ do
 			fi
       cut=`echo ${line} | awk '{printf "%4.10f", ('"${G_Pt_15to30_TuneZ2_7TeV_pythia6}"' / '"${InitialNumberG_Pt_15to30_TuneZ2_7TeV_pythia6}"' * '"${currentNumber}"' * '"${IntegratedLuminosity}"')}'`
       cuterror=`echo ${line} | awk '{printf "%4.10f", ('"${G_Pt_15to30_TuneZ2_7TeV_pythia6}"' / '"${InitialNumberG_Pt_15to30_TuneZ2_7TeV_pythia6}"' * sqrt( '"${currentNumber}"' ) * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "TTJets_TuneZ2_7TeV-madgraph-tauola_v2" ]]
+    elif [[ ${sample} = "TTJets_TuneZ2_7TeV-madgraph-tauola" ]]
     then
 			currentNumber=`echo ${line} | awk '{print $'"${currentColumn}"'}'`
 			if [[ "${currentNumber}" == "0" ]]
@@ -77,8 +77,8 @@ do
 				currentNumber="1"
 				iszero="1"
 			fi
-      cut=`echo ${line} | awk '{printf "%4.10f", ('"${TTJets_TuneZ2_7TeV_madgraph_tauola_v2}"' / '"${InitialNumberTTJets_TuneZ2_7TeV_madgraph_tauola_v2}"' * '"${currentNumber}"' * '"${IntegratedLuminosity}"')}'`
-      cuterror=`echo ${line} | awk '{printf "%4.10f", ('"${TTJets_TuneZ2_7TeV_madgraph_tauola_v2}"' / '"${InitialNumberTTJets_TuneZ2_7TeV_madgraph_tauola_v2}"' * sqrt( '"${currentNumber}"' ) * '"${IntegratedLuminosity}"')}'`
+      cut=`echo ${line} | awk '{printf "%4.10f", ('"${TTJets_TuneZ2_7TeV_madgraph_tauola}"' / '"${InitialNumberTTJets_TuneZ2_7TeV_madgraph_tauola}"' * '"${currentNumber}"' * '"${IntegratedLuminosity}"')}'`
+      cuterror=`echo ${line} | awk '{printf "%4.10f", ('"${TTJets_TuneZ2_7TeV_madgraph_tauola}"' / '"${InitialNumberTTJets_TuneZ2_7TeV_madgraph_tauola}"' * sqrt( '"${currentNumber}"' ) * '"${IntegratedLuminosity}"')}'`
     elif [[ ${sample} = "FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia" ]]
     then
 			currentNumber=`echo ${line} | awk '{print $'"${currentColumn}"'}'`
@@ -89,7 +89,7 @@ do
 			fi
       cut=`echo ${line} | awk '{printf "%4.10f", ('"${DYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia}"' / '"${InitialNumberDYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia}"' * '"${currentNumber}"' * '"${IntegratedLuminosity}"')}'`
       cuterror=`echo ${line} | awk '{printf "%4.10f", ('"${DYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia}"' / '"${InitialNumberDYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia}"' * sqrt( '"${currentNumber}"' ) * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "ISR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia" ]]
+    elif [[ ${sample} = "nonFSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia" ]]
     then
 			currentNumber=`echo ${line} | awk '{print $'"${currentColumn}"'}'`
 			if [[ "${currentNumber}" == "0" ]]
@@ -99,7 +99,7 @@ do
 			fi
       cut=`echo ${line} | awk '{printf "%4.10f", ('"${DYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia}"' / '"${InitialNumberDYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia}"' * '"${currentNumber}"' * '"${IntegratedLuminosity}"')}'`
       cuterror=`echo ${line} | awk '{printf "%4.10f", ('"${DYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia}"' / '"${InitialNumberDYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia}"' * sqrt( '"${currentNumber}"' ) * '"${IntegratedLuminosity}"')}'`
-    elif [[ ${sample} = "WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_v3" ]]
+    elif [[ ${sample} = "WJetsToLNu_TuneZ2_7TeV-madgraph-tauola" ]]
     then
 			currentNumber=`echo ${line} | awk '{print $'"${currentColumn}"'}'`
 			if [[ "${currentNumber}" == "0" ]]
@@ -152,21 +152,40 @@ echo -e "*** Summed yields\n" >> PurityEfficiency_${SelectionVersion}.txt
 # ************
 # Sum samples
 # ************
-for sample in `echo "G_Pt_ TTJets FSR_DYToMuMu ISR_DYToMuMu WJets"`
+for sample in `echo "G_Pt_ TTJets FSR_DYToMuMu nonFSR_DYToMuMu WJets"`
 do
 	allcuts=""
-	cols=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v ERROR | head -n +1 | wc -w`
+	if [[ "${sample}" = "FSR_DYToMuMu" ]]
+	then
+		cols=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v nonFSR | grep -v ERROR | head -n +1 | wc -w`
+	else
+		cols=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v ERROR | head -n +1 | wc -w`
+	fi
 	for column in ${cols}
 	do
-		currentSum=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v ERROR | awk 'BEGIN {SUM=0} {SUM+=$'"${column}"'} END {printf "%4.10f", SUM}'`
-		cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v ERROR | grep "FLAGGED" > /dev/null
-		if [[ "$?" == "0" ]]
+		if [[ "${sample}" = "FSR_DYToMuMu" ]]
 		then
-			currentMax=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v ERROR | awk 'BEGIN {MAX=0} {MAX=(MAX > $2 ? MAX : $2 ) } END {print MAX}'`
-			allcuts=`echo "${allcuts}\t MORE_THAN ${currentMax}"`
+			currentSum=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v nonFSR | grep -v ERROR | awk 'BEGIN {SUM=0} {SUM+=$'"${column}"'} END {printf "%4.10f", SUM}'`
+			cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v nonFSR | grep -v ERROR | grep "FLAGGED" > /dev/null
+			if [[ "$?" == "0" ]]
+			then
+				currentMax=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v nonFSR | grep -v ERROR | awk 'BEGIN {MAX=0} {MAX=(MAX > $2 ? MAX : $2 ) } END {print MAX}'`
+				allcuts=`echo "${allcuts}\t MORE_THAN ${currentMax}"`
+			else
+				allcuts=`echo "${allcuts}\t${currentSum}"`
+			fi
 		else
-			allcuts=`echo "${allcuts}\t${currentSum}"`
+			currentSum=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v ERROR | awk 'BEGIN {SUM=0} {SUM+=$'"${column}"'} END {printf "%4.10f", SUM}'`
+			cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v ERROR | grep "FLAGGED" > /dev/null
+			if [[ "$?" == "0" ]]
+			then
+				currentMax=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v ERROR | awk 'BEGIN {MAX=0} {MAX=(MAX > $2 ? MAX : $2 ) } END {print MAX}'`
+				allcuts=`echo "${allcuts}\t MORE_THAN ${currentMax}"`
+			else
+				allcuts=`echo "${allcuts}\t${currentSum}"`
+			fi
 		fi
+#		cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v ERROR | grep "FLAGGED" > /dev/null
 	done
 echo -e "${sample}\t${allcuts}" >> PurityEfficiency_${SelectionVersion}_TEMP2.txt
 echo -e "${sample}\t${allcuts}" >> PurityEfficiency_${SelectionVersion}.txt
@@ -178,21 +197,40 @@ echo -e "*** Root mean square of errors\n" >> PurityEfficiency_${SelectionVersio
 # ************
 # Sum errors (root mean square)
 # ************
-for sample in `echo "G_Pt_ TTJets FSR_DYToMuMu ISR_DYToMuMu WJets"`
+for sample in `echo "G_Pt_ TTJets FSR_DYToMuMu nonFSR_DYToMuMu WJets"`
 do
 	allcuterrors=""
-	cols=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep ERROR | head -n +1 | wc -w`
+	if [[ "${sample}" = "FSR_DYToMuMu" ]]
+	then
+		cols=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v nonFSR | grep ERROR | head -n +1 | wc -w`
+	else
+		cols=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep ERROR | head -n +1 | wc -w`
+	fi
 	for column in ${cols}
 	do
-		currentSum=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep ERROR | awk 'BEGIN {SUM=0} {SUM += $'"${column}"' * $'"${column}"' } END {printf "%4.10f", sqrt( SUM )}'`
-#		allcuterrors=`echo "${allcuterrors}\t${currentSum}"`
-		cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep ERROR | grep "FLAGGED" > /dev/null
-		if [[ "$?" == "0" ]]
+		if [[ "${sample}" = "FSR_DYToMuMu" ]]
 		then
-			currentMax=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep ERROR | awk 'BEGIN {MAX=0} {MAX=(MAX > $2 ? MAX : $2 ) } END {print MAX}'`
-			allcuterrors=`echo "${allcuterrors}\t${currentMax}"`
+			currentSum=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v nonFSR | grep ERROR | awk 'BEGIN {SUM=0} {SUM += $'"${column}"' * $'"${column}"' } END {printf "%4.10f", sqrt( SUM )}'`
+	#		allcuterrors=`echo "${allcuterrors}\t${currentSum}"`
+			cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v nonFSR | grep ERROR | grep "FLAGGED" > /dev/null
+			if [[ "$?" == "0" ]]
+			then
+				currentMax=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep -v nonFSR | grep ERROR | awk 'BEGIN {MAX=0} {MAX=(MAX > $2 ? MAX : $2 ) } END {print MAX}'`
+				allcuterrors=`echo "${allcuterrors}\t${currentMax}"`
+			else
+				allcuterrors=`echo "${allcuterrors}\t${currentSum}"`
+			fi
 		else
-			allcuterrors=`echo "${allcuterrors}\t${currentSum}"`
+			currentSum=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep ERROR | awk 'BEGIN {SUM=0} {SUM += $'"${column}"' * $'"${column}"' } END {printf "%4.10f", sqrt( SUM )}'`
+	#		allcuterrors=`echo "${allcuterrors}\t${currentSum}"`
+			cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep ERROR | grep "FLAGGED" > /dev/null
+			if [[ "$?" == "0" ]]
+			then
+				currentMax=`cat PurityEfficiency_${SelectionVersion}_TEMP.txt | grep ${sample} | grep ERROR | awk 'BEGIN {MAX=0} {MAX=(MAX > $2 ? MAX : $2 ) } END {print MAX}'`
+				allcuterrors=`echo "${allcuterrors}\t${currentMax}"`
+			else
+				allcuterrors=`echo "${allcuterrors}\t${currentSum}"`
+			fi
 		fi
 	done
 echo -e "ERROR_${sample}\t${allcuterrors}" >> PurityEfficiency_${SelectionVersion}_TEMP3.txt
@@ -211,7 +249,7 @@ echo -e "\n\n" >> PurityEfficiency_${SelectionVersion}.txt
 # COMPUTE PURITY
 # ************
 signal="FSR_DYToMuMu"
-BGList="G_Pt_ TTJets ISR_DYToMuMu WJets"
+BGList="G_Pt_ TTJets nonFSR_DYToMuMu WJets"
 isExact="1"
 allBGs="0.0"
 allBGerrors="0.0"
@@ -233,10 +271,10 @@ do
 	allBGerrors=`echo "${allBGerrors} + ${currentBGerror} * ${currentBGerror}"`
 done
 echo "SIGNAL = ${signal}" >> PurityEfficiency_${SelectionVersion}.txt
-cols=`cat PurityEfficiency_${SelectionVersion}_TEMP2.txt | grep ${signal} | wc -w`
-errorcols=`cat PurityEfficiency_${SelectionVersion}_TEMP3.txt | grep ERROR | grep ${signal} | wc -w`
-signalYield=`cat PurityEfficiency_${SelectionVersion}_TEMP2.txt | grep ${signal} | awk '{print $'"${cols}"'}'`
-signalYieldError=`cat PurityEfficiency_${SelectionVersion}_TEMP3.txt | grep ERROR | grep ${signal} | awk '{print $'"${cols}"'}'`
+cols=`cat PurityEfficiency_${SelectionVersion}_TEMP2.txt | grep ${signal} | grep -v nonFSR | wc -w`
+errorcols=`cat PurityEfficiency_${SelectionVersion}_TEMP3.txt | grep ERROR | grep ${signal} | grep -v nonFSR | wc -w`
+signalYield=`cat PurityEfficiency_${SelectionVersion}_TEMP2.txt | grep ${signal} | grep -v nonFSR | awk '{print $'"${cols}"'}'`
+signalYieldError=`cat PurityEfficiency_${SelectionVersion}_TEMP3.txt | grep ERROR | grep ${signal} | grep -v nonFSR | awk '{print $'"${cols}"'}'`
 echo "signal yield = ${signalYield} +- ${signalYieldError}" >> PurityEfficiency_${SelectionVersion}.txt
 BGYield=`awk 'BEGIN {printf "%4.10f", ( '"${allBGs}"' )}'`
 BGYieldError=`awk 'BEGIN {printf "%4.10f", ( sqrt( '"${allBGerrors}"' ) )}'`
@@ -262,7 +300,7 @@ echo "" >> PurityEfficiency_${SelectionVersion}.txt
 # COMPUTE PURITY
 # ************
 signal="FSR_DYToMuMu"
-BGList="TTJets ISR_DYToMuMu WJets"
+BGList="TTJets nonFSR_DYToMuMu WJets"
 isExact="1"
 allBGs="0.0"
 allBGerrors="0.0"
@@ -284,10 +322,10 @@ do
 	allBGerrors=`echo "${allBGerrors} + ${currentBGerror} * ${currentBGerror}"`
 done
 echo "SIGNAL = ${signal}" >> PurityEfficiency_${SelectionVersion}.txt
-cols=`cat PurityEfficiency_${SelectionVersion}_TEMP2.txt | grep ${signal} | wc -w`
-errorcols=`cat PurityEfficiency_${SelectionVersion}_TEMP3.txt | grep ERROR | grep ${signal} | wc -w`
-signalYield=`cat PurityEfficiency_${SelectionVersion}_TEMP2.txt | grep ${signal} | awk '{print $'"${cols}"'}'`
-signalYieldError=`cat PurityEfficiency_${SelectionVersion}_TEMP3.txt | grep ERROR | grep ${signal} | awk '{print $'"${cols}"'}'`
+cols=`cat PurityEfficiency_${SelectionVersion}_TEMP2.txt | grep ${signal} | grep -v nonFSR | wc -w`
+errorcols=`cat PurityEfficiency_${SelectionVersion}_TEMP3.txt | grep ERROR | grep ${signal} | grep -v nonFSR | wc -w`
+signalYield=`cat PurityEfficiency_${SelectionVersion}_TEMP2.txt | grep ${signal} | grep -v nonFSR | awk '{print $'"${cols}"'}'`
+signalYieldError=`cat PurityEfficiency_${SelectionVersion}_TEMP3.txt | grep ERROR | grep ${signal} | grep -v nonFSR | awk '{print $'"${cols}"'}'`
 echo "signal yield = ${signalYield} +- ${signalYieldError}" >> PurityEfficiency_${SelectionVersion}.txt
 BGYield=`awk 'BEGIN {printf "%4.10f", ( '"${allBGs}"' )}'`
 BGYieldError=`awk 'BEGIN {printf "%4.10f", ( sqrt( '"${allBGerrors}"' ) )}'`
@@ -312,7 +350,7 @@ echo "" >> PurityEfficiency_${SelectionVersion}.txt
 # ************
 # COMPUTE SIGNAL EFFICIENCY
 # ************
-line=`cat SelectionCutsNumbersSummed_${SelectionVersion}.txt | grep ${signal}`
+line=`cat SelectionCutsNumbersSummed_${SelectionVersion}.txt | grep ${signal} | grep -v nonFSR `
 cols=`echo ${line} | wc -w`
 EFFICIENCY=`echo ${line} | awk '{printf "%4.10f", ( $'"${cols}"' / $5 )}'`
 echo "EFFICIENCY = ${EFFICIENCY}" >> PurityEfficiency_${SelectionVersion}.txt

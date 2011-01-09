@@ -8,7 +8,26 @@
 #./runThisSplittedOnBatch.sh G_Pt_15to30_TuneZ2_7TeV_pythia6 hadEt-noDeltaRmin-relaxedMuEta
 #./runThisSplittedOnBatch.sh TTJets_TuneZ2_7TeV-madgraph-tauola_v2 hadEt-noDeltaRmin-relaxedMuEta
 #./runThisSplittedOnBatch.sh DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia hadEt-noDeltaRmin-relaxedMuEta
-./runThisSplittedOnBatch.sh WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_v3 hadEt-noDeltaRmin-relaxedMuEta
+#./runThisSplittedOnBatch.sh WJetsToLNu_TuneZ2_7TeV-madgraph-tauola_v3 hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G2Jets_Pt-120to180_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G2Jets_Pt-180to240_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G2Jets_Pt-20to60_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G2Jets_Pt-240to300_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G2Jets_Pt-300to5000_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G2Jets_Pt-60to120_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G3Jets_Pt-120to180_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G3Jets_Pt-180to240_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G3Jets_Pt-20to60_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G3Jets_Pt-240to300_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G3Jets_Pt-300to5000_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G3Jets_Pt-60to120_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G4Jets_Pt-120to180_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G4Jets_Pt-180to240_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G4Jets_Pt-20to60_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G4Jets_Pt-240to300_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G4Jets_Pt-300to5000_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh G4Jets_Pt-60to120_TuneZ2_7TeV-alpgen hadEt-noDeltaRmin-relaxedMuEta
+./runThisSplittedOnBatch.sh QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6 hadEt-noDeltaRmin-relaxedMuEta
 
 #./runThisSplittedOnBatch.sh G_Pt_0to15_TuneZ2_7TeV_pythia6 hadEt-noDeltaRmin-relaxedMuEta-relaxedGammaPt
 #./runThisSplittedOnBatch.sh Run2010A_partIIv2 hadEt-noDeltaRmin-relaxedMuEta-relaxedGammaPt

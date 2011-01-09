@@ -1,8 +1,8 @@
 #!/bin/bash
-# move ZmumuFolders and files to ISR and FSR
+# move ZmumuFolders and files to nonFSR and FSR
 # Written by O. Bondu (October 2010)
 
-syntax="${0} {ISR/FSR}"
+syntax="${0} {nonFSR/FSR}"
 
 if [[ -z ${1} ]]
 then
@@ -13,7 +13,7 @@ fi
 IorF=${1}
 if [[ "${IorF}" == "FSR" ]]
 then
-	notIorF="ISR"
+	notIorF="nonFSR"
 else
 	notIorF="FSR"
 fi

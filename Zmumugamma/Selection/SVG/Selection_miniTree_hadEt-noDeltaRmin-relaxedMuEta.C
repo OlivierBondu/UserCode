@@ -86,7 +86,7 @@ int main()
 	bool doJetMC									= false;
 	bool doMETMC									= false;
 	bool doPDFInfo								= false;
-	bool doSignalMuMuGamma				= true;
+	bool doSignalMuMuGamma				= false;
 	bool doSignalTopTop					 = false;
 	bool doPhotonConversionMC		 = false;
 	bool doBeamSpot							 = false;
