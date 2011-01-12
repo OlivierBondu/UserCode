@@ -23,12 +23,50 @@ G_Pt_15to30_TuneZ2_7TeV_pythia6="171700.0"
 TTJets_TuneZ2_7TeV_madgraph_tauola="121.0"
 DYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia="1614.0"
 WJetsToLNu_TuneZ2_7TeV_madgraph_tauola="24640.0"
+G4Jets_Pt_60to120_TuneZ2_7TeV_alpgen="32.08"
+G4Jets_Pt_300to5000_TuneZ2_7TeV_alpgen="0.25"
+G4Jets_Pt_240to300_TuneZ2_7TeV_alpgen="0.42"
+G4Jets_Pt_20to60_TuneZ2_7TeV_alpgen="148.30"
+G4Jets_Pt_180to240_TuneZ2_7TeV_alpgen="1.40"
+G4Jets_Pt_120to180_TuneZ2_7TeV_alpgen="5.73"
+G3Jets_Pt_60to120_TuneZ2_7TeV_alpgen="118.70"
+G3Jets_Pt_300to5000_TuneZ2_7TeV_alpgen="0.47"
+G3Jets_Pt_240to300_TuneZ2_7TeV_alpgen="0.76"
+G3Jets_Pt_20to60_TuneZ2_7TeV_alpgen="794.70"
+G3Jets_Pt_180to240_TuneZ2_7TeV_alpgen="3.09"
+G3Jets_Pt_120to180_TuneZ2_7TeV_alpgen="15.27"
+G2Jets_Pt_60to120_TuneZ2_7TeV_alpgen="425.80"
+G2Jets_Pt_300to5000_TuneZ2_7TeV_alpgen="0.72"
+G2Jets_Pt_240to300_TuneZ2_7TeV_alpgen="1.45"
+G2Jets_Pt_20to60_TuneZ2_7TeV_alpgen="4080.00"
+G2Jets_Pt_180to240_TuneZ2_7TeV_alpgen="5.94"
+G2Jets_Pt_120to180_TuneZ2_7TeV_alpgen="35.56"
+QCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6="84679.3"
 
 InitialNumberG_Pt_0to15_TuneZ2_7TeV_pythia6="1057100"
 InitialNumberG_Pt_15to30_TuneZ2_7TeV_pythia6="1025840"
 InitialNumberTTJets_TuneZ2_7TeV_madgraph_tauola="1164732"
 InitialNumberDYToMuMu_M_20_CT10_TuneZ2_7TeV_powheg_pythia="1998931"
 InitialNumberWJetsToLNu_TuneZ2_7TeV_madgraph_tauola="15123740"
+InitialNumberG4Jets_Pt_60to120_TuneZ2_7TeV_alpgen="333214"
+InitialNumberG4Jets_Pt_300to5000_TuneZ2_7TeV_alpgen="336836"
+InitialNumberG4Jets_Pt_240to300_TuneZ2_7TeV_alpgen="333241"
+InitialNumberG4Jets_Pt_20to60_TuneZ2_7TeV_alpgen="335546"
+InitialNumberG4Jets_Pt_180to240_TuneZ2_7TeV_alpgen="331020"
+InitialNumberG4Jets_Pt_120to180_TuneZ2_7TeV_alpgen="328253"
+InitialNumberG3Jets_Pt_60to120_TuneZ2_7TeV_alpgen="333681"
+InitialNumberG3Jets_Pt_300to5000_TuneZ2_7TeV_alpgen="311653"
+InitialNumberG3Jets_Pt_240to300_TuneZ2_7TeV_alpgen="339273"
+InitialNumberG3Jets_Pt_20to60_TuneZ2_7TeV_alpgen="322557"
+InitialNumberG3Jets_Pt_180to240_TuneZ2_7TeV_alpgen="324607"
+InitialNumberG3Jets_Pt_120to180_TuneZ2_7TeV_alpgen="331691"
+InitialNumberG2Jets_Pt_60to120_TuneZ2_7TeV_alpgen="338909"
+InitialNumberG2Jets_Pt_300to5000_TuneZ2_7TeV_alpgen="333630"
+InitialNumberG2Jets_Pt_240to300_TuneZ2_7TeV_alpgen="331339"
+InitialNumberG2Jets_Pt_20to60_TuneZ2_7TeV_alpgen="1782042"
+InitialNumberG2Jets_Pt_180to240_TuneZ2_7TeV_alpgen="329962"
+InitialNumberG2Jets_Pt_120to180_TuneZ2_7TeV_alpgen="330992"
+InitialNumberQCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6="28779866"
 
 echo -e "*** Raw Yields and errors\n">> PurityEfficiency_${SelectionVersion}.txt
 # ************
@@ -36,7 +74,7 @@ echo -e "*** Raw Yields and errors\n">> PurityEfficiency_${SelectionVersion}.txt
 # ************
 
 cols=`head -n 4 RawSelectionCutsNumbers_${SelectionVersion}.txt | tail -n 1 | wc -w`
-for sample in `tac RawSelectionCutsNumbers_${SelectionVersion}.txt | awk '{print $1}' | head -n -3 | grep -v Run2010`
+for sample in `tac RawSelectionCutsNumbers_${SelectionVersion}.txt | awk '{print $1}' | head -n -3 | grep -v Run2010 | grep -v G[1-4]Jet`
 do
   line=`grep -w "${sample}" RawSelectionCutsNumbers_${SelectionVersion}.txt`
   newline=""
@@ -109,6 +147,16 @@ do
 			fi
       cut=`echo ${line} | awk '{printf "%4.10f", ('"${WJetsToLNu_TuneZ2_7TeV_madgraph_tauola}"' / '"${InitialNumberWJetsToLNu_TuneZ2_7TeV_madgraph_tauola}"' * '"${currentNumber}"' * '"${IntegratedLuminosity}"')}'`
       cuterror=`echo ${line} | awk '{printf "%4.10f", ('"${WJetsToLNu_TuneZ2_7TeV_madgraph_tauola}"' / '"${InitialNumberWJetsToLNu_TuneZ2_7TeV_madgraph_tauola}"' * sqrt( '"${currentNumber}"' ) * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6" ]]
+    then
+			currentNumber=`echo ${line} | awk '{print $'"${currentColumn}"'}'`
+			if [[ "${currentNumber}" == "0" ]]
+			then
+				currentNumber="1"
+				iszero="1"
+			fi
+      cut=`echo ${line} | awk '{printf "%4.10f", ('"${QCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6}"' / '"${InitialNumberQCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6}"' * '"${currentNumber}"' * '"${IntegratedLuminosity}"')}'`
+      cuterror=`echo ${line} | awk '{printf "%4.10f", ('"${QCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6}"' / '"${InitialNumberQCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6}"' * sqrt( '"${currentNumber}"' ) * '"${IntegratedLuminosity}"')}'`
 #    elif [[ ${sample} = "SAMPLE" ]]
 #    then
 #			currentNumber=`echo ${line} | awk '{print $'"${currentColumn}"'}'`
@@ -152,7 +200,7 @@ echo -e "*** Summed yields\n" >> PurityEfficiency_${SelectionVersion}.txt
 # ************
 # Sum samples
 # ************
-for sample in `echo "G_Pt_ TTJets FSR_DYToMuMu nonFSR_DYToMuMu WJets"`
+for sample in `echo "G_Pt_ TTJets FSR_DYToMuMu nonFSR_DYToMuMu WJets QCD"`
 do
 	allcuts=""
 	if [[ "${sample}" = "FSR_DYToMuMu" ]]
@@ -197,7 +245,7 @@ echo -e "*** Root mean square of errors\n" >> PurityEfficiency_${SelectionVersio
 # ************
 # Sum errors (root mean square)
 # ************
-for sample in `echo "G_Pt_ TTJets FSR_DYToMuMu nonFSR_DYToMuMu WJets"`
+for sample in `echo "G_Pt_ TTJets FSR_DYToMuMu nonFSR_DYToMuMu WJets QCD"`
 do
 	allcuterrors=""
 	if [[ "${sample}" = "FSR_DYToMuMu" ]]
@@ -249,7 +297,7 @@ echo -e "\n\n" >> PurityEfficiency_${SelectionVersion}.txt
 # COMPUTE PURITY
 # ************
 signal="FSR_DYToMuMu"
-BGList="G_Pt_ TTJets nonFSR_DYToMuMu WJets"
+BGList="G_Pt_ TTJets nonFSR_DYToMuMu WJets QCD"
 isExact="1"
 allBGs="0.0"
 allBGerrors="0.0"
@@ -300,7 +348,7 @@ echo "" >> PurityEfficiency_${SelectionVersion}.txt
 # COMPUTE PURITY
 # ************
 signal="FSR_DYToMuMu"
-BGList="TTJets nonFSR_DYToMuMu WJets"
+BGList="TTJets nonFSR_DYToMuMu WJets QCD"
 isExact="1"
 allBGs="0.0"
 allBGerrors="0.0"

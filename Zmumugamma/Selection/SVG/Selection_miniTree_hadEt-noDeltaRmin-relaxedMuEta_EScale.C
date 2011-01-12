@@ -12,6 +12,10 @@
 #include "TBits.h"
 #include "TMath.h"
 #include "TSystem.h"
+#include "TObjArray.h"
+#include <sstream>
+#include <iostream>
+#include <fstream>
 #pragma optimize 0
 
 #include "interface/TRootBardak.h"
@@ -64,7 +68,7 @@ int main(int argc, char *argv[])
 	bool doJetMC									= false;
 	bool doMETMC									= false;
 	bool doPDFInfo								= false;
-	bool doSignalMuMuGamma				= false;
+	bool doSignalMuMuGamma				= true;
 	bool doSignalTopTop					 = false;
 	bool doPhotonConversionMC		 = false;
 	bool doBeamSpot							 = false;
@@ -337,6 +341,7 @@ int main(int argc, char *argv[])
 	
 	Float_t Mmumu, Mmumugamma;
 	Float_t deltaRNear, deltaRFar, deltaRMinus, deltaRPlus, deltaRLeading, deltaRSubleading;
+  Float_t mmg_k, mmg_k1, mmg_logk, mmg_logk1, mmg_s;
  
 	// ____________________________________________
 	// preparing the tree
@@ -668,6 +673,12 @@ int main(int argc, char *argv[])
 	miniTree->Branch("deltaRLeading", &deltaRLeading, "deltaRLeading/F");
 	miniTree->Branch("deltaRSubleading", &deltaRSubleading, "deltaRSubleading/F");
 	
+  miniTree->Branch("mmg_k", &mmg_k, "mmg_k/F");
+  miniTree->Branch("mmg_k1", &mmg_k1, "mmg_k1/F");
+  miniTree->Branch("mmg_logk", &mmg_logk, "mmg_logk/F");
+  miniTree->Branch("mmg_logk1", &mmg_logk1, "mmg_logk1/F");
+  miniTree->Branch("mmg_s", &mmg_s, "mmg_s/F");
+
 	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
 //	unsigned int NbEvents = 1000;
@@ -684,16 +695,24 @@ int main(int argc, char *argv[])
 	vector<int> SelectedEvent_RunNumber;
 	vector<int> SelectedEvent_LumiNumber;
 	vector<int> SelectedEvent_EventNumber;
-	vector<double> SelectedEvent_mumugammaInvMass;
-	vector<double> SelectedEvent_Eta_gamma;
-	vector<double> SelectedEvent_Eta_muonNear;
-	vector<double> SelectedEvent_Eta_muonFar;
-	vector<double> SelectedEvent_Et_gamma;
-	vector<double> SelectedEvent_Pt_muonNear;
-	vector<double> SelectedEvent_Pt_muonFar;
-	vector<double> SelectedEvent_DeltaRNear;
-	vector<double> SelectedEvent_DeltaRFar;
-	vector<double> SelectedEvent_mumuInvMass;
+	vector<float> SelectedEvent_mumugammaInvMass;
+	vector<float> SelectedEvent_Eta_gamma;
+	vector<float> SelectedEvent_Eta_muonNear;
+	vector<float> SelectedEvent_Eta_muonFar;
+	vector<float> SelectedEvent_Phi_gamma;
+	vector<float> SelectedEvent_Phi_muonNear;
+	vector<float> SelectedEvent_Phi_muonFar;
+	vector<float> SelectedEvent_Et_gamma;
+	vector<float> SelectedEvent_Pt_muonNear;
+	vector<float> SelectedEvent_Pt_muonFar;
+	vector<float> SelectedEvent_DeltaRNear;
+	vector<float> SelectedEvent_DeltaRFar;
+	vector<float> SelectedEvent_mumuInvMass;
+	vector<float> SelectedEvent_mmg_k;
+	vector<float> SelectedEvent_mmg_k1;
+	vector<float> SelectedEvent_mmg_logk;
+	vector<float> SelectedEvent_mmg_logk1;
+	vector<float> SelectedEvent_mmg_s;
 	SelectedEvent_RunNumber.clear();
 	SelectedEvent_LumiNumber.clear();
 	SelectedEvent_EventNumber.clear();
@@ -701,18 +720,40 @@ int main(int argc, char *argv[])
 	SelectedEvent_Eta_gamma.clear();
 	SelectedEvent_Eta_muonNear.clear();
 	SelectedEvent_Eta_muonFar.clear();
+	SelectedEvent_Phi_gamma.clear();
+	SelectedEvent_Phi_muonNear.clear();
+	SelectedEvent_Phi_muonFar.clear();
 	SelectedEvent_Et_gamma.clear();
 	SelectedEvent_Pt_muonNear.clear();
 	SelectedEvent_Pt_muonFar.clear();
 	SelectedEvent_DeltaRNear.clear();
 	SelectedEvent_DeltaRFar.clear();
 	SelectedEvent_mumuInvMass.clear();
+	SelectedEvent_mmg_k.clear();
+	SelectedEvent_mmg_k1.clear();
+	SelectedEvent_mmg_logk.clear();
+	SelectedEvent_mmg_logk1.clear();
+	SelectedEvent_mmg_s.clear();
+
 
 	inputRunTree->GetEvent(0);
   string lastFile = "";
 	double minPtHat = -100;
   double maxPtHat = 1000000;
   int verbosity = 5;
+
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!! WARNING: CHANGING EScale !!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//    Double_t EScale = 0.950;
+    Double_t EScale = alpha_;
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!! WARNING: CHANGING EScale !!!!!!!!!!!!!!!!!!!
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
 
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 	{
@@ -790,6 +831,7 @@ int main(int argc, char *argv[])
 		// ____________________________________________
 		Mmumu = Mmumugamma = -99;
 		deltaRNear = deltaRFar = deltaRPlus = deltaRMinus = deltaRLeading = deltaRSubleading = -99;
+		mmg_k = mmg_k1 = mmg_logk = mmg_logk1 = mmg_s = -99.0;
 		// ____________________________________________
 		// END OF INITIALIZATION
 		// ____________________________________________
@@ -968,7 +1010,7 @@ int main(int argc, char *argv[])
 				for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 					TRootPhoton *myphoton;
 					myphoton = (TRootPhoton*) photons->At(iphoton);
-					Pt_allPhotons = myphoton->Pt();
+					Pt_allPhotons = EScale*(myphoton->Pt());
 					Eta_allPhotons = myphoton->Eta();
 					Phi_allPhotons = myphoton->Phi();
 					isEBorEE_allPhotons = 1;
@@ -1032,8 +1074,8 @@ int main(int argc, char *argv[])
           }// end of selecting second muon
         }
       }// end of loop over MC particles
-      if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
-//      if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
+//      if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
+      if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
       {
         errfile<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
         miniTree->Fill();
@@ -1097,8 +1139,8 @@ int main(int argc, char *argv[])
             }
           } // end of cuts on muons coming from the Z
         }// end of check if the event is a mc fsr passing acceptance cuts
-        if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
-//        if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
+//        if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
+        if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
         {
           errfile<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
           miniTree->Fill();
@@ -1201,7 +1243,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(iphoton);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1264,7 +1306,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(iphoton);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1343,7 +1385,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(iphoton);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1376,7 +1418,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(iphoton);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1409,7 +1451,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(iphoton);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1433,8 +1475,8 @@ int main(int argc, char *argv[])
 		TRootPhoton *photonValidEtaCandidate;
 		for(int iphoton=0 ; iphoton<NbPhotonsNoSpike ; iphoton++){
 			photonValidEtaCandidate = (TRootPhoton*) photons->At(photonsNoSpike[iphoton]);
-			errfile << "\t\tINFO: Photon " << photonsNoSpike[iphoton] << "\tPt= " << photonValidEtaCandidate->Pt() << "\tEta= " << photonValidEtaCandidate->Eta() << endl;
-			if( (photonValidEtaCandidate->Pt()>10.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){
+			errfile << "\t\tINFO: Photon " << photonsNoSpike[iphoton] << "\tPt= " << EScale * (photonValidEtaCandidate->Pt()) << "\tEta= " << photonValidEtaCandidate->Eta() << endl;
+			if( (EScale * (photonValidEtaCandidate->Pt())>10.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){
 //			if( (photonValidEtaCandidate->Pt()>0.0) && (fabs(photonValidEtaCandidate->Eta())<2.5) ){ // FIXME
 				photonsValidEta.push_back(photonsNoSpike[iphoton]);
 			}
@@ -1455,7 +1497,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1475,13 +1517,13 @@ int main(int argc, char *argv[])
 		// GET most energetic photon
 		TRootPhoton *MPtPhoton;
 		MPtPhoton = (TRootPhoton*) photons->At(photonsValidEta[0]);
-		double PtPhoton = MPtPhoton->Pt();
+		double PtPhoton = EScale * (MPtPhoton->Pt());
 		for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 			TRootPhoton *MPtPhotonCandidate;
 			MPtPhotonCandidate = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-			if(MPtPhotonCandidate->Pt() > PtPhoton){
+			if(EScale * (MPtPhotonCandidate->Pt()) > PtPhoton){
 				MPtPhoton = MPtPhotonCandidate;
-				PtPhoton = MPtPhoton->Pt();
+				PtPhoton = EScale * (MPtPhoton->Pt());
 			}
 		}
 		// FILL THE MINITREE
@@ -1499,8 +1541,8 @@ int main(int argc, char *argv[])
 		Photon_isTightPhoton = MPtPhoton->isTightPhoton();
 		Photon_isLoosePhoton = MPtPhoton->isLoosePhoton();
 		Photon_convNTracks = MPtPhoton->convNTracks();
-		Photon_E = MPtPhoton->Energy();
-		Photon_Et = MPtPhoton->Et();
+		Photon_E = EScale * (MPtPhoton->Energy());
+		Photon_Et = EScale * (MPtPhoton->Et());
 		Photon_E2x2 = MPtPhoton->e2x2();
 		Photon_E3x3 = MPtPhoton->e3x3();
 		Photon_E5x5 = MPtPhoton->e5x5();
@@ -1539,7 +1581,9 @@ int main(int argc, char *argv[])
 		// *** Compute mumugamma invariant mass ***
 		// ********************************************************************
 		TLorentzVector mumugamma;
-		mumugamma = (*leadingMuon) + (*subleadingMuon) + (*MPtPhoton);
+    TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(MPtPhoton->Px()), EScale*(MPtPhoton->Py()), EScale*(MPtPhoton->Pz()), EScale*(MPtPhoton->Energy()));
+//		mumugamma = (*leadingMuon) + (*subleadingMuon) + (*MPtPhoton);
+		mumugamma = (*leadingMuon) + (*subleadingMuon) + (*PhotonEScale);
 		double mumugammaInvMass = mumugamma.M();
 		mumugamma.Clear();
 		errfile << "\t\tINFO: mumugamma invariant mass : Mmumugamma = " << mumugammaInvMass << endl;
@@ -1648,6 +1692,12 @@ int main(int argc, char *argv[])
 		deltaRPlus = DeltaR(etaPhoton, phiPhoton, plusMuon->Eta(), plusMuon->Phi());
 		deltaRLeading = DeltaR(etaPhoton, phiPhoton, leadingMuon->Eta(), leadingMuon->Phi());
 		deltaRSubleading = DeltaR(etaPhoton, phiPhoton, subleadingMuon->Eta(), subleadingMuon->Phi());
+
+		mmg_k = (double)(pow(91.1876,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
+    mmg_k1 = (double)(pow(Mmumugamma,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
+    mmg_logk = log(mmg_k);
+    mmg_logk1 = log(mmg_k1);
+		mmg_s = mmg_k1 - 1.0;
 	
 		// CUT 2c: DeltaR(photon, close muon) >= 0.05
 		if(!( deltaRmin>=0.00 )){
@@ -1665,7 +1715,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1699,7 +1749,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1717,9 +1767,9 @@ int main(int argc, char *argv[])
 		nAfterCut3++;
 
 		// CUT 4: photon_Et >= 10 GeV && DeltaR(photon, close muon)<=0.8
-		if(!( (MPtPhoton->Et()>=10.0)&&(deltaRmin<=0.8) )){
-			if( !(MPtPhoton->Et()>=10.0) ){
-				errfile << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for gamma momentum: MPtPhoton->Et()= " << MPtPhoton->Et() << " GeV" << endl;
+		if(!( (EScale*(MPtPhoton->Et())>=10.0)&&(deltaRmin<=0.8) )){
+			if( !(EScale*(MPtPhoton->Et())>=10.0) ){
+				errfile << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for gamma momentum: MPtPhoton->Et()= " << EScale*(MPtPhoton->Et()) << " GeV" << endl;
 			} else if(!(deltaRmin<=0.8)) {
 				errfile << "\tCUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< " CUT at level IV for large deltar: deltaRmin= " << deltaRmin << endl;
 			}
@@ -1736,7 +1786,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1774,7 +1824,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1807,7 +1857,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1840,7 +1890,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1873,7 +1923,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1903,13 +1953,20 @@ int main(int argc, char *argv[])
 		SelectedEvent_Eta_gamma.push_back(Photon_Eta);
 		SelectedEvent_Eta_muonNear.push_back(MuonN_Eta);
 		SelectedEvent_Eta_muonFar.push_back(MuonF_Eta);
+		SelectedEvent_Phi_gamma.push_back(Photon_Phi);
+		SelectedEvent_Phi_muonNear.push_back(MuonN_Phi);
+		SelectedEvent_Phi_muonFar.push_back(MuonF_Phi);
 		SelectedEvent_Et_gamma.push_back(PtPhoton);
 		SelectedEvent_Pt_muonNear.push_back(MuonN_Pt);
 		SelectedEvent_Pt_muonFar.push_back(MuonF_Pt);
 		SelectedEvent_DeltaRNear.push_back(deltaRNear);
 		SelectedEvent_DeltaRFar.push_back(deltaRFar);
 		SelectedEvent_mumuInvMass.push_back(mumuInvMass);
-
+		SelectedEvent_mmg_k.push_back(mmg_k);
+		SelectedEvent_mmg_k1.push_back(mmg_k1);
+		SelectedEvent_mmg_logk.push_back(mmg_logk);
+		SelectedEvent_mmg_logk1.push_back(mmg_logk1);
+		SelectedEvent_mmg_s.push_back(mmg_s);
 
 
 		miniTree->Fill();
@@ -1925,7 +1982,7 @@ int main(int argc, char *argv[])
 			for(int iphoton=0 ; iphoton<NbPhotonsValidEta ; iphoton++){
 				TRootPhoton *myphoton;
 				myphoton = (TRootPhoton*) photons->At(photonsValidEta[iphoton]);
-				Pt_allPhotons = myphoton->Pt();
+				Pt_allPhotons = EScale*(myphoton->Pt());
 				Eta_allPhotons = myphoton->Eta();
 				Phi_allPhotons = myphoton->Phi();
 				isEBorEE_allPhotons = 1;
@@ -1942,11 +1999,30 @@ int main(int argc, char *argv[])
 
 	outfile << endl << "**************************************************************************" << endl;
 	outfile << "DUMPING THE INFORMATION ABOUT SELECTED EVENTS:" << endl;
+/*
 	outfile << "RUN\t\tLUMI SECTION\t\tEVENT NUMBER\t\t\t\tM(MUMUGAMMA)\t\tEt GAMMA\t\tPt MUON NEAR\t\tPt Muon FAR\t\tDELTAR MUON NEAR\t\tDELTAR MUON FAR\t\tM(MUMU)\t\tETA MUON NEAR\t\tETA MUON FAR\t\tETA PHOTON\t\tK" << endl;
 	double k = 0;
 	for( int iselected=0 ; iselected<nSelected ; iselected++ ){
 		k = (double)(pow(91.1876, 2) - pow(SelectedEvent_mumuInvMass[iselected], 2))/(double)(pow(SelectedEvent_mumugammaInvMass[iselected], 2) - pow(SelectedEvent_mumuInvMass[iselected], 2));
 		outfile << SelectedEvent_RunNumber[iselected] << "\t\t" << SelectedEvent_LumiNumber[iselected] << "\t\t" << SelectedEvent_EventNumber[iselected] << "\t\t\t" << SelectedEvent_mumugammaInvMass[iselected] << "\t\t" << SelectedEvent_Et_gamma[iselected] << "\t\t" << SelectedEvent_Pt_muonNear[iselected] << "\t\t" << SelectedEvent_Pt_muonFar[iselected] << "\t\t" << SelectedEvent_DeltaRNear[iselected] << "\t\t" << SelectedEvent_DeltaRFar[iselected] << "\t\t" << SelectedEvent_mumuInvMass[iselected] << "\t\t" << SelectedEvent_Eta_muonNear[iselected] << "\t\t" << SelectedEvent_Eta_muonFar[iselected] << "\t\t" << SelectedEvent_Eta_gamma[iselected] << "\t\t" << k << endl;
+	}*/
+	outfile << "RUN\t\tLUMI\t\tEVENT\t\t"
+	<< "Pt_photon\t\tPt_Mu_near\t\tPt_Mu_far\t\t"
+	<< "Eta_photon\t\tEta_Mu_near\t\tEta_Mu_far\t\t"
+	<< "Phi_photon\t\tPhi_Mu_near\t\tPhi_Mu_far\t\t"
+	<< "DeltaR_near\t\tDeltaR_far\t\t"
+	<< "M_mumu\t\tM_mumugamma\t\t"
+	<< "k\t\tik\t\ts\t\tlogk\t\tlogik\t\t"
+	<< endl;
+	for( int iselected=0 ; iselected<nSelected ; iselected++ ){
+		outfile << SelectedEvent_RunNumber[iselected] << "\t\t" << SelectedEvent_LumiNumber[iselected] << "\t\t" << SelectedEvent_EventNumber[iselected] << "\t\t"
+		<< SelectedEvent_Et_gamma[iselected] << "\t\t" << SelectedEvent_Pt_muonNear[iselected] << "\t\t" << SelectedEvent_Pt_muonFar[iselected] << "\t\t"
+		<< SelectedEvent_Eta_gamma[iselected] << "\t\t" << SelectedEvent_Eta_muonNear[iselected] << "\t\t" << SelectedEvent_Eta_muonFar[iselected] << "\t\t"
+		<< SelectedEvent_Phi_gamma[iselected] << "\t\t" << SelectedEvent_Phi_muonNear[iselected] << "\t\t" << SelectedEvent_Phi_muonFar[iselected] << "\t\t"
+		<< SelectedEvent_DeltaRNear[iselected] << "\t\t" << SelectedEvent_DeltaRFar[iselected] << "\t\t"
+		<< SelectedEvent_mumuInvMass[iselected] << "\t\t" << SelectedEvent_mumugammaInvMass[iselected] << "\t\t"
+		<< SelectedEvent_mmg_k[iselected] << "\t\t" << SelectedEvent_mmg_k1[iselected] << "\t\t" << SelectedEvent_mmg_s[iselected] << "\t\t" << SelectedEvent_mmg_logk[iselected] << "\t\t" << SelectedEvent_mmg_logk1[iselected] << "\t\t"
+		<< endl;
 	}
 
 	outfile << endl << "**************************************************************************" << endl;

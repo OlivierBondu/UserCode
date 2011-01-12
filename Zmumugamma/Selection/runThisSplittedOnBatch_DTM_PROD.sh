@@ -56,7 +56,7 @@ signal="true" # all samples are passed with tight mumugamma mass window
 verbosity="off"
 minPtHat="-100"
 maxPtHat="1000000"
-
+prodName="${SampleName}"
 
 # SPECIFIC REQUIREMENTS (TODO: add other samples)
 if [ "${SampleName}" = "TTbarJets_Tauola-madgraph" ]
@@ -84,6 +84,7 @@ then
   NumberOfIpnTreeFilesToRunInOneJob=50
   zjetveto="true"
   powheg="true"
+	prodName="DYToMuMu-powheg"
 #	time=18000
 fi
 
@@ -205,8 +206,8 @@ do
 			sed -i -e "s,LOCATION,${LOCATION},g" ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh
 
 			echo "adding task to the list"
-			echo "dtm-task-add -t ${parameter}-V01-FSR_${i} -c ${time} -m ${memory} -p ${SampleName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}"
-			dtm-task-add -t ${parameter}-V01-FSR_${i} -c ${time} -m ${memory} -p ${SampleName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}
+			echo "dtm-task-add -t ${parameter}-V03-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}"
+			dtm-task-add -t ${parameter}-V03-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}
 #### FOR TEST
 #			break
 #### FOR TEST
@@ -231,8 +232,8 @@ do
 			sed -i -e "s,LOCATION,${LOCATION},g" ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh
 
 			echo "adding task to the list"
-			echo "dtm-task-add -t ${parameter}-V01-FSR_${i} -c ${time} -m ${memory} -p ${SampleName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}"
-			dtm-task-add -t ${parameter}-V01-FSR_${i} -c ${time} -m ${memory} -p ${SampleName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}
+			echo "dtm-task-add -t ${parameter}-V03-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}"
+			dtm-task-add -t ${parameter}-V03-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}
 	fi
 
 done # END OF LOOP OVER PARAMETERS

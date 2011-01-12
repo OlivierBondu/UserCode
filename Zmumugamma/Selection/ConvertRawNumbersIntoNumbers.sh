@@ -45,6 +45,7 @@ G2Jets_Pt_240to300_TuneZ2_7TeV_alpgen="1.45"
 G2Jets_Pt_20to60_TuneZ2_7TeV_alpgen="4080.00"
 G2Jets_Pt_180to240_TuneZ2_7TeV_alpgen="5.94"
 G2Jets_Pt_120to180_TuneZ2_7TeV_alpgen="35.56"
+QCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6="84679.3"
 
 InitialNumberG_Pt_0to15_TuneZ2_7TeV_pythia6="1057100"
 InitialNumberG_Pt_15to30_TuneZ2_7TeV_pythia6="1025840"
@@ -69,6 +70,7 @@ InitialNumberG2Jets_Pt_240to300_TuneZ2_7TeV_alpgen="331339"
 InitialNumberG2Jets_Pt_20to60_TuneZ2_7TeV_alpgen="1782042"
 InitialNumberG2Jets_Pt_180to240_TuneZ2_7TeV_alpgen="329962"
 InitialNumberG2Jets_Pt_120to180_TuneZ2_7TeV_alpgen="330992"
+InitialNumberQCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6="28779866"
 
 
 cols=`head -n 4 RawSelectionCutsNumbers_${SelectionVersion}.txt | tail -n 1 | wc -w`
@@ -100,9 +102,6 @@ do
     elif [[ ${sample} = "WJetsToLNu_TuneZ2_7TeV-madgraph-tauola" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${WJetsToLNu_TuneZ2_7TeV_madgraph_tauola}"' / '"${InitialNumberWJetsToLNu_TuneZ2_7TeV_madgraph_tauola}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
-#    elif [[ ${sample} = "SAMPLE" ]]
-#    then
-#      cut=`echo ${line} | awk '{printf "%4.5f", ('"${SAMPLE}"' / '"${InitialNumberSAMPLE}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
     elif [[ ${sample} = "G4Jets_Pt-60to120_TuneZ2_7TeV-alpgen" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${G4Jets_Pt_60to120_TuneZ2_7TeV_alpgen}"' / '"${InitialNumberG4Jets_Pt_60to120_TuneZ2_7TeV_alpgen}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
@@ -157,6 +156,12 @@ do
     elif [[ ${sample} = "G2Jets_Pt-120to180_TuneZ2_7TeV-alpgen" ]]
     then
       cut=`echo ${line} | awk '{printf "%4.5f", ('"${G2Jets_Pt_120to180_TuneZ2_7TeV_alpgen}"' / '"${InitialNumberG2Jets_Pt_120to180_TuneZ2_7TeV_alpgen}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+#    elif [[ ${sample} = "SAMPLE" ]]
+#    then
+#      cut=`echo ${line} | awk '{printf "%4.5f", ('"${SAMPLE}"' / '"${InitialNumberSAMPLE}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
+    elif [[ ${sample} = "QCD_Pt-20_MuEnrichedPt-15_TuneZ2_7TeV-pythia6" ]]
+    then
+      cut=`echo ${line} | awk '{printf "%4.5f", ('"${QCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6}"' / '"${InitialNumberQCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6}"' * $'"${currentColumn}"' * '"${IntegratedLuminosity}"')}'`
 		else
 			cut=`echo ${line} | awk '{print $'"${currentColumn}"'}'`
 		fi
