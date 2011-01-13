@@ -107,18 +107,18 @@ int main()
 //	name.push_back("After1c");
 //	set_of_cuts.push_back("isAfterCut1d");
 //	name.push_back("After1d");
-//	set_of_cuts.push_back("isAfterCut1e");
-//	name.push_back("After1e");
+	set_of_cuts.push_back("isAfterCut1e");
+	name.push_back("After1e");
 //	set_of_cuts.push_back("isAfterCut2a");
 //	name.push_back("After2a");
 //	set_of_cuts.push_back("isAfterCut2b");
 //	name.push_back("After2b");
-//	set_of_cuts.push_back("isAfterCut2c");
-//	name.push_back("After2c");
+	set_of_cuts.push_back("isAfterCut2c");
+	name.push_back("After2c");
 //	set_of_cuts.push_back("isAfterCut3");
 //  name.push_back("After3");
-//	set_of_cuts.push_back("isAfterCut4");
-//  name.push_back("After4");
+	set_of_cuts.push_back("isAfterCut4");
+  name.push_back("After4");
 //	set_of_cuts.push_back("isAfterCut5");
 //  name.push_back("After5");
 //	set_of_cuts.push_back("isAfterCut6");
@@ -186,10 +186,11 @@ int main()
 
 */
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_Eta", "Photon_Eta", "(50,-3,3)", set_of_cuts[i], name[i], "#eta^{#gamma}", true, false, c1);
-/*
+
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_Phi", "Photon_Phi", "(50,-3.15,3.15)", set_of_cuts[i], name[i], "#phi of photon", true, false, c1);
 
-		DrawDataMCplot_TH1I(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_isEB", "Photon_isEB", "(10,-1,2)", set_of_cuts[i], name[i], "photon is in barrel", true, false, c1);
+//		DrawDataMCplot_TH1I(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_isEB", "Photon_isEB", "(10,-1,2)", set_of_cuts[i], name[i], "photon is in barrel", true, false, c1);
+/*
 		DrawDataMCplot_TH1I(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_isEE", "Photon_isEE", "(10,-1,2)", set_of_cuts[i], name[i], "photon is in endcap", true, false, c1);
 		DrawDataMCplot_TH1I(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_isEEP", "Photon_isEEP", "(10,-1,2)", set_of_cuts[i], name[i], "photon is in endcap plus", true, false, c1);
 		DrawDataMCplot_TH1I(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_isEEM", "Photon_isEEM", "(10,-1,2)", set_of_cuts[i], name[i], "photon is in endcap minus", true, false, c1);

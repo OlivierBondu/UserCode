@@ -129,7 +129,7 @@ void LL()
 
 // Draw nll
 	TCanvas *cLL = new TCanvas("cLL", "cLL");
-	LL->Draw();
+	LL->Draw("E1");
 	TF1 *p2kfit = new TF1("p2kfit","pol2", 0.95, 1.05);
 	LL->Fit(p2kfit, "Rw");
 	double p0, p1, p2;
@@ -155,7 +155,7 @@ void LL()
 
 
 	TCanvas *cLL_s = new TCanvas("cLL_s", "cLL_s");
-	LL_s->Draw();
+	LL_s->Draw("E1");
 	TF1 *p2sfit = new TF1("p2sfit","pol2", -6.0, -6.0);
 	LL_s->Fit(p2sfit, "Rw");
 	double p0_s, p1_s, p2_s;
@@ -181,7 +181,7 @@ void LL()
 
 
 	TCanvas *cLL_mmg = new TCanvas("cLL_mmg", "cLL_mmg");
-	LL_mmg->Draw();
+	LL_mmg->Draw("E1");
 	TF1 *p2mmgfit = new TF1("p2mmgfit","pol2", -6.0, -6.0);
 	LL_mmg->Fit(p2mmgfit, "Rw");
 	double p0_mmg, p1_mmg, p2_mmg;

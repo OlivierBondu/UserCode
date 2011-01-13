@@ -1124,7 +1124,10 @@ int main(int argc, char *argv[])
             TRootParticle *myphoton;
             myphoton = (mcMuMuGammaEvent->photonFSR(imcphoton));
             // mc-acceptance cuts on photons
-            if( (myphoton->Pt()>8.0) && (abs(myphoton->Eta())<3.0) ) MCphotons_from_muons_from_Z = true;
+//            if( (myphoton->Pt()>8.0) && (abs(myphoton->Eta())<3.0) ) MCphotons_from_muons_from_Z = true;
+// WARNING !!
+// Change of the generator photon pt cut !!!!
+            if( (EScale*(myphoton->Pt())>8.0) && (abs(myphoton->Eta())<3.0) ) MCphotons_from_muons_from_Z = true;
           }// end of loop over mc photons
           if( MCphotons_from_muons_from_Z )
           { // if there is a fsr photon passing acceptance cuts, then look at muons coming from the Z
