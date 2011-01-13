@@ -152,6 +152,7 @@ void LL()
 	cout << endl;
 	cout << "scale=\t" << (double)(- p1) / (double)(2 * p2) << endl;
 	if(p2 >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2) ) << endl;
+	if(p2 <= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(- 2 * p2) ) << endl;
 //	th2->Draw();
 	cLL->Draw();
 	cLL->Print("LL.gif");
@@ -178,6 +179,7 @@ void LL()
 	cout << endl;
 	cout << "scale=\t" << (double)(- p1_s) / (double)(2 * p2_s) << endl;
 	if(p2_s >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2_s) ) << endl;
+	if(p2_s <= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(- 2 * p2_s) ) << endl;
 //	th2->Draw();
 	cLL_s->Draw();
 	cLL_s->Print("LL_s.gif");
@@ -204,6 +206,7 @@ void LL()
 	cout << endl;
 	cout << "scale=\t" << (double)(- p1_mmg) / (double)(2 * p2_mmg) << endl;
 	if(p2_mmg >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2_mmg) ) << endl;
+	if(p2_mmg <= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(- 2 * p2_mmg) ) << endl;
 //	th2->Draw();
 	cLL_mmg->Draw();
 	cLL_mmg->Print("LL_mmg.gif");
