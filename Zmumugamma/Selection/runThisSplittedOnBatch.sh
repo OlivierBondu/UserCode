@@ -25,8 +25,8 @@ else
 	fi
 fi
 
-NumberOfFiles=`ls ${RECODIR}/${SampleName}/${SampleName}_*.root | wc -l`
-'ls' ${RECODIR}/${SampleName}/${SampleName}_*.root > TEMP_FileList_${SampleName}
+NumberOfFiles=`ls ${RECODIR}/${SampleName}/${SampleName}*.root | wc -l`
+'ls' ${RECODIR}/${SampleName}/${SampleName}*.root > TEMP_FileList_${SampleName}
 #Uncomment the line below if the sample's name contain _alpgen or _madgraph, etc.
 #RawSampleName=`echo ${SampleName} | cut -d _ -f 2-`
 RawSampleName=`echo ${SampleName}`

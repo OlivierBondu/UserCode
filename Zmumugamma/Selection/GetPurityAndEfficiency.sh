@@ -66,7 +66,7 @@ InitialNumberG2Jets_Pt_240to300_TuneZ2_7TeV_alpgen="331339"
 InitialNumberG2Jets_Pt_20to60_TuneZ2_7TeV_alpgen="1782042"
 InitialNumberG2Jets_Pt_180to240_TuneZ2_7TeV_alpgen="329962"
 InitialNumberG2Jets_Pt_120to180_TuneZ2_7TeV_alpgen="330992"
-InitialNumberQCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6="28779866"
+InitialNumberQCD_Pt_20_MuEnrichedPt_15_TuneZ2_7TeV_pythia6="28979866"
 
 echo -e "*** Raw Yields and errors\n">> PurityEfficiency_${SelectionVersion}.txt
 # ************

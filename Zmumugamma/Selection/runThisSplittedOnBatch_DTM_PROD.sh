@@ -170,7 +170,7 @@ fi
 #for parameter in `seq -w 0.95 0.001 1.00`
 #for parameter in `seq -w 1.00 0.001 1.05`
 #for parameter in `seq -w 0.95 0.001 1.05`
-for parameter in `seq -w 0 0.1 10.0`
+for parameter in `seq -w 0 0.05 10.0`
 #for parameter in `echo "0.5"`
 #for parameter in `echo "0.950"`
 do
@@ -208,8 +208,8 @@ do
 			sed -i -e "s,LOCATION,${LOCATION},g" ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh
 
 			echo "adding task to the list"
-			echo "dtm-task-add -t ${parameter}-V05-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}"
-			dtm-task-add -t ${parameter}-V05-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}
+			echo "dtm-task-add -t ${parameter}-V13-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}"
+			dtm-task-add -t ${parameter}-V13-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}
 #### FOR TEST
 #			break
 #### FOR TEST
@@ -234,8 +234,8 @@ do
 			sed -i -e "s,LOCATION,${LOCATION},g" ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh
 
 			echo "adding task to the list"
-			echo "dtm-task-add -t ${parameter}-V05-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}"
-			dtm-task-add -t ${parameter}-V05-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}
+			echo "dtm-task-add -t ${parameter}-V13-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}"
+			dtm-task-add -t ${parameter}-V13-FSR_${i} -c ${time} -m ${memory} -p ${prodName} -s ${RESULTSDIR}/${SampleName}_${i}_${parameter}${version}_batch.sh -a ${parameter}
 	fi
 
 done # END OF LOOP OVER PARAMETERS
