@@ -13,8 +13,15 @@
 #include "TF1.h"
 #include "TH1F.h"
 #include "TH2F.h"
+#include <TFormula.h>
+#include <string.h>
+#include <algorithm>
+#include <TString.h>
+#include <TBits.h>
+#include <TMath.h>
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include "CMSStyle.C"
 gROOT->Reset();
@@ -23,15 +30,26 @@ using namespace RooFit ;
 void LL_Jan()
 {
 	CMSstyle();
+	gStyle->SetOptTitle(0);
+	gStyle->SetOptStat(0);
+	gStyle->SetOptFit(0);
 
 // Prepare output file
 	ofstream* errfile = new ofstream("Likelihood.txt");
-	TProfile *LL_k_EB = new TProfile("LL_k_EB", "LL_k_EB", 101, 0.95, 1.05);
+//	TProfile *LL_k_EB = new TProfile("LL_k_EB", "LL_k_EB", 101, 0.95, 1.05);
+	TProfile *LL_k_EB = new TProfile("LL_k_EB", "LL_k_EB", 101, -6, 6);
 	TProfile *LL_s_EB = new TProfile("LL_s_EB", "LL_s_EB", 101, -6, 6);
 	TProfile *LL_mmg_EB = new TProfile("LL_mmg_EB", "LL_mmg_EB", 101, -6, 6);
-	TProfile *LL_k_EE = new TProfile("LL_k_EE", "LL_k_EE", 101, 0.95, 1.05);
-	TProfile *LL_s_EE = new TProfile("LL_s_EE", "LL_s_EE", 101, -6, 6);
+//	TProfile *LL_k_EE = new TProfile("LL_k_EE", "LL_k_EE", 101, 0.95, 1.05);
+	TProfile *LL_k_EE = new TProfile("LL_k_EE", "LL_k_EE", 101, -6, 6);
+	TProfile *LL_s_EE = new TProfile("LL_s_EE", "LL_s_EE", 101, -6, 6);	
 	TProfile *LL_mmg_EE = new TProfile("LL_mmg_EE", "LL_mmg_EE", 101, -6, 6);
+	LL_k_EB->SetOption("E1");
+	LL_s_EB->SetOption("E1");
+	LL_mmg_EB->SetOption("E1");
+	LL_k_EE->SetOption("E1");
+	LL_s_EE->SetOption("E1");
+	LL_mmg_EE->SetOption("E1");
 //	TH2F *th2 = new TH2F("th2", "th2", 101, 0.95, 1.05, 100, -235, -223);
 
 // Setup data observables
@@ -249,14 +267,16 @@ void LL_Jan()
 //		cout << alpha << "\t" << -(kEBnll->getVal()) << endl;
 //		cout << alpha << "\t" << sum_k << endl;
 //		LL_k->Fill(alpha, -(kEBnll->getVal()));
-		LL_k_EB->Fill(alpha, sum_EB_k);
+//		LL_k_EB->Fill(alpha, sum_EB_k);
+		LL_k_EB->Fill(s_alpha, sum_EB_k);
 //		cout << s_alpha << "\t" << -(sEBnll->getVal()) << endl;
 //		cout << s_alpha << "\t" << sum_s << endl;
 //		LL_s->Fill(s_alpha, -(sEBnll->getVal()));
 		LL_s_EB->Fill(s_alpha, sum_EB_s);
 //		th2->Fill(alpha, (sEBnll->getVal()));
 		LL_mmg_EE->Fill(s_alpha, sum_EE_mmg);
-		LL_k_EE->Fill(alpha, sum_EE_k);
+//		LL_k_EE->Fill(alpha, sum_EE_k);
+		LL_k_EE->Fill(s_alpha, sum_EE_k);
 		LL_s_EE->Fill(s_alpha, sum_EE_s);
 
 
@@ -273,7 +293,8 @@ void LL_Jan()
 // Draw nll
 	TCanvas *cLL_k_EB = new TCanvas("cLL_k_EB", "cLL_k_EB");
 	LL_k_EB->Draw("E1");
-	TF1 *p2kfit_EB = new TF1("p2kfit_EB","pol2", 0.95, 1.05);
+//	TF1 *p2kfit_EB = new TF1("p2kfit_EB","pol2", 0.95, 1.05);
+	TF1 *p2kfit_EB = new TF1("p2kfit_EB","pol2", -5.0, 5.0);
 	LL_k_EB->Fit(p2kfit_EB, "Rw");
 	double p0_k_EB, p1_k_EB, p2_k_EB;
 	double p0err_k_EB, p1err_k_EB, p2err_k_EB;
@@ -293,6 +314,17 @@ void LL_Jan()
 	cout << "scale=\t" << (double)(- p1_k_EB) / (double)(2 * p2_k_EB) << endl;
 	if(p2_k_EB >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2_k_EB) ) << endl;
 //	th2->Draw();
+	LL_k_EB->GetXaxis()->SetTitle("#gamma Energy Scale (%)");
+	LL_k_EB->GetYaxis()->SetTitle("- #Delta log L for k");
+	TLatex latexLabel;
+	latexLabel.SetTextSize(0.06);
+	latexLabel.SetNDC();
+	latexLabel.DrawLatex(0.20, 0.85, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.75, "#sqrt{s} = 7 TeV");
+	std::ostringstream k_scale_stream;
+	k_scale_stream << setprecision (2) << fixed << "Estimated #gamma Energy Scale: ( " << (double)(- p1_k_EB) / (double)(2 * p2_k_EB) << " #pm " << (double)(1.0) / (double)( sqrt(2 * p2_k_EB) ) << " ) %";
+	string k_scale = k_scale_stream.str();
+	latexLabel.DrawLatex(0.20, 0.30, k_scale.c_str());
 	cLL_k_EB->Draw();
 	cLL_k_EB->Print("LL_k_EB.gif");
 
@@ -319,6 +351,17 @@ void LL_Jan()
 	if(p2_s_EB >= 0.0) cout << "scale=\t" << (double)(- p1_s_EB) / (double)(2 * p2_s_EB) << endl;
 	if(p2_s_EB >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2_s_EB) ) << endl;
 //	th2->Draw();
+	LL_s_EB->GetXaxis()->SetTitle("#gamma Energy Scale (%)");
+	LL_s_EB->GetYaxis()->SetTitle("- #Delta log L for s");
+	TLatex latexLabel;
+	latexLabel.SetTextSize(0.06);
+	latexLabel.SetNDC();
+	latexLabel.DrawLatex(0.20, 0.85, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.75, "#sqrt{s} = 7 TeV");
+	std::ostringstream s_scale_stream;
+	s_scale_stream << setprecision (2) << fixed << "Estimated #gamma Energy Scale: ( " << (double)(- p1_s_EB) / (double)(2 * p2_s_EB) << " #pm " << (double)(1.0) / (double)( sqrt(2 * p2_s_EB) ) << " ) %";
+	string s_scale = s_scale_stream.str();
+	latexLabel.DrawLatex(0.20, 0.30, s_scale.c_str());
 	cLL_s_EB->Draw();
 	cLL_s_EB->Print("LL_s_EB.gif");
 
@@ -346,12 +389,24 @@ void LL_Jan()
 	if(p2_mmg_EB >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2_mmg_EB) ) << endl;
 	if(p2_mmg_EB <= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(-2 * p2_mmg_EB) ) << endl;
 //	th2->Draw();
+	LL_mmg_EB->GetXaxis()->SetTitle("#gamma Energy Scale (%)");
+	LL_mmg_EB->GetYaxis()->SetTitle("- #Delta log L for mmg");
+	TLatex latexLabel;
+	latexLabel.SetTextSize(0.06);
+	latexLabel.SetNDC();
+	latexLabel.DrawLatex(0.20, 0.85, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.75, "#sqrt{s} = 7 TeV");
+	std::ostringstream mmg_scale_stream;
+	mmg_scale_stream << setprecision (2) << fixed << "Estimated #gamma Energy Scale: ( " << (double)(- p1_mmg_EB) / (double)(2 * p2_mmg_EB) << " #pm " << (double)(1.0) / (double)( sqrt(2 * p2_mmg_EB) ) << " ) %";
+	string mmg_scale = mmg_scale_stream.str();
+	latexLabel.DrawLatex(0.20, 0.30, mmg_scale.c_str());
 	cLL_mmg_EB->Draw();
 	cLL_mmg_EB->Print("LL_mmg_EB.gif");
 
 	TCanvas *cLL_k_EE = new TCanvas("cLL_k_EE", "cLL_k_EE");
 	LL_k_EE->Draw("E1");
-	TF1 *p2kfit_EE = new TF1("p2kfit_EE","pol2", 0.95, 1.05);
+//	TF1 *p2kfit_EE = new TF1("p2kfit_EE","pol2", 0.95, 1.05);
+	TF1 *p2kfit_EE = new TF1("p2kfit_EE","pol2", -5.0, 5.0);
 	LL_k_EE->Fit(p2kfit_EE, "Rw");
 	double p0_k_EE, p1_k_EE, p2_k_EE;
 	double p0err_k_EE, p1err_k_EE, p2err_k_EE;
@@ -371,7 +426,18 @@ void LL_Jan()
 	cout << "scale=\t" << (double)(- p1_k_EE) / (double)(2 * p2_k_EE) << endl;
 	if(p2_k_EE >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2_k_EE) ) << endl;
 //	th2->Draw();
-	cLL_k_EE->Draw();
+	LL_k_EE->GetXaxis()->SetTitle("#gamma Energy Scale (%)");
+	LL_k_EE->GetYaxis()->SetTitle("- #Delta log L for k");
+	TLatex latexLabel;
+	latexLabel.SetTextSize(0.06);
+	latexLabel.SetNDC();
+	latexLabel.DrawLatex(0.20, 0.85, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.75, "#sqrt{s} = 7 TeV");
+	std::ostringstream k_scale_stream;
+	k_scale_stream << setprecision (2) << fixed << "Estimated #gamma Energy Scale: ( " << (double)(- p1_k_EE) / (double)(2 * p2_k_EE) << " #pm " << (double)(1.0) / (double)( sqrt(2 * p2_k_EE) ) << " ) %";
+	string k_scale = k_scale_stream.str();
+	latexLabel.DrawLatex(0.20, 0.30, k_scale.c_str());
+cLL_k_EE->Draw();
 	cLL_k_EE->Print("LL_k_EE.gif");
 
 
@@ -397,6 +463,17 @@ void LL_Jan()
 	if(p2_s_EE >= 0.0) cout << "scale=\t" << (double)(- p1_s_EE) / (double)(2 * p2_s_EE) << endl;
 	if(p2_s_EE >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2_s_EE) ) << endl;
 //	th2->Draw();
+	LL_s_EE->GetXaxis()->SetTitle("#gamma Energy Scale (%)");
+	LL_s_EE->GetYaxis()->SetTitle("- #Delta log L for s");
+	TLatex latexLabel;
+	latexLabel.SetTextSize(0.06);
+	latexLabel.SetNDC();
+	latexLabel.DrawLatex(0.20, 0.85, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.75, "#sqrt{s} = 7 TeV");
+	std::ostringstream s_scale_stream;
+	s_scale_stream << setprecision (2) << fixed << "Estimated #gamma Energy Scale: ( " << (double)(- p1_s_EE) / (double)(2 * p2_s_EE) << " #pm " << (double)(1.0) / (double)( sqrt(2 * p2_s_EE) ) << " ) %";
+	string s_scale = s_scale_stream.str();
+	latexLabel.DrawLatex(0.20, 0.30, s_scale.c_str());
 	cLL_s_EE->Draw();
 	cLL_s_EE->Print("LL_s_EE.gif");
 
@@ -424,6 +501,17 @@ void LL_Jan()
 	if(p2_mmg_EE >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2_mmg_EE) ) << endl;
 	if(p2_mmg_EE <= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(-2 * p2_mmg_EE) ) << endl;
 //	th2->Draw();
+	LL_mmg_EE->GetXaxis()->SetTitle("#gamma Energy Scale (%)");
+	LL_mmg_EE->GetYaxis()->SetTitle("- #Delta log L for mmg");
+	TLatex latexLabel;
+	latexLabel.SetTextSize(0.06);
+	latexLabel.SetNDC();
+	latexLabel.DrawLatex(0.20, 0.85, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.75, "#sqrt{s} = 7 TeV");
+	std::ostringstream mmg_scale_stream;
+	mmg_scale_stream << setprecision (2) << fixed << "Estimated #gamma Energy Scale: ( " << (double)(- p1_mmg_EE) / (double)(2 * p2_mmg_EE) << " #pm " << (double)(1.0) / (double)( sqrt(-2 * p2_mmg_EE) ) << " ) %";
+	string mmg_scale = mmg_scale_stream.str();
+	latexLabel.DrawLatex(0.20, 0.30, mmg_scale.c_str());
 	cLL_mmg_EE->Draw();
 	cLL_mmg_EE->Print("LL_mmg_EE.gif");
 
