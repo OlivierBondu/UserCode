@@ -23,7 +23,8 @@ fi
 
 for file in `'ls' /sps/cms/obondu/${MCrelease}/src/UserCode/IpnTreeProducer/test/${sample} | grep root`
 do
-	ln -s /sps/cms/obondu/${MCrelease}/src/UserCode/IpnTreeProducer/test/${sample}/${file} ./${sample}/${sample}_${file}
+#	ln -s /sps/cms/obondu/${MCrelease}/src/UserCode/IpnTreeProducer/test/${sample}/${file} ./${sample}/${sample}_${file}
+	ln -s /sps/cms/obondu/${MCrelease}/src/UserCode/IpnTreeProducer/test/${sample}/${file} ./${sample}/${file}
 done
 
 exit 0
