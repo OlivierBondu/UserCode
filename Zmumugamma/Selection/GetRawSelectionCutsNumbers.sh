@@ -4,7 +4,7 @@
 # Modified for 336 (January 2010)
 # Modified for 361p4 (August 2010)
 
-CMSSW_release="CMSSW_3_8_6_v6"
+CMSSW_release="CMSSW_3_9_7_v2"
 
 syntax="${0} {SelectionVersion}"
 

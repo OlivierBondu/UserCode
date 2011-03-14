@@ -2,7 +2,7 @@
 # gets the selection efficiency and purity out of the weighted raw numbers. TODO: merge with Sum
 # Written by O. Bondu (October 2010)
 
-CMSSW_release="CMSSW_3_8_6_v6"
+CMSSW_release="CMSSW_3_9_7_v2"
 
 syntax="${0} {selection version}"
 if [[ -z ${1} ]]

@@ -2,7 +2,7 @@
 # Script to sum Numbers by sample
 # Written by O. Bondu (August 2010)
 
-CMSSW_release="CMSSW_3_8_6_v6"
+CMSSW_release="CMSSW_3_9_7_v2"
 
 syntax="${0} {SelectionVersion}"
 
