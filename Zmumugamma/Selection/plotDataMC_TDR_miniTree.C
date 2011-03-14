@@ -29,25 +29,25 @@
 
 #include "DrawDataMC.h"
 
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
-#include "/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
+#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
 
 
 
@@ -60,7 +60,7 @@ int main()
 {
 //	string selection = "hadEt-noDeltaRmin-relaxedMuEta-relaxedMMGv2";
 	string selection = "hadEt-noDeltaRmin-relaxedMuEta";
-	gSystem->Load("/sps/cms/obondu/CMSSW_3_8_6_v6/src/UserCode/IpnTreeProducer/src/libToto.so");
+	gSystem->Load("/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/src/libToto.so");
 	gROOT->ProcessLine(".x setTDRStyle.C");
 	string Data = "Selected/" + selection + "/miniTree_DATA_ALL.root"; 
 	string FSR_DYToMuMu = "Selected/" + selection + "/FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/miniTree_FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_ALL.root";
