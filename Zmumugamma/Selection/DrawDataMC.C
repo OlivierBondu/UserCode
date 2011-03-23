@@ -62,7 +62,7 @@ double fonction_affine(double *x, double *par){
 	return x[0]*par[0] - x[1]*par[1];
 }
 
-void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string var, string pic, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1, bool doFit){
+void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *nonFSR_DYToMuMu_miniTree, TTree *TTJets_miniTree, TTree *WJetsToLNu_miniTree, string var, string pic, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1, bool doFit){
 
 	CMSstyle();
 	gStyle->SetOptTitle(0);
@@ -82,7 +82,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
   TH1F *Histo_FSR_DYToMuMu = (TH1F*)gDirectory->Get("Histo_FSR_DYToMuMu_temp");
   c1->Clear();
 
-/*
+
   // Get Histo_nonFSR_DYToMuMu from eventTree
   TH1F *Histo_nonFSR_DYToMuMu_temp = new TH1F();
   string variable_nonFSR_DYToMuMu = var + ">>Histo_nonFSR_DYToMuMu_temp" + limits;
@@ -103,7 +103,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
   WJetsToLNu_miniTree->Draw(variable_WJetsToLNu.c_str(), cut.c_str());
   TH1F *Histo_WJetsToLNu = (TH1F*)gDirectory->Get("Histo_WJetsToLNu_temp");
   c1->Clear();
-
+/*
   // Get Histo_QCDMu from eventTree
   TH1F *Histo_QCDMu_temp = new TH1F();
   string variable_QCDMu = var + ">>Histo_QCDMu_temp" + limits;
@@ -128,21 +128,21 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
   double integratedLuminosity = 35.91246801;
 
   double XSectionFSR_DYToMuMu = 1614.0;
-//  double XSectionnonFSR_DYToMuMu = 1614.0;
-//  double XSectionTTJets = 121.0;
-//	double XSectionWJetsToLNu = 24640.0;
+  double XSectionnonFSR_DYToMuMu = 1614.0;
+  double XSectionTTJets = 121.0;
+	double XSectionWJetsToLNu = 24640.0;
 //	double XSectionQCDMu = 84679.3;
 
   double InitialNumberFSR_DYToMuMu = 1998931.0;
-//  double InitialNumbernonFSR_DYToMuMu = 1998931.0;
-//  double InitialNumberTTJets = 1164732.0;
-//	double InitialNumberWJetsToLNu = 15123740.0;
+  double InitialNumbernonFSR_DYToMuMu = 1998931.0;
+  double InitialNumberTTJets = 1165716.0;
+	double InitialNumberWJetsToLNu = 15168266.0;
 //	double InitialNumberQCDMu = 28979866.0;
 
   Histo_FSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionFSR_DYToMuMu) / (double)(InitialNumberFSR_DYToMuMu)) * (double)integratedLuminosity));
-//  Histo_nonFSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionnonFSR_DYToMuMu) / (double)(InitialNumbernonFSR_DYToMuMu)) * (double)integratedLuminosity));
-//  Histo_TTJets->Scale((double)(  (double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity));
-//  Histo_WJetsToLNu->Scale((double)(  (double)((double)(XSectionWJetsToLNu) / (double)(InitialNumberWJetsToLNu)) * (double)integratedLuminosity));
+  Histo_nonFSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionnonFSR_DYToMuMu) / (double)(InitialNumbernonFSR_DYToMuMu)) * (double)integratedLuminosity));
+  Histo_TTJets->Scale((double)(  (double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity));
+  Histo_WJetsToLNu->Scale((double)(  (double)((double)(XSectionWJetsToLNu) / (double)(InitialNumberWJetsToLNu)) * (double)integratedLuminosity));
 //  Histo_QCDMu->Scale((double)(  (double)((double)(XSectionQCDMu) / (double)(InitialNumberQCDMu)) * (double)integratedLuminosity));
   // Adding histograms for binned samples
 //  Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
@@ -152,9 +152,9 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
 //  Histo_QCD_Pt15->Add(Histo_QCD_Pt470);
 
 //	Histo_WJetsToLNu->Add(Histo_QCDMu);
-//	Histo_TTJets->Add(Histo_WJetsToLNu);
-//	Histo_nonFSR_DYToMuMu->Add(Histo_TTJets);
-//	Histo_FSR_DYToMuMu->Add(Histo_nonFSR_DYToMuMu);
+	Histo_TTJets->Add(Histo_WJetsToLNu);
+	Histo_nonFSR_DYToMuMu->Add(Histo_TTJets);
+	Histo_FSR_DYToMuMu->Add(Histo_nonFSR_DYToMuMu);
 
 	// Total MC histo for comupting min/max
 //	TH1F *Histo_allMC = new TH1F(*Histo_QCD_Mu_Pt20to30);
@@ -178,10 +178,10 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
 //	YMax = max(YMax, allMCMax);
 
   double dataMin = YMax;
-//  double nonFSR_DYToMuMuMin = YMax;
+  double nonFSR_DYToMuMuMin = YMax;
   double FSR_DYToMuMuMin = YMax;
-//  double TTJetsMin = YMax;
-//  double WJetsToLNuMin = YMax;
+  double TTJetsMin = YMax;
+  double WJetsToLNuMin = YMax;
 //  double QCDMuMin = YMax;
 
 	double allMCMin = YMax;
@@ -207,8 +207,8 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
     }
   }
   YMin = min(YMin, FSR_DYToMuMuMin);
-/*
-  ifor( int ibin=1 ; ibin<Histo_nonFSR_DYToMuMu->GetNbinsX() ; ibin++ ){
+
+ for( int ibin=1 ; ibin<Histo_nonFSR_DYToMuMu->GetNbinsX() ; ibin++ ){
     if( ((Histo_nonFSR_DYToMuMu->GetBinContent(ibin))!=0) && ((Histo_nonFSR_DYToMuMu->GetBinContent(ibin))<nonFSR_DYToMuMuMin) ){
       nonFSR_DYToMuMuMin = Histo_nonFSR_DYToMuMu->GetBinContent(ibin);
     }
@@ -226,6 +226,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
     }
   }
   YMin = min(YMin, WJetsToLNuMin);
+/*
   for( int ibin=1 ; ibin<Histo_QCDMu->GetNbinsX() ; ibin++ ){
     if( ((Histo_QCDMu->GetBinContent(ibin))!=0) && ((Histo_QCDMu->GetBinContent(ibin))<QCDMuMin) ){
       QCDMuMin = Histo_QCDMu->GetBinContent(ibin);
@@ -331,7 +332,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
   Histo_QCDMu->SetFillStyle(3001);
   Histo_QCDMu->SetMaximum(YMax_lin);
   Histo_QCDMu->SetMinimum(YMin_lin);
-
+*/
   Histo_WJetsToLNu->SetLineColor(kBlack);
   Histo_WJetsToLNu->SetFillColor(kMagenta+3);
   Histo_WJetsToLNu->SetFillStyle(3001);
@@ -343,7 +344,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
   Histo_TTJets->SetFillStyle(3001);
   Histo_TTJets->SetMaximum(YMax_lin);
   Histo_TTJets->SetMinimum(YMin_lin);
-*/
+
 //  Histo_FSR_DYToMuMu->SetLineColor(kBlack);
 //  Histo_FSR_DYToMuMu->SetFillColor(kMagenta);
 //  Histo_FSR_DYToMuMu->SetFillStyle(3001);
@@ -357,23 +358,23 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, string v
   Histo_FSR_DYToMuMu->SetMinimum(YMin_lin);
   Histo_FSR_DYToMuMu->GetXaxis()->SetTitle(Title.c_str());
   Histo_FSR_DYToMuMu->GetYaxis()->SetTitle(YaxisTitle.c_str());
-/*
+
 	Histo_nonFSR_DYToMuMu->SetLineColor(kBlack);
   Histo_nonFSR_DYToMuMu->SetFillColor(kOrange);
   Histo_nonFSR_DYToMuMu->SetFillStyle(3001);
   Histo_nonFSR_DYToMuMu->SetMaximum(YMax_lin);
   Histo_nonFSR_DYToMuMu->SetMinimum(YMin_lin);
-*/
+
 //	Histo_QCD_Mu_Pt20to30->Draw("same");
   Histo_FSR_DYToMuMu->Draw("same");
-//  Histo_nonFSR_DYToMuMu->Draw("same");
-//  Histo_TTJets->Draw("same");
-//  Histo_WJetsToLNu->Draw("same");
+  Histo_nonFSR_DYToMuMu->Draw("same");
+  Histo_TTJets->Draw("same");
+  Histo_WJetsToLNu->Draw("same");
 //  Histo_QCDMu->Draw("same");
   legend->AddEntry(Histo_FSR_DYToMuMu->GetName(), "Z#mu#muJet FSR", "f");
-//  legend->AddEntry(Histo_nonFSR_DYToMuMu->GetName(), "Z#mu#muJets (no FSR)", "f");
-//  legend->AddEntry(Histo_TTJets->GetName(), "t#bar{t}Jets", "f");
-//  legend->AddEntry(Histo_WJetsToLNu->GetName(), "WJets", "f");
+  legend->AddEntry(Histo_nonFSR_DYToMuMu->GetName(), "Z#mu#muJets (no FSR)", "f");
+  legend->AddEntry(Histo_TTJets->GetName(), "t#bar{t}Jets", "f");
+  legend->AddEntry(Histo_WJetsToLNu->GetName(), "WJets", "f");
 //  legend->AddEntry(Histo_QCDMu->GetName(), "QCD #mu", "f");
 //  legend->AddEntry(Histo_FSR_DYToMuMu->GetName(), "PhotonJet", "f");
 //  legend->AddEntry(Histo_QCD_Mu_Pt20to30->GetName(), "QCD Mu", "f");
@@ -456,7 +457,7 @@ if( doFit ){
   statsHisto_nonFSR_ZmumuJet_Pt0to15->SetLineColor(kWhite);
   statsHisto_nonFSR_ZmumuJet_Pt0to15->SetTextColor(kWhite);
 	statsHisto_nonFSR_ZmumuJet_Pt0to15->Draw();
-  
+
 	gPad->Update();
 	TPaveStats* statsHisto_TTbarJets_Tauola = (TPaveStats*) Histo_TTbarJets_Tauola->GetListOfFunctions()->FindObject("stats");
   statsHisto_TTbarJets_Tauola->SetLineColor(kWhite);
@@ -530,13 +531,14 @@ if( doFit ){
 //    Histo_QCD_Pt15->SetMaximum(YMax_log);
 //    Histo_QCD_Pt15->SetMinimum(YMin_log);
 //    Histo_QCD_Pt15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
-/*
+
     Histo_TTJets->SetMaximum(YMax_log);
     Histo_TTJets->SetMinimum(YMin_log);
     Histo_TTJets->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
     Histo_WJetsToLNu->SetMaximum(YMax_log);
     Histo_WJetsToLNu->SetMinimum(YMin_log);
     Histo_WJetsToLNu->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
+/*
     Histo_QCDMu->SetMaximum(YMax_log);
     Histo_QCDMu->SetMinimum(YMin_log);
     Histo_QCDMu->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
@@ -544,11 +546,11 @@ if( doFit ){
 //    Histo_InclusiveMu15->SetMaximum(YMax_log);
 //    Histo_InclusiveMu15->SetMinimum(YMin_log);
 //    Histo_InclusiveMu15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
-/*
+
     Histo_nonFSR_DYToMuMu->SetMaximum(YMax_log);
     Histo_nonFSR_DYToMuMu->SetMinimum(YMin_log);
     Histo_nonFSR_DYToMuMu->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
-*/
+
     c1->SetLogy(1);
     c1->Update();
     c1->Draw();
@@ -570,13 +572,15 @@ if( doFit ){
   Histo_Data->Delete();
   Histo_FSR_DYToMuMu_temp->Delete();
   Histo_FSR_DYToMuMu->Delete();
-/*
+
   Histo_nonFSR_DYToMuMu_temp->Delete();
   Histo_nonFSR_DYToMuMu->Delete();
+
   Histo_TTJets_temp->Delete();
   Histo_TTJets->Delete();
   Histo_WJetsToLNu_temp->Delete();
   Histo_WJetsToLNu->Delete();
+/*
   Histo_QCDMu_temp->Delete();
   Histo_QCDMu->Delete();
 */

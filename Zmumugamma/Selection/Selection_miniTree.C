@@ -64,11 +64,11 @@ int main()
 {
 	gSystem->Load("../../UserCode/IpnTreeProducer/src/libToto.so");
 	bool doHLT										= false;
-	bool doMC										 = false;
+	bool doMC										 = true;
 	bool doJetMC									= false;
 	bool doMETMC									= false;
 	bool doPDFInfo								= false;
-	bool doSignalMuMuGamma				= false;
+	bool doSignalMuMuGamma				= true;
 	bool doSignalTopTop					 = false;
 	bool doPhotonConversionMC		 = false;
 	bool doBeamSpot							 = false;
@@ -82,7 +82,7 @@ int main()
 	bool doCluster								= true;
 	bool doPhotonConversion			 = false;
 	bool doMET										= false;
-	bool doBardak								 = false;
+	bool doBardak								 = true;
 	bool doPhotonVertexCorrection = false;
 	bool doPhotonIsolation				= false;
 
@@ -101,16 +101,20 @@ int main()
 //	inputEventTree->Add("../RecoSamples/Run2010B/Run2010B*root");
 //	inputRunTree->Add("../RecoSamples/Run2010B/Run2010B*root");
 //	string sample = "Run2010B";
-//	inputEventTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
-//	inputRunTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
-//	string sample = "DYToMuMu";
+	inputEventTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
+	inputRunTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
+	string sample = "DYToMuMu";
 //	inputEventTree->Add("../RecoSamples/Run2010A/Run2010A*root");
 //	inputRunTree->Add("../RecoSamples/Run2010A/Run2010A*root");
 //	string sample = "Run2010A";
-	inputEventTree->Add("../RecoSamples/TTJets/TTJets*root");
-	inputRunTree->Add("../RecoSamples/TTJets/TTJets*root");
-	string sample = "TTJets";
-
+//	inputEventTree->Add("../RecoSamples/TTJets/TTJets*root");
+//	inputRunTree->Add("../RecoSamples/TTJets/TTJets*root");
+//	string sample = "TTJets";
+/*
+	inputEventTree->Add("../RecoSamples/WJetsToLNu/WJetsToLNu*root");
+	inputRunTree->Add("../RecoSamples/WJetsToLNu/WJetsToLNu*root");
+	string sample = "WJetsToLNu";
+*/
 /*
 	inputEventTree->Add("");
 	inputRunTree->Add("");
@@ -736,10 +740,10 @@ int main()
 	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
 //	unsigned int NbEvents = 1000;
-	bool powheg = false;
+	bool powheg = true;
 	bool signal = false;
 	bool stew = false;
-	bool zjet_veto = false;
+	bool zjet_veto = true;
 	cout << "Nb of events : " << NbEvents << endl;
 	cout << "Signal is: " << signal <<endl;
 	cout << "Stew is: " << stew << endl;
@@ -902,6 +906,84 @@ int main()
 		isAfterCutPthatFilter = 1;
 		nAfterCutPthatFilter++;
 */
+		// Signal MC Truth
+    // ZJET VETO
+    bool MCphotons_from_muons_from_Z = false;
+    bool MC_first_muon_in_phase_space = false;
+    bool MC_second_muon_in_phase_space = false;
+    bool MCsignal_in_phase_space = false;
+
+    if( zjet_veto && powheg )
+    {
+      if( mcMuMuGammaEvent->nZ() == 1 )
+      {// consistency check
+        cerr << "There is " << mcMuMuGammaEvent->nFSR() << " fsr photons in the event" << endl;
+        if( mcMuMuGammaEvent->nFSR() < 1 )
+        {// if there is no fsr photon, don't bother
+          MCsignal_in_phase_space = false;
+        }
+        else
+        {// if there is a fsr photon, check further
+          for( int imcphoton = 0 ; imcphoton < mcMuMuGammaEvent->nFSR() ; imcphoton++ )
+          {// loop over mc photons
+            TRootParticle *myphoton;
+            myphoton = (mcMuMuGammaEvent->photonFSR(imcphoton));
+            // mc-acceptance cuts on photons
+            if( (myphoton->Pt()>8.0) && (abs(myphoton->Eta())<3.0) ) MCphotons_from_muons_from_Z = true;
+          }// end of loop over mc photons
+          if( MCphotons_from_muons_from_Z )
+          { // if there is a fsr photon passing acceptance cuts, then look at muons coming from the Z
+            if( (mcMuMuGammaEvent->muplus()->Pt()>10.0) && (abs((mcMuMuGammaEvent->muplus()->Eta())<3.0)) )
+            {
+              MC_first_muon_in_phase_space = true;
+              if( (mcMuMuGammaEvent->muminus()->Pt()>10.0) && (abs((mcMuMuGammaEvent->muminus()->Eta())<3.0)) )
+              {
+                MC_second_muon_in_phase_space = true;
+                MCsignal_in_phase_space = true;
+              }
+            }
+          } // end of cuts on muons coming from the Z
+        }// end of check if the event is a mc fsr passing acceptance cuts
+//        if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
+        if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
+        {
+          cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
+/*
+          miniTree->Fill();
+          for(int imuon=0 ; imuon<NbMuons ; imuon++){
+            TRootMuon *mymuon;
+            mymuon = (TRootMuon*) muons->At(imuon);
+            Pt_allMuons = mymuon->Pt();
+            Eta_allMuons = mymuon->Eta();
+            Phi_allMuons = mymuon->Phi();
+            Charge_allMuons = mymuon->charge();
+            miniTree_allmuons->Fill();
+          }
+          for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
+            TRootPhoton *myphoton;
+            myphoton = (TRootPhoton*) photons->At(iphoton);
+            Pt_allPhotons = (myphoton->Pt());
+            Eta_allPhotons = myphoton->Eta();
+            Phi_allPhotons = myphoton->Phi();
+            isEBorEE_allPhotons = 1;
+            if( myphoton->isEBPho()==1 ){ isEB_allPhotons=1; } else { isEB_allPhotons=0; }
+            if( myphoton->isEEPho()==1 ){ isEE_allPhotons=1; } else { isEE_allPhotons=0; }
+            if( (myphoton->isEEPho()==1) && (myphoton->Eta()<0) ){ isEEM_allPhotons=1; } else { isEEM_allPhotons=0; }
+            if( (myphoton->isEEPho()==1) && (myphoton->Eta()>0) ){ isEEP_allPhotons=1; } else { isEEP_allPhotons=0; }
+          Cross_allPhotons = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));
+            isNotCommissionned = photonIsNotCommissioned[iphoton];
+            miniTree_allphotons->Fill();
+          }
+*/
+          continue;
+        }
+        isAfterCutZJETVETO = 1;
+        nAfterCutZJETVETO++;
+      } else {
+        cout << "Failed POWHEG mumugamma consistency check" << endl;
+      }// end of consistency check
+    }// end of if Z+Jets veto for powheg
+
 
 		if(verbosity>1) cout << "Start loop over muon objects" << endl;
     // Cleaning: muon quality
