@@ -63,30 +63,43 @@ double DeltaR( double eta1, double phi1, double eta2, double phi2)
 int main(int argc, char *argv[])
 {
 	cout << "argc= " << argc << endl;
+	
 	if( argc == 1 )
 	{
-		cerr << "arguments should be passed !! sample (extra scale) (extra resolution)" << endl;
+		cerr << "arguments should be passed !! sample (isZgammaMC) (extra scale) (extra resolution)" << endl;
 		return 1;
 	}
 	// First argument is sample
 	string sample = argv[1];
 	char* sample_char = argv[1];
-	// Optional second argument is extra scale
-	double EScale = 1.0;
-	if( argc > 1 )
+
+	// Optional argument : isZgammaMC
+	int isZgammaMC = 0;
+	if( argc > 2 )
 	{
+		std::stringstream ss ( argv[2] );
+		ss >> isZgammaMC;
 	}
-	// Optional third argument is extra resolution
+	
+	// Optional argument extra scale
+	double EScale = 1.0;
+	if( argc > 3 )
+	{
+		std::stringstream ss ( argv[3] );
+		ss >> EScale;
+	}
+	
+// Optional argument is extra resolution
 	double EResolution = 0.0;
 	// TODO
 
 	gSystem->Load("../../UserCode/IpnTreeProducer/src/libToto.so");
-	bool doHLT										= false;
-	bool doMC										 = true;
+	bool doHLT										= true;
+	bool doMC										 = (bool)(isZgammaMC == 1);
 	bool doJetMC									= false;
 	bool doMETMC									= false;
 	bool doPDFInfo								= false;
-	bool doSignalMuMuGamma				= true;
+	bool doSignalMuMuGamma				= (bool)(isZgammaMC == 1);
 	bool doSignalTopTop					 = false;
 	bool doPhotonConversionMC		 = false;
 	bool doBeamSpot							 = false;
@@ -764,10 +777,10 @@ int main(int argc, char *argv[])
 	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
 //	unsigned int NbEvents = 1000;
-	bool powheg = true;
+	bool powheg = (bool)(isZgammaMC == 1);
 	bool signal = false;
 	bool stew = false;
-	bool zjet_veto = true;
+	bool zjet_veto = (bool)(isZgammaMC == 1);
 	cout << "Nb of events : " << NbEvents << endl;
 	cout << "Signal is: " << signal <<endl;
 	cout << "Stew is: " << stew << endl;
