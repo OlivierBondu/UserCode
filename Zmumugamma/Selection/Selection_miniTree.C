@@ -60,8 +60,26 @@ double DeltaR( double eta1, double phi1, double eta2, double phi2)
 }
 
 //int Selection_miniTree()
-int main()
+int main(int argc, char *argv[])
 {
+	cout << "argc= " << argc << endl;
+	if( argc == 1 )
+	{
+		cerr << "arguments should be passed !! sample (extra scale) (extra resolution)" << endl;
+		return 1;
+	}
+	// First argument is sample
+	string sample = argv[1];
+	char* sample_char = argv[1];
+	// Optional second argument is extra scale
+	double EScale = 1.0;
+	if( argc > 1 )
+	{
+	}
+	// Optional third argument is extra resolution
+	double EResolution = 0.0;
+	// TODO
+
 	gSystem->Load("../../UserCode/IpnTreeProducer/src/libToto.so");
 	bool doHLT										= false;
 	bool doMC										 = true;
@@ -89,6 +107,10 @@ int main()
 	// DATASET	
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
+
+	inputEventTree->Add(Form("../RecoSamples/%s/%s*root", sample_char, sample_char));
+	inputRunTree->Add(Form("../RecoSamples/%s/%s*root", sample_char, sample_char));
+
 //	inputEventTree->Add("DYToMuMu_v2/DYToMuMu_*.root");
 //	inputRunTree->Add("DYToMuMu_v2/DYToMuMu_*.root");
 //	string sample = "DYToMuMu";
@@ -101,9 +123,11 @@ int main()
 //	inputEventTree->Add("../RecoSamples/Run2010B/Run2010B*root");
 //	inputRunTree->Add("../RecoSamples/Run2010B/Run2010B*root");
 //	string sample = "Run2010B";
-	inputEventTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
-	inputRunTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
-	string sample = "DYToMuMu";
+
+//	inputEventTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
+//	inputRunTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
+//	string sample = "DYToMuMu";
+
 //	inputEventTree->Add("../RecoSamples/Run2010A/Run2010A*root");
 //	inputRunTree->Add("../RecoSamples/Run2010A/Run2010A*root");
 //	string sample = "Run2010A";
