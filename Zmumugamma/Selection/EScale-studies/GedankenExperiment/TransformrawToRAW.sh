@@ -3,6 +3,7 @@
 # written by O. Bondu (February 2011)
 
 type="data"
+#type="MC"
 
 cp ${type}.raw ${type}.RAW
 

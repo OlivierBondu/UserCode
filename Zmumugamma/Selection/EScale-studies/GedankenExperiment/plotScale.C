@@ -45,7 +45,7 @@ TTree *DATA_scale = new TTree ("scale", "Information for data with various estim
 //MC_scale->ReadFile("mc.raw", "Gnumber/I:estimatorName/C:category/C:Nevents/I:chi2/F:constant/F:deltaConstant/F:estimator/F:deltaEstimator/F:deltaEstimator_estimator/F:sigma/F:deltaSigma/F:deltaSigma_sigma/F");
 //MC_scale->ReadFile("mc.raw2", "Gnumber/I:estimatorName/I:category/C:Nevents/I:chi2/F:constant/F:deltaConstant/F:estimator/F:deltaEstimator/F:deltaEstimator_estimator/F:sigma/F:deltaSigma/F:deltaSigma_sigma/F");
 //MC_scale->ReadFile("mc.raw3", "Gnumber/I:estimatorName/I:category/I:Nevents/I:chi2/F:constant/F:deltaConstant/F:estimator/F:deltaEstimator/F:deltaEstimator_estimator/F:sigma/F:deltaSigma/F:deltaSigma_sigma/F");
-MC_scale->ReadFile("mc.RAW", "Gnumber/I:estimatorName/I:category/I:Nevents/I:chi2/F:constant/F:deltaConstant/F:estimator/F:deltaEstimator/F:deltaEstimator_estimator/F:sigma/F:deltaSigma/F:deltaSigma_sigma/F");
+MC_scale->ReadFile("MC.RAW", "Gnumber/I:estimatorName/I:category/I:Nevents/I:chi2/F:constant/F:deltaConstant/F:estimator/F:deltaEstimator/F:deltaEstimator_estimator/F:sigma/F:deltaSigma/F:deltaSigma_sigma/F");
 DATA_scale->ReadFile("data.RAW", "Gnumber/I:estimatorName/I:category/I:Nevents/I:chi2/F:constant/F:deltaConstant/F:estimator/F:deltaEstimator/F:deltaEstimator_estimator/F:sigma/F:deltaSigma/F:deltaSigma_sigma/F");
 
 TCanvas c1;

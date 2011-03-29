@@ -38,11 +38,12 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 	string iteration = argv[1];
-	string selection = "loose";
+	string selection = "tight";
 	gROOT->ProcessLine(".x setTDRStyle.C");
 //	string FSR_DYToMuMu_powheg = "../../Selected/" + selection + "/FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/miniminiTree_36.15pb-1_" + iteration + "th_FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia.root";
 //	string FSR_DYToMuMu_powheg = "../../Selected/" + selection + "/DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/miniminiTree_36.15pb-1_" + iteration + "th_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia.root";
 //	string FSR_DYToMuMu_powheg = "../../Selected/" + selection + "/miniTree_DATA_ALL.root";
+
 	string FSR_DYToMuMu_powheg = "../miniminiTree_35.91pb-1_" + iteration + "th_FSR_DYToMuMu.root";
 //	string FSR_DYToMuMu_powheg = "../../miniTree_Run2010_ALL.root";
 	
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
 // *** all EE
   set_of_cuts.push_back("isSelected && Photon_isEE");
   name.push_back("EE");
-
+/*
 // *** EB+
 	set_of_cuts.push_back("isSelected && Photon_isEB && Photon_SC_Eta>0");
 	name.push_back("EBP");
@@ -108,7 +109,7 @@ int main(int argc, char *argv[])
 // *** EB 1.0 < |eta| < 1.44
 	set_of_cuts.push_back("isSelected && Photon_isEB && 1.0 < abs(Photon_SC_Eta) && abs(Photon_SC_Eta) < 1.44");
 	name.push_back("EB_10_LT_eta_LT_144");
-/*
+
 // *** EE+ ES region
 	set_of_cuts.push_back("isSelected && Photon_isEE && Photon_SC_Eta>0 && 1.7 < abs(Photon_SC_Eta) && abs(Photon_SC_Eta) < 2.5");
   name.push_back("EEP_ES");
@@ -168,11 +169,11 @@ string temptitle;
   temptitle = iteration + "th_Photon_k";
   DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_k", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "k = E_{kin} / E_{reco}", true, false, c1, true);
 
-  temptitle = iteration + "th_Photon_ik";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "x = 1 / k = E_{reco} / E_{kin}", true, false, c1, true);
+//  temptitle = iteration + "th_Photon_ik";
+//  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "x = 1 / k = E_{reco} / E_{kin}", true, false, c1, true);
 
   temptitle = iteration + "th_Photon_s";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s", temptitle, "(20, -1.0 , 1.0)", set_of_cuts[i], name[i], "s = 1 / k -1", true, false, c1, true);
+  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s", temptitle, "(20, -1.0 , 1.0)", set_of_cuts[i], name[i], "s = E_{reco} / E_{kin} -1", true, false, c1, true);
 /*
 
 // *****

@@ -57,9 +57,16 @@ TH2F *h2_scale_temp = new TH2F();
 //TH2F *h2_scale_temp_EE = new TH2F();
 //TH2F *h2_scale_error_temp = new TH2F();
 ////TH2F *h2_scale_error_temp_EB = new TH2F();
+
 MC_scale->Draw("k_meas:k_inj>>h2_scale_temp(200,0.94,1.06,200,0.94,1.06)", "category==0");
-//MC_scale->Draw("k_meas:k_inj>>h2_scale_temp_EB(200,0.94,1.06,200,0.94,1.06)", "category==1");
-//MC_scale->Draw("k_meas:k_inj>>h2_scale_temp_EE(200,0.94,1.06,200,0.94,1.06)", "category==2");
+MC_scale->Draw("k_meas:k_inj>>h2_scale_temp_EB(200,0.94,1.06,200,0.94,1.06)", "category==1");
+MC_scale->Draw("k_meas:k_inj>>h2_scale_temp_EE(200,0.94,1.06,200,0.94,1.06)", "category==2");
+
+/*
+MC_scale->Draw("k_meas:k_inj>>h2_scale_temp(200,-0.06,0.06,200,-0.06,0.06)", "category==0");
+MC_scale->Draw("k_meas:k_inj>>h2_scale_temp_EB(200,-0.06,0.06,200,-0.06,0.06)", "category==1");
+MC_scale->Draw("k_meas:k_inj>>h2_scale_temp_EE(200,-0.06,0.06,200,-0.06,0.06)", "category==2");
+*/
 //gPad->Update();
 //h2_scale_temp->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
 //h2_scale_temp->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
@@ -73,11 +80,11 @@ MC_scale->Draw("k_meas:k_inj>>h2_scale_temp(200,0.94,1.06,200,0.94,1.06)", "cate
 //MC_scale->Draw("k_meas_err:k_inj>>h2_scale_error_temp(200,0.0012,0.0015,200,0.94,1.06)", "category==0");
 ////MC_scale->Draw("k_meas_err:k_inj>>h2_scale_error_temp_EB(200,0.0012,0.0015,200,0.94,1.06)", "category==1");
 
-
+TCanvas c2;
 
 TH2F *h2_scale = (TH2F*)gDirectory->Get("h2_scale_temp");
-//TH2F *h2_scale_EB = (TH2F*)gDirectory->Get("h2_scale_temp_EB");
-//TH2F *h2_scale_EE = (TH2F*)gDirectory->Get("h2_scale_temp_EE");
+TH2F *h2_scale_EB = (TH2F*)gDirectory->Get("h2_scale_temp_EB");
+TH2F *h2_scale_EE = (TH2F*)gDirectory->Get("h2_scale_temp_EE");
 //h2_scale->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
 //h2_scale->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
 //h2_scale_EB->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
@@ -108,8 +115,8 @@ TH2F *h2_scale = (TH2F*)gDirectory->Get("h2_scale_temp");
 
 //TCanvas c3;
 TProfile* h2_scale_profile = (TProfile*)h2_scale->ProfileX();
-//TProfile* h2_scale_profile_EB = (TProfile*)h2_scale_EB->ProfileX();
-//TProfile* h2_scale_profile_EE = (TProfile*)h2_scale_EE->ProfileX();
+TProfile* h2_scale_profile_EB = (TProfile*)h2_scale_EB->ProfileX();
+TProfile* h2_scale_profile_EE = (TProfile*)h2_scale_EE->ProfileX();
 //TProfile* h2_scale_error_profile = (TProfile*)h2_scale_error->ProfileX();
 
 
@@ -135,17 +142,13 @@ TProfile* h2_scale_profile = (TProfile*)h2_scale->ProfileX();
 
 //TCanvas c4;
 TH1D *h1_scale = h2_scale_profile->ProjectionX();
-//TH1D *h1_scale_EB = h2_scale_profile_EB->ProjectionX();
-//TH1D *h1_scale_EE = h2_scale_profile_EE->ProjectionX();
+TH1D *h1_scale_EB = h2_scale_profile_EB->ProjectionX();
+TH1D *h1_scale_EE = h2_scale_profile_EE->ProjectionX();
 /*
 h1_scale->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
 h1_scale->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
 h1_scale->Draw();
 */
-//h1_scale_EB->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
-//h1_scale_EB->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
-//h1_scale_EE->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
-//h1_scale_EE->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
 //cout << "h1_scale->GetNbinsX()= " << h1_scale->GetNbinsX() << endl;
 //h1_scale->SetError(error);
 //for(int i=0 ; i < h1_scale->GetNbinsX(); i++)
@@ -155,70 +158,91 @@ h1_scale->Draw();
 
 //gPad->Clear();
 
-//// EE
-//gPad->Update();
-//h1_scale_EE->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
-//h1_scale_EE->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
+// EE
+gPad->Update();
+h1_scale_EE->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
+h1_scale_EE->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
 
-//h1_scale_EE->SetMarkerColor(kBlue);
-//h1_scale_EE->SetMaximum(1.06);
-//h1_scale_EE->SetMinimum(0.94);
-//h1_scale_EE->SetName("EE");
-//h1_scale_EE->Draw("E1sames");
-//TF1* f_EE = new TF1("f_EE", "pol1",  h1_scale_EE->GetXaxis()->GetXmin(), h1_scale_EE->GetXaxis()->GetXmax());
-//f_EE->SetLineWidth(1);
-//f_EE->SetLineColor(kBlue);
-//f_EE->SetParameter(1,1);
-//f_EE->SetParameter(0,0);
-//h1_scale_EE->Fit("f_EE", "RB+", "sames");
-//h1_scale_EE->Draw("E1sames");
-//gPad->Update();
+h1_scale_EE->SetMarkerColor(kBlue);
 
-//TPaveStats* statsh1_scale_EE = (TPaveStats*) h1_scale_EE->GetListOfFunctions()->FindObject("stats");
-//statsh1_scale_EE->SetName("statsh1_scale_EE");
-//statsh1_scale_EE->SetShadowColor(0);
-//statsh1_scale_EE->SetLineColor(kBlue);
-//statsh1_scale_EE->SetTextColor(kBlue);
-//statsh1_scale_EE->SetX1NDC(0.68);
-//statsh1_scale_EE->SetX2NDC(0.93);
-//statsh1_scale_EE->SetY1NDC(0.20);
-//statsh1_scale_EE->SetY2NDC(0.33);
-//statsh1_scale_EE->Draw("sames");
-//gPad->Update();
+h1_scale_EE->SetMaximum(1.06);
+h1_scale_EE->SetMinimum(0.94);
+/*
+h1_scale_EE->SetMaximum(0.06);
+h1_scale_EE->SetMinimum(-0.06);
+*/
+h1_scale_EE->SetName("EE");
+h1_scale_EE->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
+h1_scale_EE->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
+h1_scale_EE->Draw("E1");
+TF1* f_EE = new TF1("f_EE", "pol1",  h1_scale_EE->GetXaxis()->GetXmin(), h1_scale_EE->GetXaxis()->GetXmax());
+f_EE->SetLineWidth(1);
+f_EE->SetLineColor(kBlue);
+f_EE->SetParameter(1,1);
+f_EE->SetParameter(0,0);
+h1_scale_EE->Fit("f_EE", "RB+", "sames");
+h1_scale_EE->Draw("E1sames");
+gPad->Update();
 
-//// EB
-//h1_scale_EB->SetMarkerColor(kGreen+3);
-//h1_scale_EB->SetMaximum(1.06);
-//h1_scale_EB->SetMinimum(0.94);
-//h1_scale_EB->SetName("EB");
-//h1_scale_EB->Draw("E1sames");
-//TF1* f_EB = new TF1("f_EB", "pol1",  h1_scale_EB->GetXaxis()->GetXmin(), h1_scale_EB->GetXaxis()->GetXmax());
-//f_EB->SetLineWidth(1);
-//f_EB->SetLineColor(kGreen+3);
-//f_EB->SetParameter(1,1);
-//f_EB->SetParameter(0,0);
-//h1_scale_EB->Fit("f_EB", "RB+", "sames");
-//h1_scale_EB->Draw("E1sames");
+TPaveStats* statsh1_scale_EE = (TPaveStats*) h1_scale_EE->GetListOfFunctions()->FindObject("stats");
+statsh1_scale_EE->SetName("statsh1_scale_EE");
+statsh1_scale_EE->SetShadowColor(0);
+statsh1_scale_EE->SetLineColor(kBlue);
+statsh1_scale_EE->SetTextColor(kBlue);
+statsh1_scale_EE->SetX1NDC(0.68);
+statsh1_scale_EE->SetX2NDC(0.93);
+statsh1_scale_EE->SetY1NDC(0.20);
+statsh1_scale_EE->SetY2NDC(0.33);
+statsh1_scale_EE->Draw("sames");
+gPad->Update();
 
-//gPad->Update();
-//TPaveStats* statsh1_scale_EB = (TPaveStats*) h1_scale_EB->GetListOfFunctions()->FindObject("stats");
-//statsh1_scale_EB->SetShadowColor(0);
-//statsh1_scale_EB->SetName("statsh1_scale_EB");
-//statsh1_scale_EB->SetLineColor(kGreen+3);
-//statsh1_scale_EB->SetTextColor(kGreen+3);
-//statsh1_scale_EB->SetX1NDC(0.68);
-//statsh1_scale_EB->SetX2NDC(0.93);
-//statsh1_scale_EB->SetY1NDC(0.34);
-//statsh1_scale_EB->SetY2NDC(0.47);
-//statsh1_scale_EB->Draw("sames");
+// EB
+h1_scale_EB->SetMarkerColor(kGreen+3);
+
+h1_scale_EB->SetMaximum(1.06);
+h1_scale_EB->SetMinimum(0.94);
+
+/*
+h1_scale_EB->SetMaximum(0.06);
+h1_scale_EB->SetMinimum(-0.06);
+*/
+h1_scale_EB->SetName("EB");
+h1_scale_EB->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
+h1_scale_EB->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
+h1_scale_EB->Draw("E1same");
+TF1* f_EB = new TF1("f_EB", "pol1",  h1_scale_EB->GetXaxis()->GetXmin(), h1_scale_EB->GetXaxis()->GetXmax());
+f_EB->SetLineWidth(1);
+f_EB->SetLineColor(kGreen+3);
+f_EB->SetParameter(1,1);
+f_EB->SetParameter(0,0);
+h1_scale_EB->Fit("f_EB", "RB+", "sames");
+h1_scale_EB->Draw("E1sames");
+
+gPad->Update();
+TPaveStats* statsh1_scale_EB = (TPaveStats*) h1_scale_EB->GetListOfFunctions()->FindObject("stats");
+statsh1_scale_EB->SetShadowColor(0);
+statsh1_scale_EB->SetName("statsh1_scale_EB");
+statsh1_scale_EB->SetLineColor(kGreen+3);
+statsh1_scale_EB->SetTextColor(kGreen+3);
+statsh1_scale_EB->SetX1NDC(0.68);
+statsh1_scale_EB->SetX2NDC(0.93);
+statsh1_scale_EB->SetY1NDC(0.34);
+statsh1_scale_EB->SetY2NDC(0.47);
+statsh1_scale_EB->Draw("sames");
 
 //gPad->Update();
 
 ////// EB +EE 
 //h1_scale->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
 //h1_scale->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
+
 h1_scale->SetMaximum(1.06);
 h1_scale->SetMinimum(0.94);
+
+/*
+h1_scale->SetMaximum(-0.06);
+h1_scale->SetMinimum(0.06);
+*/
 //h1_scale->Draw("E1sames");
 //h1_scale->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
 //h1_scale->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
@@ -233,7 +257,8 @@ h1_scale->SetName("EB+EE");
 h1_scale->GetYaxis()->SetTitle("(E_{measured}/E_{muons})_{measured}");
 h1_scale->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
 //h1_scale->Draw("E1sames");
-h1_scale->Draw("E1");
+h1_scale->Draw("E1same");
+//h1_scale->Draw("E1");
 
 
 gPad->Update();
@@ -304,10 +329,11 @@ h2_scale_temp->GetXaxis()->SetTitle("(E_{measured}/E_{muons})_{injected}");
 gPad->Update();
 */
 
-//c1->Print("kmeasVSkinj.eps");
-//c1->Print("kmeasVSkinj.pdf");
-//c1->Print("kmeasVSkinj.gif");
-//c1->Print("kmeasVSkinj.C");
+c2->Print("eps/kmeasVSkinj.eps");
+c2->Print("pdf/kmeasVSkinj.pdf");
+c2->Print("gif/kmeasVSkinj.gif");
+c2->Print("png/kmeasVSkinj.png");
+c2->Print("C/kmeasVSkinj.C");
 
 
 //TProfile* h2_scale_profile_temp = new TProfile(h2_scale->ProfileX());

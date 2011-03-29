@@ -278,6 +278,18 @@ if( doFit ){
 	}
   c1->Print(PicName.c_str());
 	if(!doData){
+	  PicName="png/MC_" + pic + "_" + name + ".png";
+	} else {
+	  PicName="png/Data_" + pic + "_" + name + ".png";
+	}
+  c1->Print(PicName.c_str());
+	if(!doData){
+	  PicName="C/MC_" + pic + "_" + name + ".C";
+	} else {
+	  PicName="C/Data_" + pic + "_" + name + ".C";
+	}
+  c1->Print(PicName.c_str());
+	if(!doData){
   	PicName="eps/MC_" + pic + "_" + name + ".eps";
 	} else {
   	PicName="eps/DATA_" + pic + "_" + name + ".eps";
@@ -303,6 +315,18 @@ if( doFit ){
   	  PicName_log="gif/MC_" + pic + "_" + name + "_log.gif";
 		} else {
   	  PicName_log="gif/DATA_" + pic + "_" + name + "_log.gif";
+		}
+    c1->Print(PicName_log.c_str());
+	  if(!doData){
+  	  PicName_log="C/MC_" + pic + "_" + name + "_log.C";
+		} else {
+  	  PicName_log="C/DATA_" + pic + "_" + name + "_log.C";
+		}
+    c1->Print(PicName_log.c_str());
+	  if(!doData){
+  	  PicName_log="png/MC_" + pic + "_" + name + "_log.png";
+		} else {
+  	  PicName_log="png/DATA_" + pic + "_" + name + "_log.png";
 		}
     c1->Print(PicName_log.c_str());
 	  if(!doData){
