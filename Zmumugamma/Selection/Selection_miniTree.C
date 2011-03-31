@@ -1063,8 +1063,8 @@ int main(int argc, char *argv[])
 			nbMuonsAfterID[7]++;
 			TOTALnbMuonsAfterID[7]++;
 
-//      if(! (fabs(mymuon->GlobaldB())<0.2) )
-      if(! (fabs(mymuon->dB())<0.2) )
+      if(! (fabs(mymuon->GlobaldB())<0.2) )
+//      if(! (fabs(mymuon->dB())<0.2) )
 			{// inner track transverse impact parameter w.r.t the beam spot |d_xy|
         muonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because inner track transverse impact parameter w.r.t the beam spot |d_xy|" << endl;
