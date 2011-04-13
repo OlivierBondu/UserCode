@@ -23,11 +23,12 @@
 //#include "RooStats/HLFactory.h"
 
 void Scale_Data(){
+	gStyle->SetOptTitle(0);
 	CMSstyle();
 	using namespace RooFit;
 
-//	TFile* file_Data = new TFile("miniTree_Run2010_ALL_v2.root");
-	TFile* file_Data = new TFile("miniTree_FSR_DYToMuMu_v2.root");
+//	TFile* file_Data = new TFile("../../miniTree_Run2010_ALL_v2.root");
+	TFile* file_Data = new TFile("../../miniTree_FSR_DYToMuMu_v2.root");
 	TTree* Tree_Data = (TTree*) file_Data->Get("miniTree");
 
 	RooRealVar Photon_isEB("Photon_isEB", "Photon_isEB", 0, 1);
@@ -72,50 +73,35 @@ void Scale_Data(){
 	RooDataSet *EB_Data = Data->reduce("Photon_isEB == 1");
 
 	// BREIT-WIGNER
-	RooRealVar mmg_BW_mean("mmg_BW_mean", "mmg_BW_mean",  91.188, 85.0, 95.0,"GeV/c^{2}");
-	RooRealVar mmg_BW_width("mmg_BW_width", "mmg_BW_width", 2.45, 2.0,3.0,"GeV/c^{2}");
+	RooRealVar mmg_BW_mean("BW m_{0}", "mmg_BW_mean",  91.188, 85.0, 95.0,"GeV");
+	RooRealVar mmg_BW_width("BW #Gamma", "mmg_BW_width", 2.45, 2.0,3.0,"GeV");
 	mmg_BW_mean.setConstant();
 	mmg_BW_width.setConstant();
 	RooBreitWigner mmg_BW("mmg_BW", "mmg_BW", Mmumugamma, mmg_BW_mean, mmg_BW_width);
 
 
 	// CRYSTALBALL
-  RooRealVar mmg_CB_m0("mmg_CB_m0","mmg_CB_m0", 0.0, -10.0, 10.0);  
-  RooRealVar mmg_CB_sigma("mmg_CB_sigma","mmg_CB_sigma", 1.45, 1.0, 5.0);
-  RooRealVar mmg_CB_alpha("mmg_CB_alpha","mmg_CB_alpha", 0.98, 0.0, 2.0);
-  RooRealVar mmg_CB_n("mmg_CB_n","mmg_CB_n", 3.8, 0.5, 10.0);
+  RooRealVar mmg_CB_m0("CB #Delta m_{0}","mmg_CB_m0", 0.0, -10.0, 10.0, "GeV");  
+  RooRealVar mmg_CB_sigma("CB #sigma","mmg_CB_sigma", 1.45, 1.0, 5.0, "GeV");
+  RooRealVar mmg_CB_alpha("CB #alpha","mmg_CB_alpha", 0.98, 0.0, 2.0);
+  RooRealVar mmg_CB_n("CB n","mmg_CB_n", 3.8, 0.5, 10.0);
   RooCBShape mmg_CrystalBall("mmg_CrystalBall","mmg_CrystalBall", Mmumugamma, mmg_CB_m0, mmg_CB_sigma, mmg_CB_alpha, mmg_CB_n);
 
 	// CONVOLUTION
-//	RooFFTConvPdf mmg_BWxCB("mmg_BWxCB", "mmg_BWxCB", Mmumugamma, mmg_CrystalBall, mmg_BW);
 	RooFFTConvPdf mmg_BWxCB("mmg_BWxCB", "mmg_BWxCB", Mmumugamma, mmg_BW, mmg_CrystalBall);
-//	RooNumConvPdf mmg_BWxCB("mmg_BWxCB", "mmg_BWxCB", Mmumugamma, mmg_CrystalBall, mmg_BW);
 
 	mmg_BWxCB.fitTo(*EB_Data);
-//	mmg_CrystalBall.fitTo(*EB_Data);
-//	mmg_CrystalBall.fitTo(*Data);
-//	RooArgSet* mmg_CB_param = mmg_CrystalBall.getVariables();
 	RooArgSet* mmg_BWxCB_param = mmg_BWxCB.getVariables();
-//	mmg_CB_param->Print("v");
 	mmg_BWxCB_param->Print("v");
 
-//	TCanvas* mmg_CB_canvas = new TCanvas("mmg_CB_canvas", "mmg_CB_canvas");
 	TCanvas* mmg_BWxCB_canvas = new TCanvas("mmg_BWxCB_canvas", "mmg_BWxCB_canvas");
-//	RooPlot* mmg_CB_frame = Mmumugamma.frame(Title("m_{#mu#mu#gamma} fitted with a Crystal Ball"));
-	RooPlot* mmg_BWxCB_frame = Mmumugamma.frame(Title("m_{#mu#mu#gamma} fitted with a Crystal Ball convoluted with a Z^{0} Breit-Wigner"));
-//	Data->plotOn(mmg_CB_frame);
-//	EB_Data->plotOn(mmg_CB_frame, Name("data"));
+	RooPlot* mmg_BWxCB_frame = Mmumugamma.frame(Title("m_{#mu#mu#gamma} fitted with Z^{0} Breit-Wigner convoluted with  a Crystal Ball"));
 	EB_Data->plotOn(mmg_BWxCB_frame, Name("data"));
-//	mmg_CrystalBall.plotOn(mmg_CB_frame, Name("model"));
 	mmg_BWxCB.plotOn(mmg_BWxCB_frame, Name("model"));
-//	mmg_CB_frame->Draw();
+	mmg_BWxCB.paramOn(mmg_BWxCB_frame, Format("NEU", AutoPrecision(2)), Parameters(RooArgSet(mmg_BW_mean, mmg_BW_width, mmg_CB_m0, mmg_CB_sigma, mmg_CB_alpha, mmg_CB_n)), ShowConstants(kTRUE));
 	mmg_BWxCB_frame->Draw();
-//	Double_t mmg_CB_chi2_ndf = mmg_CB_frame->chiSquare("model", "data", 4);
 	Double_t mmg_BWxCB_chi2_ndf = mmg_BWxCB_frame->chiSquare("model", "data", 4);
-//	cout << "mmg_CB_chi2_ndf= " << mmg_CB_chi2_ndf << endl;
 	cout << "mmg_BWxCB_chi2_ndf= " << mmg_BWxCB_chi2_ndf << endl;
-
-
 
 
 return;
