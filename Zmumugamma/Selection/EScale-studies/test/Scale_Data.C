@@ -45,9 +45,9 @@ void Scale_Data(){
 	RooRealVar Mmumugamma_SC("Mmumugamma_SC", "Mmumugamma_SC", 60, 120, "GeV");
 	RooRealVar Mmumugamma_SCraw("Mmumugamma_SCraw", "Mmumugamma_SCraw", 60, 120, "GeV");
 */
-	RooRealVar mmg_k("mmg_k", "mmg_k", -500, 500, ""); 
+	RooRealVar mmg_k("mmg_k", "k", 0.0, 2.0, ""); 
 	RooRealVar mmg_ik("mmg_ik", "mmg_ik", -500, 500, "");
-	RooRealVar mmg_s("mmg_s", "mmg_s", -500, 500, "");
+	RooRealVar mmg_s("mmg_s", "s", -1.0, 1.0, "");
 	RooRealVar mmg_logk("mmg_logk", "mmg_logk", -500, 500, ""); 
 	RooRealVar mmg_logik("mmg_logik", "mmg_logik", -500, 500, "");
 	RooRealVar mmg_logs("mmg_logs", "mmg_logs", -500, 500, "");
@@ -80,15 +80,22 @@ void Scale_Data(){
   vector<string> name;
 	vector<string> display;
 
+
   set_of_cuts.push_back("Photon_isEB == 1");
   display.push_back("EB, loose m_{#mu#mu#gamma}");
 	name.push_back("EB_loose");
+
+
   set_of_cuts.push_back("Photon_isEB == 0");
   display.push_back("EE, loose m_{#mu#mu#gamma}");
 	name.push_back("EE_loose");
+
+
 	set_of_cuts.push_back("Photon_isEB == 1 && Mmumugamma > 87.2 && Mmumugamma < 95.2");
   display.push_back("EB, tight m_{#mu#mu#gamma}");
 	name.push_back("EB_tight");
+
+
   set_of_cuts.push_back("Photon_isEB == 0 && Mmumugamma > 87.2 && Mmumugamma < 95.2");
   display.push_back("EE, tight m_{#mu#mu#gamma}");
 	name.push_back("EE_tight");
@@ -100,12 +107,12 @@ void Scale_Data(){
 for(int i=0; i<set_of_cuts.size() ; i++){
 
   Data_subset[i] = (RooDataSet*)Data->reduce(set_of_cuts[i].c_str());
-	
+
+/*	
 // ***************************************************************
 // ***** Mmumugamma fit
 // ***************************************************************
 
-//	RooDataSet *Data_subset[i] = Data->reduce("Photon_isEB == 1");
 
 	// BREIT-WIGNER
 	RooRealVar mmg_BW_mean("mmg_BW_mean", "BW m_{0}",  91.188, 85.0, 95.0,"GeV");
@@ -197,11 +204,189 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	mmg_BWxCB_canvas->Print(Form("png/mmg_BWxCB_%s.png", name[i].c_str()));
 	mmg_BWxCB_canvas->Print(Form("C/mmg_BWxCB_%s.C", name[i].c_str()));
 	system(Form("convert eps/mmg_BWxCB_%s.eps pdf/mmg_BWxCB_%s.pdf", name[i].c_str(), name[i].c_str()));
-
+*/
 
 // ***************************************************************
 // ***** k fit
 // ***************************************************************
+  // CRYSTALBALL
+  RooRealVar mmg_k_CB_m0("mmg_k_CB_m0", "CB #Delta m_{0}", 1.0, -5.0, 5.0, "GeV");  
+  RooRealVar mmg_k_CB_sigma("mmg_k_CB_sigma", "CB #sigma", 0.45, 0.0, 0.5, "GeV");
+  RooRealVar mmg_k_CB_alpha("mmg_k_CB_alpha", "CB #alpha", 1.0, 0.0, 10.0);
+  RooRealVar mmg_k_CB_n("mmg_k_CB_n", "CB n", 2.0, 0.5, 10.0);
+  RooCBShape mmg_k_CrystalBall("mmg_k_CrystalBall","mmg_k_CrystalBall", mmg_k, mmg_k_CB_m0, mmg_k_CB_sigma, mmg_k_CB_alpha, mmg_k_CB_n);
+
+	// BREIT-WIGNER
+	RooRealVar mmg_k_BW_mean("mmg_k_BW_mean", "BW m_{0}", 0.0 , -2.0, 2.0 ,"GeV");
+	RooRealVar mmg_k_BW_width("mmg_k_BW_width", "BW #Gamma", 1.0, 0.0, 5.0,"GeV");
+	RooBreitWigner mmg_k_BW("mmg_k_BW", "mmg_k_BW", mmg_k, mmg_k_BW_mean, mmg_k_BW_width);
+
+
+  // CONVOLUTION
+  RooFFTConvPdf model("mmg_k_BWxCB", "mmg_k_BWxCB", mmg_k, mmg_k_BW, mmg_k_CrystalBall);
+
+
+	model.fitTo(*Data_subset[i]);
+  RooArgSet* mmg_k_BWxCB_param = model.getVariables();
+  mmg_k_BWxCB_param->Print("v");
+
+	TCanvas *mmg_k_BWxCB_canvas = new TCanvas("mmg_k_BWxCB_canvas", "mmg_k_BWxCB_canvas");
+	RooPlot* mmg_k_frame = mmg_k.frame(Title("k"));
+	Data_subset[i]->plotOn(mmg_k_frame, Name("data"));
+	model.plotOn(mmg_k_frame, Name("model"));
+	mmg_k_frame->Draw();
+
+	Double_t mmg_k_BWxCB_chi2_ndf = mmg_k_frame->chiSquare("model", "data", 6);
+//	cout << "mmg_k_chi2_ndf= " << mmg_k_chi2_ndf << endl;	
+	TLatex latexLabel;
+	latexLabel.SetTextSize(0.06);
+	latexLabel.SetNDC();
+	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
+	latexLabel.DrawLatex(0.70, 0.82, display[i].c_str());
+	latexLabel.SetTextSize(0.03);
+
+	TIterator *it = (TIterator*) mmg_k_BWxCB_param->createIterator();	
+//	cout << mmg_k_BWxCB_param->getRealValue("BW #Gamma") << endl;
+//	mmg_k_BWxCB_param->printValue(cout);
+//	it->Next()->Print();
+//	mmg_BW_width.Print();
+//	cout << "mmg_BW_width.GetName()= " << mmg_BW_width.GetName() << "\tmmg_BW_width.getVal()= " << mmg_BW_width.getVal() << endl;
+	RooRealVar* obj = new RooRealVar();
+	double position = 0.82;
+	gStyle->SetOptTitle(0);
+	position -= 0.04;
+	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
+	while(( (RooRealVar*)obj = it->Next()) != 0)
+	{
+		if( ! strcmp(((char*)obj->GetName()), "mmg_k") ) continue;
+//		cout << "obj->getTitle()= " << obj->getTitle() << endl; // char*
+//		cout << "obj->GetName()= " << obj->GetName() << endl; // char*
+//		cout << "obj->getVal()= " << obj->getVal() << endl; // Double_t
+//		cout << "obj->getError()= " << obj->getError() << endl; // Double_t
+//		cout << "obj->getUnit()= " << obj->getUnit() << endl; // Text_t
+//		cout << endl;
+		position -= 0.04;
+//		double plaf = (double)obj->getVal();
+//		cout << "plaf= " << plaf << endl;
+		std::ostringstream valueStream;
+		if( (double)obj->getError() != 0.0 )
+		{
+			valueStream << setprecision (3) << fixed << (double)obj->getVal() << " +- " << (double)obj->getError();
+		} else {
+			 valueStream << setprecision (3) << fixed << (double)obj->getVal();
+		}
+		string valueString = valueStream.str();
+		latexLabel.DrawLatex(0.20, position, Form("%s = %s %s", obj->GetTitle(), valueString.c_str(), (char*)obj->getUnit()));
+//		latexLabel.DrawLatex(0.18, position, Form("%s = %d \pm %d (%s)", obj->GetTitle(), (double)obj->getVal(), (double)obj->getError(), (char*)obj->getUnit()));
+	}
+//	cout << "it->Next()->GetName()= " << it->Next()->GetName() << "\tit->Next()->getVal()= " << it->Next()->getVal() << endl;
+
+	position -= 0.04;
+	std::ostringstream valueStream;
+	valueStream << setprecision (4) << fixed << (double)mmg_k_BWxCB_chi2_ndf;
+	string valueString = valueStream.str();
+	latexLabel.DrawLatex(0.20, position, Form("#chi^{2} / ndf = %s", valueString.c_str()));
+
+//	Data_subset[i]->Clear();
+
+	mmg_k_BWxCB_canvas->Print(Form("gif/mmg_k_BWxCB_%s.gif", name[i].c_str()));
+	mmg_k_BWxCB_canvas->Print(Form("eps/mmg_k_BWxCB_%s.eps", name[i].c_str()));
+	mmg_k_BWxCB_canvas->Print(Form("png/mmg_k_BWxCB_%s.png", name[i].c_str()));
+	mmg_k_BWxCB_canvas->Print(Form("C/mmg_k_BWxCB_%s.C", name[i].c_str()));
+	system(Form("convert eps/mmg_k_BWxCB_%s.eps pdf/mmg_k_BWxCB_%s.pdf", name[i].c_str(), name[i].c_str()));
+
+
+// ***************************************************************
+// ***** s fit
+// ***************************************************************
+  // CRYSTALBALL
+  RooRealVar mmg_s_CB_m0("mmg_s_CB_m0", "CB #Delta m_{0}", 1.0, -5.0, 5.0, "GeV");  
+  RooRealVar mmg_s_CB_sigma("mmg_s_CB_sigma", "CB #sigma", 0.45, 0.0, 0.5, "GeV");
+  RooRealVar mmg_s_CB_alpha("mmg_s_CB_alpha", "CB #alpha", 1.0, 0.0, 10.0);
+  RooRealVar mmg_s_CB_n("mmg_s_CB_n", "CB n", 2.0, 0.5, 10.0);
+  RooCBShape mmg_s_CrystalBall("mmg_s_CrystalBall","mmg_s_CrystalBall", mmg_s, mmg_s_CB_m0, mmg_s_CB_sigma, mmg_s_CB_alpha, mmg_s_CB_n);
+
+	// BREIT-WIGNER
+	RooRealVar mmg_s_BW_mean("mmg_s_BW_mean", "BW m_{0}", 0.0 , -2.0, 2.0 ,"GeV");
+	RooRealVar mmg_s_BW_width("mmg_s_BW_width", "BW #Gamma", 1.0, 0.0, 5.0,"GeV");
+	RooBreitWigner mmg_s_BW("mmg_s_BW", "mmg_s_BW", mmg_s, mmg_s_BW_mean, mmg_s_BW_width);
+
+
+  // CONVOLUTION
+  RooFFTConvPdf model("mmg_s_BWxCB", "mmg_s_BWxCB", mmg_s, mmg_s_BW, mmg_s_CrystalBall);
+
+
+	model.fitTo(*Data_subset[i]);
+  RooArgSet* mmg_s_BWxCB_param = model.getVariables();
+  mmg_s_BWxCB_param->Print("v");
+
+	TCanvas *mmg_s_BWxCB_canvas = new TCanvas("mmg_s_BWxCB_canvas", "mmg_s_BWxCB_canvas");
+	RooPlot* mmg_s_frame = mmg_s.frame(Title("k"));
+	Data_subset[i]->plotOn(mmg_s_frame, Name("data"));
+	model.plotOn(mmg_s_frame, Name("model"));
+	mmg_s_frame->Draw();
+
+	Double_t mmg_s_BWxCB_chi2_ndf = mmg_s_frame->chiSquare("model", "data", 6);
+//	cout << "mmg_s_chi2_ndf= " << mmg_s_chi2_ndf << endl;	
+	TLatex latexLabel;
+	latexLabel.SetTextSize(0.06);
+	latexLabel.SetNDC();
+	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
+	latexLabel.DrawLatex(0.70, 0.82, display[i].c_str());
+	latexLabel.SetTextSize(0.03);
+
+	TIterator *it = (TIterator*) mmg_s_BWxCB_param->createIterator();	
+//	cout << mmg_s_BWxCB_param->getRealValue("BW #Gamma") << endl;
+//	mmg_s_BWxCB_param->printValue(cout);
+//	it->Next()->Print();
+//	mmg_BW_width.Print();
+//	cout << "mmg_BW_width.GetName()= " << mmg_BW_width.GetName() << "\tmmg_BW_width.getVal()= " << mmg_BW_width.getVal() << endl;
+	RooRealVar* obj = new RooRealVar();
+	double position = 0.82;
+	gStyle->SetOptTitle(0);
+	position -= 0.04;
+	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
+	while(( (RooRealVar*)obj = it->Next()) != 0)
+	{
+		if( ! strcmp(((char*)obj->GetName()), "mmg_s") ) continue;
+//		cout << "obj->getTitle()= " << obj->getTitle() << endl; // char*
+//		cout << "obj->GetName()= " << obj->GetName() << endl; // char*
+//		cout << "obj->getVal()= " << obj->getVal() << endl; // Double_t
+//		cout << "obj->getError()= " << obj->getError() << endl; // Double_t
+//		cout << "obj->getUnit()= " << obj->getUnit() << endl; // Text_t
+//		cout << endl;
+		position -= 0.04;
+//		double plaf = (double)obj->getVal();
+//		cout << "plaf= " << plaf << endl;
+		std::ostringstream valueStream;
+		if( (double)obj->getError() != 0.0 )
+		{
+			valueStream << setprecision (3) << fixed << (double)obj->getVal() << " +- " << (double)obj->getError();
+		} else {
+			 valueStream << setprecision (3) << fixed << (double)obj->getVal();
+		}
+		string valueString = valueStream.str();
+		latexLabel.DrawLatex(0.20, position, Form("%s = %s %s", obj->GetTitle(), valueString.c_str(), (char*)obj->getUnit()));
+//		latexLabel.DrawLatex(0.18, position, Form("%s = %d \pm %d (%s)", obj->GetTitle(), (double)obj->getVal(), (double)obj->getError(), (char*)obj->getUnit()));
+	}
+//	cout << "it->Next()->GetName()= " << it->Next()->GetName() << "\tit->Next()->getVal()= " << it->Next()->getVal() << endl;
+
+	position -= 0.04;
+	std::ostringstream valueStream;
+	valueStream << setprecision (4) << fixed << (double)mmg_s_BWxCB_chi2_ndf;
+	string valueString = valueStream.str();
+	latexLabel.DrawLatex(0.20, position, Form("#chi^{2} / ndf = %s", valueString.c_str()));
+
+//	Data_subset[i]->Clear();
+
+	mmg_s_BWxCB_canvas->Print(Form("gif/mmg_s_BWxCB_%s.gif", name[i].c_str()));
+	mmg_s_BWxCB_canvas->Print(Form("eps/mmg_s_BWxCB_%s.eps", name[i].c_str()));
+	mmg_s_BWxCB_canvas->Print(Form("png/mmg_s_BWxCB_%s.png", name[i].c_str()));
+	mmg_s_BWxCB_canvas->Print(Form("C/mmg_s_BWxCB_%s.C", name[i].c_str()));
+	system(Form("convert eps/mmg_s_BWxCB_%s.eps pdf/mmg_s_BWxCB_%s.pdf", name[i].c_str(), name[i].c_str()));
+
 
 
 }
