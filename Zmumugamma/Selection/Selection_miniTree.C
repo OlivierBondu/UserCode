@@ -59,6 +59,43 @@ double DeltaR( double eta1, double phi1, double eta2, double phi2)
 	return sqrt(DeltaEta*DeltaEta + DeltaPhi*DeltaPhi);
 }
 
+void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* particule_trueE, float* particule_truePx, float* particule_truePy, float* particule_truePz, float* particule_trueEta, float* particule_truePhi, int particle_pdgId = 0)
+{
+  TRootMCParticle* mygenparticle;
+  int NbMCpartInCone=0;
+  double bestPtdiff=500.0;
+  int igpsl=-1;
+  for (int igp=0; igp<mcParticles->GetEntriesFast(); igp++) {
+    mygenparticle = (TRootMCParticle*) mcParticles->At(igp);
+    //cout<<endl<<"deltaR = "<<DeltaR(mygenparticle->Eta(), mygenparticle->Phi(), myparticle->Eta(), myparticle->Phi())<<endl;
+    //cout<<"mygenparticle->Mag() = "<<mygenparticle->Mag()<<endl;
+    if (DeltaR(mygenparticle->Eta(), mygenparticle->Phi(), myparticle->Eta(), myparticle->Phi())<0.3){
+      if ( (mygenparticle->status()==1) && ( (particle_pdgId==0)?true:((mygenparticle->type())==particle_pdgId) ) ){
+        //HistoMCpartStatus1InConeId->Fill(mygenparticle->type());
+        NbMCpartInCone++;
+        if (fabs( (mygenparticle->Pt()) - (myparticle->Pt()) )<bestPtdiff){
+          bestPtdiff=fabs(mygenparticle->Pt()-myparticle->Pt());
+          igpsl=igp;
+        }
+      }
+    }
+  }
+  if (igpsl!=-1){
+    mygenparticle = (TRootMCParticle*) mcParticles->At(igpsl);
+    *particule_trueE = mygenparticle->Energy();
+    *particule_truePx = mygenparticle->Px();
+    *particule_truePy = mygenparticle->Py();
+    *particule_truePz = mygenparticle->Pz();
+    *particule_truePhi = mygenparticle->Phi();
+    *particule_trueEta = mygenparticle->Eta();
+
+  }
+
+  return;
+}
+
+
+
 //int Selection_miniTree()
 int main(int argc, char *argv[])
 {
@@ -133,6 +170,7 @@ int main(int argc, char *argv[])
 
 	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_3_9_7_v2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
 	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_3_9_7_v2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
+
 
 //	inputEventTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
 //	inputRunTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
@@ -317,7 +355,7 @@ int main(int argc, char *argv[])
   string ListWantedHLTnames[1];
 	ListWantedHLTnames[0] = "HLT_Mu11";
 	
-	
+
 	// ____________________________________________
 	// Event information
 	// ____________________________________________
@@ -341,7 +379,7 @@ int main(int argc, char *argv[])
 	Int_t NbMuons;
 
 	Float_t Pt_allMuons, Eta_allMuons, Phi_allMuons, Charge_allMuons;
-// (M minus charge, P plus charge), (F far, N near), (H high, L low)
+// (M minus charge, P plus charge), (F far, N near), (L leading, S subleading)
 	Float_t MuonM_Pt, MuonP_Pt, MuonN_Pt, MuonF_Pt, MuonL_Pt, MuonS_Pt;
 	Float_t MuonM_Eta, MuonP_Eta, MuonN_Eta, MuonF_Eta, MuonL_Eta, MuonS_Eta;
 	Float_t MuonM_Phi, MuonP_Phi, MuonN_Phi, MuonF_Phi, MuonL_Phi, MuonS_Phi;
@@ -397,6 +435,22 @@ int main(int argc, char *argv[])
 	Float_t mmg_k_SC, mmg_ik_SC, mmg_s_SC, mmg_logk_SC, mmg_logik_SC, mmg_logs_SC;
 	Float_t mmg_k_SCraw, mmg_ik_SCraw, mmg_s_SCraw, mmg_logk_SCraw, mmg_logik_SCraw, mmg_logs_SCraw;
  
+	// ____________________________________________
+  // MC Truth
+  // ___________________________________________
+
+  Float_t Photon_MC_E, Photon_MC_Px, Photon_MC_Py, Photon_MC_Pz, Photon_MC_Phi, Photon_MC_Eta;
+  Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta;
+  Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta;
+  Float_t MuonN_MC_E, MuonN_MC_Px, MuonN_MC_Py, MuonN_MC_Pz, MuonN_MC_Phi, MuonN_MC_Eta;
+  Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta;
+  Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta;
+  Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta;
+
+	Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
+	Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
+	Float_t Mmumu_MMG_MC, Mmumugamma_MMG_MC, mmg_k_MMG_MC, mmg_ik_MMG_MC, mmg_s_MMG_MC, mmg_logk_MMG_MC, mmg_logik_MMG_MC, mmg_logs_MMG_MC;
+
 	// ____________________________________________
 	// preparing the tree
 	// ____________________________________________
@@ -765,6 +819,78 @@ int main(int argc, char *argv[])
   miniTree->Branch("mmg_logik_SCraw", &mmg_logik_SCraw, "mmg_logik_SCraw/F");
   miniTree->Branch("mmg_logs_SCraw", &mmg_logs_SCraw, "mmg_logs_SCraw/F");
 
+	// ____________________________________________
+  // MC Truth
+  // ___________________________________________
+
+	miniTree->Branch("Photon_MC_E", &Photon_MC_E, "Photon_MC_E/F");
+	miniTree->Branch("Photon_MC_Px", &Photon_MC_Px, "Photon_MC_Px/F");
+	miniTree->Branch("Photon_MC_Py", &Photon_MC_Py, "Photon_MC_Py/F");
+	miniTree->Branch("Photon_MC_Pz", &Photon_MC_Pz, "Photon_MC_Pz/F");
+	miniTree->Branch("Photon_MC_Phi", &Photon_MC_Phi, "Photon_MC_Phi/F");
+	miniTree->Branch("Photon_MC_Eta", &Photon_MC_Eta, "Photon_MC_Eta/F");
+	miniTree->Branch("MuonM_MC_E", &MuonM_MC_E, "MuonM_MC_E/F");
+	miniTree->Branch("MuonM_MC_Px", &MuonM_MC_Px, "MuonM_MC_Px/F");
+	miniTree->Branch("MuonM_MC_Py", &MuonM_MC_Py, "MuonM_MC_Py/F");
+	miniTree->Branch("MuonM_MC_Pz", &MuonM_MC_Pz, "MuonM_MC_Pz/F");
+	miniTree->Branch("MuonM_MC_Phi", &MuonM_MC_Phi, "MuonM_MC_Phi/F");
+	miniTree->Branch("MuonM_MC_Eta", &MuonM_MC_Eta, "MuonM_MC_Eta/F");
+	miniTree->Branch("MuonP_MC_E", &MuonP_MC_E, "MuonP_MC_E/F");
+	miniTree->Branch("MuonP_MC_Px", &MuonP_MC_Px, "MuonP_MC_Px/F");
+	miniTree->Branch("MuonP_MC_Py", &MuonP_MC_Py, "MuonP_MC_Py/F");
+	miniTree->Branch("MuonP_MC_Pz", &MuonP_MC_Pz, "MuonP_MC_Pz/F");
+	miniTree->Branch("MuonP_MC_Phi", &MuonP_MC_Phi, "MuonP_MC_Phi/F");
+	miniTree->Branch("MuonP_MC_Eta", &MuonP_MC_Eta, "MuonP_MC_Eta/F");
+	miniTree->Branch("MuonN_MC_E", &MuonN_MC_E, "MuonN_MC_E/F");
+	miniTree->Branch("MuonN_MC_Px", &MuonN_MC_Px, "MuonN_MC_Px/F");
+	miniTree->Branch("MuonN_MC_Py", &MuonN_MC_Py, "MuonN_MC_Py/F");
+	miniTree->Branch("MuonN_MC_Pz", &MuonN_MC_Pz, "MuonN_MC_Pz/F");
+	miniTree->Branch("MuonN_MC_Phi", &MuonN_MC_Phi, "MuonN_MC_Phi/F");
+	miniTree->Branch("MuonN_MC_Eta", &MuonN_MC_Eta, "MuonN_MC_Eta/F");
+	miniTree->Branch("MuonF_MC_E", &MuonF_MC_E, "MuonF_MC_E/F");
+	miniTree->Branch("MuonF_MC_Px", &MuonF_MC_Px, "MuonF_MC_Px/F");
+	miniTree->Branch("MuonF_MC_Py", &MuonF_MC_Py, "MuonF_MC_Py/F");
+	miniTree->Branch("MuonF_MC_Pz", &MuonF_MC_Pz, "MuonF_MC_Pz/F");
+	miniTree->Branch("MuonF_MC_Phi", &MuonF_MC_Phi, "MuonF_MC_Phi/F");
+	miniTree->Branch("MuonF_MC_Eta", &MuonF_MC_Eta, "MuonF_MC_Eta/F");
+	miniTree->Branch("MuonL_MC_E", &MuonL_MC_E, "MuonL_MC_E/F");
+	miniTree->Branch("MuonL_MC_Px", &MuonL_MC_Px, "MuonL_MC_Px/F");
+	miniTree->Branch("MuonL_MC_Py", &MuonL_MC_Py, "MuonL_MC_Py/F");
+	miniTree->Branch("MuonL_MC_Pz", &MuonL_MC_Pz, "MuonL_MC_Pz/F");
+	miniTree->Branch("MuonL_MC_Phi", &MuonL_MC_Phi, "MuonL_MC_Phi/F");
+	miniTree->Branch("MuonL_MC_Eta", &MuonL_MC_Eta, "MuonL_MC_Eta/F");
+	miniTree->Branch("MuonS_MC_E", &MuonS_MC_E, "MuonS_MC_E/F");
+	miniTree->Branch("MuonS_MC_Px", &MuonS_MC_Px, "MuonS_MC_Px/F");
+	miniTree->Branch("MuonS_MC_Py", &MuonS_MC_Py, "MuonS_MC_Py/F");
+	miniTree->Branch("MuonS_MC_Pz", &MuonS_MC_Pz, "MuonS_MC_Pz/F");
+	miniTree->Branch("MuonS_MC_Phi", &MuonS_MC_Phi, "MuonS_MC_Phi/F");
+	miniTree->Branch("MuonS_MC_Eta", &MuonS_MC_Eta, "MuonS_MC_Eta/F");
+
+	miniTree->Branch("Mmumu_Photon_MC", &Mmumu_Photon_MC, "Mmumu_Photon_MC/F");
+	miniTree->Branch("Mmumugamma_Photon_MC", &Mmumugamma_Photon_MC, "Mmumugamma_Photon_MC/F");
+	miniTree->Branch("mmg_k_Photon_MC", &mmg_k_Photon_MC, "mmg_k_Photon_MC/F");
+	miniTree->Branch("mmg_ik_Photon_MC", &mmg_ik_Photon_MC, "mmg_ik_Photon_MC/F");
+	miniTree->Branch("mmg_s_Photon_MC", &mmg_s_Photon_MC, "mmg_s_Photon_MC/F");
+	miniTree->Branch("mmg_logk_Photon_MC", &mmg_logk_Photon_MC, "mmg_logk_Photon_MC/F");
+	miniTree->Branch("mmg_logik_Photon_MC", &mmg_logik_Photon_MC, "mmg_logik_Photon_MC/F");
+	miniTree->Branch("mmg_logs_Photon_MC", &mmg_logs_Photon_MC, "mmg_logs_Photon_MC/F");
+	miniTree->Branch("Mmumu_Muons_MC", &Mmumu_Muons_MC, "Mmumu_Muons_MC/F");
+	miniTree->Branch("Mmumugamma_Muons_MC", &Mmumugamma_Muons_MC, "Mmumugamma_Muons_MC/F");
+	miniTree->Branch("mmg_k_Muons_MC", &mmg_k_Muons_MC, "mmg_k_Muons_MC/F");
+	miniTree->Branch("mmg_ik_Muons_MC", &mmg_ik_Muons_MC, "mmg_ik_Muons_MC/F");
+	miniTree->Branch("mmg_s_Muons_MC", &mmg_s_Muons_MC, "mmg_s_Muons_MC/F");
+	miniTree->Branch("mmg_logk_Muons_MC", &mmg_logk_Muons_MC, "mmg_logk_Muons_MC/F");
+	miniTree->Branch("mmg_logik_Muons_MC", &mmg_logik_Muons_MC, "mmg_logik_Muons_MC/F");
+	miniTree->Branch("mmg_logs_Muons_MC", &mmg_logs_Muons_MC, "mmg_logs_Muons_MC/F");
+	miniTree->Branch("Mmumu_MMG_MC", &Mmumu_MMG_MC, "Mmumu_MMG_MC/F");
+	miniTree->Branch("Mmumugamma_MMG_MC", &Mmumugamma_MMG_MC, "Mmumugamma_MMG_MC/F");
+	miniTree->Branch("mmg_k_MMG_MC", &mmg_k_MMG_MC, "mmg_k_MMG_MC/F");
+	miniTree->Branch("mmg_ik_MMG_MC", &mmg_ik_MMG_MC, "mmg_ik_MMG_MC/F");
+	miniTree->Branch("mmg_s_MMG_MC", &mmg_s_MMG_MC, "mmg_s_MMG_MC/F");
+	miniTree->Branch("mmg_logk_MMG_MC", &mmg_logk_MMG_MC, "mmg_logk_MMG_MC/F");
+	miniTree->Branch("mmg_logik_MMG_MC", &mmg_logik_MMG_MC, "mmg_logik_MMG_MC/F");
+	miniTree->Branch("mmg_logs_MMG_MC", &mmg_logs_MMG_MC, "mmg_logs_MMG_MC/F");
+
 	
 	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
@@ -908,7 +1034,20 @@ int main(int argc, char *argv[])
 		mmg_k_SC = mmg_ik_SC = mmg_s_SC = mmg_logk_SC = mmg_logik_SC = mmg_logs_SC = -99.0;
 		mmg_k_SCraw = mmg_ik_SCraw = mmg_s_SCraw = mmg_logk_SCraw = mmg_logik_SCraw = mmg_logs_SCraw = -99.0;
  
+		// ____________________________________________
+	  // MC Truth
+	  // ___________________________________________
+	  Photon_MC_E = Photon_MC_Px = Photon_MC_Py = Photon_MC_Pz = Photon_MC_Phi = Photon_MC_Eta = -99.0;
+	  MuonM_MC_E = MuonM_MC_Px = MuonM_MC_Py = MuonM_MC_Pz = MuonM_MC_Phi = MuonM_MC_Eta = -99.0;
+	  MuonP_MC_E = MuonP_MC_Px = MuonP_MC_Py = MuonP_MC_Pz = MuonP_MC_Phi = MuonP_MC_Eta = -99.0;
+	  MuonN_MC_E = MuonN_MC_Px = MuonN_MC_Py = MuonN_MC_Pz = MuonN_MC_Phi = MuonN_MC_Eta = -99.0;
+	  MuonF_MC_E = MuonF_MC_Px = MuonF_MC_Py = MuonF_MC_Pz = MuonF_MC_Phi = MuonF_MC_Eta = -99.0;
+	  MuonL_MC_E = MuonL_MC_Px = MuonL_MC_Py = MuonL_MC_Pz = MuonL_MC_Phi = MuonL_MC_Eta = -99.0;
+	  MuonS_MC_E = MuonS_MC_Px = MuonS_MC_Py = MuonS_MC_Pz = MuonS_MC_Phi = MuonS_MC_Eta = -99.0;
 
+		Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;
+		Mmumu_Muons_MC = Mmumugamma_Muons_MC = mmg_k_Muons_MC = mmg_ik_Muons_MC = mmg_s_Muons_MC = mmg_logk_Muons_MC = mmg_logik_Muons_MC = mmg_logs_Muons_MC = -99.0;
+		Mmumu_MMG_MC = Mmumugamma_MMG_MC = mmg_k_MMG_MC = mmg_ik_MMG_MC = mmg_s_MMG_MC = mmg_logk_MMG_MC = mmg_logik_MMG_MC = mmg_logs_MMG_MC = -99.0;
 
 		// ____________________________________________
 		// END OF INITIALIZATION
@@ -1827,6 +1966,71 @@ int main(int argc, char *argv[])
     deltaRPlus = DeltaR(etaPhoton, phiPhoton, plusMuon->Eta(), plusMuon->Phi());
     deltaRLeading = DeltaR(etaPhoton, phiPhoton, leadingMuon->Eta(), leadingMuon->Phi());
     deltaRSubleading = DeltaR(etaPhoton, phiPhoton, subleadingMuon->Eta(), subleadingMuon->Phi());
+
+		if( doMC )
+		{ // Compute Stuff, with MC truth information
+			doGenInfo( (TRootParticle*) myphoton, mcParticles, &Photon_MC_E, &Photon_MC_Px, &Photon_MC_Py, &Photon_MC_Pz, &Photon_MC_Phi, &Photon_MC_Eta, 22 );
+			doGenInfo( (TRootParticle*) minusMuon, mcParticles, &MuonM_MC_E, &MuonM_MC_Px, &MuonM_MC_Py, &MuonM_MC_Pz, &MuonM_MC_Phi, &MuonM_MC_Eta, 13 );
+			doGenInfo( (TRootParticle*) plusMuon, mcParticles, &MuonP_MC_E, &MuonP_MC_Px, &MuonP_MC_Py, &MuonP_MC_Pz, &MuonP_MC_Phi, &MuonP_MC_Eta, -13 );
+			doGenInfo( (TRootParticle*) nearMuon, mcParticles, &MuonN_MC_E, &MuonN_MC_Px, &MuonN_MC_Py, &MuonN_MC_Pz, &MuonN_MC_Phi, &MuonN_MC_Eta, (-1)*(nearMuon->charge())*13 );
+			doGenInfo( (TRootParticle*) farMuon, mcParticles, &MuonF_MC_E, &MuonF_MC_Px, &MuonF_MC_Py, &MuonF_MC_Pz, &MuonF_MC_Phi, &MuonF_MC_Eta, (-1)*(farMuon->charge())*13 );
+			doGenInfo( (TRootParticle*) leadingMuon, mcParticles, &MuonL_MC_E, &MuonL_MC_Px, &MuonL_MC_Py, &MuonL_MC_Pz, &MuonL_MC_Phi, &MuonL_MC_Eta, (-1)*(leadingMuon->charge())*13 );
+			doGenInfo( (TRootParticle*) subleadingMuon, mcParticles, &MuonS_MC_E, &MuonS_MC_Px, &MuonS_MC_Py, &MuonS_MC_Pz, &MuonS_MC_Phi, &MuonS_MC_Eta, (-1)*(subleadingMuon->charge())*13 );
+
+			TLorentzVector mumu_Photon_MC;
+			TLorentzVector mumugamma_Photon_MC;
+			TLorentzVector mumu_Muons_MC;
+			TLorentzVector mumugamma_Muons_MC;
+			TLorentzVector mumu_MMG_MC;
+			TLorentzVector mumugamma_MMG_MC;
+			
+			TLorentzVector *PhotonMC = new TLorentzVector( Photon_MC_Px, Photon_MC_Py, Photon_MC_Pz, Photon_MC_E);
+			TLorentzVector *MuonLMC = new TLorentzVector( MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_E);
+			TLorentzVector *MuonSMC = new TLorentzVector( MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_E);
+	
+			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
+			TLorentzVector *PhotonSC = new TLorentzVector( myphoton->Px(), myphoton->Py(), myphoton->Pz(), EScale*(myphoton->superCluster()->Mag()));
+			TLorentzVector *Photon5x5 = new TLorentzVector( myphoton->Px(), myphoton->Py(), myphoton->Pz(), EScale*(myphoton->e5x5()));
+			TLorentzVector *PhotonSC_raw = new TLorentzVector( myphoton->Px(), myphoton->Py(), myphoton->Pz(), EScale*(myphoton->superCluster()->rawEnergy()));
+
+			mumu_Photon_MC = (*leadingMuon) + (*subleadingMuon);
+			mumugamma_Photon_MC = (*leadingMuon) + (*subleadingMuon) + (*PhotonMC);
+			mumu_Muons_MC = (*MuonLMC) + (*MuonSMC);
+			mumugamma_Muons_MC = (*MuonLMC) + (*MuonSMC) + (*PhotonEScale);
+			mumu_MMG_MC = (*MuonLMC) + (*MuonSMC);
+			mumugamma_MMG_MC = (*MuonLMC) + (*MuonSMC) + (*PhotonMC);
+			Mmumu_Photon_MC = mumu_Photon_MC.M();
+			Mmumugamma_Photon_MC = mumugamma_Photon_MC.M();
+			Mmumu_Muons_MC = mumu_Muons_MC.M();
+			Mmumugamma_Muons_MC = mumugamma_Muons_MC.M();
+			Mmumu_MMG_MC = mumu_MMG_MC.M();
+			Mmumugamma_MMG_MC = mumugamma_MMG_MC.M();
+
+			mmg_k_Photon_MC = (double)(pow(91.1876,2) - pow(Mmumu_Photon_MC,2) ) / (double)(pow(Mmumugamma_Photon_MC,2) - pow(Mmumu_Photon_MC,2));
+			mmg_ik_Photon_MC = (double)(pow(Mmumugamma_Photon_MC,2) - pow(Mmumu_Photon_MC,2)) / (double)(pow(91.1876,2) - pow(Mmumu_Photon_MC,2) );
+			mmg_s_Photon_MC = mmg_ik_Photon_MC -1.0;
+			mmg_logk_Photon_MC = log(mmg_k_Photon_MC);
+			mmg_logik_Photon_MC = log(mmg_ik_Photon_MC);
+			mmg_logs_Photon_MC = log(mmg_s_Photon_MC);
+
+			mmg_k_Muons_MC = (double)(pow(91.1876,2) - pow(Mmumu_Muons_MC,2) ) / (double)(pow(Mmumugamma_Muons_MC,2) - pow(Mmumu_Muons_MC,2));
+			mmg_ik_Muons_MC = (double)(pow(Mmumugamma_Muons_MC,2) - pow(Mmumu_Muons_MC,2)) / (double)(pow(91.1876,2) - pow(Mmumu_Muons_MC,2) );
+			mmg_s_Muons_MC = mmg_ik_Muons_MC -1.0;
+			mmg_logk_Muons_MC = log(mmg_k_Muons_MC);
+			mmg_logik_Muons_MC = log(mmg_ik_Muons_MC);
+			mmg_logs_Muons_MC = log(mmg_s_Muons_MC);
+
+			mmg_k_MMG_MC = (double)(pow(91.1876,2) - pow(Mmumu_MMG_MC,2) ) / (double)(pow(Mmumugamma_MMG_MC,2) - pow(Mmumu_MMG_MC,2));
+			mmg_ik_MMG_MC = (double)(pow(Mmumugamma_MMG_MC,2) - pow(Mmumu_MMG_MC,2)) / (double)(pow(91.1876,2) - pow(Mmumu_MMG_MC,2) );
+			mmg_s_MMG_MC = mmg_ik_MMG_MC -1.0;
+			mmg_logk_MMG_MC = log(mmg_k_MMG_MC);
+			mmg_logik_MMG_MC = log(mmg_ik_MMG_MC);
+			mmg_logs_MMG_MC = log(mmg_s_MMG_MC);
+
+/*			Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;
+			Mmumu_Muons_MC = Mmumugamma_Muons_MC = mmg_k_Muons_MC = mmg_ik_Muons_MC = mmg_s_Muons_MC = mmg_logk_Muons_MC = mmg_logik_Muons_MC = mmg_logs_Muons_MC = -99.0;
+			Mmumu_MMG_MC = Mmumugamma_MMG_MC = mmg_k_MMG_MC = mmg_ik_MMG_MC = mmg_s_MMG_MC = mmg_logk_MMG_MC = mmg_logik_MMG_MC = mmg_logs_MMG_MC = -99.0;*/
+		}
 
 
 		myphoton->Clear();
