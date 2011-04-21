@@ -363,7 +363,7 @@ int main(int argc, char *argv[])
 	Int_t isSignalApplied, isStewApplied, isZJetsApplied;
 
 	Int_t isBeforeAllCuts, isAfterCutPthatFilter, isAfterCutZJETVETO;
-	Int_t isLooseMMG, isTightMMG, isAfterCut1c, isAfterCut1d, isAfterCut1e;
+	Int_t isLooseMMG, isTightMMG, isMM, isAfterCut1d, isAfterCut1e;
 	Int_t isAfterCut2a, isAfterCut2b, isAfterCut2c;
 	Int_t isAfterCut3, isAfterCut4, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
 	Int_t isSelected;
@@ -429,6 +429,7 @@ int main(int argc, char *argv[])
 	// ____________________________________________
 	
 	Float_t Mmumu, Mmumugamma, Mmumugamma_5x5, Mmumugamma_SC, Mmumugamma_SCraw;
+	Float_t Ptmumu;
 	Float_t deltaRNear, deltaRFar, deltaRMinus, deltaRPlus, deltaRLeading, deltaRSubleading;
 	Float_t mmg_k, mmg_ik, mmg_s, mmg_logk, mmg_logik, mmg_logs;
 	Float_t mmg_k_5x5, mmg_ik_5x5, mmg_s_5x5, mmg_logk_5x5, mmg_logik_5x5, mmg_logs_5x5;
@@ -479,7 +480,7 @@ int main(int argc, char *argv[])
 
 	miniTree->Branch("isLooseMMG", &isLooseMMG, "isLooseMMG/I");
 	miniTree->Branch("isTightMMG", &isTightMMG, "isTightMMG/I");
-	miniTree->Branch("isAfterCut1c", &isAfterCut1c, "isAfterCut1c/I");
+	miniTree->Branch("isMM", &isMM, "isMM/I");
 	miniTree->Branch("isAfterCut1d", &isAfterCut1d, "isAfterCut1d/I");
 	miniTree->Branch("isAfterCut1e", &isAfterCut1e, "isAfterCut1e/I");
 
@@ -514,7 +515,7 @@ int main(int argc, char *argv[])
 
 	miniTree_allmuons->Branch("isLooseMMG", &isLooseMMG, "isLooseMMG/I");
 	miniTree_allmuons->Branch("isTightMMG", &isTightMMG, "isTightMMG/I");
-	miniTree_allmuons->Branch("isAfterCut1c", &isAfterCut1c, "isAfterCut1c/I");
+	miniTree_allmuons->Branch("isMM", &isMM, "isMM/I");
 	miniTree_allmuons->Branch("isAfterCut1d", &isAfterCut1d, "isAfterCut1d/I");
 	miniTree_allmuons->Branch("isAfterCut1e", &isAfterCut1e, "isAfterCut1e/I");
 
@@ -548,7 +549,7 @@ int main(int argc, char *argv[])
 
 	miniTree_allphotons->Branch("isLooseMMG", &isLooseMMG, "isLooseMMG/I");
 	miniTree_allphotons->Branch("isTightMMG", &isTightMMG, "isTightMMG/I");
-	miniTree_allphotons->Branch("isAfterCut1c", &isAfterCut1c, "isAfterCut1c/I");
+	miniTree_allphotons->Branch("isMM", &isMM, "isMM/I");
 	miniTree_allphotons->Branch("isAfterCut1d", &isAfterCut1d, "isAfterCut1d/I");
 	miniTree_allphotons->Branch("isAfterCut1e", &isAfterCut1e, "isAfterCut1e/I");
 
@@ -784,6 +785,9 @@ int main(int argc, char *argv[])
 	miniTree->Branch("Mmumugamma_SC", &Mmumugamma_SC, "Mmumugamma_SC/F");
 	miniTree->Branch("Mmumugamma_SCraw", &Mmumugamma_SCraw, "Mmumugamma_SCraw/F");
 
+	miniTree->Branch("Ptmumu", &Ptmumu, "Ptmumu/F");
+	miniTree_allmuons->Branch("Ptmumu", &Ptmumu, "Ptmumu/F");
+
 	miniTree->Branch("deltaRNear", &deltaRNear, "deltaRNear/F");
 	miniTree->Branch("deltaRFar", &deltaRFar, "deltaRFar/F");
 	miniTree->Branch("deltaRPlus", &deltaRPlus, "deltaRPlus/F");
@@ -973,7 +977,7 @@ int main(int argc, char *argv[])
 		isStewApplied = stew;
 		isZJetsApplied = zjet_veto;
 		isAfterCutPthatFilter = isAfterCutZJETVETO = 0;
-		isLooseMMG = isTightMMG = isAfterCut1c = isAfterCut1d = isAfterCut1e = 0;
+		isLooseMMG = isTightMMG = isMM = isAfterCut1d = isAfterCut1e = 0;
 		isAfterCut2a = isAfterCut2b = isAfterCut2c = 0;
 		isAfterCut3 = isAfterCut4 = isAfterCut5 = isAfterCut6 = isAfterCut7 = isAfterCut8 = isAfterCut9 = isAfterCut10 = 0;
 		isSelected = 0;
@@ -1014,12 +1018,12 @@ int main(int argc, char *argv[])
 		Photon_hasPixelSeed = Photon_isAlsoElectron = Photon_Nclusters = Photon_nBasicClusters = Photon_nXtals = -99;
 		Photon_isTightPhoton = Photon_isLoosePhoton = -99;
 		Photon_convNTracks = -99;
-		Photon_E = Photon_Et = Photon_E2x2 = Photon_E3x3 = Photon_E5x5 = Photon_Emax = Photon_E2nd = -99;
-		Photon_r19 = Photon_r9 = Photon_cross = -99;
-		Photon_caloConeSize = Photon_PreshEnergy = Photon_HoE = Photon_sigmaEtaEta = Photon_sigmaIetaIeta = Photon_covEtaEta = Photon_covPhiPhi = Photon_covEtaPhi = Photon_etaWidth = Photon_phiWidth = -99;
-		Photon_dR03isoEcalRecHit = Photon_dR03isoHcalRecHit = Photon_dR03isoSolidTrkCone = Photon_dR03isoHollowTrkCone = Photon_dR03isoNTracksSolidCone = Photon_dR03isoNTracksHollowCone = -99;
-		Photon_dR04isoEcalRecHit = Photon_dR04isoHcalRecHit = Photon_dR04isoSolidTrkCone = Photon_dR04isoHollowTrkCone = Photon_dR04isoNTracksSolidCone = Photon_dR04isoNTracksHollowCone = -99;
-		Photon_seedTime = Photon_seedFlag = -99;
+		Photon_E = Photon_Et = Photon_E2x2 = Photon_E3x3 = Photon_E5x5 = Photon_Emax = Photon_E2nd = -99.0;
+		Photon_r19 = Photon_r9 = Photon_cross = -99.0;
+		Photon_caloConeSize = Photon_PreshEnergy = Photon_HoE = Photon_sigmaEtaEta = Photon_sigmaIetaIeta = Photon_covEtaEta = Photon_covPhiPhi = Photon_covEtaPhi = Photon_etaWidth = Photon_phiWidth = -99.0;
+		Photon_dR03isoEcalRecHit = Photon_dR03isoHcalRecHit = Photon_dR03isoSolidTrkCone = Photon_dR03isoHollowTrkCone = Photon_dR03isoNTracksSolidCone = Photon_dR03isoNTracksHollowCone = -99.0;
+		Photon_dR04isoEcalRecHit = Photon_dR04isoHcalRecHit = Photon_dR04isoSolidTrkCone = Photon_dR04isoHollowTrkCone = Photon_dR04isoNTracksSolidCone = Photon_dR04isoNTracksHollowCone = -99.0;
+		Photon_seedTime = Photon_seedFlag = -99.0;
 		Photon_seedPosition1 = Photon_seedPosition2 = -99;
 		Photon_SC_Eta = Photon_SC_Phi = Photon_SC_brem = -99.0;
 		Photon_SC_E = Photon_SC_Et = Photon_SC_rawE = Photon_SC_rawEt = -99.0;
@@ -1027,8 +1031,9 @@ int main(int argc, char *argv[])
 		// ____________________________________________
 		// mugamma / mumu / mumugamma information
 		// ____________________________________________
-		Mmumu = Mmumugamma = Mmumugamma_5x5 = Mmumugamma_SC = Mmumugamma_SCraw = -99;
-		deltaRNear = deltaRFar = deltaRPlus = deltaRMinus = deltaRLeading = deltaRSubleading = -99;
+		Mmumu = Mmumugamma = Mmumugamma_5x5 = Mmumugamma_SC = Mmumugamma_SCraw = -99.0;
+		Ptmumu = -99.0;
+		deltaRNear = deltaRFar = deltaRPlus = deltaRMinus = deltaRLeading = deltaRSubleading = -99.0;
 		mmg_k = mmg_ik = mmg_s = mmg_logk = mmg_logik = mmg_logs = -99.0;
 		mmg_k_5x5 = mmg_ik_5x5 = mmg_s_5x5 = mmg_logk_5x5 = mmg_logik_5x5 = mmg_logs_5x5 = -99.0;
 		mmg_k_SC = mmg_ik_SC = mmg_s_SC = mmg_logk_SC = mmg_logik_SC = mmg_logs_SC = -99.0;
@@ -1353,6 +1358,22 @@ int main(int argc, char *argv[])
 		TOTALnbDimuonsAfterID[2] += numberOfDimuons[2];
 		TOTALnbEventsAfterDimuonID[2] += 1;
 
+		isMM = 1;
+		for(int idimuon = 0 ; idimuon < numberOfDimuons[2]; idimuon++)
+		{
+      TRootMuon* mymuon1;
+      TRootMuon* mymuon2;
+      mymuon1 = (TRootMuon*) muons->At( IDofMuons[2][idimuon].first );
+      mymuon2 = (TRootMuon*) muons->At( IDofMuons[2][idimuon].second );
+			
+	    TLorentzVector mumu;
+			mumu = (*mymuon1) + (*mymuon2);
+			Ptmumu = mumu.Pt();
+	    mumu.Clear();
+			mymuon1->Clear();
+			mymuon2->Clear();
+			miniTree_allmuons->Fill();
+		}
 
 
 		if(verbosity>1) cout << "cleaning photon collection" << endl;
@@ -1795,6 +1816,7 @@ int main(int argc, char *argv[])
 	
 	    TLorentzVector mumu;
 	    mumu = (*leadingMuon) + (*subleadingMuon);
+			Ptmumu = mumu.Pt();
 	    double mumuInvMass = mumu.M();
 	    cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
 	    mumu.Clear();
@@ -2402,8 +2424,6 @@ int main(int argc, char *argv[])
 
 
 
-		isAfterCut1c = 1;
-		nAfterCut1c++;
 
 		isAfterCut1d = 1;
 		nAfterCut1d++;
