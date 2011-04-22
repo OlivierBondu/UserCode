@@ -2,7 +2,7 @@
 # script to relink data processed elsewhere in this directory
 # Written by Olivier Bondu (July 2010)
 
-MCrelease="CMSSW_3_9_7_v2"
+MCrelease="CMSSW_4_1_2"
 syntax="Syntax ${0} {sample} ({release})"
 
 if [[ -z ${1} ]]
