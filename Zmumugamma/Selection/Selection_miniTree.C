@@ -443,15 +443,14 @@ int main(int argc, char *argv[])
 	// mugamma / mumu / mumugamma information
 	// ____________________________________________
 	
-	Float_t Mmumu, Mmumugamma, Mmumugamma_5x5, Mmumugamma_SC, Mmumugamma_SCraw;
+	Float_t Mmumu, Mmumugamma, Mmumugamma_5x5, Mmumugamma_SC, Mmumugamma_SCraw, Mmumugamma_SCraw_fEta;
 	Float_t Ptmumu;
 	Float_t deltaRNear, deltaRFar, deltaRMinus, deltaRPlus, deltaRLeading, deltaRSubleading;
 	Float_t mmg_k, mmg_ik, mmg_s, mmg_logk, mmg_logik, mmg_logs;
 	Float_t mmg_k_5x5, mmg_ik_5x5, mmg_s_5x5, mmg_logk_5x5, mmg_logik_5x5, mmg_logs_5x5;
 	Float_t mmg_k_SC, mmg_ik_SC, mmg_s_SC, mmg_logk_SC, mmg_logik_SC, mmg_logs_SC;
 	Float_t mmg_k_SCraw, mmg_ik_SCraw, mmg_s_SCraw, mmg_logk_SCraw, mmg_logik_SCraw, mmg_logs_SCraw;
-	Float_t Mmumugamma_SCraw_True, Mmumugamma_SCraw_True_fEta;
-	Float_t mmg_ik_SCraw_True, mmg_ik_SCraw_True_fEta;
+	Float_t mmg_k_SCraw_fEta, mmg_ik_SCraw_fEta, mmg_s_SCraw_fEta, mmg_logk_SCraw_fEta, mmg_logik_SCraw_fEta, mmg_logs_SCraw_fEta;
  
 	// ____________________________________________
   // MC Truth
@@ -801,6 +800,7 @@ int main(int argc, char *argv[])
 	miniTree->Branch("Mmumugamma_5x5", &Mmumugamma_5x5, "Mmumugamma_5x5/F");
 	miniTree->Branch("Mmumugamma_SC", &Mmumugamma_SC, "Mmumugamma_SC/F");
 	miniTree->Branch("Mmumugamma_SCraw", &Mmumugamma_SCraw, "Mmumugamma_SCraw/F");
+	miniTree->Branch("Mmumugamma_SCraw_fEta", &Mmumugamma_SCraw_fEta, "Mmumugamma_SCraw_fEta/F");
 
 	miniTree->Branch("Ptmumu", &Ptmumu, "Ptmumu/F");
 	miniTree_allmuons->Branch("Ptmumu", &Ptmumu, "Ptmumu/F");
@@ -839,11 +839,14 @@ int main(int argc, char *argv[])
   miniTree->Branch("mmg_logk_SCraw", &mmg_logk_SCraw, "mmg_logk_SCraw/F");
   miniTree->Branch("mmg_logik_SCraw", &mmg_logik_SCraw, "mmg_logik_SCraw/F");
   miniTree->Branch("mmg_logs_SCraw", &mmg_logs_SCraw, "mmg_logs_SCraw/F");
+
+	miniTree->Branch("mmg_k_SCraw_fEta", &mmg_k_SCraw_fEta, "mmg_k_SCraw_fEta/F");
+  miniTree->Branch("mmg_ik_SCraw_fEta", &mmg_ik_SCraw_fEta, "mmg_ik_SCraw_fEta/F");
+  miniTree->Branch("mmg_s_SCraw_fEta", &mmg_s_SCraw_fEta, "mmg_s_SCraw_fEta/F");
+  miniTree->Branch("mmg_logk_SCraw_fEta", &mmg_logk_SCraw_fEta, "mmg_logk_SCraw_fEta/F");
+  miniTree->Branch("mmg_logik_SCraw_fEta", &mmg_logik_SCraw_fEta, "mmg_logik_SCraw_fEta/F");
+  miniTree->Branch("mmg_logs_SCraw_fEta", &mmg_logs_SCraw_fEta, "mmg_logs_SCraw_fEta/F");
   
-  miniTree->Branch("Mmumugamma_SCraw_True", &Mmumugamma_SCraw_True, "Mmumugamma_SCraw_True/F");
-  miniTree->Branch("Mmumugamma_SCraw_True_fEta", &Mmumugamma_SCraw_True_fEta, "Mmumugamma_SCraw_True_fEta/F");
-  miniTree->Branch("mmg_ik_SCraw_True", &mmg_ik_SCraw_True, "mmg_ik_SCraw_True/F");
-  miniTree->Branch("mmg_ik_SCraw_True_fEta", &mmg_ik_SCraw_True_fEta, "mmg_ik_SCraw_True_fEta/F");
 	// ____________________________________________
   // MC Truth
   // ___________________________________________
@@ -1052,13 +1055,14 @@ int main(int argc, char *argv[])
 		// ____________________________________________
 		// mugamma / mumu / mumugamma information
 		// ____________________________________________
-		Mmumu = Mmumugamma = Mmumugamma_5x5 = Mmumugamma_SC = Mmumugamma_SCraw = Mmumugamma_SCraw_True = Mmumugamma_SCraw_True_fEta = -99.0;
+		Mmumu = Mmumugamma = Mmumugamma_5x5 = Mmumugamma_SC = Mmumugamma_SCraw = Mmumugamma_SCraw_fEta = -99.0;
 		Ptmumu = -99.0;
 		deltaRNear = deltaRFar = deltaRPlus = deltaRMinus = deltaRLeading = deltaRSubleading = -99.0;
 		mmg_k = mmg_ik = mmg_s = mmg_logk = mmg_logik = mmg_logs = -99.0;
 		mmg_k_5x5 = mmg_ik_5x5 = mmg_s_5x5 = mmg_logk_5x5 = mmg_logik_5x5 = mmg_logs_5x5 = -99.0;
 		mmg_k_SC = mmg_ik_SC = mmg_s_SC = mmg_logk_SC = mmg_logik_SC = mmg_logs_SC = -99.0;
-		mmg_k_SCraw = mmg_ik_SCraw = mmg_ik_SCraw_True = mmg_ik_SCraw_True_fEta = mmg_s_SCraw = mmg_logk_SCraw = mmg_logik_SCraw = mmg_logs_SCraw = -99.0;
+		mmg_k_SCraw = mmg_ik_SCraw = mmg_s_SCraw = mmg_logk_SCraw = mmg_logik_SCraw = mmg_logs_SCraw = -99.0;
+		mmg_k_SCraw_fEta = mmg_ik_SCraw_fEta = mmg_s_SCraw_fEta = mmg_logk_SCraw_fEta = mmg_logik_SCraw_fEta = mmg_logs_SCraw_fEta = -99.0;
  
 		// ____________________________________________
 	  // MC Truth
@@ -1846,49 +1850,58 @@ int main(int argc, char *argv[])
     // ********************************************************************
     // *** Compute mumugamma invariant mass ***
     // ********************************************************************
+		// Re-compute modified photon momentum so as to keep m_photon = 0
+		Double_t Px_SC, Px_5x5, Px_SCraw, Px_SCraw_fEta;
+		Double_t Py_SC, Py_5x5, Py_SCraw, Py_SCraw_fEta;
+		Double_t Pz_SC, Pz_5x5, Pz_SCraw, Pz_SCraw_fEta;
+		Px_SC = Px_5x5 = Px_SCraw = Px_SCraw_fEta = 0.0;
+		Py_SC = Py_5x5 = Py_SCraw = Py_SCraw_fEta = 0.0;
+		Pz_SC = Pz_5x5 = Pz_SCraw = Pz_SCraw_fEta = 0.0;
+
+		Px_SC = (myphoton->Px()) / (myphoton->Energy())	* (myphoton->superCluster()->Mag());
+		Py_SC = (myphoton->Py()) / (myphoton->Energy())	* (myphoton->superCluster()->Mag());
+		Pz_SC = (myphoton->Pz()) / (myphoton->Energy())	* (myphoton->superCluster()->Mag());
+
+		Px_5x5 = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->e5x5());
+		Py_5x5 = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->e5x5());
+		Pz_5x5 = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->e5x5());
+
+		Px_SCraw = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
+		Py_SCraw = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
+		Pz_SCraw = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
+
+		Px_SCraw_fEta = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
+		Py_SCraw_fEta = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
+		Pz_SCraw_fEta = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
+
     TLorentzVector mumugamma;
     TLorentzVector mumuSC;
     TLorentzVector mumu5x5;
     TLorentzVector mumuSC_raw;
-    TLorentzVector mumuSC_raw_True;
-    TLorentzVector mumuSC_raw_True_fEta;
+    TLorentzVector mumuSC_raw_fEta;
+
     TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
-		TLorentzVector *PhotonSC = new TLorentzVector( myphoton->Px(), myphoton->Py(), myphoton->Pz(), EScale*(myphoton->superCluster()->Mag()));
-    TLorentzVector *Photon5x5 = new TLorentzVector( myphoton->Px(), myphoton->Py(), myphoton->Pz(), EScale*(myphoton->e5x5()));
-    TLorentzVector *PhotonSC_raw = new TLorentzVector( myphoton->Px(), myphoton->Py(), myphoton->Pz(), EScale*(myphoton->superCluster()->rawEnergy()));
-
-//*****"True" Momentum*****
-        Double_t PxTrue = 0;
-        Double_t PyTrue = 0;
-        Double_t PzTrue = 0;
-        PxTrue = ( myphoton->Px()/myphoton->Energy() ) * myphoton->superCluster()->rawEnergy();
-        PyTrue = ( myphoton->Py()/myphoton->Energy() ) * myphoton->superCluster()->rawEnergy();
-        PzTrue = ( myphoton->Pz()/myphoton->Energy() ) * myphoton->superCluster()->rawEnergy();
-
-        TLorentzVector *PhotonSC_raw_True = new TLorentzVector( PxTrue, PyTrue, PzTrue, EScale*(myphoton->superCluster()->rawEnergy()));
-        TLorentzVector *PhotonSC_raw_True_fEta = new TLorentzVector( PxTrue * fEta(Photon_SC_Eta), PyTrue * fEta(Photon_SC_Eta), PzTrue * fEta(Photon_SC_Eta), EScale*(myphoton->superCluster()->rawEnergy()) * fEta(Photon_SC_Eta));
-
-
+		TLorentzVector *PhotonSC = new TLorentzVector( EScale*Px_SC, EScale*Py_SC, EScale*Pz_SC, EScale*(myphoton->superCluster()->Mag()) );
+    TLorentzVector *Photon5x5 = new TLorentzVector(EScale*Px_5x5 , EScale*Py_5x5, EScale*Pz_5x5, EScale*(myphoton->e5x5()));
+    TLorentzVector *PhotonSC_raw = new TLorentzVector(EScale*Px_SCraw , EScale*Py_SCraw, EScale*Pz_SCraw, EScale*(myphoton->superCluster()->rawEnergy()));
+    TLorentzVector *PhotonSC_raw_fEta = new TLorentzVector(EScale*Px_SCraw_fEta , EScale*Py_SCraw_fEta, EScale*Pz_SCraw_fEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta)));
 
 //    mumugamma = (*leadingMuon) + (*subleadingMuon) + (*myphoton);
 		mumugamma = (*leadingMuon) + (*subleadingMuon) + (*PhotonEScale);
     mumuSC = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC);
     mumu5x5 = (*leadingMuon) + (*subleadingMuon) + (*Photon5x5);
     mumuSC_raw = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw);
-    mumuSC_raw_True = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw_True);
-    mumuSC_raw_True_fEta = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw_True_fEta);
+    mumuSC_raw_fEta = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw_fEta);
     double mumugammaInvMass = mumugamma.M();
     double mumuSCInvMass = mumuSC.M();
     double mumu5x5InvMass = mumu5x5.M();
     double mumuSC_rawInvMass = mumuSC_raw.M();
-    double mumuSC_rawInvMass_True = mumuSC_raw_True.M();
-    double mumuSC_rawInvMass_True_fEta = mumuSC_raw_True_fEta.M();
+    double mumuSC_rawInvMass_fEta = mumuSC_raw_fEta.M();
     Mmumugamma = mumugammaInvMass;
     Mmumugamma_SC = mumuSCInvMass;
     Mmumugamma_5x5 = mumu5x5InvMass;
     Mmumugamma_SCraw = mumuSC_rawInvMass;
-    Mmumugamma_SCraw_True = mumuSC_rawInvMass_True;
-    Mmumugamma_SCraw_True_fEta = mumuSC_rawInvMass_True_fEta;
+    Mmumugamma_SCraw_fEta = mumuSC_rawInvMass_fEta;
     mumugamma.Clear();
     mumuSC.Clear();
     mumu5x5.Clear();
@@ -1897,6 +1910,7 @@ int main(int argc, char *argv[])
     PhotonSC->Clear();
     Photon5x5->Clear();
     PhotonSC_raw->Clear();
+		PhotonSC_raw_fEta->Clear();
 
     mmg_k = (double)(pow(91.1876,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
     mmg_ik = (double)(pow(Mmumugamma,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
@@ -1921,12 +1935,17 @@ int main(int argc, char *argv[])
 
     mmg_k_SCraw = (double)(pow(91.1876,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma_SCraw,2) - pow(Mmumu,2));
     mmg_ik_SCraw = (double)(pow(Mmumugamma_SCraw,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
-    mmg_ik_SCraw_True = (double)(pow(Mmumugamma_SCraw_True,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
-    mmg_ik_SCraw_True_fEta = (double)(pow(Mmumugamma_SCraw_True_fEta,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
     mmg_s_SCraw = mmg_ik_SCraw - 1.0;
     mmg_logk_SCraw = log(mmg_k_SCraw);
     mmg_logik_SCraw = log(mmg_ik_SCraw);
     mmg_logs_SCraw = log(mmg_s_SCraw);
+
+    mmg_k_SCraw_fEta = (double)(pow(91.1876,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma_SCraw_fEta,2) - pow(Mmumu,2));
+    mmg_ik_SCraw_fEta = (double)(pow(Mmumugamma_SCraw_fEta,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
+    mmg_s_SCraw_fEta = mmg_ik_SCraw_fEta - 1.0;
+    mmg_logk_SCraw_fEta = log(mmg_k_SCraw_fEta);
+    mmg_logik_SCraw_fEta = log(mmg_ik_SCraw_fEta);
+    mmg_logs_SCraw_fEta = log(mmg_s_SCraw_fEta);
 
 
     cerr << "\t\tINFO: mumugamma invariant mass : Mmumugamma = " << mumugammaInvMass << endl;
