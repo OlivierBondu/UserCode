@@ -34,25 +34,25 @@
 
 #include "DrawDataMC.h"
 
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
-#include "/sps/cms/obondu/CMSSW_3_9_7_v2/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootBardak.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootBeamSpot.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootCluster.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootEcalRecHit.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootElectron.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootEvent.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootJet.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootMCParticle.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootMCPhoton.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootMET.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootMuon.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootParticle.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootPhoton.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootRun.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootSignalEvent.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootSuperCluster.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootTopTop.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootTrack.h"
+#include "/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/interface/TRootVertex.h"
 
 #include "CMSStyle.C"
 
@@ -62,7 +62,7 @@ double fonction_affine(double *x, double *par){
 	return x[0]*par[0] - x[1]*par[1];
 }
 
-void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *nonFSR_DYToMuMu_miniTree, TTree *TTJets_miniTree, TTree *WJetsToLNu_miniTree, string var, string pic, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1, bool doFit){
+void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *nonFSR_DYToMuMu_miniTree, string var, string pic, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1, bool doFit){
 
 	CMSstyle();
 	gStyle->SetOptTitle(0);
@@ -90,6 +90,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   TH1F *Histo_nonFSR_DYToMuMu = (TH1F*)gDirectory->Get("Histo_nonFSR_DYToMuMu_temp");
   c1->Clear();
 
+/*
   // Get Histo_TTJets from eventTree
   TH1F *Histo_TTJets_temp = new TH1F();
   string variable_TTJets = var + ">>Histo_TTJets_temp" + limits;
@@ -103,7 +104,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   WJetsToLNu_miniTree->Draw(variable_WJetsToLNu.c_str(), cut.c_str());
   TH1F *Histo_WJetsToLNu = (TH1F*)gDirectory->Get("Histo_WJetsToLNu_temp");
   c1->Clear();
-/*
+*//*
   // Get Histo_QCDMu from eventTree
   TH1F *Histo_QCDMu_temp = new TH1F();
   string variable_QCDMu = var + ">>Histo_QCDMu_temp" + limits;
@@ -125,24 +126,30 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   //Histo_Data->Scale((double)((double)1.0/(double)a));
   //Histo_MC->Scale((double)((double)1.0/(double)b));
   // // Normalize MC to Data number of entries
-  double integratedLuminosity = 35.91246801;
+  double integratedLuminosity = 9.72;
 
   double XSectionFSR_DYToMuMu = 1614.0;
   double XSectionnonFSR_DYToMuMu = 1614.0;
+/*
   double XSectionTTJets = 121.0;
 	double XSectionWJetsToLNu = 24640.0;
+*/
 //	double XSectionQCDMu = 84679.3;
 
-  double InitialNumberFSR_DYToMuMu = 1998931.0;
-  double InitialNumbernonFSR_DYToMuMu = 1998931.0;
+  double InitialNumberFSR_DYToMuMu = 1995236.0;
+  double InitialNumbernonFSR_DYToMuMu = 1995236.0;
+/*
   double InitialNumberTTJets = 1165716.0;
 	double InitialNumberWJetsToLNu = 15168266.0;
+*/
 //	double InitialNumberQCDMu = 28979866.0;
 
   Histo_FSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionFSR_DYToMuMu) / (double)(InitialNumberFSR_DYToMuMu)) * (double)integratedLuminosity));
   Histo_nonFSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionnonFSR_DYToMuMu) / (double)(InitialNumbernonFSR_DYToMuMu)) * (double)integratedLuminosity));
+/*
   Histo_TTJets->Scale((double)(  (double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity));
   Histo_WJetsToLNu->Scale((double)(  (double)((double)(XSectionWJetsToLNu) / (double)(InitialNumberWJetsToLNu)) * (double)integratedLuminosity));
+*/
 //  Histo_QCDMu->Scale((double)(  (double)((double)(XSectionQCDMu) / (double)(InitialNumberQCDMu)) * (double)integratedLuminosity));
   // Adding histograms for binned samples
 //  Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
@@ -152,8 +159,8 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
 //  Histo_QCD_Pt15->Add(Histo_QCD_Pt470);
 
 //	Histo_WJetsToLNu->Add(Histo_QCDMu);
-	Histo_TTJets->Add(Histo_WJetsToLNu);
-	Histo_nonFSR_DYToMuMu->Add(Histo_TTJets);
+//	Histo_TTJets->Add(Histo_WJetsToLNu);
+//	Histo_nonFSR_DYToMuMu->Add(Histo_TTJets);
 	Histo_FSR_DYToMuMu->Add(Histo_nonFSR_DYToMuMu);
 
 	// Total MC histo for comupting min/max
@@ -180,8 +187,8 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   double dataMin = YMax;
   double nonFSR_DYToMuMuMin = YMax;
   double FSR_DYToMuMuMin = YMax;
-  double TTJetsMin = YMax;
-  double WJetsToLNuMin = YMax;
+//  double TTJetsMin = YMax;
+//  double WJetsToLNuMin = YMax;
 //  double QCDMuMin = YMax;
 
 	double allMCMin = YMax;
@@ -214,6 +221,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
     }
   }
   YMin = min(YMin, nonFSR_DYToMuMuMin);
+/*
   for( int ibin=1 ; ibin<Histo_TTJets->GetNbinsX() ; ibin++ ){
     if( ((Histo_TTJets->GetBinContent(ibin))!=0) && ((Histo_TTJets->GetBinContent(ibin))<TTJetsMin) ){
       TTJetsMin = Histo_TTJets->GetBinContent(ibin);
@@ -226,6 +234,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
     }
   }
   YMin = min(YMin, WJetsToLNuMin);
+*/
 /*
   for( int ibin=1 ; ibin<Histo_QCDMu->GetNbinsX() ; ibin++ ){
     if( ((Histo_QCDMu->GetBinContent(ibin))!=0) && ((Histo_QCDMu->GetBinContent(ibin))<QCDMuMin) ){
@@ -333,6 +342,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   Histo_QCDMu->SetMaximum(YMax_lin);
   Histo_QCDMu->SetMinimum(YMin_lin);
 */
+/*
   Histo_WJetsToLNu->SetLineColor(kBlack);
   Histo_WJetsToLNu->SetFillColor(kMagenta+3);
   Histo_WJetsToLNu->SetFillStyle(3001);
@@ -344,7 +354,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   Histo_TTJets->SetFillStyle(3001);
   Histo_TTJets->SetMaximum(YMax_lin);
   Histo_TTJets->SetMinimum(YMin_lin);
-
+*/
 //  Histo_FSR_DYToMuMu->SetLineColor(kBlack);
 //  Histo_FSR_DYToMuMu->SetFillColor(kMagenta);
 //  Histo_FSR_DYToMuMu->SetFillStyle(3001);
@@ -368,13 +378,15 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
 //	Histo_QCD_Mu_Pt20to30->Draw("same");
   Histo_FSR_DYToMuMu->Draw("same");
   Histo_nonFSR_DYToMuMu->Draw("same");
+/*
   Histo_TTJets->Draw("same");
   Histo_WJetsToLNu->Draw("same");
+*/
 //  Histo_QCDMu->Draw("same");
   legend->AddEntry(Histo_FSR_DYToMuMu->GetName(), "Z#mu#muJet FSR", "f");
   legend->AddEntry(Histo_nonFSR_DYToMuMu->GetName(), "Z#mu#muJets (no FSR)", "f");
-  legend->AddEntry(Histo_TTJets->GetName(), "t#bar{t}Jets", "f");
-  legend->AddEntry(Histo_WJetsToLNu->GetName(), "WJets", "f");
+//  legend->AddEntry(Histo_TTJets->GetName(), "t#bar{t}Jets", "f");
+//  legend->AddEntry(Histo_WJetsToLNu->GetName(), "WJets", "f");
 //  legend->AddEntry(Histo_QCDMu->GetName(), "QCD #mu", "f");
 //  legend->AddEntry(Histo_FSR_DYToMuMu->GetName(), "PhotonJet", "f");
 //  legend->AddEntry(Histo_QCD_Mu_Pt20to30->GetName(), "QCD Mu", "f");
@@ -501,13 +513,13 @@ if( doFit ){
 
   TLatex latexLabel;
   std::ostringstream intLumiString;
-  intLumiString << setprecision (3) << fixed << integratedLuminosity;
+  intLumiString << setprecision (2) << fixed << integratedLuminosity;
   string intLumiText = "#intL= " + intLumiString.str() + " pb^{-1}";
   latexLabel.SetTextSize(0.03);
   latexLabel.SetNDC();
-  latexLabel.DrawLatex(0.18, 0.90, "CMS Preliminary 2010");
-  latexLabel.DrawLatex(0.18, 0.86, "#sqrt{s} = 7 TeV");
-  latexLabel.DrawLatex(0.16, 0.82, intLumiText.c_str());
+  latexLabel.DrawLatex(0.13, 0.96, "CMS Preliminary 2011");
+  latexLabel.DrawLatex(0.42, 0.96, "#sqrt{s} = 7 TeV");
+  latexLabel.DrawLatex(0.57, 0.96, intLumiText.c_str());
 
   // // Sixth: update canvas
   c1->Update();
@@ -531,13 +543,14 @@ if( doFit ){
 //    Histo_QCD_Pt15->SetMaximum(YMax_log);
 //    Histo_QCD_Pt15->SetMinimum(YMin_log);
 //    Histo_QCD_Pt15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
-
+/*
     Histo_TTJets->SetMaximum(YMax_log);
     Histo_TTJets->SetMinimum(YMin_log);
     Histo_TTJets->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
     Histo_WJetsToLNu->SetMaximum(YMax_log);
     Histo_WJetsToLNu->SetMinimum(YMin_log);
     Histo_WJetsToLNu->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
+*/
 /*
     Histo_QCDMu->SetMaximum(YMax_log);
     Histo_QCDMu->SetMinimum(YMin_log);
@@ -575,11 +588,12 @@ if( doFit ){
 
   Histo_nonFSR_DYToMuMu_temp->Delete();
   Histo_nonFSR_DYToMuMu->Delete();
-
+/*
   Histo_TTJets_temp->Delete();
   Histo_TTJets->Delete();
   Histo_WJetsToLNu_temp->Delete();
   Histo_WJetsToLNu->Delete();
+*/
 /*
   Histo_QCDMu_temp->Delete();
   Histo_QCDMu->Delete();
