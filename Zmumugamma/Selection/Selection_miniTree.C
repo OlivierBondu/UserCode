@@ -1,3 +1,4 @@
+
 #include "TF1.h"
 #include "TH1F.h"
 #include "TH2F.h"
@@ -16,7 +17,7 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
-#pragma optimize 0
+//#pragma optimize 0
 
 #include "interface/TRootBardak.h"
 #include "interface/TRootBeamSpot.h"
@@ -38,6 +39,9 @@
 #include "interface/TRootTopTop.h"
 #include "interface/TRootTrack.h"
 #include "interface/TRootVertex.h"
+
+
+using namespace std;
 
 int factorial(int number) {
 	int temp;
@@ -90,7 +94,6 @@ void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* part
     *particule_trueEta = mygenparticle->Eta();
 
   }
-
   return;
 }
 
@@ -113,7 +116,9 @@ float fEta(float eta)
 
 //int Selection_miniTree()
 int main(int argc, char *argv[])
+//int main()
 {
+
 	cout << "argc= " << argc << endl;
 	for(int iarg = 0 ; iarg < argc; iarg++)
 	{
@@ -127,6 +132,7 @@ int main(int argc, char *argv[])
 	}
 	// First argument is sample
 	char* sample_char = argv[1];
+//	char* sample_char2 = argv[1];
 
 	// Optional argument : output root file
 	string sample = argv[1];
@@ -134,6 +140,7 @@ int main(int argc, char *argv[])
 	{
 		sample = argv[2];
 	}
+
 
 	// Optional argument : isZgammaMC
 	int isZgammaMC = 0;
@@ -156,7 +163,7 @@ int main(int argc, char *argv[])
 	// TODO
 
 	gSystem->Load("libToto.so");
-	bool doHLT										= true;
+	bool doHLT										= false;
 	bool doMC										 = (bool)(isZgammaMC >= 1);
 	bool doJetMC									= false;
 	bool doMETMC									= false;
@@ -172,10 +179,10 @@ int main(int argc, char *argv[])
 	bool doMuon									 = true;
 	bool doElectron							 = false;
 	bool doPhoton								 = true;
-	bool doCluster								= true;
+	bool doCluster								= false;
 	bool doPhotonConversion			 = false;
 	bool doMET										= false;
-	bool doBardak								 = true;
+	bool doBardak								 = false;
 	bool doPhotonVertexCorrection = false;
 	bool doPhotonIsolation				= false;
 
@@ -183,8 +190,18 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_3_9_7_v2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
-	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_3_9_7_v2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
+/*
+	string filename = "Single.root";
+	inputEventTree->Add(filename.c_str());
+	inputRunTree->Add(filename.c_str());
+*/
+//	inputEventTree->Add("Single.root");
+//	inputRunTree->Add("Single.root");
+//	inputEventTree->Add("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/Single.root");
+//	inputRunTree->Add("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/Single.root");
+	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
+	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
+//	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/SingleMu-Run2011A_161079-161352/SingleMu-Run2011A_161079-161352*root"));
 
 
 //	inputEventTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
@@ -220,7 +237,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("MCParticles", &mcParticles, &mcParticles_br);
 		inputEventTree->SetBranchStatus("MCParticles", 1);
 	}
-	
+/*	
 	TBranch* genJets_br = 0;
 	TClonesArray* genJets = new TClonesArray("TRootParticle", 0);
 	if(doJetMC)
@@ -236,7 +253,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("genMETs", &genMETs, &genMETs_br);
 		inputEventTree->SetBranchStatus("genMETs", 1);
 	}
-	
+*/	
 		TBranch* mcSignalMuMuGamma_br = 0;
 		TRootSignalEvent* mcMuMuGammaEvent = 0;
 	if(doSignalMuMuGamma)
@@ -244,7 +261,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("MuMuGamma", &mcMuMuGammaEvent, &mcSignalMuMuGamma_br);
 		inputEventTree->SetBranchStatus("MuMuGamma", 1);
 	}
-	
+/*	
 		TBranch* mcTopTopEvent_br = 0;
 		TRootSignalEvent* mcTopTopEvent = 0;
 	if(doSignalTopTop)
@@ -252,7 +269,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("rootMCTopTop", &mcTopTopEvent, &mcTopTopEvent_br);
 		inputEventTree->SetBranchStatus("rootMCTopTop", 1);
 	}
-	
+*/	
 		TBranch* mcPhotons_br = 0;
 		TClonesArray* mcPhotons = new TClonesArray("TRootMCPhoton", 0);
 	if(doPhotonConversionMC)
@@ -260,7 +277,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("MCPhotons", &mcPhotons, &mcPhotons_br);
 		inputEventTree->SetBranchStatus("MCPhotons", 1);
 	}
-	
+/*	
 		TBranch* beamSpot_br = 0;
 		TRootBeamSpot* beamSpot = 0;
 	if(doBeamSpot)
@@ -268,7 +285,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("BeamSpot", &beamSpot, &beamSpot_br);
 		inputEventTree->SetBranchStatus("BeamSpot", 1);
 	}
-	
+*/
 		TBranch* vertices_br = 0;
 		TClonesArray* vertices = new TClonesArray("TRootVertex", 0);
 	if(doPrimaryVertex)
@@ -276,7 +293,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("Vertices", &vertices, &vertices_br);
 		inputEventTree->SetBranchStatus("Vertices", 1);
 	}
-	
+/*	
 		TBranch* zeeVertices_br = 0;
 		TClonesArray* zeeVertices = new TClonesArray("TRootVertex", 0);
 	if(doZeePrimaryVertex)
@@ -299,7 +316,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("ak5CaloJets", &jets, &jets_br);
 		inputEventTree->SetBranchStatus("ak5CaloJets", 1);
 	}
-	
+*/	
 		TBranch* muons_br = 0;
 		TClonesArray* muons = new TClonesArray("TRootMuon", 0);
 	if(doMuon)
@@ -307,7 +324,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("muons", &muons, &muons_br);
 		inputEventTree->SetBranchStatus("muons", 1);
 	}
-	
+/*	
 		TBranch* electrons_br = 0;
 		TClonesArray* electrons = new TClonesArray("TRootElectron", 0);
 	if(doElectron)
@@ -315,7 +332,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("gsfElectrons", &electrons, &electrons_br);
 		inputEventTree->SetBranchStatus("gsfElectrons", 1);
 	}
-	
+*/	
 		TBranch* photons_br = 0;
 		TClonesArray* photons = new TClonesArray("TRootPhoton", 0);
 	if(doPhoton)
@@ -323,7 +340,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("photons", &photons, &photons_br);
 		inputEventTree->SetBranchStatus("photons", 1);
 	}
-	
+/*	
 		TBranch* clusters_br = 0;
 		TClonesArray* clusters = new TClonesArray("TRootCluster", 0);
 	if(doCluster)
@@ -363,7 +380,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("Bardak", &bardak, &bardak_br);
 		inputEventTree->SetBranchStatus("Bardak", 1);
 	}
-
+*/
 
   int* NumWantedHLTnames;
 
@@ -475,7 +492,7 @@ int main(int argc, char *argv[])
 	TTree* miniTree = new TTree("miniTree","Mu Mu Gamma informations");
 	TTree* miniTree_allmuons = new TTree("miniTree_allmuons","all muons informations");
 	TTree* miniTree_allphotons = new TTree("miniTree_allphotons","all photons informations");
-	TTree *outputEventTree = inputEventTree->CloneTree(0);
+//	TTree *outputEventTree = inputEventTree->CloneTree(0);
 
 	// ____________________________________________
 	// Event information
@@ -922,7 +939,7 @@ int main(int argc, char *argv[])
 	
 	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
-//	unsigned int NbEvents = 1000;
+//	unsigned int NbEvents = 10000;
 	bool powheg = (bool)(isZgammaMC >= 1);
 	bool signal = false;
 	bool stew = false;
@@ -933,6 +950,7 @@ int main(int argc, char *argv[])
 	cout << "ZJet veto is: " << zjet_veto << endl;
 	int nBeforeAllCuts, nAfterCutPthatFilter, nAfterCutCSA07ID, nAfterCutZJETVETO, nAfterLooseMMG, nAfterTightMMG, nAfterCut1c, nAfterCut1d, nAfterCut1e, nAfterCut2a, nAfterCut2b, nAfterCut2c, nAfterCut3, nAfterCut4, nAfterCut5, nAfterCut6, nAfterCut7, nAfterCut8, nAfterCut9, nAfterCut10, nSelected;
 	nBeforeAllCuts = nAfterCutPthatFilter = nAfterCutCSA07ID = nAfterCutZJETVETO = nAfterLooseMMG = nAfterTightMMG = nAfterCut1c = nAfterCut1d = nAfterCut1e = nAfterCut2a = nAfterCut2b = nAfterCut2c = nAfterCut3 = nAfterCut4 = nAfterCut5 = nAfterCut6 = nAfterCut7 = nAfterCut8 = nAfterCut9 = nAfterCut10 = nSelected = 0;
+
 	vector<int> SelectedEvent_RunNumber;
 	vector<int> SelectedEvent_LumiNumber;
 	vector<int> SelectedEvent_EventNumber;
@@ -960,8 +978,18 @@ int main(int argc, char *argv[])
 	SelectedEvent_DeltaRFar.clear();
 	SelectedEvent_mumuInvMass.clear();
 
-	inputRunTree->GetEvent(0);
+//	cout << "inputRunTree->GetEntries()= " << inputRunTree->GetEntries() << endl;
+//	cout << "inputRunTree->GetCurrentFile()->GetName()= " << inputRunTree->GetCurrentFile()->GetName() << endl;
+//	cout << "inputRunTree->GetMaxTreeSize()= " << inputRunTree->GetMaxTreeSize() << endl;
+//	inputRunTree->GetEvent(0);
+//	inputRunTree->GetEntry(0);
+//	cout << "inputRunTree->GetCurrentFile()->GetName()= " << inputRunTree->GetCurrentFile()->GetName() << endl;
+//	inputRunTree->~TTree();
+//	inputRunTree->Clear();
+//	delete inputRunTree;
+//	free(inputRunTree);
   string lastFile = "";
+
 	double minPtHat = -100;
   double maxPtHat = 1000000;
   int verbosity = 0;
@@ -974,6 +1002,7 @@ int main(int argc, char *argv[])
 	int TOTALnbMuMuGammaAfterID[7] = {0};
 	int TOTALnbEventsAfterMuMuGammaID[7] = {0};
 
+	// LOOP over events
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 //	for(unsigned int ievt=9680; ievt<NbEvents; ievt++)
 	{
@@ -982,6 +1011,7 @@ int main(int argc, char *argv[])
 		isBeforeAllCuts = 1;
 		int nprint = (int)((double)NbEvents/(double)100.0);
 		if( (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEvents*100)<<" \% )"<<endl; }
+
 		iEvent = ievt;
 		inputEventTree->GetEvent(ievt);
     if( lastFile == "" ){
@@ -1084,27 +1114,27 @@ int main(int argc, char *argv[])
 		// ____________________________________________
 
 		// HLT information		
-/*
-		if(doHLT){
-			if( ievt==0 ){ inputRunTree->GetEvent(ievt); NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);  }
-			if ( string(inputEventTree->GetCurrentFile()->GetName()) != lastFile ){
-				inputRunTree->GetEntry(inputEventTree->GetTreeNumber());
-     	  lastFile = string(inputEventTree->GetCurrentFile()->GetName());
-     	  cout << ievt << "\t" << lastFile << endl;
-     	 	NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);
-     	}
-      doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_Mu11);
-		}
-*/
-/*
-		if (!((event->ptHat()>=minPtHat)&&(event->ptHat()<maxPtHat)))
-		{
-      cerr << "CUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT for pthat filtering" << endl;
-			continue;
-		}
-		isAfterCutPthatFilter = 1;
-		nAfterCutPthatFilter++;
-*/
+
+//		if(doHLT){
+//			if( ievt==0 ){ inputRunTree->GetEvent(ievt); NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);  }
+//			if ( string(inputEventTree->GetCurrentFile()->GetName()) != lastFile ){
+//				inputRunTree->GetEntry(inputEventTree->GetTreeNumber());
+//     	  lastFile = string(inputEventTree->GetCurrentFile()->GetName());
+//     	  cout << ievt << "\t" << lastFile << endl;
+//     	 	NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);
+//     	}
+//      doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_Mu11);
+//		}
+//
+//
+//		if (!((event->ptHat()>=minPtHat)&&(event->ptHat()<maxPtHat)))
+//		{
+//      cerr << "CUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT for pthat filtering" << endl;
+//			continue;
+//		}
+//		isAfterCutPthatFilter = 1;
+//		nAfterCutPthatFilter++;
+
 		// Signal MC Truth
     // ZJET VETO
     bool MCphotons_from_muons_from_Z = false;
@@ -1267,19 +1297,19 @@ int main(int argc, char *argv[])
 			TOTALnbMuonsAfterID[11]++;
 
 
-/*
-      if(! (mymuon->) ){// 
-        muonIsNotCommissioned.push_back(1);
-        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because" << endl;
-        continue;
-      }
-*/
+
+//      if(! (mymuon->) ){// 
+//        muonIsNotCommissioned.push_back(1);
+//        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because" << endl;
+//        continue;
+//      }
+
 
 
       if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " accepted" << endl;
       muonIsNotCommissioned.push_back(0);
       muonIdentified.push_back(imuon);
-			mymuon->Clear();
+////			mymuon->Clear();
     }
     unsigned int NbMuonsIdentified = muonIdentified.size();
 		
@@ -1337,7 +1367,6 @@ int main(int argc, char *argv[])
 			}
 		}
 
-	
 		if(verbosity>2) cout << "loop over possible muon pairs, fill dimuons candidates with opposite charge" << endl;	
 		// loop over possible muon pairs, fill dimuons candidates with opposite charge
 		for(int i_dimuons = 0; i_dimuons < numberOfDimuons[0]; i_dimuons++)
@@ -1350,8 +1379,8 @@ int main(int argc, char *argv[])
 				numberOfDimuons[1] += 1;
 				IDofMuons[1][i_dimuons] = make_pair(IDofMuons[0][i_dimuons].first, IDofMuons[0][i_dimuons].second);
 			}
-			Muon1->Clear();
-			Muon2->Clear();
+////			Muon1->Clear();
+////			Muon2->Clear();
 		}
 		if(! (numberOfDimuons[1] >= 1) ) continue; // Not enough dimuon candidates, skip the event
 		TOTALnbDimuonsAfterID[1] += numberOfDimuons[1];
@@ -1370,8 +1399,8 @@ int main(int argc, char *argv[])
 				numberOfDimuons[2] += 1;
 				IDofMuons[2][i_dimuons] = make_pair(IDofMuons[1][i_dimuons].first, IDofMuons[1][i_dimuons].second);
 			}
-			Muon1->Clear();
-			Muon2->Clear();
+////			Muon1->Clear();
+////			Muon2->Clear();
 		}
 
 		if(! (numberOfDimuons[2] >= 1) )// Not enough dimuon candidates, skip the event
@@ -1394,9 +1423,9 @@ int main(int argc, char *argv[])
 	    TLorentzVector mumu;
 			mumu = (*mymuon1) + (*mymuon2);
 			Ptmumu = mumu.Pt();
-	    mumu.Clear();
-			mymuon1->Clear();
-			mymuon2->Clear();
+////	    mumu.Clear();
+////			mymuon1->Clear();
+////			mymuon2->Clear();
 			miniTree_allmuons->Fill();
 		}
 
@@ -1412,7 +1441,8 @@ int main(int argc, char *argv[])
     nbPhotonsAfterID[0] = NbPhotons;
 		TOTALnbPhotonsAfterID[0] += nbPhotonsAfterID[0];
 
-		for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++){
+		for(int iphoton=0 ; iphoton<NbPhotons ; iphoton++)
+		{
       TRootPhoton *myphoton;
       myphoton = (TRootPhoton*) photons->At(iphoton);
 
@@ -1468,6 +1498,7 @@ int main(int argc, char *argv[])
       if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " accepted" << endl;
       photonsNoSpike.push_back(iphoton);
       photonIsNotCommissioned.push_back(0);
+////			myphoton->Clear();
     }
     unsigned int NbPhotonsNoSpike = photonsNoSpike.size();
 
@@ -1495,11 +1526,11 @@ int main(int argc, char *argv[])
 		TOTALnbMuMuGammaAfterID[0] += nbMuMuGammaAfterID[0];
 		TOTALnbEventsAfterMuMuGammaID[0]++ ;
 //		if( nbMuMuGammaCandidates >= 2 ) { cout << "Arf, there is more than one possible candidate, what should I do ?? I'll take the first one for now. ("<< nbPhotonsAfterID[5] << " photons, " << numberOfDimuons[2] << " dimuon pairs)" << endl; }
-		pair <int, pair<int, int> > MuMuGammaCandidates[6][nbMuMuGammaCandidates];
+		pair <int, pair<int, int> > MuMuGammaCandidates[7][nbMuMuGammaCandidates];
 
 		if(verbosity>2) cout << "initializing triplet objects" << endl;
 		// Initializing triplet objects
-		for(int i = 0; i < 6; i++)
+		for(int i = 0; i < 7; i++)
 		{
 			for(int j = 0; j < nbMuMuGammaCandidates; j++)
 			{
@@ -1568,9 +1599,9 @@ int main(int argc, char *argv[])
 			MuMuGammaCandidates[1][nbMuMuGammaAfterID[1]] = make_pair(MuMuGammaCandidates[0][i_mmg].first, make_pair(MuMuGammaCandidates[0][i_mmg].second.first, MuMuGammaCandidates[0][i_mmg].second.second) );
 			nbMuMuGammaAfterID[1]++;
 			TOTALnbMuMuGammaAfterID[1]++;
-			myphoton->Clear();
-			mymuon1->Clear();
-			mymuon2->Clear();
+////			myphoton->Clear();
+////			mymuon1->Clear();
+////			mymuon2->Clear();
 		}
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[1]= " << nbMuMuGammaAfterID[1] << endl;
 		if(! (nbMuMuGammaAfterID[1] > 0) )
@@ -1607,9 +1638,9 @@ int main(int argc, char *argv[])
 			}
 			MuMuGammaCandidates[2][nbMuMuGammaAfterID[2]] = make_pair(MuMuGammaCandidates[1][i_mmg].first, make_pair(MuMuGammaCandidates[1][i_mmg].second.first, MuMuGammaCandidates[1][i_mmg].second.second) );
       nbMuMuGammaAfterID[2]++;
-			myphoton->Clear();
-			mymuon1->Clear();
-			mymuon2->Clear();
+////			myphoton->Clear();
+////			mymuon1->Clear();
+////			mymuon2->Clear();
     }
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[2]= " << nbMuMuGammaAfterID[2] << endl;
     if(! (nbMuMuGammaAfterID[2] > 0) )
@@ -1642,9 +1673,9 @@ int main(int argc, char *argv[])
 			if( min_DeltaR >= 0.8 ) continue;
 			MuMuGammaCandidates[3][nbMuMuGammaAfterID[3]] = make_pair(MuMuGammaCandidates[2][i_mmg].first, make_pair(MuMuGammaCandidates[2][i_mmg].second.first, MuMuGammaCandidates[2][i_mmg].second.second) );
       nbMuMuGammaAfterID[3]++;
-      myphoton->Clear();
-      mymuon1->Clear();
-      mymuon2->Clear();
+////      myphoton->Clear();
+////      mymuon1->Clear();
+////      mymuon2->Clear();
 
     }
     if(! (nbMuMuGammaAfterID[3] > 0) )
@@ -1677,9 +1708,9 @@ int main(int argc, char *argv[])
 			if( far_muonPt <= 30.0 ) continue;
 			MuMuGammaCandidates[4][nbMuMuGammaAfterID[4]] = make_pair(MuMuGammaCandidates[3][i_mmg].first, make_pair(MuMuGammaCandidates[3][i_mmg].second.first, MuMuGammaCandidates[3][i_mmg].second.second) );
       nbMuMuGammaAfterID[4]++;
-      myphoton->Clear();
-      mymuon1->Clear();
-      mymuon2->Clear();
+////      myphoton->Clear();
+////      mymuon1->Clear();
+////      mymuon2->Clear();
 
     }
     if(! (nbMuMuGammaAfterID[4] > 0) )
@@ -1715,10 +1746,10 @@ int main(int argc, char *argv[])
 			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())  ) continue;
 			MuMuGammaCandidates[5][nbMuMuGammaAfterID[5]] = make_pair(MuMuGammaCandidates[4][i_mmg].first, make_pair(MuMuGammaCandidates[4][i_mmg].second.first, MuMuGammaCandidates[4][i_mmg].second.second) );
       nbMuMuGammaAfterID[5]++;
-			PhotonEScale->Clear();
-      myphoton->Clear();
-      mymuon1->Clear();
-      mymuon2->Clear();
+//			PhotonEScale->Clear();
+////      myphoton->Clear();
+////      mymuon1->Clear();
+////      mymuon2->Clear();
 
     }
     if(! (nbMuMuGammaAfterID[5] > 0) )
@@ -1843,8 +1874,8 @@ int main(int argc, char *argv[])
 	    mumu = (*leadingMuon) + (*subleadingMuon);
 			Ptmumu = mumu.Pt();
 	    double mumuInvMass = mumu.M();
-	    cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
-	    mumu.Clear();
+//	    cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
+////	    mumu.Clear();
 	    Mmumu = mumuInvMass;
 
     // ********************************************************************
@@ -1902,15 +1933,15 @@ int main(int argc, char *argv[])
     Mmumugamma_5x5 = mumu5x5InvMass;
     Mmumugamma_SCraw = mumuSC_rawInvMass;
     Mmumugamma_SCraw_fEta = mumuSC_rawInvMass_fEta;
-    mumugamma.Clear();
-    mumuSC.Clear();
-    mumu5x5.Clear();
-    mumuSC_raw.Clear();
-		PhotonEScale->Clear();
-    PhotonSC->Clear();
-    Photon5x5->Clear();
-    PhotonSC_raw->Clear();
-		PhotonSC_raw_fEta->Clear();
+////    mumugamma.Clear();
+////    mumuSC.Clear();
+////    mumu5x5.Clear();
+////    mumuSC_raw.Clear();
+//		PhotonEScale->Clear();
+//    PhotonSC->Clear();
+//    Photon5x5->Clear();
+//    PhotonSC_raw->Clear();
+//		PhotonSC_raw_fEta->Clear();
 
     mmg_k = (double)(pow(91.1876,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
     mmg_ik = (double)(pow(Mmumugamma,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
@@ -1948,7 +1979,7 @@ int main(int argc, char *argv[])
     mmg_logs_SCraw_fEta = log(mmg_s_SCraw_fEta);
 
 
-    cerr << "\t\tINFO: mumugamma invariant mass : Mmumugamma = " << mumugammaInvMass << endl;
+//    cerr << "\t\tINFO: mumugamma invariant mass : Mmumugamma = " << mumugammaInvMass << endl;
 
     double phiPhoton = myphoton->Phi();
     double etaPhoton = myphoton->Eta();
@@ -2113,24 +2144,31 @@ int main(int argc, char *argv[])
 			mmg_logik_MMG_MC = log(mmg_ik_MMG_MC);
 			mmg_logs_MMG_MC = log(mmg_s_MMG_MC);
 
-/*			Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;
-			Mmumu_Muons_MC = Mmumugamma_Muons_MC = mmg_k_Muons_MC = mmg_ik_Muons_MC = mmg_s_Muons_MC = mmg_logk_Muons_MC = mmg_logik_Muons_MC = mmg_logs_Muons_MC = -99.0;
-			Mmumu_MMG_MC = Mmumugamma_MMG_MC = mmg_k_MMG_MC = mmg_ik_MMG_MC = mmg_s_MMG_MC = mmg_logk_MMG_MC = mmg_logik_MMG_MC = mmg_logs_MMG_MC = -99.0;*/
-		}
+//			Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;
+//			Mmumu_Muons_MC = Mmumugamma_Muons_MC = mmg_k_Muons_MC = mmg_ik_Muons_MC = mmg_s_Muons_MC = mmg_logk_Muons_MC = mmg_logik_Muons_MC = mmg_logs_Muons_MC = -99.0;
+//			Mmumu_MMG_MC = Mmumugamma_MMG_MC = mmg_k_MMG_MC = mmg_ik_MMG_MC = mmg_s_MMG_MC = mmg_logk_MMG_MC = mmg_logik_MMG_MC = mmg_logs_MMG_MC = -99.0;
+//		PhotonMC->Clear();
+//		MuonLMC->Clear();
+//		MuonSMC->Clear();
+//		PhotonEScale->Clear();
+//		PhotonSC->Clear();
+//		Photon5x5->Clear();
+//		PhotonSC_raw->Clear();
+		}// end doMC
 
 
-		myphoton->Clear();
-		mymuon1->Clear();
-		mymuon2->Clear();
-    farMuon->Clear();
-    nearMuon->Clear();
-    minusMuon->Clear();
-    plusMuon->Clear();
-    PhotonSC->Clear();
-    Photon5x5->Clear();
-    PhotonSC_raw->Clear();
-    leadingMuon->Clear();
-    subleadingMuon->Clear();
+////		myphoton->Clear();
+////		mymuon1->Clear();
+////		mymuon2->Clear();
+////    farMuon->Clear();
+////    nearMuon->Clear();
+////    minusMuon->Clear();
+////    plusMuon->Clear();
+////    PhotonSC->Clear();
+////    Photon5x5->Clear();
+////    PhotonSC_raw->Clear();
+////    leadingMuon->Clear();
+////    subleadingMuon->Clear();
 
 		}
 			isLooseMMG = 1;
@@ -2162,10 +2200,10 @@ int main(int argc, char *argv[])
 			if( (mumugamma.M() < 87.2) || (95.2 < mumugamma.M())  ) continue;
 			MuMuGammaCandidates[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates[5][i_mmg].first, make_pair(MuMuGammaCandidates[5][i_mmg].second.first, MuMuGammaCandidates[5][i_mmg].second.second) );
       nbMuMuGammaAfterID[6]++;
-			PhotonEScale->Clear();
-      myphoton->Clear();
-      mymuon1->Clear();
-      mymuon2->Clear();
+//			PhotonEScale->Clear();
+////      myphoton->Clear();
+////      mymuon1->Clear();
+////      mymuon2->Clear();
 
     }
     if(! (nbMuMuGammaAfterID[6] > 0) )
@@ -2298,8 +2336,8 @@ int main(int argc, char *argv[])
 	    TLorentzVector mumu;
 	    mumu = (*leadingMuon) + (*subleadingMuon);
 	    double mumuInvMass = mumu.M();
-	    cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
-	    mumu.Clear();
+//	    cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
+////	    mumu.Clear();
 	    Mmumu = mumuInvMass;
 
     // ********************************************************************
@@ -2326,14 +2364,14 @@ int main(int argc, char *argv[])
     Mmumugamma_SC = mumuSCInvMass;
     Mmumugamma_5x5 = mumu5x5InvMass;
     Mmumugamma_SCraw = mumuSC_rawInvMass;
-    mumugamma.Clear();
-    mumuSC.Clear();
-    mumu5x5.Clear();
-    mumuSC_raw.Clear();
-		PhotonEScale->Clear();
-    PhotonSC->Clear();
-    Photon5x5->Clear();
-    PhotonSC_raw->Clear();
+////    mumugamma.Clear();
+////    mumuSC.Clear();
+////    mumu5x5.Clear();
+////    mumuSC_raw.Clear();
+//		PhotonEScale->Clear();
+//    PhotonSC->Clear();
+//    Photon5x5->Clear();
+//    PhotonSC_raw->Clear();
 
     mmg_k = (double)(pow(91.1876,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
     mmg_ik = (double)(pow(Mmumugamma,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
@@ -2364,7 +2402,7 @@ int main(int argc, char *argv[])
     mmg_logs_SCraw = log(mmg_s_SCraw);
 
 
-    cerr << "\t\tINFO: mumugamma invariant mass : Mmumugamma = " << mumugammaInvMass << endl;
+//    cerr << "\t\tINFO: mumugamma invariant mass : Mmumugamma = " << mumugammaInvMass << endl;
 
     double phiPhoton = myphoton->Phi();
     double etaPhoton = myphoton->Eta();
@@ -2470,18 +2508,19 @@ int main(int argc, char *argv[])
     deltaRSubleading = DeltaR(etaPhoton, phiPhoton, subleadingMuon->Eta(), subleadingMuon->Phi());
 
 
-		myphoton->Clear();
-		mymuon1->Clear();
-		mymuon2->Clear();
-    farMuon->Clear();
-    nearMuon->Clear();
-    minusMuon->Clear();
-    plusMuon->Clear();
-    PhotonSC->Clear();
-    Photon5x5->Clear();
-    PhotonSC_raw->Clear();
-    leadingMuon->Clear();
-    subleadingMuon->Clear();
+////		myphoton->Clear();
+////		mymuon1->Clear();
+////		mymuon2->Clear();
+////    farMuon->Clear();
+////    nearMuon->Clear();
+////    minusMuon->Clear();
+////    plusMuon->Clear();
+////    PhotonSC->Clear();
+////    Photon5x5->Clear();
+////    PhotonSC_raw->Clear();
+////    leadingMuon->Clear();
+////    subleadingMuon->Clear();
+//		free(subleadingMuon);
 
 		}
 
@@ -2529,77 +2568,15 @@ int main(int argc, char *argv[])
 		isSelected = 1;
 		nSelected++;
 		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;
-/*
-		SelectedEvent_RunNumber.push_back(event->runId());
-		SelectedEvent_LumiNumber.push_back(event->luminosityBlock());
-		SelectedEvent_EventNumber.push_back(event->eventId());
-		SelectedEvent_mumugammaInvMass.push_back(mumugammaInvMass);
-		SelectedEvent_Eta_gamma.push_back(Photon_Eta);
-		SelectedEvent_Eta_muonNear.push_back(MuonN_Eta);
-		SelectedEvent_Eta_muonFar.push_back(MuonF_Eta);
-		SelectedEvent_Et_gamma.push_back(PtPhoton);
-		SelectedEvent_Pt_muonNear.push_back(MuonN_Pt);
-		SelectedEvent_Pt_muonFar.push_back(MuonF_Pt);
-		SelectedEvent_DeltaRNear.push_back(deltaRNear);
-		SelectedEvent_DeltaRFar.push_back(deltaRFar);
-		SelectedEvent_mumuInvMass.push_back(mumuInvMass);
 
-		outfile << Photon_SC_Eta << "\t" << Photon_SC_Phi << "\t" << Photon_isEB << "\t" << Photon_isEE << "\t" << Photon_Et << "\t" << Photon_seedPosition1 << "\t" << Photon_seedPosition2 << "\t" << Photon_r9 << "\t" << Photon_convNTracks
-		 << "\t" << Mmumu << "\t" << Mmumugamma << "\t" << Mmumugamma_5x5 << "\t" << Mmumugamma_SC << "\t" << Mmumugamma_SCraw
-		 << "\t" << mmg_k << "\t" << mmg_ik << "\t" << mmg_s << "\t" << mmg_logk << "\t" << mmg_logik << "\t" << mmg_logs
-		 << "\t" << mmg_k_5x5 << "\t" << mmg_ik_5x5 << "\t" << mmg_s_5x5 << "\t" << mmg_logk_5x5 << "\t" << mmg_logik_5x5 << "\t" << mmg_logs_5x5
-		 << "\t" << mmg_k_SC << "\t" << mmg_ik_SC << "\t" << mmg_s_SC << "\t" << mmg_logk_SC << "\t" << mmg_logik_SC << "\t" << mmg_logs_SC
-		 << "\t" << mmg_k_SCraw << "\t" << mmg_ik_SCraw << "\t" << mmg_s_SCraw << "\t" << mmg_logk_SCraw << "\t" << mmg_logik_SCraw << "\t" << mmg_logs_SCraw
-		<< endl;
-*/
 		miniTree->Fill();
 
-//			event->printHltAcceptNames();
-			outputEventTree->Fill();
-	} // fin boucle sur evts
+//			outputEventTree->Fill();
 
-/*	cout << endl << "**************************************************************************" << endl;
-	cout << "DUMPING THE INFORMATION ABOUT SELECTED EVENTS:" << endl;
-	cout << "RUN\t\tLUMI SECTION\t\tEVENT NUMBER\t\t\t\tM(MUMUGAMMA)\t\tEt GAMMA\t\tPt MUON NEAR\t\tPt Muon FAR\t\tDELTAR MUON NEAR\t\tDELTAR MUON FAR\t\tM(MUMU)\t\tETA MUON NEAR\t\tETA MUON FAR\t\tETA PHOTON\t\tK" << endl;
-	double k = 0;
-	for( int iselected=0 ; iselected<nSelected ; iselected++ ){
-		k = (double)(pow(91.1876, 2) - pow(SelectedEvent_mumuInvMass[iselected], 2))/(double)(pow(SelectedEvent_mumugammaInvMass[iselected], 2) - pow(SelectedEvent_mumuInvMass[iselected], 2));
-		cout << SelectedEvent_RunNumber[iselected] << "\t\t" << SelectedEvent_LumiNumber[iselected] << "\t\t" << SelectedEvent_EventNumber[iselected] << "\t\t\t" << SelectedEvent_mumugammaInvMass[iselected] << "\t\t" << SelectedEvent_Et_gamma[iselected] << "\t\t" << SelectedEvent_Pt_muonNear[iselected] << "\t\t" << SelectedEvent_Pt_muonFar[iselected] << "\t\t" << SelectedEvent_DeltaRNear[iselected] << "\t\t" << SelectedEvent_DeltaRFar[iselected] << "\t\t" << SelectedEvent_mumuInvMass[iselected] << "\t\t" << SelectedEvent_Eta_muonNear[iselected] << "\t\t" << SelectedEvent_Eta_muonFar[iselected] << "\t\t" << SelectedEvent_Eta_gamma[iselected] << "\t\t" << k << endl;
-	}
 
-	cout << endl << "**************************************************************************" << endl;
-	cout << "cut" << "\t\t" << "# events" << "\t\t" << "% rel"	<< "\t\t" << "% abs"<<endl;
-	cout << "nBeforeAllCuts=" << "\t\t" << nBeforeAllCuts << "\t\t" << "-" << "\t\t" << "-" << endl;
-	cout << "nAfterCutPthatFilter=" << "\t\t" << nAfterCutPthatFilter << "\t\t" << (double)nAfterCutPthatFilter/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCutPthatFilter/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCutCSA07ID=" << "\t\t" << nAfterCutCSA07ID << "\t\t" << (double)nAfterCutCSA07ID/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCutCSA07ID/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCutZJETVETO=" << "\t\t" << nAfterCutZJETVETO << "\t\t" << (double)nAfterCutZJETVETO/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterCutZJETVETO/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterLooseMMG=" << "\t\t" << nAfterLooseMMG << "\t\t" << (double)nAfterLooseMMG/(double)nBeforeAllCuts*100.0 << "\t\t" << (double)nAfterLooseMMG/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterTightMMG=" << "\t\t" << nAfterTightMMG << "\t\t" << (double)nAfterTightMMG/(double)nAfterLooseMMG*100.0 << "\t\t" << (double)nAfterTightMMG/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut1c=" << "\t\t" << nAfterCut1c << "\t\t" << (double)nAfterCut1c/(double)nAfterTightMMG*100.0 << "\t\t" << (double)nAfterCut1c/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut1d=" << "\t\t" << nAfterCut1d << "\t\t" << (double)nAfterCut1d/(double)nAfterCut1c*100.0 << "\t\t" << (double)nAfterCut1d/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut1e=" << "\t\t" << nAfterCut1e << "\t\t" << (double)nAfterCut1e/(double)nAfterCut1d*100.0 << "\t\t" << (double)nAfterCut1e/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut2a=" << "\t\t" << nAfterCut2a << "\t\t" << (double)nAfterCut2a/(double)nAfterCut1e*100.0 << "\t\t" << (double)nAfterCut2a/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut2b=" << "\t\t" << nAfterCut2b << "\t\t" << (double)nAfterCut2b/(double)nAfterCut2a*100.0 << "\t\t" << (double)nAfterCut2b/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut2c=" << "\t\t" << nAfterCut2c << "\t\t" << (double)nAfterCut2c/(double)nAfterCut2b*100.0 << "\t\t" << (double)nAfterCut2c/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut3=" << "\t\t" << nAfterCut3 << "\t\t" << (double)nAfterCut3/(double)nAfterCut2c*100.0 << "\t\t" << (double)nAfterCut3/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut4=" << "\t\t" << nAfterCut4 << "\t\t" << (double)nAfterCut4/(double)nAfterCut3*100.0 << "\t\t" << (double)nAfterCut4/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut5=" << "\t\t" << nAfterCut5 << "\t\t" << (double)nAfterCut5/(double)nAfterCut4*100.0 << "\t\t" << (double)nAfterCut5/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut6=" << "\t\t" << nAfterCut6 << "\t\t" << (double)nAfterCut6/(double)nAfterCut5*100.0 << "\t\t" << (double)nAfterCut6/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut7=" << "\t\t" << nAfterCut7 << "\t\t" << (double)nAfterCut7/(double)nAfterCut6*100.0 << "\t\t" << (double)nAfterCut7/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut8=" << "\t\t" << nAfterCut8 << "\t\t" << (double)nAfterCut8/(double)nAfterCut7*100.0 << "\t\t" << (double)nAfterCut8/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut9=" << "\t\t" << nAfterCut9 << "\t\t" << (double)nAfterCut9/(double)nAfterCut8*100.0 << "\t\t" << (double)nAfterCut9/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nAfterCut10=" << "\t\t" << nAfterCut10 << "\t\t" << (double)nAfterCut10/(double)nAfterCut9*100.0 << "\t\t" << (double)nAfterCut10/(double)nBeforeAllCuts*100.0 << endl;
-	cout << "nSelected=" << "\t\t" << nSelected << "\t\t" << (double)nSelected/(double)nAfterCut10*100.0 << "\t\t" << (double)nSelected/(double)nBeforeAllCuts*100.0 << endl;
-*/
 
-	outputEventTree->AutoSave();
-	
-	OutputRootFile->cd();
-	OutputRootFile->Write();
-	OutputRootFile->Close();
 
-	OutputRootFile->Clear();
-	inputEventTree->Clear();
+	} // fin boucle sur evts LOOP
 
 		for(int i = 0; i < 12 ; i++)
 		{
@@ -2617,5 +2594,73 @@ int main(int argc, char *argv[])
 		{
 			cout << "TOTALnbMuMuGammaAfterID["<<i<<"]= " << TOTALnbMuMuGammaAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuMuGammaID["<<i<<"]= " << TOTALnbEventsAfterMuMuGammaID[i] << endl;
 		}
+
+// Writing stuff out
+/*
+	outputEventTree->AutoSave();
+	
+	OutputRootFile->cd();
+*/
+	OutputRootFile->Write();
+	OutputRootFile->Close();
+
+	delete OutputRootFile;
+	delete inputEventTree;
+	delete inputRunTree;
+/*
+	delete sample_char;
+
+	delete event_br;
+	delete event;
+	delete run_br;
+	delete runInfos;
+	delete mcParticles_br;
+	delete mcParticles;
+	delete mcSignalMuMuGamma_br;
+	delete mcMuMuGammaEvent;
+	delete mcPhotons_br;
+	delete mcPhotons;
+	delete muons_br;
+	delete muons;
+	delete photons_br;
+	delete photons;
+	delete NumWantedHLTnames;
+*/
+/*
+// Cleaning memory
+
+//	outputEventTree->Clear();
+//	miniTree_allphotons->Clear();
+//	miniTree_allmuons->Clear();
+//	miniTree->Clear();
+*//*
+	delete NumWantedHLTnames;
+//	bardak->Clear();
+//	met->Clear();
+//	conversionTracks->Clear();
+//	superClusters->Clear();
+//	clusters->Clear();
+//	photons->Clear();
+//	electrons->Clear();
+//	muons->Clear();
+//	jets->Clear();
+//	tracks->Clear();
+//	zeeVertices->Clear();
+//	vertices->Clear();
+//	beamSpot->Clear();
+//	mcPhotons->Clear();
+//	mcTopTopEvent->Clear();
+//	mcMuMuGammaEvent->Clear();
+//	genMETs->Clear();
+//	genJets->Clear();
+//	mcParticles->Clear();
+//	runInfos->Clear();
+//	event->Clear();
+//	OutputRootFile->Clear();
+//	inputEventTree->Clear();
+//	inputRunTree->Clear();
+*/
+	cout << "bam" << endl;
 	return 0;
+
 }
