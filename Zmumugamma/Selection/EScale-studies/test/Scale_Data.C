@@ -29,13 +29,13 @@
 
 void Scale_Data(){
 //	gStyle->SetOptTitle(0);
-	gROOT->ProcessLine(".x setTDRStyle.C");
 	CMSstyle();
 	using namespace RooFit;
 
-//	TFile* file_Data = new TFile("../../miniTree_Run2010_ALL_v2.root");
-	TFile* file_Data = new TFile("../../miniTree_FSR_DYToMuMu_v2.root");
+	TFile* file_Data = new TFile("../../miniTree_Run2010_ALL_v2.root");
+	TFile* file_MC = new TFile("../../miniTree_FSR_DYToMuMu_v2.root");
 	TTree* Tree_Data = (TTree*) file_Data->Get("miniTree");
+	TTree* Tree_MC = (TTree*) file_MC->Get("miniTree");
 
 	RooRealVar Photon_isEB("Photon_isEB", "Photon_isEB", 0, 1);
  
@@ -76,12 +76,16 @@ void Scale_Data(){
 	RooArgSet *ntplVars = new RooArgSet(Photon_isEB, Mmumu, Mmumugamma, mmg_k, mmg_ik, mmg_s, mmg_logk, mmg_logik, mmg_logs);
 //	RooArgSet ntplVars(Mmumu, Mmumugamma, Mmumugamma_5x5, Mmumugamma_SC, Mmumugamma_SCraw, mmg_k, mmg_ik, mmg_s, mmg_logk, mmg_logik, mmg_logs, mmg_k_5x5, mmg_ik_5x5, mmg_s_5x5, mmg_logk_5x5, mmg_logik_5x5, mmg_logs_5x5, mmg_k_SC, mmg_ik_SC, mmg_s_SC, mmg_logk_SC, mmg_logik_SC, mmg_logs_SC, mmg_k_SCraw, mmg_ik_SCraw, mmg_s_SCraw, mmg_logk_SCraw, mmg_logik_SCraw, mmg_logs_SCraw);
 	RooDataSet *Data = new RooDataSet("Data", "Data", Tree_Data, *ntplVars);
+//	RooMCSet *MC = new RooMCSet("MC", "MC", Tree_MC, *ntplVars);
+//	RooDataSet *Data = new RooDataSet("MC", "MC", Tree_MC, *ntplVars);
+//	bool isData = false;
+	bool isData = true;
 
 	vector<string> set_of_cuts;
   vector<string> name;
 	vector<string> display;
 
-/*
+
   set_of_cuts.push_back("Photon_isEB == 1");
   display.push_back("EB, loose m_{#mu#mu#gamma}");
 	name.push_back("EB_loose");
@@ -91,16 +95,16 @@ void Scale_Data(){
   display.push_back("EE, loose m_{#mu#mu#gamma}");
 	name.push_back("EE_loose");
 
-*/
+
 	set_of_cuts.push_back("Photon_isEB == 1 && Mmumugamma > 87.2 && Mmumugamma < 95.2");
   display.push_back("EB, tight m_{#mu#mu#gamma}");
 	name.push_back("EB_tight");
 
-/*
+
   set_of_cuts.push_back("Photon_isEB == 0 && Mmumugamma > 87.2 && Mmumugamma < 95.2");
   display.push_back("EE, tight m_{#mu#mu#gamma}");
 	name.push_back("EE_tight");
-*/
+
 	const int size = set_of_cuts.size();
 	RooDataSet* Data_subset[size];
 //return;
@@ -125,8 +129,8 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 
 	// CRYSTALBALL
   RooRealVar mmg_CB_m0("mmg_CB_m0", "CB #Delta m_{0}", 0.0, -10.0, 10.0, "GeV");  
-  RooRealVar mmg_CB_sigma("mmg_CB_sigma", "CB #sigma", 1.45, 0.0, 5.0, "GeV");
-  RooRealVar mmg_CB_alpha("mmg_CB_alpha", "CB #alpha", 0.98, 0.0, 10.0);
+  RooRealVar mmg_CB_sigma("mmg_CB_sigma", "CB #sigma", 1.45, 0.01, 5.0, "GeV");
+  RooRealVar mmg_CB_alpha("mmg_CB_alpha", "CB #alpha", 0.98, 0.01, 10.0);
   RooRealVar mmg_CB_n("mmg_CB_n", "CB n", 3.8, 0.5, 50.0);
   RooCBShape mmg_CrystalBall("mmg_CrystalBall","mmg_CrystalBall", Mmumugamma, mmg_CB_m0, mmg_CB_sigma, mmg_CB_alpha, mmg_CB_n);
 
@@ -147,13 +151,14 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 
 
 	Double_t mmg_BWxCB_chi2_ndf = mmg_BWxCB_frame->chiSquare("model", "data", 4);
-//	cout << "mmg_BWxCB_chi2_ndf= " << mmg_BWxCB_chi2_ndf << endl;
+	cout << "mmg_BWxCB_chi2_ndf= " << mmg_BWxCB_chi2_ndf << endl;
 
 	TLatex latexLabel;
 	latexLabel.SetTextSize(0.06);
 	latexLabel.SetNDC();
 	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2010");
 	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
+	latexLabel.DrawLatex(0.70, 0.88, isData ? "DATA" : "MC");
 	latexLabel.DrawLatex(0.70, 0.82, display[i].c_str());
 	latexLabel.SetTextSize(0.03);
 
@@ -205,17 +210,18 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	mmg_BWxCB_canvas->Print(Form("png/mmg_BWxCB_%s.png", name[i].c_str()));
 	mmg_BWxCB_canvas->Print(Form("C/mmg_BWxCB_%s.C", name[i].c_str()));
 	system(Form("convert eps/mmg_BWxCB_%s.eps pdf/mmg_BWxCB_%s.pdf", name[i].c_str(), name[i].c_str()));
-*/
 
+*/
 // ***************************************************************
 // ***** k fit
 // ***************************************************************
   // CRYSTALBALL
   RooRealVar mmg_k_CB_m0("mmg_k_CB_m0", "CB #Delta m_{0}", 1.0, -5.0, 5.0, "GeV");  
-  RooRealVar mmg_k_CB_sigma("mmg_k_CB_sigma", "CB #sigma", 0.45, 0.0, 0.5, "GeV");
-  RooRealVar mmg_k_CB_alpha("mmg_k_CB_alpha", "CB #alpha", 1.0, 0.0, 10.0);
-  RooRealVar mmg_k_CB_n("mmg_k_CB_n", "CB n", 2.0, 0.5, 10.0);
-  RooCBShape mmg_k_CrystalBall("mmg_k_CrystalBall","mmg_k_CrystalBall", mmg_k, mmg_k_CB_m0, mmg_k_CB_sigma, mmg_k_CB_alpha, mmg_k_CB_n);
+  RooRealVar mmg_k_CB_sigma("mmg_k_CB_sigma", "CB #sigma", 0.45, 0.01, 0.5, "GeV");
+  RooRealVar mmg_k_CB_alpha("mmg_k_CB_alpha", "CB #alpha", -1.0, -10.01, 10.0);
+  RooRealVar mmg_k_CB_n("mmg_k_CB_n", "CB n", 2.0, 0.5, 500.0);
+//  RooCBShape mmg_k_CrystalBall("mmg_k_CrystalBall","mmg_k_CrystalBall", mmg_k, mmg_k_CB_m0, mmg_k_CB_sigma, mmg_k_CB_alpha, mmg_k_CB_n);
+  RooCBShape model("mmg_k_CrystalBall","mmg_k_CrystalBall", mmg_k, mmg_k_CB_m0, mmg_k_CB_sigma, mmg_k_CB_alpha, mmg_k_CB_n);
 
 	// BREIT-WIGNER
 	RooRealVar mmg_k_BW_mean("mmg_k_BW_mean", "BW m_{0}", 0.0 , -2.0, 2.0 ,"GeV");
@@ -224,7 +230,7 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 
 
   // CONVOLUTION
-  RooFFTConvPdf model("mmg_k_BWxCB", "mmg_k_BWxCB", mmg_k, mmg_k_BW, mmg_k_CrystalBall);
+//  RooFFTConvPdf model("mmg_k_BWxCB", "mmg_k_BWxCB", mmg_k, mmg_k_BW, mmg_k_CrystalBall);
 
 
 	model.fitTo(*Data_subset[i]);
@@ -237,13 +243,15 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	model.plotOn(mmg_k_frame, Name("model"));
 	mmg_k_frame->Draw();
 
-	Double_t mmg_k_BWxCB_chi2_ndf = mmg_k_frame->chiSquare("model", "data", 6);
-//	cout << "mmg_k_chi2_ndf= " << mmg_k_chi2_ndf << endl;	
+//	Double_t mmg_k_BWxCB_chi2_ndf = mmg_k_frame->chiSquare("model", "data", 6);
+	Double_t mmg_k_BWxCB_chi2_ndf = mmg_k_frame->chiSquare("model", "data", 4);
+	cout << "mmg_k_BWxCB_chi2_ndf= " << mmg_k_BWxCB_chi2_ndf << endl;	
 	TLatex latexLabel;
 	latexLabel.SetTextSize(0.06);
 	latexLabel.SetNDC();
 	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2010");
 	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
+	latexLabel.DrawLatex(0.70, 0.88, isData ? "DATA" : "MC");
 	latexLabel.DrawLatex(0.70, 0.82, display[i].c_str());
 	latexLabel.SetTextSize(0.03);
 
@@ -257,7 +265,8 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	double position = 0.82;
 	gStyle->SetOptTitle(0);
 	position -= 0.04;
-	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
+//	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
+	latexLabel.DrawLatex(0.20, position, "Fit: Crystal-Ball");
 	while(( (RooRealVar*)obj = it->Next()) != 0)
 	{
 		if( ! strcmp(((char*)obj->GetName()), "mmg_k") ) continue;
@@ -290,12 +299,18 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	latexLabel.DrawLatex(0.20, position, Form("#chi^{2} / ndf = %s", valueString.c_str()));
 
 //	Data_subset[i]->Clear();
-
+/*
 	mmg_k_BWxCB_canvas->Print(Form("gif/mmg_k_BWxCB_%s.gif", name[i].c_str()));
 	mmg_k_BWxCB_canvas->Print(Form("eps/mmg_k_BWxCB_%s.eps", name[i].c_str()));
 	mmg_k_BWxCB_canvas->Print(Form("png/mmg_k_BWxCB_%s.png", name[i].c_str()));
 	mmg_k_BWxCB_canvas->Print(Form("C/mmg_k_BWxCB_%s.C", name[i].c_str()));
 	system(Form("convert eps/mmg_k_BWxCB_%s.eps pdf/mmg_k_BWxCB_%s.pdf", name[i].c_str(), name[i].c_str()));
+*/
+	mmg_k_BWxCB_canvas->Print(Form("gif/mmg_k_CB_%s_%s.gif", isData?"DATA":"MC", name[i].c_str()));
+	mmg_k_BWxCB_canvas->Print(Form("eps/mmg_k_CB_%s_%s.eps", isData?"DATA":"MC", name[i].c_str()));
+	mmg_k_BWxCB_canvas->Print(Form("png/mmg_k_CB_%s_%s.png", isData?"DATA":"MC", name[i].c_str()));
+	mmg_k_BWxCB_canvas->Print(Form("C/mmg_k_CB_%s_%s.C", isData?"DATA":"MC", name[i].c_str()));
+	system(Form("convert eps/mmg_k_CB_%s_%s.eps pdf/mmg_k_CB_%s_%s.pdf", isData?"DATA":"MC", name[i].c_str(), isData?"DATA":"MC", name[i].c_str()));
 
 
 // ***************************************************************
@@ -305,8 +320,9 @@ for(int i=0; i<set_of_cuts.size() ; i++){
   RooRealVar mmg_s_CB_m0("mmg_s_CB_m0", "CB #Delta m_{0}", 1.0, -5.0, 5.0, "GeV");  
   RooRealVar mmg_s_CB_sigma("mmg_s_CB_sigma", "CB #sigma", 0.45, 0.0, 0.5, "GeV");
   RooRealVar mmg_s_CB_alpha("mmg_s_CB_alpha", "CB #alpha", 1.0, 0.0, 10.0);
-  RooRealVar mmg_s_CB_n("mmg_s_CB_n", "CB n", 2.0, 0.5, 10.0);
-  RooCBShape mmg_s_CrystalBall("mmg_s_CrystalBall","mmg_s_CrystalBall", mmg_s, mmg_s_CB_m0, mmg_s_CB_sigma, mmg_s_CB_alpha, mmg_s_CB_n);
+  RooRealVar mmg_s_CB_n("mmg_s_CB_n", "CB n", 2.0, 0.5, 1000.0);
+//  RooCBShape mmg_s_CrystalBall("mmg_s_CrystalBall","mmg_s_CrystalBall", mmg_s, mmg_s_CB_m0, mmg_s_CB_sigma, mmg_s_CB_alpha, mmg_s_CB_n);
+  RooCBShape model("mmg_s_CrystalBall","mmg_s_CrystalBall", mmg_s, mmg_s_CB_m0, mmg_s_CB_sigma, mmg_s_CB_alpha, mmg_s_CB_n);
 
 	// BREIT-WIGNER
 	RooRealVar mmg_s_BW_mean("mmg_s_BW_mean", "BW m_{0}", 0.0 , -2.0, 2.0 ,"GeV");
@@ -315,7 +331,7 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 
 
   // CONVOLUTION
-  RooFFTConvPdf model("mmg_s_BWxCB", "mmg_s_BWxCB", mmg_s, mmg_s_BW, mmg_s_CrystalBall);
+//  RooFFTConvPdf model("mmg_s_BWxCB", "mmg_s_BWxCB", mmg_s, mmg_s_BW, mmg_s_CrystalBall);
 
 
 	model.fitTo(*Data_subset[i]);
@@ -328,13 +344,15 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	model.plotOn(mmg_s_frame, Name("model"));
 	mmg_s_frame->Draw();
 
-	Double_t mmg_s_BWxCB_chi2_ndf = mmg_s_frame->chiSquare("model", "data", 6);
-//	cout << "mmg_s_chi2_ndf= " << mmg_s_chi2_ndf << endl;	
+//	Double_t mmg_s_BWxCB_chi2_ndf = mmg_s_frame->chiSquare("model", "data", 6);
+	Double_t mmg_s_BWxCB_chi2_ndf = mmg_s_frame->chiSquare("model", "data", 4);
+	cout << "mmg_s_BWxCB_chi2_ndf= " << mmg_s_BWxCB_chi2_ndf << endl;	
 	TLatex latexLabel;
 	latexLabel.SetTextSize(0.06);
 	latexLabel.SetNDC();
 	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2010");
 	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
+	latexLabel.DrawLatex(0.70, 0.88, isData ? "DATA" : "MC");
 	latexLabel.DrawLatex(0.70, 0.82, display[i].c_str());
 	latexLabel.SetTextSize(0.03);
 
@@ -348,7 +366,8 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	double position = 0.82;
 	gStyle->SetOptTitle(0);
 	position -= 0.04;
-	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
+//	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
+	latexLabel.DrawLatex(0.20, position, "Fit: Crystal-Ball");
 	while(( (RooRealVar*)obj = it->Next()) != 0)
 	{
 		if( ! strcmp(((char*)obj->GetName()), "mmg_s") ) continue;
@@ -381,12 +400,18 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	latexLabel.DrawLatex(0.20, position, Form("#chi^{2} / ndf = %s", valueString.c_str()));
 
 //	Data_subset[i]->Clear();
-
+/*
 	mmg_s_BWxCB_canvas->Print(Form("gif/mmg_s_BWxCB_%s.gif", name[i].c_str()));
 	mmg_s_BWxCB_canvas->Print(Form("eps/mmg_s_BWxCB_%s.eps", name[i].c_str()));
 	mmg_s_BWxCB_canvas->Print(Form("png/mmg_s_BWxCB_%s.png", name[i].c_str()));
 	mmg_s_BWxCB_canvas->Print(Form("C/mmg_s_BWxCB_%s.C", name[i].c_str()));
 	system(Form("convert eps/mmg_s_BWxCB_%s.eps pdf/mmg_s_BWxCB_%s.pdf", name[i].c_str(), name[i].c_str()));
+*/
+	mmg_s_BWxCB_canvas->Print(Form("gif/mmg_s_CB_%s_%s.gif", isData?"DATA":"MC", name[i].c_str()));
+	mmg_s_BWxCB_canvas->Print(Form("eps/mmg_s_CB_%s_%s.eps", isData?"DATA":"MC", name[i].c_str()));
+	mmg_s_BWxCB_canvas->Print(Form("png/mmg_s_CB_%s_%s.png", isData?"DATA":"MC", name[i].c_str()));
+	mmg_s_BWxCB_canvas->Print(Form("C/mmg_s_CB_%s_%s.C", isData?"DATA":"MC", name[i].c_str()));
+	system(Form("convert eps/mmg_s_CB_%s_%s.eps pdf/mmg_s_CB_%s_%s.pdf", isData?"DATA":"MC", name[i].c_str(), isData?"DATA":"MC", name[i].c_str()));
 
 
 
