@@ -29,6 +29,7 @@
 
 void Scale_Data(){
 //	gStyle->SetOptTitle(0);
+	gROOT->ProcessLine(".x setTDRStyle.C");
 	CMSstyle();
 	using namespace RooFit;
 
@@ -80,7 +81,7 @@ void Scale_Data(){
   vector<string> name;
 	vector<string> display;
 
-
+/*
   set_of_cuts.push_back("Photon_isEB == 1");
   display.push_back("EB, loose m_{#mu#mu#gamma}");
 	name.push_back("EB_loose");
@@ -90,16 +91,16 @@ void Scale_Data(){
   display.push_back("EE, loose m_{#mu#mu#gamma}");
 	name.push_back("EE_loose");
 
-
+*/
 	set_of_cuts.push_back("Photon_isEB == 1 && Mmumugamma > 87.2 && Mmumugamma < 95.2");
   display.push_back("EB, tight m_{#mu#mu#gamma}");
 	name.push_back("EB_tight");
 
-
+/*
   set_of_cuts.push_back("Photon_isEB == 0 && Mmumugamma > 87.2 && Mmumugamma < 95.2");
   display.push_back("EE, tight m_{#mu#mu#gamma}");
 	name.push_back("EE_tight");
-
+*/
 	const int size = set_of_cuts.size();
 	RooDataSet* Data_subset[size];
 //return;
