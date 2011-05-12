@@ -26,6 +26,7 @@
 #include <iomanip>
 #include <sstream>
 #include <TLatex.h>
+#include "CMSStyle.C"
 
 #include "DrawMC.h"
 
@@ -40,12 +41,14 @@ int main(int argc, char *argv[])
 	string iteration = argv[1];
 	string selection = "tight";
 	gROOT->ProcessLine(".x setTDRStyle.C");
+	CMSstyle();
 //	string FSR_DYToMuMu_powheg = "../../Selected/" + selection + "/FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/miniminiTree_36.15pb-1_" + iteration + "th_FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia.root";
 //	string FSR_DYToMuMu_powheg = "../../Selected/" + selection + "/DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia/miniminiTree_36.15pb-1_" + iteration + "th_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia.root";
 //	string FSR_DYToMuMu_powheg = "../../Selected/" + selection + "/miniTree_DATA_ALL.root";
 
-	string FSR_DYToMuMu_powheg = "../miniminiTree_35.91pb-1_" + iteration + "th_FSR_DYToMuMu.root";
-//	string FSR_DYToMuMu_powheg = "../../miniTree_Run2010_ALL.root";
+//	string FSR_DYToMuMu_powheg = "../miniTree_FSR_DYToMuMu.root";
+//	string FSR_DYToMuMu_powheg = "../miniminiTree_35.91pb-1_" + iteration + "th_FSR_DYToMuMu.root";
+	string FSR_DYToMuMu_powheg = "../../miniTree_Run2010_ALL_v3.root";
 	
 	TFile *FSR_DYToMuMu_powheg_File = new TFile(FSR_DYToMuMu_powheg.c_str());
 	TTree* FSR_DYToMuMu_powheg_miniTree = (TTree*) FSR_DYToMuMu_powheg_File->Get("miniTree");
@@ -59,8 +62,8 @@ int main(int argc, char *argv[])
 
 
 // *** all EB + all EE
-	set_of_cuts.push_back("isSelected");
-  name.push_back("EBEE");
+//	set_of_cuts.push_back("isSelected");
+//  name.push_back("EBEE");
 
 // *** all EB
   set_of_cuts.push_back("isSelected && Photon_isEB");
@@ -166,45 +169,49 @@ string temptitle;
 	temptitle = iteration + "th_Photon_s";
 	DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "(Mmumugamma**2 - Mmumu**2) / (91.1876**2 - Mmumu**2 ) -1", temptitle, "(40, 0.0 , 2.0)", set_of_cuts[i], name[i], "x = 1 / k = E_{reco} / E_{true}", true, false, c1, true);
 */
+/*
   temptitle = iteration + "th_Photon_k";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_k", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "k = E_{kin} / E_{reco}", true, false, c1, true);
-
+  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_k", temptitle, "(40, 0.0 , 2.0)", set_of_cuts[i], name[i], "k = E_{kin} / E_{reco}", true, false, c1, true);
+*/
 //  temptitle = iteration + "th_Photon_ik";
-//  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "x = 1 / k = E_{reco} / E_{kin}", true, false, c1, true);
+//  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "1 / k = E_{reco} / E_{kin}", true, false, c1, true);
 
   temptitle = iteration + "th_Photon_s";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s", temptitle, "(20, -1.0 , 1.0)", set_of_cuts[i], name[i], "s = E_{reco} / E_{kin} -1", true, false, c1, true);
-/*
+  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s", temptitle, "(40, -1.0 , 1.0)", set_of_cuts[i], name[i], "s = E_{reco} / E_{kin.} -1", true, false, c1, true);
 
+/*
 // *****
   temptitle = iteration + "th_Photon_k_5x5";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_k_5x5", temptitle, "(40, 0.0 , 2.0)", set_of_cuts[i], name[i], "k_{5x5} = E_{kin} / E_{reco}_{5x5}", true, false, c1, true);
+  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_k_5x5", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "k_{5x5} = E_{kin} / E_{reco}_{5x5}", true, false, c1, true);
 
-  temptitle = iteration + "th_Photon_ik_5x5";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik_5x5", temptitle, "(40, 0.0 , 2.0)", set_of_cuts[i], name[i], "x_{5x5} = 1 / k_{5x5} = E_{reco}_{5x5} / E_{kin}", true, false, c1, true);
+//  temptitle = iteration + "th_Photon_ik_5x5";
+//  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik_5x5", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "1 / k_{5x5} = E_{reco}_{5x5} / E_{kin}", true, false, c1, true);
 
   temptitle = iteration + "th_Photon_s_5x5";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s_5x5", temptitle, "(40, -1.0 , 1.0)", set_of_cuts[i], name[i], "s_{5x5} = 1 / k_{5x5} -1", true, false, c1, true);
+  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s_5x5", temptitle, "(20, -1.0 , 1.0)", set_of_cuts[i], name[i], "s_{5x5} = E_{reco}_{5x5} / E_{kin} -1", true, false, c1, true);
+
 // *****
   temptitle = iteration + "th_Photon_k_SC";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_k_SC", temptitle, "(40, 0.0 , 2.0)", set_of_cuts[i], name[i], "k_{SC} = E_{kin} / E_{reco}_{SC}", true, false, c1, true);
+  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_k_SC", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "k_{SC} = E_{kin} / E_{reco}_{SC}", true, false, c1, true);
 
-  temptitle = iteration + "th_Photon_ik_SC";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik_SC", temptitle, "(40, 0.0 , 2.0)", set_of_cuts[i], name[i], "x_{SC} = 1 / k_{SC} = E_{reco}_{SC} / E_{kin}", true, false, c1, true);
+//  temptitle = iteration + "th_Photon_ik_SC";
+//  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik_SC", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "1 / k_{SC} = E_{reco}_{SC} / E_{kin}", true, false, c1, true);
 
   temptitle = iteration + "th_Photon_s_SC";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s_SC", temptitle, "(40, -1.0 , 1.0)", set_of_cuts[i], name[i], "s_{SC} = 1 / k_{SC} -1", true, false, c1, true);
+  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s_SC", temptitle, "(20, -1.0 , 1.0)", set_of_cuts[i], name[i], "s_{SC} = E_{reco}_{SC} / E_{kin} -1", true, false, c1, true);
+*/
 // *****
+/*
   temptitle = iteration + "th_Photon_k_SCraw";
   DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_k_SCraw", temptitle, "(40, 0.0 , 2.0)", set_of_cuts[i], name[i], "k_{SCraw} = E_{kin} / E_{reco}_{SCraw}", true, false, c1, true);
 
-  temptitle = iteration + "th_Photon_ik_SCraw";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik_SCraw", temptitle, "(40, 0.0 , 2.0)", set_of_cuts[i], name[i], "x_{SCraw} = 1 / k_{SCraw} = E_{reco}_{SCraw} / E_{kin}", true, false, c1, true);
+//  temptitle = iteration + "th_Photon_ik_SCraw";
+//  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_ik_SCraw", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "1 / k_{SCraw} = E_{reco}_{SCraw} / E_{kin}", true, false, c1, true);
 
   temptitle = iteration + "th_Photon_s_SCraw";
-  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s_SCraw", temptitle, "(40, -1.0 , 1.0)", set_of_cuts[i], name[i], "s_{SCraw} = 1 / k_{SCraw} -1", true, false, c1, true);
-
+  DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "mmg_s_SCraw", temptitle, "(40, -1.0 , 1.0)", set_of_cuts[i], name[i], "s_{SCraw} = E_{reco}_{SCraw} / E_{kin} -1", true, false, c1, true);
 */
+
 
 //temptitle = iteration + "th_Photon_k_extended2";
 //	DrawMCplot(FSR_DYToMuMu_powheg_miniTree, "(91.1876**2 - Mmumu**2 ) / (Mmumugamma**2 - Mmumu**2)", temptitle, "(20, 0.0 , 2.0)", set_of_cuts[i], name[i], "k = E_{true} / E_{reco}", true, false, c1, true);
