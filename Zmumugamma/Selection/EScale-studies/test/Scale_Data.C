@@ -33,8 +33,8 @@ void Scale_Data(){
 	CMSstyle();
 	using namespace RooFit;
 
-	TFile* file_Data = new TFile("../../miniTree_Run2010_ALL_v2.root");
-	TFile* file_MC = new TFile("../../miniTree_FSR_DYToMuMu_v2.root");
+	TFile* file_Data = new TFile("../../miniTree_v2_DoubleMu-Run2011A_160404-163757_vALL.root");
+	TFile* file_MC = new TFile("../../miniTree_v2_FSR_DYToMuMu.root");
 	TTree* Tree_Data = (TTree*) file_Data->Get("miniTree");
 	TTree* Tree_MC = (TTree*) file_MC->Get("miniTree");
 
