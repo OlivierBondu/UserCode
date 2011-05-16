@@ -1,118 +1,102 @@
+#include "Selection_miniTree.h"
 
-#include "TF1.h"
-#include "TH1F.h"
-#include "TH2F.h"
-#include "TTree.h"
-#include "TClonesArray.h"
-#include "TBranch.h"
-#include "TChain.h"
-#include "TFile.h"
-#include "TLegend.h"
-#include "TStyle.h"
-#include "TString.h"
-#include "TBits.h"
-#include "TMath.h"
-#include "TSystem.h"
-#include <sstream>
-#include <iostream>
-#include <fstream>
-#include <utility>
-//#pragma optimize 0
+	// ____________________________________________
+	// Event information
+	// ____________________________________________
+	Int_t iEvent, iEventID, iLumiID, iRunID;
+	Int_t isSignalApplied, isStewApplied, isZJetsApplied;
 
-#include "interface/TRootBardak.h"
-#include "interface/TRootBeamSpot.h"
-#include "interface/TRootCluster.h"
-#include "interface/TRootDummyEvent.h"
-#include "interface/TRootEcalRecHit.h"
-#include "interface/TRootElectron.h"
-#include "interface/TRootEvent.h"
-#include "interface/TRootJet.h"
-#include "interface/TRootMCParticle.h"
-#include "interface/TRootMCPhoton.h"
-#include "interface/TRootMET.h"
-#include "interface/TRootMuon.h"
-#include "interface/TRootParticle.h"
-#include "interface/TRootPhoton.h"
-#include "interface/TRootRun.h"
-#include "interface/TRootSignalEvent.h"
-#include "interface/TRootSuperCluster.h"
-#include "interface/TRootTopTop.h"
-#include "interface/TRootTrack.h"
-#include "interface/TRootVertex.h"
+	Int_t isBeforeAllCuts, isAfterCutPthatFilter, isAfterCutZJETVETO;
+	Int_t isLooseMMG, isTightMMG, isMM, isAfterCut1d, isAfterCut1e;
+	Int_t isAfterCut2a, isAfterCut2b, isAfterCut2c;
+	Int_t isAfterCut3, isAfterCut4, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
+	Int_t isSelected;
+	
+	Int_t isNotCommissionned;
 
+	Int_t Muon_eventPassHLT_Mu11;
+	Int_t nVertices;
 
-using namespace std;
+	// ____________________________________________
+	// Muon variables
+	// ____________________________________________
+	Int_t NbMuons;
 
-int factorial(int number) {
-	int temp;
+	Float_t Pt_allMuons, Eta_allMuons, Phi_allMuons, Charge_allMuons;
+// (M minus charge, P plus charge), (F far, N near), (L leading, S subleading)
+	Float_t MuonM_Pt, MuonP_Pt, MuonN_Pt, MuonF_Pt, MuonL_Pt, MuonS_Pt;
+	Float_t MuonM_Eta, MuonP_Eta, MuonN_Eta, MuonF_Eta, MuonL_Eta, MuonS_Eta;
+	Float_t MuonM_Phi, MuonP_Phi, MuonN_Phi, MuonF_Phi, MuonL_Phi, MuonS_Phi;
+	Int_t MuonF_Charge, MuonN_Charge, MuonL_Charge, MuonS_Charge;
 
-	if(number <= 1) return 1;
+	Float_t MuonM_isoR03_emEt, MuonP_isoR03_emEt, MuonN_isoR03_emEt, MuonF_isoR03_emEt, MuonL_isoR03_emEt, MuonS_isoR03_emEt;
+	Float_t MuonM_isoR03_hadEt, MuonP_isoR03_hadEt, MuonN_isoR03_hadEt, MuonF_isoR03_hadEt, MuonL_isoR03_hadEt, MuonS_isoR03_hadEt;
+	Float_t MuonM_isoR03_hoEt, MuonP_isoR03_hoEt, MuonN_isoR03_hoEt, MuonF_isoR03_hoEt, MuonL_isoR03_hoEt, MuonS_isoR03_hoEt;
+	Float_t MuonM_isoR03_nJets, MuonP_isoR03_nJets, MuonN_isoR03_nJets, MuonF_isoR03_nJets, MuonL_isoR03_nJets, MuonS_isoR03_nJets;
+	Float_t MuonM_isoR03_nTracks, MuonP_isoR03_nTracks, MuonN_isoR03_nTracks, MuonF_isoR03_nTracks, MuonL_isoR03_nTracks, MuonS_isoR03_nTracks;
+	Float_t MuonM_isoR03_sumPt, MuonP_isoR03_sumPt, MuonN_isoR03_sumPt, MuonF_isoR03_sumPt, MuonL_isoR03_sumPt, MuonS_isoR03_sumPt;
 
-	temp = number * factorial(number - 1);
-	return temp;
-}
+	Float_t MuonM_isoR05_emEt, MuonP_isoR05_emEt, MuonN_isoR05_emEt, MuonF_isoR05_emEt, MuonL_isoR05_emEt, MuonS_isoR05_emEt;
+	Float_t MuonM_isoR05_hadEt, MuonP_isoR05_hadEt, MuonN_isoR05_hadEt, MuonF_isoR05_hadEt, MuonL_isoR05_hadEt, MuonS_isoR05_hadEt;
+	Float_t MuonM_isoR05_hoEt, MuonP_isoR05_hoEt, MuonN_isoR05_hoEt, MuonF_isoR05_hoEt, MuonL_isoR05_hoEt, MuonS_isoR05_hoEt;
+	Float_t MuonM_isoR05_nJets, MuonP_isoR05_nJets, MuonN_isoR05_nJets, MuonF_isoR05_nJets, MuonL_isoR05_nJets, MuonS_isoR05_nJets;
+	Float_t MuonM_isoR05_nTracks, MuonP_isoR05_nTracks, MuonN_isoR05_nTracks, MuonF_isoR05_nTracks, MuonL_isoR05_nTracks, MuonS_isoR05_nTracks;
+	Float_t MuonM_isoR05_sumPt, MuonP_isoR05_sumPt, MuonN_isoR05_sumPt, MuonF_isoR05_sumPt, MuonL_isoR05_sumPt, MuonS_isoR05_sumPt;
 
+	// ____________________________________________
+	// Photon variables
+	// ___________________________________________
+	Int_t NbPhotons;
+	Float_t Pt_allPhotons, Eta_allPhotons, Phi_allPhotons, Cross_allPhotons;
+	Int_t isEBorEE_allPhotons, isEB_allPhotons, isEE_allPhotons, isEEP_allPhotons, isEEM_allPhotons;
+	Float_t Photon_Eta, Photon_Phi;
+	Int_t Photon_isEBorEE, Photon_isEB, Photon_isEE, Photon_isEEP, Photon_isEEM;
 
-double DeltaR( double eta1, double phi1, double eta2, double phi2)
-{
-	double DeltaEta = fabs( eta1-eta2 );
-	double DeltaPhi = fabs( phi1-phi2 );
-	// Returning DeltaPhi in the correct range (0, 2pi)
-	while (DeltaPhi >	 TMath::Pi()) DeltaPhi -= 2*TMath::Pi();
-	while (DeltaPhi <= -TMath::Pi()) DeltaPhi += 2*TMath::Pi();
-	return sqrt(DeltaEta*DeltaEta + DeltaPhi*DeltaPhi);
-}
+	Int_t Photon_hasPixelSeed, Photon_isAlsoElectron, Photon_Nclusters, Photon_nBasicClusters, Photon_nXtals;
+	Int_t Photon_isTightPhoton, Photon_isLoosePhoton;
+	Int_t Photon_convNTracks;
+	Float_t Photon_E, Photon_Et, Photon_E2x2, Photon_E3x3, Photon_E5x5, Photon_Emax, Photon_E2nd;
+	Float_t Photon_r19, Photon_r9, Photon_cross;
+	Float_t Photon_caloConeSize, Photon_PreshEnergy, Photon_HoE;
+	Float_t Photon_sigmaEtaEta, Photon_sigmaIetaIeta;
+	Float_t Photon_covEtaEta, Photon_covPhiPhi, Photon_covEtaPhi;
+	Float_t Photon_etaWidth, Photon_phiWidth;
+	Float_t Photon_dR03isoEcalRecHit, Photon_dR03isoHcalRecHit, Photon_dR03isoSolidTrkCone, Photon_dR03isoHollowTrkCone, Photon_dR03isoNTracksSolidCone, Photon_dR03isoNTracksHollowCone;
+	Float_t Photon_dR04isoEcalRecHit, Photon_dR04isoHcalRecHit, Photon_dR04isoSolidTrkCone, Photon_dR04isoHollowTrkCone, Photon_dR04isoNTracksSolidCone, Photon_dR04isoNTracksHollowCone;
+	Float_t Photon_seedTime, Photon_seedFlag;
+	Int_t Photon_seedPosition1, Photon_seedPosition2;
+	Float_t Photon_SC_Eta, Photon_SC_Phi, Photon_SC_brem;
+	Float_t Photon_SC_E, Photon_SC_Et, Photon_SC_rawE, Photon_SC_rawEt;
 
-void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* particule_trueE, float* particule_truePx, float* particule_truePy, float* particule_truePz, float* particule_trueEta, float* particule_truePhi, int particle_pdgId = 0)
-{
-  TRootMCParticle* mygenparticle;
-  int NbMCpartInCone=0;
-  double bestPtdiff=500.0;
-  int igpsl=-1;
-  for (int igp=0; igp<mcParticles->GetEntriesFast(); igp++) {
-    mygenparticle = (TRootMCParticle*) mcParticles->At(igp);
-    //cout<<endl<<"deltaR = "<<DeltaR(mygenparticle->Eta(), mygenparticle->Phi(), myparticle->Eta(), myparticle->Phi())<<endl;
-    //cout<<"mygenparticle->Mag() = "<<mygenparticle->Mag()<<endl;
-    if (DeltaR(mygenparticle->Eta(), mygenparticle->Phi(), myparticle->Eta(), myparticle->Phi())<0.3){
-      if ( (mygenparticle->status()==1) && ( (particle_pdgId==0)?true:((mygenparticle->type())==particle_pdgId) ) ){
-        //HistoMCpartStatus1InConeId->Fill(mygenparticle->type());
-        NbMCpartInCone++;
-        if (fabs( (mygenparticle->Pt()) - (myparticle->Pt()) )<bestPtdiff){
-          bestPtdiff=fabs(mygenparticle->Pt()-myparticle->Pt());
-          igpsl=igp;
-        }
-      }
-    }
-  }
-  if (igpsl!=-1){
-    mygenparticle = (TRootMCParticle*) mcParticles->At(igpsl);
-    *particule_trueE = mygenparticle->Energy();
-    *particule_truePx = mygenparticle->Px();
-    *particule_truePy = mygenparticle->Py();
-    *particule_truePz = mygenparticle->Pz();
-    *particule_truePhi = mygenparticle->Phi();
-    *particule_trueEta = mygenparticle->Eta();
+	// ____________________________________________
+	// mugamma / mumu / mumugamma information
+	// ____________________________________________
+	
+	Float_t Mmumu, Mmumugamma, Mmumugamma_5x5, Mmumugamma_SC, Mmumugamma_SCraw, Mmumugamma_SCraw_fEta;
+	Float_t Ptmumu;
+	Float_t deltaRNear, deltaRFar, deltaRMinus, deltaRPlus, deltaRLeading, deltaRSubleading;
+	Float_t mmg_k, mmg_ik, mmg_s, mmg_logk, mmg_logik, mmg_logs;
+	Float_t mmg_k_5x5, mmg_ik_5x5, mmg_s_5x5, mmg_logk_5x5, mmg_logik_5x5, mmg_logs_5x5;
+	Float_t mmg_k_SC, mmg_ik_SC, mmg_s_SC, mmg_logk_SC, mmg_logik_SC, mmg_logs_SC;
+	Float_t mmg_k_SCraw, mmg_ik_SCraw, mmg_s_SCraw, mmg_logk_SCraw, mmg_logik_SCraw, mmg_logs_SCraw;
+	Float_t mmg_k_SCraw_fEta, mmg_ik_SCraw_fEta, mmg_s_SCraw_fEta, mmg_logk_SCraw_fEta, mmg_logik_SCraw_fEta, mmg_logs_SCraw_fEta;
+ 
+	// ____________________________________________
+  // MC Truth
+  // ___________________________________________
 
-  }
-  return;
-}
+  Float_t Photon_MC_E, Photon_MC_Px, Photon_MC_Py, Photon_MC_Pz, Photon_MC_Phi, Photon_MC_Eta;
+  Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta;
+  Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta;
+  Float_t MuonN_MC_E, MuonN_MC_Px, MuonN_MC_Py, MuonN_MC_Pz, MuonN_MC_Phi, MuonN_MC_Eta;
+  Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta;
+  Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta;
+  Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta;
 
-float fEta(float eta) 
-{
+	Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
+	Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
+	Float_t Mmumu_MMG_MC, Mmumugamma_MMG_MC, mmg_k_MMG_MC, mmg_ik_MMG_MC, mmg_s_MMG_MC, mmg_logk_MMG_MC, mmg_logik_MMG_MC, mmg_logs_MMG_MC;
 
-  
-  float ieta = fabs(eta)*(5/0.087);
-  float p0 = 40.2198;  // should be 40.2198
-  float p1 = -3.03103e-6;  // should be -3.03103e-6
-  float feta = 1; 
-
-  if ( ieta < p0 || fabs(eta) > 1.4442) feta = 1.0; 
-  else feta = 1.0/(1.0 + p1*(ieta-p0)*(ieta-p0));
-
-  //correctedEnergy = energy/(1.0 + p1*(ieta-p0)*(ieta-p0));
-  return feta;
-
-}
 
 //int Selection_miniTree()
 int main(int argc, char *argv[])
@@ -190,33 +174,10 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-/*
-	string filename = "Single.root";
-	inputEventTree->Add(filename.c_str());
-	inputRunTree->Add(filename.c_str());
-*/
-//	inputEventTree->Add("Single.root");
-//	inputRunTree->Add("Single.root");
-//	inputEventTree->Add("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/Single.root");
-//	inputRunTree->Add("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/Single.root");
 	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
 	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
-//	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/RecoSamples/SingleMu-Run2011A_161079-161352/SingleMu-Run2011A_161079-161352*root"));
-
-
-//	inputEventTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
-//	inputRunTree->Add("../RecoSamples/DYToMuMu/DYToMuMu*root");
-//	string sample = "DYToMuMu";
-
-/*
-	inputEventTree->Add("");
-	inputRunTree->Add("");
-	string sample = "";
-*/
 
 // INSERTFILES
-//  string sample = "SAMPLEPART";
-//	ofstream outfile("event_dump_SAMPLEPART.out");
 
 	TFile* OutputRootFile = new TFile(Form("miniTree_%s.root", sample.c_str()), "RECREATE");
 	
@@ -387,103 +348,6 @@ int main(int argc, char *argv[])
   string ListWantedHLTnames[1];
 	ListWantedHLTnames[0] = "HLT_Mu11";
 	
-
-	// ____________________________________________
-	// Event information
-	// ____________________________________________
-	Int_t iEvent, iEventID, iLumiID, iRunID;
-	Int_t isSignalApplied, isStewApplied, isZJetsApplied;
-
-	Int_t isBeforeAllCuts, isAfterCutPthatFilter, isAfterCutZJETVETO;
-	Int_t isLooseMMG, isTightMMG, isMM, isAfterCut1d, isAfterCut1e;
-	Int_t isAfterCut2a, isAfterCut2b, isAfterCut2c;
-	Int_t isAfterCut3, isAfterCut4, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
-	Int_t isSelected;
-	
-	Int_t isNotCommissionned;
-
-	Int_t Muon_eventPassHLT_Mu11;
-	Int_t nVertices;
-
-	// ____________________________________________
-	// Muon variables
-	// ____________________________________________
-	Int_t NbMuons;
-
-	Float_t Pt_allMuons, Eta_allMuons, Phi_allMuons, Charge_allMuons;
-// (M minus charge, P plus charge), (F far, N near), (L leading, S subleading)
-	Float_t MuonM_Pt, MuonP_Pt, MuonN_Pt, MuonF_Pt, MuonL_Pt, MuonS_Pt;
-	Float_t MuonM_Eta, MuonP_Eta, MuonN_Eta, MuonF_Eta, MuonL_Eta, MuonS_Eta;
-	Float_t MuonM_Phi, MuonP_Phi, MuonN_Phi, MuonF_Phi, MuonL_Phi, MuonS_Phi;
-	Int_t MuonF_Charge, MuonN_Charge, MuonL_Charge, MuonS_Charge;
-
-	Float_t MuonM_isoR03_emEt, MuonP_isoR03_emEt, MuonN_isoR03_emEt, MuonF_isoR03_emEt, MuonL_isoR03_emEt, MuonS_isoR03_emEt;
-	Float_t MuonM_isoR03_hadEt, MuonP_isoR03_hadEt, MuonN_isoR03_hadEt, MuonF_isoR03_hadEt, MuonL_isoR03_hadEt, MuonS_isoR03_hadEt;
-	Float_t MuonM_isoR03_hoEt, MuonP_isoR03_hoEt, MuonN_isoR03_hoEt, MuonF_isoR03_hoEt, MuonL_isoR03_hoEt, MuonS_isoR03_hoEt;
-	Float_t MuonM_isoR03_nJets, MuonP_isoR03_nJets, MuonN_isoR03_nJets, MuonF_isoR03_nJets, MuonL_isoR03_nJets, MuonS_isoR03_nJets;
-	Float_t MuonM_isoR03_nTracks, MuonP_isoR03_nTracks, MuonN_isoR03_nTracks, MuonF_isoR03_nTracks, MuonL_isoR03_nTracks, MuonS_isoR03_nTracks;
-	Float_t MuonM_isoR03_sumPt, MuonP_isoR03_sumPt, MuonN_isoR03_sumPt, MuonF_isoR03_sumPt, MuonL_isoR03_sumPt, MuonS_isoR03_sumPt;
-
-	Float_t MuonM_isoR05_emEt, MuonP_isoR05_emEt, MuonN_isoR05_emEt, MuonF_isoR05_emEt, MuonL_isoR05_emEt, MuonS_isoR05_emEt;
-	Float_t MuonM_isoR05_hadEt, MuonP_isoR05_hadEt, MuonN_isoR05_hadEt, MuonF_isoR05_hadEt, MuonL_isoR05_hadEt, MuonS_isoR05_hadEt;
-	Float_t MuonM_isoR05_hoEt, MuonP_isoR05_hoEt, MuonN_isoR05_hoEt, MuonF_isoR05_hoEt, MuonL_isoR05_hoEt, MuonS_isoR05_hoEt;
-	Float_t MuonM_isoR05_nJets, MuonP_isoR05_nJets, MuonN_isoR05_nJets, MuonF_isoR05_nJets, MuonL_isoR05_nJets, MuonS_isoR05_nJets;
-	Float_t MuonM_isoR05_nTracks, MuonP_isoR05_nTracks, MuonN_isoR05_nTracks, MuonF_isoR05_nTracks, MuonL_isoR05_nTracks, MuonS_isoR05_nTracks;
-	Float_t MuonM_isoR05_sumPt, MuonP_isoR05_sumPt, MuonN_isoR05_sumPt, MuonF_isoR05_sumPt, MuonL_isoR05_sumPt, MuonS_isoR05_sumPt;
-
-	// ____________________________________________
-	// Photon variables
-	// ___________________________________________
-	Int_t NbPhotons;
-	Float_t Pt_allPhotons, Eta_allPhotons, Phi_allPhotons, Cross_allPhotons;
-	Int_t isEBorEE_allPhotons, isEB_allPhotons, isEE_allPhotons, isEEP_allPhotons, isEEM_allPhotons;
-	Float_t Photon_Eta, Photon_Phi;
-	Int_t Photon_isEBorEE, Photon_isEB, Photon_isEE, Photon_isEEP, Photon_isEEM;
-
-	Int_t Photon_hasPixelSeed, Photon_isAlsoElectron, Photon_Nclusters, Photon_nBasicClusters, Photon_nXtals;
-	Int_t Photon_isTightPhoton, Photon_isLoosePhoton;
-	Int_t Photon_convNTracks;
-	Float_t Photon_E, Photon_Et, Photon_E2x2, Photon_E3x3, Photon_E5x5, Photon_Emax, Photon_E2nd;
-	Float_t Photon_r19, Photon_r9, Photon_cross;
-	Float_t Photon_caloConeSize, Photon_PreshEnergy, Photon_HoE;
-	Float_t Photon_sigmaEtaEta, Photon_sigmaIetaIeta;
-	Float_t Photon_covEtaEta, Photon_covPhiPhi, Photon_covEtaPhi;
-	Float_t Photon_etaWidth, Photon_phiWidth;
-	Float_t Photon_dR03isoEcalRecHit, Photon_dR03isoHcalRecHit, Photon_dR03isoSolidTrkCone, Photon_dR03isoHollowTrkCone, Photon_dR03isoNTracksSolidCone, Photon_dR03isoNTracksHollowCone;
-	Float_t Photon_dR04isoEcalRecHit, Photon_dR04isoHcalRecHit, Photon_dR04isoSolidTrkCone, Photon_dR04isoHollowTrkCone, Photon_dR04isoNTracksSolidCone, Photon_dR04isoNTracksHollowCone;
-	Float_t Photon_seedTime, Photon_seedFlag;
-	Int_t Photon_seedPosition1, Photon_seedPosition2;
-	Float_t Photon_SC_Eta, Photon_SC_Phi, Photon_SC_brem;
-	Float_t Photon_SC_E, Photon_SC_Et, Photon_SC_rawE, Photon_SC_rawEt;
-
-	// ____________________________________________
-	// mugamma / mumu / mumugamma information
-	// ____________________________________________
-	
-	Float_t Mmumu, Mmumugamma, Mmumugamma_5x5, Mmumugamma_SC, Mmumugamma_SCraw, Mmumugamma_SCraw_fEta;
-	Float_t Ptmumu;
-	Float_t deltaRNear, deltaRFar, deltaRMinus, deltaRPlus, deltaRLeading, deltaRSubleading;
-	Float_t mmg_k, mmg_ik, mmg_s, mmg_logk, mmg_logik, mmg_logs;
-	Float_t mmg_k_5x5, mmg_ik_5x5, mmg_s_5x5, mmg_logk_5x5, mmg_logik_5x5, mmg_logs_5x5;
-	Float_t mmg_k_SC, mmg_ik_SC, mmg_s_SC, mmg_logk_SC, mmg_logik_SC, mmg_logs_SC;
-	Float_t mmg_k_SCraw, mmg_ik_SCraw, mmg_s_SCraw, mmg_logk_SCraw, mmg_logik_SCraw, mmg_logs_SCraw;
-	Float_t mmg_k_SCraw_fEta, mmg_ik_SCraw_fEta, mmg_s_SCraw_fEta, mmg_logk_SCraw_fEta, mmg_logik_SCraw_fEta, mmg_logs_SCraw_fEta;
- 
-	// ____________________________________________
-  // MC Truth
-  // ___________________________________________
-
-  Float_t Photon_MC_E, Photon_MC_Px, Photon_MC_Py, Photon_MC_Pz, Photon_MC_Phi, Photon_MC_Eta;
-  Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta;
-  Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta;
-  Float_t MuonN_MC_E, MuonN_MC_Px, MuonN_MC_Py, MuonN_MC_Pz, MuonN_MC_Phi, MuonN_MC_Eta;
-  Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta;
-  Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta;
-  Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta;
-
-	Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
-	Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
-	Float_t Mmumu_MMG_MC, Mmumugamma_MMG_MC, mmg_k_MMG_MC, mmg_ik_MMG_MC, mmg_s_MMG_MC, mmg_logk_MMG_MC, mmg_logik_MMG_MC, mmg_logs_MMG_MC;
 
 	// ____________________________________________
 	// preparing the tree
@@ -999,8 +863,8 @@ int main(int argc, char *argv[])
 	int TOTALnbEventsAfterDimuonID[3] = {0};
 	int TOTALnbPhotonsAfterID[6] = {0};
 	int TOTALnbEventsAfterPhotonID[6] = {0};
-	int TOTALnbMuMuGammaAfterID[7] = {0};
-	int TOTALnbEventsAfterMuMuGammaID[7] = {0};
+	int TOTALnbMuMuGammaAfterID[8] = {0};
+	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
 	// LOOP over events
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
@@ -1113,30 +977,10 @@ int main(int argc, char *argv[])
 		// END OF INITIALIZATION
 		// ____________________________________________
 
-		// HLT information		
+// ********************************************************************************************************************
+// ***** MC-TRUTH SIGNAL MATCHING *****
+// ********************************************************************************************************************
 
-//		if(doHLT){
-//			if( ievt==0 ){ inputRunTree->GetEvent(ievt); NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);  }
-//			if ( string(inputEventTree->GetCurrentFile()->GetName()) != lastFile ){
-//				inputRunTree->GetEntry(inputEventTree->GetTreeNumber());
-//     	  lastFile = string(inputEventTree->GetCurrentFile()->GetName());
-//     	  cout << ievt << "\t" << lastFile << endl;
-//     	 	NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);
-//     	}
-//      doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_Mu11);
-//		}
-//
-//
-//		if (!((event->ptHat()>=minPtHat)&&(event->ptHat()<maxPtHat)))
-//		{
-//      cerr << "CUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT for pthat filtering" << endl;
-//			continue;
-//		}
-//		isAfterCutPthatFilter = 1;
-//		nAfterCutPthatFilter++;
-
-		// Signal MC Truth
-    // ZJET VETO
     bool MCphotons_from_muons_from_Z = false;
     bool MC_first_muon_in_phase_space = false;
     bool MC_second_muon_in_phase_space = false;
@@ -1173,8 +1017,6 @@ int main(int argc, char *argv[])
             }
           } // end of cuts on muons coming from the Z
         }// end of check if the event is a mc fsr passing acceptance cuts
-//        if(   MCsignal_in_phase_space ) // ***** WARNING *****  veto currently normal to consider background
-//        if( !  MCsignal_in_phase_space ) // ***** WARNING *****  veto currently REVERSED to consider SIGNAL
 
 				if( ((isZgammaMC == 1) && (!MCsignal_in_phase_space)) || ((isZgammaMC == 2) && (MCsignal_in_phase_space)) )
         {
@@ -1189,6 +1031,35 @@ int main(int argc, char *argv[])
       }// end of consistency check
     }// end of if Z+Jets veto for powheg
 
+// ********************************************************************************************************************
+// ***** HLT REQUIREMENT *****
+// ********************************************************************************************************************
+
+		// HLT information		
+
+//		if(doHLT){
+//			if( ievt==0 ){ inputRunTree->GetEvent(ievt); NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);  }
+//			if ( string(inputEventTree->GetCurrentFile()->GetName()) != lastFile ){
+//				inputRunTree->GetEntry(inputEventTree->GetTreeNumber());
+//     	  lastFile = string(inputEventTree->GetCurrentFile()->GetName());
+//     	  cout << ievt << "\t" << lastFile << endl;
+//     	 	NumWantedHLTnames = InitializeHLTinfo(inputRunTree, runInfos, event->nHLTPaths(), ListWantedHLTnames, 1);
+//     	}
+//      doHLTInfo(event, runInfos, NumWantedHLTnames, 1, &Muon_eventPassHLT_Mu11);
+//		}
+//
+//
+//		if (!((event->ptHat()>=minPtHat)&&(event->ptHat()<maxPtHat)))
+//		{
+//      cerr << "CUT: event " << ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )" << " CUT for pthat filtering" << endl;
+//			continue;
+//		}
+//		isAfterCutPthatFilter = 1;
+//		nAfterCutPthatFilter++;
+
+// ********************************************************************************************************************
+// ***** MUON OBJECT SELECTION *****
+// ********************************************************************************************************************
 
 		if(verbosity>1) cout << "Start loop over muon objects" << endl;
     // Cleaning: muon quality
@@ -1263,7 +1134,6 @@ int main(int argc, char *argv[])
 			TOTALnbMuonsAfterID[7]++;
 
       if(! (fabs(mymuon->GlobaldB())<0.2) )
-//      if(! (fabs(mymuon->dB())<0.2) )
 			{// inner track transverse impact parameter w.r.t the beam spot |d_xy|
         muonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because inner track transverse impact parameter w.r.t the beam spot |d_xy|" << endl;
@@ -1296,15 +1166,11 @@ int main(int argc, char *argv[])
 			nbMuonsAfterID[11]++;
 			TOTALnbMuonsAfterID[11]++;
 
-
-
 //      if(! (mymuon->) ){// 
 //        muonIsNotCommissioned.push_back(1);
 //        if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because" << endl;
 //        continue;
 //      }
-
-
 
       if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " accepted" << endl;
       muonIsNotCommissioned.push_back(0);
@@ -1321,11 +1187,12 @@ int main(int argc, char *argv[])
 
 		if(! (nbMuonsAfterID[11] >=2) )// Not enough dimuon candidates, skip the event
 		{
-
         continue;
-
 		}
 
+// ********************************************************************************************************************
+// ***** DIMUON OBJECT SELECTION *****
+// ********************************************************************************************************************
 
 
 		if(verbosity>1) cout << "Filling dimuon pair holder" << endl;
@@ -1343,8 +1210,6 @@ int main(int argc, char *argv[])
 
 		TOTALnbDimuonsAfterID[0] += numberOfDimuons[0];
 		TOTALnbEventsAfterDimuonID[0] += 1;
-
-
 
 		pair <int, int> IDofMuons[3][numberOfDimuons[0]];
 
@@ -1367,6 +1232,10 @@ int main(int argc, char *argv[])
 			}
 		}
 
+// --------------------------------------------------------------------------------------------------------------------
+// ----- dimuon candidate of opposite charge -----
+// --------------------------------------------------------------------------------------------------------------------
+
 		if(verbosity>2) cout << "loop over possible muon pairs, fill dimuons candidates with opposite charge" << endl;	
 		// loop over possible muon pairs, fill dimuons candidates with opposite charge
 		for(int i_dimuons = 0; i_dimuons < numberOfDimuons[0]; i_dimuons++)
@@ -1385,6 +1254,10 @@ int main(int argc, char *argv[])
 		if(! (numberOfDimuons[1] >= 1) ) continue; // Not enough dimuon candidates, skip the event
 		TOTALnbDimuonsAfterID[1] += numberOfDimuons[1];
 		TOTALnbEventsAfterDimuonID[1] += 1;
+
+// --------------------------------------------------------------------------------------------------------------------
+// ----- dimuon candidate of correct invariant mass -----
+// --------------------------------------------------------------------------------------------------------------------
 
 		if(verbosity>2) cout << "loop over possible muon pairs, fill dimuons candidates with valid invariant mass" << endl;
 		// loop over possible muon pairs, fill dimuons candidates with valid invariant mass
@@ -1429,6 +1302,9 @@ int main(int argc, char *argv[])
 			miniTree_allmuons->Fill();
 		}
 
+// ********************************************************************************************************************
+// ***** PHOTON OBJECT SELECTION *****
+// ********************************************************************************************************************
 
 		if(verbosity>1) cout << "cleaning photon collection" << endl;
    // Cleaning: removing not commissionned superclusters and spikes
@@ -1515,6 +1391,9 @@ int main(int argc, char *argv[])
           continue;
 
     }
+// ********************************************************************************************************************
+// ***** MUMUGAMMA FSR TRIPLET OBJECT SELECTION *****
+// ********************************************************************************************************************
 
 
 		if(verbosity>2) cout << "creating triplet pair object" << endl;
@@ -1558,6 +1437,8 @@ int main(int argc, char *argv[])
 		if(verbosity>3) cout << "start looping over triplet candidates" << endl;	
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[0]= " << nbMuMuGammaAfterID[0] << endl;
 
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 
 		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[0] ; i_mmg++)
 		{
@@ -1612,6 +1493,8 @@ int main(int argc, char *argv[])
     }
 
 		TOTALnbEventsAfterMuMuGammaID[1]++ ;
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 
 //		cout << "loop over nbMuMuGammaAfterID[1]= " << nbMuMuGammaAfterID[1] << " candidates" << endl;
 		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[1] ; i_mmg++)
@@ -1651,6 +1534,8 @@ int main(int argc, char *argv[])
 
 		TOTALnbMuMuGammaAfterID[2] += nbMuMuGammaAfterID[2];
 		TOTALnbEventsAfterMuMuGammaID[2]++ ;
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 
 //		cout << "loop over nbMuMuGammaAfterID[2]= " << nbMuMuGammaAfterID[2] << " candidates" << endl;
 		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[2] ; i_mmg++)
@@ -1686,6 +1571,8 @@ int main(int argc, char *argv[])
 
 		TOTALnbMuMuGammaAfterID[3] += nbMuMuGammaAfterID[3];
 		TOTALnbEventsAfterMuMuGammaID[3]++ ;
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 
 //		cout << "loop over nbMuMuGammaAfterID[3]= " << nbMuMuGammaAfterID[3] << " candidates" << endl;
 		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[3] ; i_mmg++)
@@ -1721,6 +1608,8 @@ int main(int argc, char *argv[])
 
 		TOTALnbMuMuGammaAfterID[4] += nbMuMuGammaAfterID[4];
 		TOTALnbEventsAfterMuMuGammaID[4]++ ;
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 
 //		cout << "loop over nbMuMuGammaAfterID[4]= " << nbMuMuGammaAfterID[4] << " candidates" << endl;
 		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[4] ; i_mmg++)
@@ -1765,7 +1654,8 @@ int main(int argc, char *argv[])
       myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[5][i_mmg].first);
       mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.first );
       mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.second );
-
+			FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+/*
 			// Fill photon stuff
 			Photon_Eta = myphoton->Eta();
 	    Photon_Phi = myphoton->Phi();
@@ -2169,10 +2059,12 @@ int main(int argc, char *argv[])
 ////    PhotonSC_raw->Clear();
 ////    leadingMuon->Clear();
 ////    subleadingMuon->Clear();
-
+*/
 		}
 			isLooseMMG = 1;
 			nAfterLooseMMG++;
+// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 
 		TOTALnbMuMuGammaAfterID[5] += nbMuMuGammaAfterID[5];
 		TOTALnbEventsAfterMuMuGammaID[5]++ ;
@@ -2228,7 +2120,8 @@ int main(int argc, char *argv[])
       myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[6][i_mmg].first);
       mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.first );
       mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.second );
-
+			FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+/*
 			// Fill photon stuff
 			Photon_Eta = myphoton->Eta();
 	    Photon_Phi = myphoton->Phi();
@@ -2521,6 +2414,7 @@ int main(int argc, char *argv[])
 ////    leadingMuon->Clear();
 ////    subleadingMuon->Clear();
 //		free(subleadingMuon);
+*/
 
 		}
 
@@ -2571,11 +2465,6 @@ int main(int argc, char *argv[])
 
 		miniTree->Fill();
 
-//			outputEventTree->Fill();
-
-
-
-
 	} // fin boucle sur evts LOOP
 
 		for(int i = 0; i < 12 ; i++)
@@ -2596,71 +2485,15 @@ int main(int argc, char *argv[])
 		}
 
 // Writing stuff out
-/*
-	outputEventTree->AutoSave();
-	
-	OutputRootFile->cd();
-*/
 	OutputRootFile->Write();
 	OutputRootFile->Close();
 
 	delete OutputRootFile;
 	delete inputEventTree;
 	delete inputRunTree;
-/*
-	delete sample_char;
 
-	delete event_br;
-	delete event;
-	delete run_br;
-	delete runInfos;
-	delete mcParticles_br;
-	delete mcParticles;
-	delete mcSignalMuMuGamma_br;
-	delete mcMuMuGammaEvent;
-	delete mcPhotons_br;
-	delete mcPhotons;
-	delete muons_br;
-	delete muons;
-	delete photons_br;
-	delete photons;
-	delete NumWantedHLTnames;
-*/
-/*
-// Cleaning memory
 
-//	outputEventTree->Clear();
-//	miniTree_allphotons->Clear();
-//	miniTree_allmuons->Clear();
-//	miniTree->Clear();
-*//*
-	delete NumWantedHLTnames;
-//	bardak->Clear();
-//	met->Clear();
-//	conversionTracks->Clear();
-//	superClusters->Clear();
-//	clusters->Clear();
-//	photons->Clear();
-//	electrons->Clear();
-//	muons->Clear();
-//	jets->Clear();
-//	tracks->Clear();
-//	zeeVertices->Clear();
-//	vertices->Clear();
-//	beamSpot->Clear();
-//	mcPhotons->Clear();
-//	mcTopTopEvent->Clear();
-//	mcMuMuGammaEvent->Clear();
-//	genMETs->Clear();
-//	genJets->Clear();
-//	mcParticles->Clear();
-//	runInfos->Clear();
-//	event->Clear();
-//	OutputRootFile->Clear();
-//	inputEventTree->Clear();
-//	inputRunTree->Clear();
-*/
-	cout << "bam" << endl;
+
 	return 0;
 
 }
