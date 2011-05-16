@@ -9,7 +9,7 @@
 	Int_t isBeforeAllCuts, isAfterCutPthatFilter, isAfterCutZJETVETO;
 	Int_t isVeryLooseMMG, isLooseMMG, isMM, isTightMMG, isMMGCandidate;
 	Int_t isAfterFSRCut1, isAfterFSRCut2, isAfterFSRCut3;
-	Int_t isAfterFSRCut4, isAfterCut4, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
+	Int_t isAfterFSRCut4, isMultipleCandidate, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
 	Int_t isSelected;
 	
 	Int_t isNotCommissionned;
@@ -386,7 +386,7 @@ int main(int argc, char *argv[])
 	miniTree->Branch("isAfterFSRCut3", &isAfterFSRCut3, "isAfterFSRCut3/I");
 
 	miniTree->Branch("isAfterFSRCut4", &isAfterFSRCut4, "isAfterFSRCut4/I");
-	miniTree->Branch("isAfterCut4", &isAfterCut4, "isAfterCut4/I");
+	miniTree->Branch("isMultipleCandidate", &isMultipleCandidate, "isMultipleCandidate/I");
 	miniTree->Branch("isAfterCut5", &isAfterCut5, "isAfterCut5/I");
 	miniTree->Branch("isAfterCut6", &isAfterCut6, "isAfterCut6/I");
 	miniTree->Branch("isAfterCut7", &isAfterCut7, "isAfterCut7/I");
@@ -421,7 +421,7 @@ int main(int argc, char *argv[])
 	miniTree_allmuons->Branch("isAfterFSRCut3", &isAfterFSRCut3, "isAfterFSRCut3/I");
 
 	miniTree_allmuons->Branch("isAfterFSRCut4", &isAfterFSRCut4, "isAfterFSRCut4/I");
-	miniTree_allmuons->Branch("isAfterCut4", &isAfterCut4, "isAfterCut4/I");
+	miniTree_allmuons->Branch("isMultipleCandidate", &isMultipleCandidate, "isMultipleCandidate/I");
 	miniTree_allmuons->Branch("isAfterCut5", &isAfterCut5, "isAfterCut5/I");
 	miniTree_allmuons->Branch("isAfterCut6", &isAfterCut6, "isAfterCut6/I");
 	miniTree_allmuons->Branch("isAfterCut7", &isAfterCut7, "isAfterCut7/I");
@@ -455,7 +455,7 @@ int main(int argc, char *argv[])
 	miniTree_allphotons->Branch("isAfterFSRCut3", &isAfterFSRCut3, "isAfterFSRCut3/I");
 
 	miniTree_allphotons->Branch("isAfterFSRCut4", &isAfterFSRCut4, "isAfterFSRCut4/I");
-	miniTree_allphotons->Branch("isAfterCut4", &isAfterCut4, "isAfterCut4/I");
+	miniTree_allphotons->Branch("isMultipleCandidate", &isMultipleCandidate, "isMultipleCandidate/I");
 	miniTree_allphotons->Branch("isAfterCut5", &isAfterCut5, "isAfterCut5/I");
 	miniTree_allphotons->Branch("isAfterCut6", &isAfterCut6, "isAfterCut6/I");
 	miniTree_allphotons->Branch("isAfterCut7", &isAfterCut7, "isAfterCut7/I");
@@ -878,10 +878,10 @@ int main(int argc, char *argv[])
 
 		iEvent = ievt;
 		inputEventTree->GetEvent(ievt);
-    if( lastFile == "" ){
-      lastFile = string(inputEventTree->GetCurrentFile()->GetName());
-      cout << ievt << "\t" << lastFile << endl;
-    }
+//    if( lastFile == "" ){
+//      lastFile = string(inputEventTree->GetCurrentFile()->GetName());
+//      cout << ievt << "\t" << lastFile << endl;
+//    }
 
 		// ____________________________________________
 		// Event information
@@ -897,7 +897,7 @@ int main(int argc, char *argv[])
 		isAfterCutPthatFilter = isAfterCutZJETVETO = 0;
 		isVeryLooseMMG = isLooseMMG = isMM = isTightMMG = isMMGCandidate = 0;
 		isAfterFSRCut1 = isAfterFSRCut2 = isAfterFSRCut3 = 0;
-		isAfterFSRCut4 = isAfterCut4 = isAfterCut5 = isAfterCut6 = isAfterCut7 = isAfterCut8 = isAfterCut9 = isAfterCut10 = 0;
+		isAfterFSRCut4 = isMultipleCandidate = isAfterCut5 = isAfterCut6 = isAfterCut7 = isAfterCut8 = isAfterCut9 = isAfterCut10 = 0;
 		isSelected = 0;
 
 		// ____________________________________________
@@ -1773,7 +1773,7 @@ int main(int argc, char *argv[])
 
 		nAfterCut2c++;
 		if( nbMuMuGammaAfterID[7] != 1 ){
-			isVeryLooseMMG = isLooseMMG = isMM = isTightMMG = isMMGCandidate = isAfterFSRCut1 = isAfterFSRCut2 = isAfterFSRCut3 = isAfterFSRCut4 = isSelected = 0;
+			isMultipleCandidate = 1;
 	    for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[7] ; i_mmg++)
 	    {
 	      TRootPhoton* myphoton;
@@ -1791,7 +1791,6 @@ int main(int argc, char *argv[])
 
 		nAfterCut3++;
 
-		isAfterCut4 = 1;
 		nAfterCut4++;
 
 		isAfterCut5 = 1;
