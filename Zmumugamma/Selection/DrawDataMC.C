@@ -126,7 +126,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   //Histo_Data->Scale((double)((double)1.0/(double)a));
   //Histo_MC->Scale((double)((double)1.0/(double)b));
   // // Normalize MC to Data number of entries
-  double integratedLuminosity = 9.72;
+  double integratedLuminosity = 191.09326;
 
   double XSectionFSR_DYToMuMu = 1614.0;
   double XSectionnonFSR_DYToMuMu = 1614.0;

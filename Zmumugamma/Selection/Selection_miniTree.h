@@ -116,6 +116,7 @@ float fEta(float eta)
 
 int main(int argc, char *argv[]);
 
+
   // ____________________________________________
   // Event information
   // ____________________________________________
@@ -123,9 +124,9 @@ int main(int argc, char *argv[]);
   extern Int_t isSignalApplied, isStewApplied, isZJetsApplied;
 
   extern Int_t isBeforeAllCuts, isAfterCutPthatFilter, isAfterCutZJETVETO;
-  extern Int_t isLooseMMG, isTightMMG, isMM, isAfterCut1d, isAfterCut1e;
-  extern Int_t isAfterCut2a, isAfterCut2b, isAfterCut2c;
-  extern Int_t isAfterCut3, isAfterCut4, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
+  extern Int_t isVeryLooseMMG, isLooseMMG, isMM, isTightMMG, isMMGCandidate;
+  extern Int_t isAfterFSRCut1, isAfterFSRCut2, isAfterFSRCut3;
+  extern Int_t isAfterFSRCut4, isMultipleCandidate, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
   extern Int_t isSelected;
 
   extern Int_t isNotCommissionned;
@@ -212,6 +213,10 @@ int main(int argc, char *argv[]);
   extern Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
   extern Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
   extern Float_t Mmumu_MMG_MC, Mmumugamma_MMG_MC, mmg_k_MMG_MC, mmg_ik_MMG_MC, mmg_s_MMG_MC, mmg_logk_MMG_MC, mmg_logik_MMG_MC, mmg_logs_MMG_MC;
+
+
+
+//int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, TClonesArray* mcParticles);
 
 
 
@@ -325,7 +330,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
       Ptmumu = mumu.Pt();
       double mumuInvMass = mumu.M();
 //      cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
-////      mumu.Clear();
+      mumu.Clear();
       Mmumu = mumuInvMass;
 
     // ********************************************************************
@@ -379,19 +384,22 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     double mumuSC_rawInvMass = mumuSC_raw.M();
     double mumuSC_rawInvMass_fEta = mumuSC_raw_fEta.M();
     Mmumugamma = mumugammaInvMass;
+//		if( ((Mmumugamma>97.2) && (Mmumugamma<110.0)) || ((Mmumugamma>70.0) && (Mmumugamma<87.2)) ) cout << "isVeryLooseMMG:isLooseMMG:isTightMMG " << isVeryLooseMMG << isLooseMMG << isTightMMG << "\t\t\tMmumugamma= " << Mmumugamma << endl;
+//		cout << "ievt= " << iEvent << "\t\tVL:L:T:M " << isVeryLooseMMG << isLooseMMG << isTightMMG << isMultipleCandidate << "\t\t\tMmumugamma= " << Mmumugamma << endl;
+//		cout << "ievt= " << iEvent << "\t\t" << isMMGCandidate << isAfterFSRCut1 << isAfterFSRCut2 << isAfterFSRCut3 << isAfterFSRCut4 << isVeryLooseMMG << isLooseMMG << isTightMMG << isMultipleCandidate << "\t\t\tMmumugamma= " << Mmumugamma << endl;
     Mmumugamma_SC = mumuSCInvMass;
     Mmumugamma_5x5 = mumu5x5InvMass;
     Mmumugamma_SCraw = mumuSC_rawInvMass;
     Mmumugamma_SCraw_fEta = mumuSC_rawInvMass_fEta;
-////    mumugamma.Clear();
-////    mumuSC.Clear();
-////    mumu5x5.Clear();
-////    mumuSC_raw.Clear();
-//    PhotonEScale->Clear();
-//    PhotonSC->Clear();
-//    Photon5x5->Clear();
-//    PhotonSC_raw->Clear();
-//    PhotonSC_raw_fEta->Clear();
+    mumugamma.Clear();
+    mumuSC.Clear();
+    mumu5x5.Clear();
+    mumuSC_raw.Clear();
+    PhotonEScale->Clear();
+    PhotonSC->Clear();
+    Photon5x5->Clear();
+    PhotonSC_raw->Clear();
+    PhotonSC_raw_fEta->Clear();
 
     mmg_k = (double)(pow(91.1876,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
     mmg_ik = (double)(pow(Mmumugamma,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
@@ -597,17 +605,17 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 //      Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;
 //      Mmumu_Muons_MC = Mmumugamma_Muons_MC = mmg_k_Muons_MC = mmg_ik_Muons_MC = mmg_s_Muons_MC = mmg_logk_Muons_MC = mmg_logik_Muons_MC = mmg_logs_Muons_MC = -99.0;
 //      Mmumu_MMG_MC = Mmumugamma_MMG_MC = mmg_k_MMG_MC = mmg_ik_MMG_MC = mmg_s_MMG_MC = mmg_logk_MMG_MC = mmg_logik_MMG_MC = mmg_logs_MMG_MC = -99.0;
-//    PhotonMC->Clear();
-//    MuonLMC->Clear();
-//    MuonSMC->Clear();
-//    PhotonEScale->Clear();
-//    PhotonSC->Clear();
-//    Photon5x5->Clear();
-//    PhotonSC_raw->Clear();
+    PhotonMC->Clear();
+    MuonLMC->Clear();
+    MuonSMC->Clear();
+    PhotonEScale->Clear();
+    PhotonSC->Clear();
+    Photon5x5->Clear();
+    PhotonSC_raw->Clear();
     }// end doMC
 
 
-////    myphoton->Clear();
+//    myphoton->Clear();
 ////    mymuon1->Clear();
 ////    mymuon2->Clear();
 ////    farMuon->Clear();
@@ -623,5 +631,3 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 
 return 0;
 }
-
-

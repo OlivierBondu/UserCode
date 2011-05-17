@@ -98,6 +98,7 @@
 	Float_t Mmumu_MMG_MC, Mmumugamma_MMG_MC, mmg_k_MMG_MC, mmg_ik_MMG_MC, mmg_s_MMG_MC, mmg_logk_MMG_MC, mmg_logik_MMG_MC, mmg_logs_MMG_MC;
 
 
+
 //int Selection_miniTree()
 int main(int argc, char *argv[])
 //int main()
@@ -1692,6 +1693,7 @@ int main(int argc, char *argv[])
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())  )
 			{
+//				cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
 				miniTree->Fill();
 				continue;
@@ -1747,7 +1749,10 @@ int main(int argc, char *argv[])
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			if( (mumugamma.M() < 87.2) || (95.2 < mumugamma.M())  )
 			{
+//				cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
+//				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+//				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				miniTree->Fill();
 				continue;
 			}
@@ -1788,6 +1793,21 @@ int main(int argc, char *argv[])
 			continue;
 		}
 
+		int i_mmg = 0;
+		isMultipleCandidate = 0;
+		TRootPhoton* myphoton;
+		TRootMuon* mymuon1;
+		TRootMuon* mymuon2;
+		myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
+    mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
+    mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
+    FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+		isSelected = 1;
+		nSelected++;
+		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;
+		miniTree->Fill();
+
+
 
 		nAfterCut3++;
 
@@ -1808,12 +1828,6 @@ int main(int argc, char *argv[])
 		nAfterCut9++;
 		isAfterCut10 = 1;
 		nAfterCut10++;
-		isSelected = 1;
-		nSelected++;
-		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;
-
-		miniTree->Fill();
-
 	} // fin boucle sur evts LOOP
 
 		for(int i = 0; i < 12 ; i++)

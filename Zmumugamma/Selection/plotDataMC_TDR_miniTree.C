@@ -61,12 +61,15 @@ int main()
 	string selection = "loose";
 	gSystem->Load("/sps/cms/obondu/CMSSW_4_1_2/src/UserCode/IpnTreeProducer/src/libToto.so");
 	gROOT->ProcessLine(".x setTDRStyle.C");
-	string Data = "miniTree_v2_DATA_2011_ALL.root"; 
-	string FSR_DYToMuMu = "miniTree_v2_FSR_DYToMuMu.root";
-	string nonFSR_DYToMuMu = "miniTree_v2_nonFSR_DYToMuMu.root";
-	string TTJets = "miniTree_v2_TTJets.root";
-	string WJetsToLNu = "miniTree_v2_WJets.root";
-	string QCDMu = "miniTree_v2_QCD.root"; 
+//	string Data = "miniTree_v2_DATA_2011_ALL.root"; 
+//	string Data = "miniTree_v2_DoubleMu-Run2011A_160404-163369_vALL_v02.root"; 
+//	string Data = "miniTree_v2_DoubleMu-Run2011A_160404-163757_vALL.root";
+	string Data = "miniTree_v3_DoubleMu-Run2011A_160404-163869_vALL.root";
+	string FSR_DYToMuMu = "miniTree_v3_FSR_DYToMuMu.root";
+	string nonFSR_DYToMuMu = "miniTree_v3_nonFSR_DYToMuMu.root";
+	string TTJets = "miniTree_v3_TTJets.root";
+	string WJetsToLNu = "miniTree_v3_WJets.root";
+	string QCDMu = "miniTree_v3_QCD.root"; 
 
 	TFile *Data_File = new TFile(Data.c_str());
 	TTree* Data_miniTree = (TTree*) Data_File->Get("miniTree");
@@ -97,10 +100,23 @@ int main()
 
 	TCanvas *c1 = new TCanvas("Default", "Default");
 
-	DrawDataMCplot(Data_miniTree_allmuons, FSR_DYToMuMu_miniTree_allmuons, nonFSR_DYToMuMu_miniTree_allmuons, QCDMu_miniTree_allmuons, TTJets_miniTree_allmuons, WJetsToLNu_miniTree_allmuons, "Ptmumu", "Ptmumu", "(100,0,200)", "isMM", "dimuon", "p_{T}^{#mu#mu} [GeV]", true, false, c1);
+//	DrawDataMCplot(Data_miniTree_allmuons, FSR_DYToMuMu_miniTree_allmuons, nonFSR_DYToMuMu_miniTree_allmuons, QCDMu_miniTree_allmuons, TTJets_miniTree_allmuons, WJetsToLNu_miniTree_allmuons, "Ptmumu", "Ptmumu", "(100,0,200)", "isMM", "dimuon", "p_{T}^{#mu#mu} [GeV]", true, false, c1);
 
 	vector<string> set_of_cuts;
 	vector<string> name;
+
+	set_of_cuts.push_back("isMMGCandidate");
+	name.push_back("selected-00-beforeFSRcuts");
+	set_of_cuts.push_back("isAfterFSRCut1");
+	name.push_back("selected-01");
+	set_of_cuts.push_back("isAfterFSRCut2");
+	name.push_back("selected-02");
+	set_of_cuts.push_back("isAfterFSRCut3");
+	name.push_back("selected-03");
+	set_of_cuts.push_back("isAfterFSRCut4");
+	name.push_back("selected-04");
+	set_of_cuts.push_back("isVeryLooseMMG");
+	name.push_back("selected-veryloose");
 
 	set_of_cuts.push_back("isLooseMMG");
   name.push_back("selected-loose");
@@ -114,6 +130,19 @@ int main()
   name.push_back("selected-tight-EB");
 	set_of_cuts.push_back("isTightMMG && Photon_isEE");
   name.push_back("selected-tight-EE");
+
+	set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
+  name.push_back("selected-loose-nomultiple");
+	set_of_cuts.push_back("isLooseMMG && Photon_isEB && isMultipleCandidate==0");
+  name.push_back("selected-loose-EB-nomultiple");
+	set_of_cuts.push_back("isLooseMMG && Photon_isEE && isMultipleCandidate==0");
+  name.push_back("selected-loose-EE-nomultiple");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0");
+  name.push_back("selected-tight-nomultiple");
+	set_of_cuts.push_back("isTightMMG && Photon_isEB && isMultipleCandidate==0");
+  name.push_back("selected-tight-EB-nomultiple");
+	set_of_cuts.push_back("isTightMMG && Photon_isEE && isMultipleCandidate==0");
+  name.push_back("selected-tight-EE-nomultiple");
 
 
 	for(int i=0; i<set_of_cuts.size() ; i++)
@@ -146,13 +175,14 @@ int main()
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "MuonF_Charge", "MuonF_Charge", "(20,-2,2)", set_of_cuts[i], name[i], "charge #mu_{far}", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "MuonN_Charge", "MuonN_Charge", "(20,-2,2)", set_of_cuts[i], name[i], "charge #mu_{near}", true, false, c1);
 */
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu", "(150,0,300)", set_of_cuts[i], name[i], "M_{#mu#mu} [GeV]", true, false, c1);
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu_extended", "(30,30,90)", set_of_cuts[i], name[i], "M_{#mu#mu} [GeV]", true, false, c1);
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma", "(300,0,300)", set_of_cuts[i], name[i], "M_{#mu#mu#gamma} [GeV]", true, false, c1);
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma_extended", "(60,60,120)", set_of_cuts[i], name[i], "M_{#mu#mu#gamma} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu", "(150,0,300)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu_extended", "(30,30,90)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma", "(300,0,300)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma_extended", "(60,60,120)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma_zoom", "(48,85,97)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma} [GeV]", true, false, c1);
 
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma_SCraw", "Mmumugamma_SCraw", "(60,60,120)", set_of_cuts[i], name[i], "M_{#mu#mu#gamma}^{SCraw} [GeV]", true, false, c1);
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma_SCraw_fEta", "Mmumugamma_SCraw_fEta", "(60,60,120)", set_of_cuts[i], name[i], "M_{#mu#mu#gamma}^{SCraw x fEta} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma_SCraw", "Mmumugamma_SCraw", "(50,0,200)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma}^{SCraw} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma_SCraw_fEta", "Mmumugamma_SCraw_fEta", "(50,0,200)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma}^{SCraw x fEta} [GeV]", true, false, c1);
 	
 
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "deltaRNear", "deltaRNear", "(100,0,1)", set_of_cuts[i], name[i], "#Delta R(#gamma, #mu_{near})", true, false, c1);
@@ -177,8 +207,8 @@ int main()
 //		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_Et", "Photon_Et", "(100, 0, 100)", set_of_cuts[i], name[i], "E_{T}^{#gamma} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_Et", "Photon_Et", "(50, 0, 100)", set_of_cuts[i], name[i], "E_{T}^{#gamma} [GeV]", true, false, c1);
 /*
-		DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumugamma", "(900,0,300,900,0,300)", set_of_cuts[i], name[i], "M_{#mu#mu} [GeV]", "M_{#mu#mu#gamma} [GeV]", "Mmumu_VS_Mmumugamma", false, false, c1);
-		DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumugamma", "(450,20,100,450,80,110)", set_of_cuts[i], name[i], "M_{#mu#mu} [GeV]", "M_{#mu#mu#gamma} [GeV]", "Mmumu_VS_Mmumugamma_extended", false, false, c1);
+		DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumugamma", "(900,0,300,900,0,300)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", "m_{#mu#mu#gamma} [GeV]", "Mmumu_VS_Mmumugamma", false, false, c1);
+		DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumugamma", "(450,20,100,450,80,110)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", "m_{#mu#mu#gamma} [GeV]", "Mmumu_VS_Mmumugamma_extended", false, false, c1);
 
 DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "((91.1876**2 - Mmumu**2 ) / (Mmumugamma**2 - Mmumu**2))*Photon_E", "Photon_E", "(400,0,100,400,0,100)", set_of_cuts[i], name[i], "E_{true} = k*E_{reco} [GeV]", "E_{reco} [GeV]", "Etrue_VS_Ereco", false, false, c1, true);
 DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "((91.1876**2 - Mmumu**2 ) / (Mmumugamma**2 - Mmumu**2))*Photon_E", "Photon_E", "(600,0,150,600,0,150)", set_of_cuts[i], name[i], "E_{true} = k*E_{reco} [GeV]", "E_{reco} [GeV]", "Etrue_VS_Ereco_extended", false, false, c1, true);
@@ -186,16 +216,18 @@ DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTr
 
 
 	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_k", "mmg_k", "(40,0,2.0)", set_of_cuts[i], name[i], "k = E_{muons} / E_{reco}", true, false, c1);
-	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_s", "mmg_s", "(40,-1.0,1.0)", set_of_cuts[i], name[i], "s = 1 - E_{reco} / E_{muons}", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_s", "mmg_s", "(40,-1.0,1.0)", set_of_cuts[i], name[i], "s = E_{reco} / E_{muons} - 1", true, false, c1);
 
 	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_k", "mmg_k_extended", "(20,0,2.0)", set_of_cuts[i], name[i], "k = E_{muons} / E_{reco}", true, false, c1);
-	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_s", "mmg_s_extended", "(20,-1.0,1.0)", set_of_cuts[i], name[i], "s = 1 - E_{reco} / E_{muons}", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_s", "mmg_s_extended", "(20,-1.0,1.0)", set_of_cuts[i], name[i], "s = E_{reco} / E_{muons} - 1", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_k", "mmg_k_zoom", "(20,0.6,1.6)", set_of_cuts[i], name[i], "k = E_{muons} / E_{reco}", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_s", "mmg_s_zoom", "(20,-0.5,0.5)", set_of_cuts[i], name[i], "s = E_{reco} / E_{muons} - 1", true, false, c1);
 
-	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_k_SCraw", "mmg_k_SCraw", "(20,0,2.0)", set_of_cuts[i], name[i], "k_{SCraw} = E_{muons} / E_{SCraw}", true, false, c1);
-	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_s_SCraw", "mmg_s_SCraw", "(20,0,2.0)", set_of_cuts[i], name[i], "s_{SCraw} = 1 - E_{SCraw} / E_{muons}", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_k_SCraw", "mmg_k_SCraw", "(60,-1.0,3.0)", set_of_cuts[i], name[i], "k_{SCraw} = E_{muons} / E_{SCraw}", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_s_SCraw", "mmg_s_SCraw", "(60,-2.0,2.0)", set_of_cuts[i], name[i], "s_{SCraw} = 1 - E_{SCraw} / E_{muons}", true, false, c1);
 
-	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_k_SCraw_fEta", "mmg_k_SCraw_fEta", "(20,0,2.0)", set_of_cuts[i], name[i], "k_{SCraw x fEta} = E_{muons} / E_{SCraw x fEta}", true, false, c1);
-	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_s_SCraw_fEta", "mmg_s_SCraw_fEta", "(20,0,2.0)", set_of_cuts[i], name[i], "s_{SCraw x fEta} = 1 -  E_{SCraw x fEta} /  E_{muons}", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_k_SCraw_fEta", "mmg_k_SCraw_fEta", "(60,-1.0,3.0)", set_of_cuts[i], name[i], "k_{SCraw x fEta} = E_{muons} / E_{SCraw x fEta}", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "mmg_s_SCraw_fEta", "mmg_s_SCraw_fEta", "(60,-2.0,2.0)", set_of_cuts[i], name[i], "s_{SCraw x fEta} = 1 -  E_{SCraw x fEta} /  E_{muons}", true, false, c1);
 
 /*
 //DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_convNTracks", "MuonN_isoR03_sumPt", "(16,0,4,200,0,10)", set_of_cuts[i], name[i], "Photon_convNTracks", "MuonN_isoR03_sumPt", "Photon_convNTracks_VS_MuonN_isoR03_sumPt", false, false, c1, false);
