@@ -1,0 +1,9 @@
+# Makefile
+
+plotDataData_TEST: plotDataData_TDR_miniTree.o DrawDataData.o
+	g++ `root-config --libs --cflags` plotDataData_TDR_miniTree.o DrawDataData.o -o PLOT_DATA_DATA.exe
+plotDataData_TDR_miniTree.o: plotDataData_TDR_miniTree.C DrawDataData.h
+	g++ `root-config --libs --cflags` -c plotDataData_TDR_miniTree.C
+DrawDataData.o: DrawDataData.C DrawDataData.h CMSStyle.C
+	g++ `root-config --libs --cflags` -c DrawDataData.C
+
