@@ -1007,10 +1007,10 @@ int main(int argc, char *argv[])
           }// end of loop over mc photons
           if( MCphotons_from_muons_from_Z )
           { // if there is a fsr photon passing acceptance cuts, then look at muons coming from the Z
-            if( (mcMuMuGammaEvent->muplus()->Pt()>10.0) && (abs((mcMuMuGammaEvent->muplus()->Eta())<3.0)) )
+            if( (mcMuMuGammaEvent->muplus()->Pt()>8.0) && (abs((mcMuMuGammaEvent->muplus()->Eta())<3.0)) )
             {
               MC_first_muon_in_phase_space = true;
-              if( (mcMuMuGammaEvent->muminus()->Pt()>10.0) && (abs((mcMuMuGammaEvent->muminus()->Eta())<3.0)) )
+              if( (mcMuMuGammaEvent->muminus()->Pt()>8.0) && (abs((mcMuMuGammaEvent->muminus()->Eta())<3.0)) )
               {
                 MC_second_muon_in_phase_space = true;
                 MCsignal_in_phase_space = true;

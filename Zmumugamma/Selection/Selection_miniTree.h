@@ -349,16 +349,16 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     Pz_SC = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->Mag());
 
     Px_5x5 = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->e5x5());
-    Py_5x5 = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->e5x5());
-    Pz_5x5 = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->e5x5());
+    Py_5x5 = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->e5x5());
+    Pz_5x5 = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->e5x5());
 
     Px_SCraw = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
-    Py_SCraw = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
-    Pz_SCraw = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
+    Py_SCraw = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
+    Pz_SCraw = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
 
     Px_SCraw_fEta = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
-    Py_SCraw_fEta = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
-    Pz_SCraw_fEta = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
+    Py_SCraw_fEta = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
+    Pz_SCraw_fEta = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
 
     TLorentzVector mumugamma;
     TLorentzVector mumuSC;
