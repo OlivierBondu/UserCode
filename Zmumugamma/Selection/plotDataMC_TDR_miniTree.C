@@ -29,25 +29,25 @@
 
 #include "DrawDataMC.h"
 
-#include "interface/TRootBardak.h"
-#include "interface/TRootBeamSpot.h"
-#include "interface/TRootCluster.h"
-#include "interface/TRootEcalRecHit.h"
-#include "interface/TRootElectron.h"
-#include "interface/TRootEvent.h"
-#include "interface/TRootJet.h"
-#include "interface/TRootMCParticle.h"
-#include "interface/TRootMCPhoton.h"
-#include "interface/TRootMET.h"
-#include "interface/TRootMuon.h"
-#include "interface/TRootParticle.h"
-#include "interface/TRootPhoton.h"
-#include "interface/TRootRun.h"
-#include "interface/TRootSignalEvent.h"
-#include "interface/TRootSuperCluster.h"
-#include "interface/TRootTopTop.h"
-#include "interface/TRootTrack.h"
-#include "interface/TRootVertex.h"
+//#include "interface/TRootBardak.h"
+//#include "interface/TRootBeamSpot.h"
+//#include "interface/TRootCluster.h"
+//#include "interface/TRootEcalRecHit.h"
+//#include "interface/TRootElectron.h"
+//#include "interface/TRootEvent.h"
+//#include "interface/TRootJet.h"
+//#include "interface/TRootMCParticle.h"
+//#include "interface/TRootMCPhoton.h"
+//#include "interface/TRootMET.h"
+//#include "interface/TRootMuon.h"
+//#include "interface/TRootParticle.h"
+//#include "interface/TRootPhoton.h"
+//#include "interface/TRootRun.h"
+//#include "interface/TRootSignalEvent.h"
+//#include "interface/TRootSuperCluster.h"
+//#include "interface/TRootTopTop.h"
+//#include "interface/TRootTrack.h"
+//#include "interface/TRootVertex.h"
 
 
 
@@ -59,12 +59,13 @@ using namespace std;
 int main()
 {
 	string selection = "loose";
-	gSystem->Load("libToto.so");
+//	gSystem->Load("libToto.so");
 	gROOT->ProcessLine(".x setTDRStyle.C");
 //	string Data = "miniTree_v2_DATA_2011_ALL.root"; 
 //	string Data = "miniTree_v2_DoubleMu-Run2011A_160404-163369_vALL_v02.root"; 
 //	string Data = "miniTree_v2_DoubleMu-Run2011A_160404-163757_vALL.root";
-	string Data = "miniTree_v4_DoubleMu-Run2011A_160404-163869_vALL.root";
+//	string Data = "miniTree_v4_DoubleMu-Run2011A_160404-163869_vALL.root";
+	 string Data = "/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/Selection/miniTree_v1_Run2011A-ZMu-May10ReReco.root";
 	string FSR_DYToMuMu = "miniTree_v4_FSR_DYToMuMu.root";
 	string nonFSR_DYToMuMu = "miniTree_v4_nonFSR_DYToMuMu.root";
 	string TTJets = "miniTree_v4_TTJets.root";
@@ -104,6 +105,8 @@ int main()
 
 	vector<string> set_of_cuts;
 	vector<string> name;
+
+
 /*
 	set_of_cuts.push_back("isMMGCandidate");
 	name.push_back("selected-00-beforeFSRcuts");
@@ -120,21 +123,35 @@ int main()
 
 	set_of_cuts.push_back("isLooseMMG");
   name.push_back("selected-loose");
-*/
+	set_of_cuts.push_back("isLooseMMG && Photon_isEB");
+  name.push_back("selected-loose-EB");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEB && Photon_r9 < .94");
   name.push_back("selected-loose-EB-lowR9");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEB && Photon_r9 > .94");
   name.push_back("selected-loose-EB-highR9");
-/*	set_of_cuts.push_back("isLooseMMG && Photon_isEE");
+	set_of_cuts.push_back("isLooseMMG && Photon_isEE");
   name.push_back("selected-loose-EE");
+	set_of_cuts.push_back("isLooseMMG && Photon_isEE && Photon_r9 < .95");
+  name.push_back("selected-loose-EE-lowR9");
+	set_of_cuts.push_back("isLooseMMG && Photon_isEE && Photon_r9 > .95");
+  name.push_back("selected-loose-EE-highR9");
+
 	set_of_cuts.push_back("isTightMMG");
   name.push_back("selected-tight");
 	set_of_cuts.push_back("isTightMMG && Photon_isEB");
   name.push_back("selected-tight-EB");
+	set_of_cuts.push_back("isTightMMG && Photon_isEB && Photon_r9 < .94");
+  name.push_back("selected-tight-EB-lowR9");
+	set_of_cuts.push_back("isTightMMG && Photon_isEB && Photon_r9 > .94");
+  name.push_back("selected-tight-EB-highR9");
 	set_of_cuts.push_back("isTightMMG && Photon_isEE");
   name.push_back("selected-tight-EE");
-
-	set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
+	set_of_cuts.push_back("isTightMMG && Photon_isEE && Photon_r9 < .95");
+  name.push_back("selected-tight-EE-lowR9");
+	set_of_cuts.push_back("isTightMMG && Photon_isEE && Photon_r9 > .95");
+  name.push_back("selected-tight-EE-highR9");
+	
+set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
   name.push_back("selected-loose-nomultiple");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEB && isMultipleCandidate==0");
   name.push_back("selected-loose-EB-nomultiple");
@@ -147,6 +164,30 @@ int main()
 	set_of_cuts.push_back("isTightMMG && Photon_isEE && isMultipleCandidate==0");
   name.push_back("selected-tight-EE-nomultiple");
 */
+
+string selection[9];
+  selection[0] = "(abs(Photon_SC_Eta)<=2.5)";
+  selection[1] =  "Photon_hasPixelSeed==0";
+  selection[2] =  "Photon_dR04isoHollowTrkCone<2";
+  selection[3] =  "Photon_dR04isoEcalRecHit<4.2";
+  selection[4] =  "Photon_dR04isoHcalRecHit<2.2";
+  selection[5] =  "Photon_Et>30";
+  selection[6] =   "(((Photon_isEB==1)&&(Photon_sigmaIetaIeta<0.01))||((Photon_isEE==1)&&(Photon_sigmaIetaIeta<0.03)))";
+  selection[7] =   "Photon_HoE<0.05";
+  selection[8] =   "(!((abs(Photon_SC_Eta)>1.4442)&&(abs(Photon_SC_Eta)<1.566)))";
+
+for(int j=0; j < 9; j++)
+{
+	string temp = "isTightMMG && isMultipleCandidate==0";
+	for(int k = 0; k < 9; k++ )
+	{
+		if( k == j ) continue;
+		temp += selection[k];
+	}
+	cout << temp << endl;
+//	name.push_back();
+//	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0");
+}
 
 	for(int i=0; i<set_of_cuts.size() ; i++)
 	{
@@ -178,8 +219,8 @@ int main()
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "MuonF_Charge", "MuonF_Charge", "(20,-2,2)", set_of_cuts[i], name[i], "charge #mu_{far}", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "MuonN_Charge", "MuonN_Charge", "(20,-2,2)", set_of_cuts[i], name[i], "charge #mu_{near}", true, false, c1);
 */
-//		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu", "(150,0,300)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
-//		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu_extended", "(30,30,90)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu", "(150,0,300)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu_extended", "(30,30,90)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma", "(300,0,300)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma_extended", "(60,60,120)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma_zoom", "(48,85,97)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma} [GeV]", true, false, c1);
@@ -187,7 +228,6 @@ int main()
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma_5x5", "Mmumugamma_5x5", "(50,0,200)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma}^{5x5} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma_SC", "Mmumugamma_SC", "(50,0,200)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma}^{SC} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma_SCraw", "Mmumugamma_SCraw", "(50,0,200)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma}^{SCraw} [GeV]", true, false, c1);
-//		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma_SCraw", "Mmumugamma_SCraw", "(50,0,200)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma}^{SCraw} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma_SCraw_fEta", "Mmumugamma_SCraw_fEta", "(50,0,200)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma}^{SCraw x fEta} [GeV]", true, false, c1);
 	
 
@@ -203,15 +243,17 @@ int main()
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_Eta", "Photon_Eta", "(16,-3.2,3.2)", set_of_cuts[i], name[i], "#eta^{#gamma}", true, false, c1);
 
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_Phi", "Photon_Phi", "(21,-3.15,3.15)", set_of_cuts[i], name[i], "#phi^{#gamma}", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_r9", "Photon_r9", "(40,0.0,1.2)", set_of_cuts[i], name[i], "E^{3x3} / E^{SC}", true, false, c1);
+//		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_r19", "Photon_r19", "(21,-3.15,3.15)", set_of_cuts[i], name[i], "#phi^{#gamma}", true, false, c1);
 
 /*
 */
 //		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_E", "Photon_E", "(100, 0, 100)", set_of_cuts[i], name[i], "E^{#gamma} [GeV]", true, false, c1);
 //		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_E", "Photon_E_extended", "(100, 0, 150)", set_of_cuts[i], name[i], "E^{#gamma} [GeV]", true, false, c1);
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_E", "Photon_E", "(50, 0, 250)", set_of_cuts[i], name[i], "E^{#gamma} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_E", "Photon_E", "(50, 0, 300)", set_of_cuts[i], name[i], "E^{#gamma} [GeV]", true, false, c1);
 
 //		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_Et", "Photon_Et", "(100, 0, 100)", set_of_cuts[i], name[i], "E_{T}^{#gamma} [GeV]", true, false, c1);
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_Et", "Photon_Et", "(50, 0, 100)", set_of_cuts[i], name[i], "E_{T}^{#gamma} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_Et", "Photon_Et", "(50, 0, 250)", set_of_cuts[i], name[i], "E_{T}^{#gamma} [GeV]", true, false, c1);
 /*
 		DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumugamma", "(900,0,300,900,0,300)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", "m_{#mu#mu#gamma} [GeV]", "Mmumu_VS_Mmumugamma", false, false, c1);
 		DrawDataMCplot_TH2F(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumugamma", "(450,20,100,450,80,110)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", "m_{#mu#mu#gamma} [GeV]", "Mmumu_VS_Mmumugamma_extended", false, false, c1);

@@ -32,7 +32,7 @@
 #include <TMinuit.h>
 #include <TPaveStats.h>
 
-#include "DrawDataData.h"
+#include "DrawDataDataMCMC.h"
 
 #include "interface/TRootBardak.h"
 #include "interface/TRootBeamSpot.h"
@@ -62,7 +62,7 @@ double fonction_affine(double *x, double *par){
 	return x[0]*par[0] - x[1]*par[1];
 }
 
-void DrawDataDataplot(TTree *Data_miniTree, TTree *OLD_Data_miniTree, string var, string pic, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1){
+void DrawDataDataMCMCplot(TTree *Data_miniTree, TTree *DYToMuMu_miniTree, TTree *OLD_Data_miniTree, TTree *OLD_DYToMuMu_miniTree, string var, string pic, string limits, string cut, string name, string Title, bool inlog, bool drawUnderOverFsubleading, TCanvas *c1){
 
 	CMSstyle();
 	gStyle->SetOptTitle(0);
@@ -74,7 +74,7 @@ void DrawDataDataplot(TTree *Data_miniTree, TTree *OLD_Data_miniTree, string var
   Data_miniTree->Draw(variable_Data.c_str(), cut.c_str());
   TH1F *Histo_Data = (TH1F*)gDirectory->Get("Histo_Data_temp");
   c1->Clear();
-/*
+
   // Get Histo_DYToMuMu from eventTree
   TH1F *Histo_DYToMuMu_temp = new TH1F();
   string variable_DYToMuMu = var + ">>Histo_DYToMuMu_temp" + limits;
@@ -89,7 +89,7 @@ void DrawDataDataplot(TTree *Data_miniTree, TTree *OLD_Data_miniTree, string var
   OLD_DYToMuMu_miniTree->Draw(variable_OLD_DYToMuMu.c_str(), cut.c_str());
   TH1F *Histo_OLD_DYToMuMu = (TH1F*)gDirectory->Get("Histo_OLD_DYToMuMu_temp");
   c1->Clear();
-*/
+
 
   // Get Histo_OLD_Data from eventTree
   TH1F *Histo_OLD_Data_temp = new TH1F();
@@ -144,13 +144,13 @@ void DrawDataDataplot(TTree *Data_miniTree, TTree *OLD_Data_miniTree, string var
 // Normalize everything to 1
 	double N_Data = Histo_Data->Integral();
 	double N_OLD_Data = Histo_OLD_Data->Integral();
-//	double N_DYToMuMu = Histo_DYToMuMu->Integral();
-//	double N_OLD_DYToMuMu = Histo_OLD_DYToMuMu->Integral();
+	double N_DYToMuMu = Histo_DYToMuMu->Integral();
+	double N_OLD_DYToMuMu = Histo_OLD_DYToMuMu->Integral();
 
 	Histo_Data->Scale((double)((double)1.0/(double)N_Data));
 	Histo_OLD_Data->Scale((double)((double)1.0/(double)N_OLD_Data));
-//	Histo_DYToMuMu->Scale((double)((double)1.0/(double)N_DYToMuMu));
-//	Histo_OLD_DYToMuMu->Scale((double)((double)1.0/(double)N_OLD_DYToMuMu));
+	Histo_DYToMuMu->Scale((double)((double)1.0/(double)N_DYToMuMu));
+	Histo_OLD_DYToMuMu->Scale((double)((double)1.0/(double)N_OLD_DYToMuMu));
 
 
 //  Histo_DYToMuMu->Scale((double)(  (double)((double)(XSectionDYToMuMu) / (double)(InitialNumberDYToMuMu)) * (double)integratedLuminosity));
@@ -167,8 +167,8 @@ void DrawDataDataplot(TTree *Data_miniTree, TTree *OLD_Data_miniTree, string var
 
 //	Histo_WJetsToLNu->Add(Histo_QCDMu);
 //	Histo_OLD_Data->Add(Histo_WJetsToLNu);
-//	Histo_OLD_DYToMuMu->Add(Histo_OLD_Data);
-//	Histo_DYToMuMu->Add(Histo_OLD_DYToMuMu);
+	Histo_OLD_DYToMuMu->Add(Histo_OLD_Data);
+	Histo_DYToMuMu->Add(Histo_OLD_DYToMuMu);
 
 	// Total MC histo for comupting min/max
 //	TH1F *Histo_allMC = new TH1F(*Histo_QCD_Mu_Pt20to30);
@@ -185,21 +185,21 @@ void DrawDataDataplot(TTree *Data_miniTree, TTree *OLD_Data_miniTree, string var
   double dataMax = Histo_Data->GetMaximum();
   double YMax = dataMax;
 
-//  double DYToMuMuMax = Histo_DYToMuMu->GetMaximum();
-//  YMax = max(YMax, DYToMuMuMax);
+  double DYToMuMuMax = Histo_DYToMuMu->GetMaximum();
+  YMax = max(YMax, DYToMuMuMax);
 
 	double OLD_dataMax = Histo_OLD_Data->GetMaximum();
 	YMax = max(YMax, OLD_dataMax);
 
-//	double OLD_DYToMuMuMax = Histo_OLD_DYToMuMu->GetMaximum();
-//  YMax = max(YMax, OLD_DYToMuMuMax);
+	double OLD_DYToMuMuMax = Histo_OLD_DYToMuMu->GetMaximum();
+  YMax = max(YMax, OLD_DYToMuMuMax);
 
 //	double allMCMax = Histo_allMC->GetMaximum();
 //	YMax = max(YMax, allMCMax);
 
   double dataMin = YMax;
-//  double OLD_DYToMuMuMin = YMax;
-//  double DYToMuMuMin = YMax;
+  double OLD_DYToMuMuMin = YMax;
+  double DYToMuMuMin = YMax;
   double OLD_DataMin = YMax;
 //  double WJetsToLNuMin = YMax;
 //  double QCDMuMin = YMax;
@@ -221,7 +221,6 @@ void DrawDataDataplot(TTree *Data_miniTree, TTree *OLD_Data_miniTree, string var
     }
   }
   YMin = min(YMin, dataMin);
-/*
   for( int ibin=1 ; ibin<Histo_DYToMuMu->GetNbinsX() ; ibin++ ){
     if( ((Histo_DYToMuMu->GetBinContent(ibin))!=0) && ((Histo_DYToMuMu->GetBinContent(ibin))<DYToMuMuMin) ){
       DYToMuMuMin = Histo_DYToMuMu->GetBinContent(ibin);
@@ -235,7 +234,7 @@ void DrawDataDataplot(TTree *Data_miniTree, TTree *OLD_Data_miniTree, string var
     }
   }
   YMin = min(YMin, OLD_DYToMuMuMin);
-*/
+
   for( int ibin=1 ; ibin<Histo_OLD_Data->GetNbinsX() ; ibin++ ){
     if( ((Histo_OLD_Data->GetBinContent(ibin))!=0) && ((Histo_OLD_Data->GetBinContent(ibin))<OLD_DataMin) ){
       OLD_DataMin = Histo_OLD_Data->GetBinContent(ibin);
@@ -277,20 +276,23 @@ void DrawDataDataplot(TTree *Data_miniTree, TTree *OLD_Data_miniTree, string var
 
 
 
-	c1->Divide(1,2);
+	c1->Divide(1,3);
 	c1->cd(1);
 //	gPad->SetNumber(1);
-	gPad->SetPad(0,0.2,1,1);
+	gPad->SetPad(0,0.4,1,1);
 //	gPad->SetBottomMargin(0);
 	gPad->Draw();
 
 	c1->cd(2);
 //	gPad->SetNumber(2);
-	gPad->SetPad(0,0.,1,0.2);
+	gPad->SetPad(0,0.2,1,0.4);
 //	gPad->SetTopMargin(0);
 //	gPad->SetBottomMargin(0.3);
 	gPad->Draw();
 
+	c1->cd(3);
+	gPad->SetPad(0,0,1,0.2);
+	gPad->Draw();
 
 	
 
@@ -319,7 +321,7 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
   // Setup the histo and canvas names and title
   string data_name = "Data_" + pic + "_" + name;
   string mc_name = "MC_" + pic + "_" + name;
-  string canvas_name = "DataData_" + pic + "_" + name;
+  string canvas_name = "DataDataMCMC_" + pic + "_" + name;
   std::ostringstream binWidthOSS;
   binWidthOSS << (double)Histo_Data->GetBinWidth(1);
   string binWidth = binWidthOSS.str();
@@ -333,7 +335,7 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
   }
   Histo_Data->SetName(data_name.c_str());
 //  Histo_QCDMu->SetName(mc_name.c_str());
-//	Histo_DYToMuMu->SetName(mc_name.c_str());
+	Histo_DYToMuMu->SetName(mc_name.c_str());
 	
   c1->SetName(canvas_name.c_str());
   c1->SetTitle(canvas_name.c_str());
@@ -407,7 +409,6 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
 //  Histo_DYToMuMu->SetMaximum(YMax_lin);
 //  Histo_DYToMuMu->SetMinimum(YMin_lin);
 
-/*
   Histo_DYToMuMu->SetLineColor(kBlack);
   Histo_DYToMuMu->SetFillColor(kRed);
   Histo_DYToMuMu->SetFillStyle(3001);
@@ -423,14 +424,14 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
   Histo_OLD_DYToMuMu->SetMaximum(YMax_lin);
   Histo_OLD_DYToMuMu->SetMinimum(YMin_lin);
   Histo_OLD_DYToMuMu->Draw("HISTsame");
-*/
+
 //	Histo_QCD_Mu_Pt20to30->Draw("same");
 //  Histo_WJetsToLNu->Draw("same");
 //  Histo_QCDMu->Draw("same");
-  legend->AddEntry(Histo_Data->GetName(), "Data 42X May10 ReReco", "lp");
-  legend->AddEntry(Histo_OLD_Data->GetName(), "Data 41X Prompt", "lp");
-//  legend->AddEntry(Histo_DYToMuMu->GetName(), "Z#mu#muJet 41X", "f");
-//  legend->AddEntry(Histo_OLD_DYToMuMu->GetName(), "Z#mu#muJets 39X", "f");
+  legend->AddEntry(Histo_Data->GetName(), "Data 41X", "lp");
+  legend->AddEntry(Histo_OLD_Data->GetName(), "Data 39X", "lp");
+  legend->AddEntry(Histo_DYToMuMu->GetName(), "Z#mu#muJet 41X", "f");
+  legend->AddEntry(Histo_OLD_DYToMuMu->GetName(), "Z#mu#muJets 39X", "f");
 //  legend->AddEntry(Histo_WJetsToLNu->GetName(), "WJets", "f");
 //  legend->AddEntry(Histo_QCDMu->GetName(), "QCD #mu", "f");
 //  legend->AddEntry(Histo_DYToMuMu->GetName(), "PhotonJet", "f");
@@ -466,7 +467,7 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
 	l->SetLineWidth(1.5); 
 	l->Draw("same");
 	c1->Update();
-/*
+
 	c1->cd(3);
  	TH1F *Histo_DYToMuMuRatio = (TH1F*) Histo_DYToMuMu->Clone("DYToMuMuratio");
 	Histo_DYToMuMuRatio->Reset();
@@ -485,7 +486,7 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
 	l1->SetLineWidth(1.5); 
 	l1->Draw("same");
 	c1->Update();
-*/
+
 	c1->cd(1);
   TLatex latexLabel;
 //  std::ostringstream intLumiString;
@@ -502,11 +503,11 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
   c1->Draw();
 
   // Print the canvas
-  string PicName="gif/DataData_" + pic + "_" + name + ".gif";
+  string PicName="gif/DataDataMCMC_" + pic + "_" + name + ".gif";
   c1->Print(PicName.c_str());
-  PicName="eps/DataData_" + pic + "_" + name + ".eps";
+  PicName="eps/DataDataMCMC_" + pic + "_" + name + ".eps";
   c1->Print(PicName.c_str());
-  string convert = "convert eps/DataData_" + pic + "_" + name + ".eps" + " pdf/DataData_" + pic + "_" + name + ".pdf";
+  string convert = "convert eps/DataDataMCMC_" + pic + "_" + name + ".eps" + " pdf/DataDataMCMC_" + pic + "_" + name + ".pdf";
   system(convert.c_str());
 
 
@@ -515,9 +516,9 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
     Histo_Data->SetMaximum(YMax_log);
     Histo_Data->SetMinimum(YMin_log);
     Histo_Data->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
-//    Histo_DYToMuMu->SetMaximum(YMax_log);
-//    Histo_DYToMuMu->SetMinimum(YMin_log);
-//    Histo_DYToMuMu->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
+    Histo_DYToMuMu->SetMaximum(YMax_log);
+    Histo_DYToMuMu->SetMinimum(YMin_log);
+    Histo_DYToMuMu->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
 //    Histo_QCD_Pt15->SetMaximum(YMax_log);
 //    Histo_QCD_Pt15->SetMinimum(YMin_log);
 //    Histo_QCD_Pt15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
@@ -538,18 +539,18 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
 //    Histo_InclusiveMu15->SetMinimum(YMin_log);
 //    Histo_InclusiveMu15->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
 
-//    Histo_OLD_DYToMuMu->SetMaximum(YMax_log);
-//    Histo_OLD_DYToMuMu->SetMinimum(YMin_log);
-//    Histo_OLD_DYToMuMu->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
+    Histo_OLD_DYToMuMu->SetMaximum(YMax_log);
+    Histo_OLD_DYToMuMu->SetMinimum(YMin_log);
+    Histo_OLD_DYToMuMu->GetYaxis()->SetRangeUser(YMin_log, YMax_log);
 
     c1->cd(1)->SetLogy(1);
     c1->Update();
     c1->Draw();
-    string PicName_log="gif/DataData_" + pic + "_" + name + "_log.gif";
+    string PicName_log="gif/DataDataMCMC_" + pic + "_" + name + "_log.gif";
     c1->Print(PicName_log.c_str());
-    PicName="eps/DataData_" + pic + "_" + name + "_log.eps";
+    PicName="eps/DataDataMCMC_" + pic + "_" + name + "_log.eps";
     c1->Print(PicName.c_str());
-    string convert = "convert eps/DataData_" + pic + "_" + name + "_log.eps" + " pdf/DataData_" + pic + "_" + name + "_log.pdf";
+    string convert = "convert eps/DataDataMCMC_" + pic + "_" + name + "_log.eps" + " pdf/DataDataMCMC_" + pic + "_" + name + "_log.pdf";
     system(convert.c_str());
     c1->cd(1)->SetLogy(0);
     c1->Update();
@@ -562,11 +563,11 @@ TPad *pad =new TPad("haut","haut",0,0.4,1,1);
 //	Histo_template->Delete();
   Histo_Data_temp->Delete();
   Histo_Data->Delete();
-//  Histo_DYToMuMu_temp->Delete();
-//  Histo_DYToMuMu->Delete();
+  Histo_DYToMuMu_temp->Delete();
+  Histo_DYToMuMu->Delete();
 
-//  Histo_OLD_DYToMuMu_temp->Delete();
-//  Histo_OLD_DYToMuMu->Delete();
+  Histo_OLD_DYToMuMu_temp->Delete();
+  Histo_OLD_DYToMuMu->Delete();
 
   Histo_OLD_Data_temp->Delete();
   Histo_OLD_Data->Delete();
