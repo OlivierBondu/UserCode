@@ -127,18 +127,18 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   //Histo_MC->Scale((double)((double)1.0/(double)b));
   // // Normalize MC to Data number of entries
 //  double integratedLuminosity = 191.09326;
-  double integratedLuminosity = 186.41965;
+  double integratedLuminosity = 498.35418;
 
   double XSectionFSR_DYToMuMu = 1614.0;
   double XSectionnonFSR_DYToMuMu = 1614.0;
-  double XSectionTTJets = 121.0;
-	double XSectionWJetsToLNu = 24640.0;
+  double XSectionTTJets = 94.0;
+	double XSectionWJetsToLNu = 7899.0;
 	double XSectionQCDMu = 84679.30;
 
   double InitialNumberFSR_DYToMuMu = 1995236.0;
   double InitialNumbernonFSR_DYToMuMu = 1995236.0;
-  double InitialNumberTTJets = 1164208.0;
-	double InitialNumberWJetsToLNu = 15110974.0;
+  double InitialNumberTTJets = 1089625.0;
+	double InitialNumberWJetsToLNu = 5413258.0;
 	double InitialNumberQCDMu = 29434562.0;
 
   Histo_FSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionFSR_DYToMuMu) / (double)(InitialNumberFSR_DYToMuMu)) * (double)integratedLuminosity));
@@ -157,6 +157,11 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
 	Histo_TTJets->Add(Histo_WJetsToLNu);
 	Histo_nonFSR_DYToMuMu->Add(Histo_TTJets);
 	Histo_FSR_DYToMuMu->Add(Histo_nonFSR_DYToMuMu);
+
+	double integral_data = Histo_Data->Integral();
+	double integral_signal = (double)(Histo_FSR_DYToMuMu->Integral()) - (double)(Histo_nonFSR_DYToMuMu->Integral());
+	double integral_bg = (double)(Histo_nonFSR_DYToMuMu->Integral());
+	double integral_mc = (double)(Histo_FSR_DYToMuMu->Integral());
 
 	// Total MC histo for comupting min/max
 //	TH1F *Histo_allMC = new TH1F(*Histo_QCD_Mu_Pt20to30);
@@ -320,7 +325,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
 //  Histo_Data->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);
 //  Histo_Data->Draw("E1sames");
   Histo_Data->Draw("E1");
-  legend->AddEntry(Histo_Data->GetName(), "Data May10 ReReco", "lp");
+  legend->AddEntry(Histo_Data->GetName(), "Data May10-ReReco + June3-Prompt", "lp");
 
   // // Second: draw MC on the same canvas
 //  Histo_InclusiveMu15->SetLineColor(kBlack);
@@ -513,6 +518,23 @@ if( doFit ){
   latexLabel.DrawLatex(0.42, 0.96, "#sqrt{s} = 7 TeV");
   latexLabel.DrawLatex(0.57, 0.96, intLumiText.c_str());
 
+	TLatex latexYields;
+	latexYields.SetTextSize(0.03);
+	latexYields.SetNDC();
+	std::ostringstream tempString;
+	tempString << setprecision (0) << fixed << integral_data;
+	string tempText = "N_{data}= " + tempString.str();
+	latexYields.DrawLatex(0.18, 0.90, tempText.c_str());
+	std::ostringstream tempString2;
+	tempString2 << setprecision (2) << fixed << integral_mc;
+	tempText = "N_{MC}= " + tempString2.str();
+	latexYields.DrawLatex(0.18, 0.86, tempText.c_str());
+	std::ostringstream tempString3;
+  tempString3 << setprecision (1) << fixed << 100.0*(double)(integral_signal)/(double)(integral_mc);
+	tempText = "purity= " + tempString3.str() + "\%";
+//	latexYields.DrawLatex(0.16, 0.82, tempText.c_str());
+
+
   // // Sixth: update canvas
   c1->Update();
   c1->Draw();
@@ -521,6 +543,10 @@ if( doFit ){
   string PicName="gif/DataMC_" + pic + "_" + name + ".gif";
   c1->Print(PicName.c_str());
   PicName="eps/DataMC_" + pic + "_" + name + ".eps";
+  c1->Print(PicName.c_str());
+  PicName="C/DataMC_" + pic + "_" + name + ".C";
+  c1->Print(PicName.c_str());
+  PicName="png/DataMC_" + pic + "_" + name + ".png";
   c1->Print(PicName.c_str());
   string convert = "convert eps/DataMC_" + pic + "_" + name + ".eps" + " pdf/DataMC_" + pic + "_" + name + ".pdf";
   system(convert.c_str());
@@ -562,6 +588,10 @@ if( doFit ){
     string PicName_log="gif/DataMC_" + pic + "_" + name + "_log.gif";
     c1->Print(PicName_log.c_str());
     PicName="eps/DataMC_" + pic + "_" + name + "_log.eps";
+    c1->Print(PicName.c_str());
+    PicName="C/DataMC_" + pic + "_" + name + "_log.C";
+    c1->Print(PicName.c_str());
+    PicName="png/DataMC_" + pic + "_" + name + "_log.png";
     c1->Print(PicName.c_str());
     string convert = "convert eps/DataMC_" + pic + "_" + name + "_log.eps" + " pdf/DataMC_" + pic + "_" + name + "_log.pdf";
     system(convert.c_str());

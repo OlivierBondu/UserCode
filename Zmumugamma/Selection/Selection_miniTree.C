@@ -805,7 +805,7 @@ int main(int argc, char *argv[])
 	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
 //	unsigned int NbEvents = 10000;
-	bool powheg = (bool)(isZgammaMC >= 1);
+	bool powheg = false;
 	bool signal = false;
 	bool stew = false;
 	bool zjet_veto = (bool)(isZgammaMC >= 1);
@@ -869,7 +869,7 @@ int main(int argc, char *argv[])
 
 	// LOOP over events
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
-//	for(unsigned int ievt=9680; ievt<NbEvents; ievt++)
+//	for(unsigned int ievt=0; ievt<9000; ievt++)
 	{
 		if(verbosity>4) cout << "analysing event ievt= " << ievt << endl;
 		nBeforeAllCuts++;
@@ -986,6 +986,56 @@ int main(int argc, char *argv[])
     bool MC_first_muon_in_phase_space = false;
     bool MC_second_muon_in_phase_space = false;
     bool MCsignal_in_phase_space = false;
+
+    if( zjet_veto && (!powheg) ){
+      // ****
+      // First loop: look for a photon
+      for( int iMCparticle = 0 ; iMCparticle < mcParticles->GetEntries() ; iMCparticle++ ){
+        TRootMCParticle *mcParticleCandidate = (TRootMCParticle *)mcParticles->At(iMCparticle);
+        if( (mcParticleCandidate->status()==1) && (mcParticleCandidate->type() == 22) ){ // if the particle is a true MC photon
+          if( abs(mcParticleCandidate->motherType()) == 13 ){// if the true MC photon origins from a muon
+            if( abs(mcParticleCandidate->oldgrannyType()) == 23 ){// photon coming from a muon coming from a Z
+              if( (mcParticleCandidate->Pt()>8.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
+                MCphotons_from_muons_from_Z = true;
+              }
+            }
+          }
+        } // end of origin of the photon
+      }// end of loop over MC particles
+      // ****
+      // Second loop: look for muons
+      for( int iMCparticle = 0 ; iMCparticle < mcParticles->GetEntries() ; iMCparticle++ ){
+        TRootMCParticle *mcParticleCandidate = (TRootMCParticle *)mcParticles->At(iMCparticle);
+        if( MCphotons_from_muons_from_Z == true ){ // if there is a photon coming from a muon coming from a Z and photon in MC phase space, THEN, look for muons in phase space
+          if( (MC_first_muon_in_phase_space == false) && (mcParticleCandidate->status()==1) && (abs(mcParticleCandidate->type()) == 13) ){// if the particle is a final state muon
+            if( abs(mcParticleCandidate->motherType()) == 13 ){
+              if( abs(mcParticleCandidate->oldgrannyType()) == 23 ){// muon is coming from a Z
+                if( (mcParticleCandidate->Pt()>8.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
+                  MC_first_muon_in_phase_space = true;
+                }
+              }
+            }
+          } // end of selecting first muon
+          if( (MC_first_muon_in_phase_space == true) && (mcParticleCandidate->status()==1) && (abs(mcParticleCandidate->type()) == 13) ){// if the particle is a final state muon
+            if( abs(mcParticleCandidate->motherType()) == 13 ){
+              if( abs(mcParticleCandidate->oldgrannyType()) == 23 ){// muon is coming from a Z
+                if( (mcParticleCandidate->Pt()>8.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
+                  MC_second_muon_in_phase_space = true;
+                  MCsignal_in_phase_space = true;
+                }
+              }
+            }
+          }// end of selecting second muon
+        }
+      }// end of loop over MC particles
+ 			if( ((isZgammaMC == 1) && (!MCsignal_in_phase_space)) || ((isZgammaMC == 2) && (MCsignal_in_phase_space)) )
+      {
+        cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
+        continue;
+      }
+      isAfterCutZJETVETO = 1;
+      nAfterCutZJETVETO++;
+     }// end of if Z+Jets veto for anything but powheg
 
     if( zjet_veto && powheg )
     {
