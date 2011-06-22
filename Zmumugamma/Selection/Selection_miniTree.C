@@ -67,6 +67,8 @@
 	Int_t Photon_seedPosition1, Photon_seedPosition2;
 	Float_t Photon_SC_Eta, Photon_SC_Phi, Photon_SC_brem;
 	Float_t Photon_SC_E, Photon_SC_Et, Photon_SC_rawE, Photon_SC_rawEt;
+	Float_t Photon_lambdaRatio, Photon_ratioSeed, Photon_ratioS4, Photon_lamdbaDivCov;
+	Float_t Photon_SC_rawE_x_fEta;
 
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
@@ -81,6 +83,11 @@
 	Float_t mmg_k_SCraw, mmg_ik_SCraw, mmg_s_SCraw, mmg_logk_SCraw, mmg_logik_SCraw, mmg_logs_SCraw;
 	Float_t mmg_k_SCraw_fEta, mmg_ik_SCraw_fEta, mmg_s_SCraw_fEta, mmg_logk_SCraw_fEta, mmg_logik_SCraw_fEta, mmg_logs_SCraw_fEta;
  
+  // ____________________________________________
+  // Neural Network variables
+  // ____________________________________________
+	Float_t Photon_NNshapeOutput;
+
 	// ____________________________________________
   // MC Truth
   // ___________________________________________
@@ -92,6 +99,7 @@
   Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta;
   Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta;
   Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta;
+	Float_t Photon_SC_rawE_x_fEta_o_MC_E, Photon_E_o_MC_E;
 
 	Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
 	Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
@@ -673,6 +681,12 @@ int main(int argc, char *argv[])
 	miniTree->Branch("Photon_SC_rawEt", &Photon_SC_rawEt, "Photon_SC_rawEt/F");
 	miniTree->Branch("Photon_SC_rawE", &Photon_SC_rawE, "Photon_SC_rawE/F");
 
+	miniTree->Branch("Photon_lambdaRatio", &Photon_lambdaRatio, "Photon_lambdaRatio/F");
+	miniTree->Branch("Photon_ratioSeed", &Photon_ratioSeed, "Photon_ratioSeed/F");
+	miniTree->Branch("Photon_ratioS4", &Photon_ratioS4, "Photon_ratioS4/F");
+	miniTree->Branch("Photon_lamdbaDivCov", &Photon_lamdbaDivCov, "Photon_lamdbaDivCov/F");
+	miniTree->Branch("Photon_SC_rawE_x_fEta", &Photon_SC_rawE_x_fEta, "Photon_SC_rawE_x_fEta/F");
+
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
 	// ____________________________________________
@@ -728,7 +742,12 @@ int main(int argc, char *argv[])
   miniTree->Branch("mmg_logk_SCraw_fEta", &mmg_logk_SCraw_fEta, "mmg_logk_SCraw_fEta/F");
   miniTree->Branch("mmg_logik_SCraw_fEta", &mmg_logik_SCraw_fEta, "mmg_logik_SCraw_fEta/F");
   miniTree->Branch("mmg_logs_SCraw_fEta", &mmg_logs_SCraw_fEta, "mmg_logs_SCraw_fEta/F");
-  
+ 
+	// ____________________________________________
+  // Neural Network variables
+  // ____________________________________________
+	miniTree->Branch("Photon_NNshapeOutput", &Photon_NNshapeOutput, "Photon_NNshapeOutput/F");
+ 
 	// ____________________________________________
   // MC Truth
   // ___________________________________________
@@ -775,6 +794,8 @@ int main(int argc, char *argv[])
 	miniTree->Branch("MuonS_MC_Pz", &MuonS_MC_Pz, "MuonS_MC_Pz/F");
 	miniTree->Branch("MuonS_MC_Phi", &MuonS_MC_Phi, "MuonS_MC_Phi/F");
 	miniTree->Branch("MuonS_MC_Eta", &MuonS_MC_Eta, "MuonS_MC_Eta/F");
+	miniTree->Branch("Photon_SC_rawE_x_fEta_o_MC_E", &Photon_SC_rawE_x_fEta_o_MC_E, "Photon_SC_rawE_x_fEta_o_MC_E/F");
+	miniTree->Branch("Photon_E_o_MC_E", &Photon_E_o_MC_E, "Photon_E_o_MC_E/F");
 
 	miniTree->Branch("Mmumu_Photon_MC", &Mmumu_Photon_MC, "Mmumu_Photon_MC/F");
 	miniTree->Branch("Mmumugamma_Photon_MC", &Mmumugamma_Photon_MC, "Mmumugamma_Photon_MC/F");
@@ -801,11 +822,24 @@ int main(int argc, char *argv[])
 	miniTree->Branch("mmg_logik_MMG_MC", &mmg_logik_MMG_MC, "mmg_logik_MMG_MC/F");
 	miniTree->Branch("mmg_logs_MMG_MC", &mmg_logs_MMG_MC, "mmg_logs_MMG_MC/F");
 
+  TMVA::Reader* reader = new TMVA::Reader( "!Color:!Silent" );
+  reader->AddVariable("pho_cEP",&Photon_covEtaPhi);
+  reader->AddVariable("pho_SCbr",&Photon_SC_brem);
+  reader->AddVariable("(pho_cEE+pho_cPP-sqrt((pho_cEE-pho_cPP)**2+4*pho_cEP**2))/(pho_cEE+pho_cPP+sqrt((pho_cEE-pho_cPP)**2+4*pho_cEP**2))",&Photon_lambdaRatio);
+  reader->AddVariable("pho_eMax/pho_SCEraw",&Photon_ratioSeed);
+  reader->AddVariable("pho_etawidth",&Photon_etaWidth);
+  reader->AddVariable("pho_e2x2/pho_e5x5",&Photon_ratioS4);
+  reader->AddVariable("(pho_cEE+pho_cPP-sqrt((pho_cEE-pho_cPP)**2+4*pho_cEP**2))/pho_cEE",&Photon_lamdbaDivCov);
+  reader->AddVariable("pho_r19",&Photon_r19);
+  reader->BookMVA("MLP method","/sps/cms/hbrun/DiPhotons41X/diPhotonMC/weights/TMVAClassification_MLP.weights.xml");
+
+
 	
 	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
 //	unsigned int NbEvents = 10000;
-	bool powheg = false;
+//	bool powheg = false;
+	bool powheg = true;
 	bool signal = false;
 	bool stew = false;
 	bool zjet_veto = (bool)(isZgammaMC >= 1);
@@ -869,7 +903,7 @@ int main(int argc, char *argv[])
 
 	// LOOP over events
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
-//	for(unsigned int ievt=0; ievt<9000; ievt++)
+//	for(unsigned int ievt=0; ievt<20000; ievt++)
 	{
 		if(verbosity>4) cout << "analysing event ievt= " << ievt << endl;
 		nBeforeAllCuts++;
@@ -946,6 +980,8 @@ int main(int argc, char *argv[])
 		Photon_seedPosition1 = Photon_seedPosition2 = -99;
 		Photon_SC_Eta = Photon_SC_Phi = Photon_SC_brem = -99.0;
 		Photon_SC_E = Photon_SC_Et = Photon_SC_rawE = Photon_SC_rawEt = -99.0;
+		Photon_lambdaRatio = Photon_ratioSeed = Photon_ratioS4 = Photon_lamdbaDivCov = -99.0;
+		Photon_SC_rawE_x_fEta = -99.0;
 
 		// ____________________________________________
 		// mugamma / mumu / mumugamma information
@@ -958,7 +994,12 @@ int main(int argc, char *argv[])
 		mmg_k_SC = mmg_ik_SC = mmg_s_SC = mmg_logk_SC = mmg_logik_SC = mmg_logs_SC = -99.0;
 		mmg_k_SCraw = mmg_ik_SCraw = mmg_s_SCraw = mmg_logk_SCraw = mmg_logik_SCraw = mmg_logs_SCraw = -99.0;
 		mmg_k_SCraw_fEta = mmg_ik_SCraw_fEta = mmg_s_SCraw_fEta = mmg_logk_SCraw_fEta = mmg_logik_SCraw_fEta = mmg_logs_SCraw_fEta = -99.0;
- 
+
+		// ____________________________________________
+	  // Neural Network variables
+  	// ____________________________________________
+		Photon_NNshapeOutput = -99.0;
+
 		// ____________________________________________
 	  // MC Truth
 	  // ___________________________________________
@@ -969,6 +1010,7 @@ int main(int argc, char *argv[])
 	  MuonF_MC_E = MuonF_MC_Px = MuonF_MC_Py = MuonF_MC_Pz = MuonF_MC_Phi = MuonF_MC_Eta = -99.0;
 	  MuonL_MC_E = MuonL_MC_Px = MuonL_MC_Py = MuonL_MC_Pz = MuonL_MC_Phi = MuonL_MC_Eta = -99.0;
 	  MuonS_MC_E = MuonS_MC_Px = MuonS_MC_Py = MuonS_MC_Pz = MuonS_MC_Phi = MuonS_MC_Eta = -99.0;
+		Photon_SC_rawE_x_fEta_o_MC_E = Photon_E_o_MC_E = -99.0;
 
 		Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;
 		Mmumu_Muons_MC = Mmumugamma_Muons_MC = mmg_k_Muons_MC = mmg_ik_Muons_MC = mmg_s_Muons_MC = mmg_logk_Muons_MC = mmg_logik_Muons_MC = mmg_logs_Muons_MC = -99.0;
@@ -994,7 +1036,9 @@ int main(int argc, char *argv[])
         TRootMCParticle *mcParticleCandidate = (TRootMCParticle *)mcParticles->At(iMCparticle);
         if( (mcParticleCandidate->status()==1) && (mcParticleCandidate->type() == 22) ){ // if the particle is a true MC photon
           if( abs(mcParticleCandidate->motherType()) == 13 ){// if the true MC photon origins from a muon
+//							cout << "mother: " << abs(mcParticleCandidate->motherType()) << "\tgranny: " << abs(mcParticleCandidate->grannyType()) << "\toldgranny: " << abs(mcParticleCandidate->oldgrannyType()) << endl;
             if( abs(mcParticleCandidate->oldgrannyType()) == 23 ){// photon coming from a muon coming from a Z
+//            if( abs(mcParticleCandidate->grannyType()) == 23 ){// photon coming from a muon coming from a Z
               if( (mcParticleCandidate->Pt()>8.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
                 MCphotons_from_muons_from_Z = true;
               }
@@ -1010,6 +1054,7 @@ int main(int argc, char *argv[])
           if( (MC_first_muon_in_phase_space == false) && (mcParticleCandidate->status()==1) && (abs(mcParticleCandidate->type()) == 13) ){// if the particle is a final state muon
             if( abs(mcParticleCandidate->motherType()) == 13 ){
               if( abs(mcParticleCandidate->oldgrannyType()) == 23 ){// muon is coming from a Z
+//              if( abs(mcParticleCandidate->grannyType()) == 23 ){// muon is coming from a Z
                 if( (mcParticleCandidate->Pt()>8.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
                   MC_first_muon_in_phase_space = true;
                 }
@@ -1019,6 +1064,7 @@ int main(int argc, char *argv[])
           if( (MC_first_muon_in_phase_space == true) && (mcParticleCandidate->status()==1) && (abs(mcParticleCandidate->type()) == 13) ){// if the particle is a final state muon
             if( abs(mcParticleCandidate->motherType()) == 13 ){
               if( abs(mcParticleCandidate->oldgrannyType()) == 23 ){// muon is coming from a Z
+//              if( abs(mcParticleCandidate->grannyType()) == 23 ){// muon is coming from a Z
                 if( (mcParticleCandidate->Pt()>8.0) && (abs(mcParticleCandidate->Eta())<3.0) ){
                   MC_second_muon_in_phase_space = true;
                   MCsignal_in_phase_space = true;
@@ -1522,7 +1568,7 @@ int main(int argc, char *argv[])
 			if( close_isoR03_hadEt >= 1.0)
 			{
 				if(verbosity>3) cerr << "candidate thrown because close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			} else {
@@ -1569,7 +1615,7 @@ int main(int argc, char *argv[])
 			if( far_isoR03_emEt >= 1.0) 
 			{
 				if(verbosity>4) cerr << "candidate thrown because far_isoR03_emEt= " << far_isoR03_emEt << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1609,7 +1655,7 @@ int main(int argc, char *argv[])
 			double min_DeltaR = min(deltaRphomu1, deltaRphomu2);
 			if( min_DeltaR >= 0.8 )
 			{
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1649,7 +1695,7 @@ int main(int argc, char *argv[])
 			double far_muonPt = (deltaRphomu1 > deltaRphomu2) ? mymuon1->Pt() : mymuon2->Pt();
 			if( far_muonPt <= 30.0 )
 			{
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1691,7 +1737,7 @@ int main(int argc, char *argv[])
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			if( (mumugamma.M() < 30.0) || (150.0 < mumugamma.M())  )
 			{
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1711,7 +1757,7 @@ int main(int argc, char *argv[])
 //      myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[5][i_mmg].first);
 //      mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.first );
 //      mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.second );
-//			FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+//			FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 //		}
 		TOTALnbMuMuGammaAfterID[5] += nbMuMuGammaAfterID[5];
 		TOTALnbEventsAfterMuMuGammaID[5]++ ;
@@ -1744,7 +1790,7 @@ int main(int argc, char *argv[])
 			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())  )
 			{
 //				cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1771,7 +1817,7 @@ int main(int argc, char *argv[])
 //      myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[6][i_mmg].first);
 //      mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.first );
 //      mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.second );
-//			FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+//			FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 //		}
 // --------------------------------------------------------------------------------------------------------------------
 // ----- cut on mumugamma.M() (tight window) -----
@@ -1801,7 +1847,7 @@ int main(int argc, char *argv[])
 			{
 //				cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				miniTree->Fill();
 				continue;
@@ -1837,7 +1883,7 @@ int main(int argc, char *argv[])
 	      myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
 	      mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
 	      mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
-	      FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+	      FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 				miniTree->Fill();
 	    }
 			continue;
@@ -1851,7 +1897,7 @@ int main(int argc, char *argv[])
 		myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
     mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
     mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
-    FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles);
+    FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 		isSelected = 1;
 		nSelected++;
 		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;

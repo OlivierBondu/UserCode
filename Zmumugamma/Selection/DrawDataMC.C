@@ -127,7 +127,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   //Histo_MC->Scale((double)((double)1.0/(double)b));
   // // Normalize MC to Data number of entries
 //  double integratedLuminosity = 191.09326;
-  double integratedLuminosity = 498.35418;
+  double integratedLuminosity = 714.78373;
 
   double XSectionFSR_DYToMuMu = 1614.0;
   double XSectionnonFSR_DYToMuMu = 1614.0;
@@ -325,7 +325,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
 //  Histo_Data->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);
 //  Histo_Data->Draw("E1sames");
   Histo_Data->Draw("E1");
-  legend->AddEntry(Histo_Data->GetName(), "Data May10-ReReco + June3-Prompt", "lp");
+  legend->AddEntry(Histo_Data->GetName(), "Data June17 json", "lp");
 
   // // Second: draw MC on the same canvas
 //  Histo_InclusiveMu15->SetLineColor(kBlack);
@@ -532,7 +532,7 @@ if( doFit ){
 	std::ostringstream tempString3;
   tempString3 << setprecision (1) << fixed << 100.0*(double)(integral_signal)/(double)(integral_mc);
 	tempText = "purity= " + tempString3.str() + "\%";
-//	latexYields.DrawLatex(0.16, 0.82, tempText.c_str());
+	latexYields.DrawLatex(0.16, 0.82, tempText.c_str());
 
 
   // // Sixth: update canvas

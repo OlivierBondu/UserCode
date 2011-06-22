@@ -65,14 +65,12 @@ int main()
 //	string Data = "miniTree_v2_DoubleMu-Run2011A_160404-163369_vALL_v02.root"; 
 //	string Data = "miniTree_v2_DoubleMu-Run2011A_160404-163757_vALL.root";
 //	string Data = "miniTree_v4_DoubleMu-Run2011A_160404-163869_vALL.root";
-	string Data = "miniTree_v1_Run2011A_June10_ALL.root";
-	string FSR_DYToMuMu = "miniTree_v1_FSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v2.root";
-	string nonFSR_DYToMuMu = "miniTree_v1_nonFSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v2.root";
-//	string FSR_DYToMuMu = "/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/Selection/miniTree_v4_FSR_DYToMuMu.root";
-//	string nonFSR_DYToMuMu = "/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/Selection/miniTree_v4_nonFSR_DYToMuMu.root";
-	string TTJets = "miniTree_v1_TT_TuneZ2_7TeV-pythia6-tauola.root";
-	string WJetsToLNu = "miniTree_v1_WToMuNu_TuneZ2_7TeV-pythia6.root";
-	string QCDMu = "/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/Selection/miniTree_v4_QCD.root"; 
+	string Data = "miniTree_v2_Run2011A-PromptReco-v4_June17_ALL.root";
+	string FSR_DYToMuMu = "miniTree_v2_FSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
+	string nonFSR_DYToMuMu = "miniTree_v2_nonFSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
+	string TTJets = "miniTree_v2_TT_TuneZ2_7TeV-pythia6-tauola.root";
+	string WJetsToLNu = "miniTree_v2_WToMuNu_TuneZ2_7TeV-pythia6.root";
+	string QCDMu = "miniTree_v2_QCD_Pt-20_MuEnrichedPt-10_TuneZ2_7TeV-pythia6.root"; 
 
 	TFile *Data_File = new TFile(Data.c_str());
 	TTree* Data_miniTree = (TTree*) Data_File->Get("miniTree");
@@ -108,7 +106,7 @@ int main()
 	vector<string> set_of_cuts;
 	vector<string> name;
 
-/*
+
 	set_of_cuts.push_back("isMMGCandidate");
 	name.push_back("selected-00-beforeFSRcuts");
 	set_of_cuts.push_back("isAfterFSRCut1");
@@ -137,10 +135,9 @@ int main()
   name.push_back("selected-loose-EE-lowR9");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEE && Photon_r9 > .95");
   name.push_back("selected-loose-EE-highR9");
-*/
+/*
 	set_of_cuts.push_back("isTightMMG");
   name.push_back("selected-tight");
-/*
 	set_of_cuts.push_back("isTightMMG && Photon_isEB");
   name.push_back("selected-tight-EB");
 	set_of_cuts.push_back("isTightMMG && Photon_isEB && Photon_r9 < .94");
@@ -167,43 +164,69 @@ set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
   name.push_back("selected-tight-EB-nomultiple");
 	set_of_cuts.push_back("isTightMMG && Photon_isEE && isMultipleCandidate==0");
   name.push_back("selected-tight-EE-nomultiple");
-*/
+
 	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 30.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05");
   name.push_back("selected-tight-EGM-10-006-pt30");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 30.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEB");
+  name.push_back("selected-tight-EGM-10-006-pt30-EB");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 30.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEE");
+  name.push_back("selected-tight-EGM-10-006-pt30-EE");
 
 	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 20.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05");
   name.push_back("selected-tight-EGM-10-006-pt20");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 20.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEB");
+  name.push_back("selected-tight-EGM-10-006-pt20-EB");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 20.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEE");
+  name.push_back("selected-tight-EGM-10-006-pt20-EE");
 
-/*
-string selection[9];
-  selection[0] = "(abs(Photon_SC_Eta)<=2.5)";
-  selection[1] =  "Photon_hasPixelSeed==0";
-  selection[2] =  "Photon_dR04isoHollowTrkCone<2";
-  selection[3] =  "Photon_dR04isoEcalRecHit<4.2";
-  selection[4] =  "Photon_dR04isoHcalRecHit<2.2";
-  selection[5] =  "Photon_Et>30";
-  selection[6] =   "(((Photon_isEB==1)&&(Photon_sigmaIetaIeta<0.01))||((Photon_isEE==1)&&(Photon_sigmaIetaIeta<0.03)))";
-  selection[7] =   "Photon_HoE<0.05";
-  selection[8] =   "(!((abs(Photon_SC_Eta)>1.4442)&&(abs(Photon_SC_Eta)<1.566)))";
-*/
-/*
+
+string selection_ID[9];
+string name_selection_ID[9];
+  selection_ID[0] = "(abs(Photon_SC_Eta)<=2.5)";
+	name_selection_ID[0] = "wo-eta";
+  selection_ID[1] =  "Photon_hasPixelSeed==0";
+	name_selection_ID[1] =  "wo-hasPixelSeed";
+  selection_ID[2] =  "Photon_dR04isoHollowTrkCone<2";
+	name_selection_ID[2] =  "wo-dR04isoHollowTrkCone";
+  selection_ID[3] =  "Photon_dR04isoEcalRecHit<4.2";
+	name_selection_ID[3] =  "wo-dR04isoEcalRecHit";
+  selection_ID[4] =  "Photon_dR04isoHcalRecHit<2.2";
+	name_selection_ID[4] =  "wo-dR04isoHcalRecHit";
+  selection_ID[5] =  "Photon_Et>30";
+	name_selection_ID[5] =  "wo-pt30";
+  selection_ID[6] =   "(((Photon_isEB==1)&&(Photon_sigmaIetaIeta<0.01))||((Photon_isEE==1)&&(Photon_sigmaIetaIeta<0.03)))";
+	name_selection_ID[6] =   "wo-sigmaIetaIeta";
+  selection_ID[7] =   "Photon_HoE<0.05";
+	name_selection_ID[7] =   "wo-HoE";
+  selection_ID[8] =   "(!((abs(Photon_SC_Eta)>1.4442)&&(abs(Photon_SC_Eta)<1.566)))";
+	name_selection_ID[8] =   "wo-crack";
+
 for(int j=0; j < 9; j++)
 {
 	string temp = "isTightMMG && isMultipleCandidate==0";
+	string name_temp = "selected-tight-EGM-10-006-";
 	for(int k = 0; k < 9; k++ )
 	{
-		if( k == j ) continue;
-		temp += selection[k];
+		if( k == j )
+		{
+			name_temp += name_selection_ID[k];
+			continue;
+		}
+		temp += "&&" + selection_ID[k];
 	}
-	cout << temp << endl;
-//	name.push_back();
-//	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0");
+//	cout << name_temp << "\t\t\t" << temp << endl;
+	set_of_cuts.push_back(temp);
+	name.push_back(name_temp);
 }
 */
 
+
 	for(int i=0; i<set_of_cuts.size() ; i++)
 	{
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_dR04isoHollowTrkCone - MuonN_Pt", "Photon_dR04isoHollowTrkCone_minusMuonTrack", "(100, -1.0, 10.0)", set_of_cuts[i], name[i], "dR04isoHollowTrkCone - p_{T}^{#mu near}", true, false, c1);
+	
 //	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Ptmumu", "Ptmumu", "(100,0,200)", set_of_cuts[i], name[i], "p_{T}^{#mu#mu} [GeV]", true, false, c1);
+
 
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu", "(150,0,300)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu_extended", "(30,30,90)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);

@@ -1,4 +1,5 @@
-
+#include "TMVA/Reader.h"
+#include "TMVA/Tools.h"
 #include "TF1.h"
 #include "TH1F.h"
 #include "TH2F.h"
@@ -109,10 +110,11 @@ float fEta(float eta)
   if ( ieta < p0 || fabs(eta) > 1.4442) feta = 1.0; 
   else feta = 1.0/(1.0 + p1*(ieta-p0)*(ieta-p0));
 
-  //correctedEnergy = energy/(1.0 + p1*(ieta-p0)*(ieta-p0));
   return feta;
 
 }
+
+
 
 int main(int argc, char *argv[]);
 
@@ -184,6 +186,8 @@ int main(int argc, char *argv[]);
   extern Int_t Photon_seedPosition1, Photon_seedPosition2;
   extern Float_t Photon_SC_Eta, Photon_SC_Phi, Photon_SC_brem;
   extern Float_t Photon_SC_E, Photon_SC_Et, Photon_SC_rawE, Photon_SC_rawEt;
+	extern Float_t Photon_lambdaRatio, Photon_ratioSeed, Photon_ratioS4, Photon_lamdbaDivCov;
+	extern Float_t Photon_SC_rawE_x_fEta;
 
   // ____________________________________________
   // mugamma / mumu / mumugamma information
@@ -199,6 +203,11 @@ int main(int argc, char *argv[]);
   extern Float_t mmg_k_SCraw_fEta, mmg_ik_SCraw_fEta, mmg_s_SCraw_fEta, mmg_logk_SCraw_fEta, mmg_logik_SCraw_fEta, mmg_logs_SCraw_fEta;
 
   // ____________________________________________
+	// Neural Network variables
+  // ____________________________________________
+	extern Float_t Photon_NNshapeOutput;
+
+  // ____________________________________________
   // MC Truth
   // ___________________________________________
 
@@ -209,6 +218,7 @@ int main(int argc, char *argv[]);
   extern Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta;
   extern Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta;
   extern Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta;
+ 	extern Float_t Photon_SC_rawE_x_fEta_o_MC_E, Photon_E_o_MC_E;
 
   extern Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
   extern Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
@@ -220,7 +230,7 @@ int main(int argc, char *argv[]);
 
 
 
-int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, TClonesArray* mcParticles){
+int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, TClonesArray* mcParticles, TMVA::Reader* reader){
 
       // Fill photon stuff
       Photon_Eta = myphoton->Eta();
@@ -280,7 +290,18 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
       Photon_SC_Et = Photon_SC_E * (sin(myphoton->superCluster()->Theta()));
       Photon_SC_rawE = myphoton->superCluster()->rawEnergy();
       Photon_SC_rawEt = Photon_SC_rawE * (sin(myphoton->superCluster()->Theta()));
+			Photon_lambdaRatio = 0.0;
+	    if ((Photon_covEtaEta+Photon_covPhiPhi+sqrt((Photon_covEtaEta-Photon_covPhiPhi)*(Photon_covEtaEta-Photon_covPhiPhi)+4*Photon_covEtaPhi*Photon_covEtaPhi))!=0) Photon_lambdaRatio = (Photon_covEtaEta+Photon_covPhiPhi-sqrt((Photon_covEtaEta-Photon_covPhiPhi)*(Photon_covEtaEta-Photon_covPhiPhi)+4*Photon_covEtaPhi*Photon_covEtaPhi))/(Photon_covEtaEta+Photon_covPhiPhi+sqrt((Photon_covEtaEta-Photon_covPhiPhi)*(Photon_covEtaEta-Photon_covPhiPhi)+4*Photon_covEtaPhi*Photon_covEtaPhi));
+			Photon_ratioSeed = 0.0;
+			if (Photon_SC_rawE != 0) Photon_ratioSeed = Photon_Emax/Photon_SC_rawE; 
+			Photon_ratioS4 = 0.0;
+			if (Photon_E5x5 != 0)  Photon_ratioS4 = Photon_E2x2/Photon_E5x5;
+			Photon_lamdbaDivCov = 0.0;
+			if (Photon_covEtaEta != 0) Photon_lamdbaDivCov = (Photon_covEtaEta+Photon_covPhiPhi-sqrt((Photon_covEtaEta-Photon_covPhiPhi)*(Photon_covEtaEta-Photon_covPhiPhi)+4*Photon_covEtaPhi*Photon_covEtaPhi))/Photon_covEtaEta;
+			Photon_SC_rawE_x_fEta = Photon_SC_rawE * fEta(Photon_SC_Eta);
 
+// Read NN output from weight file
+			Photon_NNshapeOutput = reader->EvaluateMVA("MLP method");
 
       // Fill muons stuff
       TRootMuon *leadingMuon;
@@ -551,6 +572,9 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
       doGenInfo( (TRootParticle*) farMuon, mcParticles, &MuonF_MC_E, &MuonF_MC_Px, &MuonF_MC_Py, &MuonF_MC_Pz, &MuonF_MC_Phi, &MuonF_MC_Eta, (-1)*(farMuon->charge())*13 );
       doGenInfo( (TRootParticle*) leadingMuon, mcParticles, &MuonL_MC_E, &MuonL_MC_Px, &MuonL_MC_Py, &MuonL_MC_Pz, &MuonL_MC_Phi, &MuonL_MC_Eta, (-1)*(leadingMuon->charge())*13 );
       doGenInfo( (TRootParticle*) subleadingMuon, mcParticles, &MuonS_MC_E, &MuonS_MC_Px, &MuonS_MC_Py, &MuonS_MC_Pz, &MuonS_MC_Phi, &MuonS_MC_Eta, (-1)*(subleadingMuon->charge())*13 );
+
+			if(Photon_MC_E != 0.0) Photon_SC_rawE_x_fEta_o_MC_E = (double)(Photon_SC_rawE_x_fEta) / (double)(Photon_MC_E);
+			if(Photon_MC_E != 0.0) Photon_E_o_MC_E = (double)(Photon_E) / (double)(Photon_MC_E);
 
       TLorentzVector mumu_Photon_MC;
       TLorentzVector mumugamma_Photon_MC;
