@@ -16,6 +16,7 @@
 
 	Int_t Muon_eventPassHLT_Mu11;
 	Int_t nVertices;
+	Int_t nGenVertices;
 
 	// ____________________________________________
 	// Muon variables
@@ -69,6 +70,7 @@
 	Float_t Photon_SC_E, Photon_SC_Et, Photon_SC_rawE, Photon_SC_rawEt;
 	Float_t Photon_lambdaRatio, Photon_ratioSeed, Photon_ratioS4, Photon_lamdbaDivCov;
 	Float_t Photon_SC_rawE_x_fEta;
+	Float_t Photon_secondMomentMaj, Photon_secondMomentMin, Photon_secondMomentAlpha;
 
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
@@ -405,6 +407,7 @@ int main(int argc, char *argv[])
 
 	miniTree->Branch("isSelected", &isSelected, "isSelected/I");
 	miniTree->Branch("nVertices", &nVertices, "nVertices/I");
+	miniTree->Branch("nGenVertices", &nGenVertices, "nGenVertices/I");
 
 	miniTree_allmuons->Branch("iEvent", &iEvent, "iEvent/I");
 	miniTree_allmuons->Branch("iEventID", &iEventID, "iEventID/I");
@@ -686,7 +689,10 @@ int main(int argc, char *argv[])
 	miniTree->Branch("Photon_ratioS4", &Photon_ratioS4, "Photon_ratioS4/F");
 	miniTree->Branch("Photon_lamdbaDivCov", &Photon_lamdbaDivCov, "Photon_lamdbaDivCov/F");
 	miniTree->Branch("Photon_SC_rawE_x_fEta", &Photon_SC_rawE_x_fEta, "Photon_SC_rawE_x_fEta/F");
-
+	miniTree->Branch("Photon_secondMomentMaj", &Photon_secondMomentMaj, "Photon_secondMomentMaj/F");
+	miniTree->Branch("Photon_secondMomentMin", &Photon_secondMomentMin, "Photon_secondMomentMin/F");
+	miniTree->Branch("Photon_secondMomentAlpha", &Photon_secondMomentAlpha, "Photon_secondMomentAlpha/F");
+	  
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
 	// ____________________________________________
@@ -892,6 +898,7 @@ int main(int argc, char *argv[])
 	double minPtHat = -100;
   double maxPtHat = 1000000;
   int verbosity = 0;
+	int Nb_events_outside_powheg_cuts = 0;
 	int TOTALnbMuonsAfterID[12] = {0};
 	int TOTALnbEventsAfterMuonID[12] = {0};
 	int TOTALnbDimuonsAfterID[3] = {0};
@@ -926,6 +933,11 @@ int main(int argc, char *argv[])
 		iRunID = event->runId();
 //		if(iRunID != 149291) continue;
 		nVertices = vertices->GetEntries();
+		nGenVertices = vertices->GetEntries();
+		if( (isZgammaMC >= 1) )
+		{
+			nGenVertices = event->nInTimePUVertices();
+		}
 		isSignalApplied = signal;
 		isStewApplied = stew;
 		isZJetsApplied = zjet_veto;
@@ -982,6 +994,7 @@ int main(int argc, char *argv[])
 		Photon_SC_E = Photon_SC_Et = Photon_SC_rawE = Photon_SC_rawEt = -99.0;
 		Photon_lambdaRatio = Photon_ratioSeed = Photon_ratioS4 = Photon_lamdbaDivCov = -99.0;
 		Photon_SC_rawE_x_fEta = -99.0;
+		Photon_secondMomentMaj = Photon_secondMomentMin = Photon_secondMomentAlpha = -99.0;
 
 		// ____________________________________________
 		// mugamma / mumu / mumugamma information
@@ -1085,6 +1098,23 @@ int main(int argc, char *argv[])
 
     if( zjet_veto && powheg )
     {
+			// POWHEG GENERATOR CUTS
+			TRootParticle *mymuplus;
+      mymuplus = (mcMuMuGammaEvent->muplus());
+      TRootParticle *mymuminus;
+      mymuminus = (mcMuMuGammaEvent->muminus());
+      TRootParticle dimuon;
+      dimuon = *mymuplus + *mymuminus;
+      //cout << "dimuon.M()= " << dimuon.M() << endl;
+      if( (dimuon.M() < 20.0) || (dimuon.M() > 500.0) )
+      {
+        cout << "This is one event outside powheg range" << endl;
+        Nb_events_outside_powheg_cuts++;
+				continue;
+      }
+
+
+			// FSR-tagging
       if( mcMuMuGammaEvent->nZ() == 1 )
       {// consistency check
         cerr << "There is " << mcMuMuGammaEvent->nFSR() << " fsr photons in the event" << endl;
@@ -1926,6 +1956,7 @@ int main(int argc, char *argv[])
 		nAfterCut10++;
 	} // fin boucle sur evts LOOP
 
+		cout << "Nb_events_outside_powheg_cuts= " << Nb_events_outside_powheg_cuts << endl << endl;
 		for(int i = 0; i < 12 ; i++)
 		{
 			cout << "TOTALnbMuonsAfterID["<<i<<"]= " << TOTALnbMuonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuonID["<<i<<"]= " << TOTALnbEventsAfterMuonID[i] << endl;

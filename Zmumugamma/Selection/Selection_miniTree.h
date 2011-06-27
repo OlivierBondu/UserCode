@@ -135,6 +135,7 @@ int main(int argc, char *argv[]);
   
   extern Int_t Muon_eventPassHLT_Mu11;
   extern Int_t nVertices;
+  extern Int_t nGenVertices;
 
   // ____________________________________________
   // Muon variables 
@@ -188,6 +189,8 @@ int main(int argc, char *argv[]);
   extern Float_t Photon_SC_E, Photon_SC_Et, Photon_SC_rawE, Photon_SC_rawEt;
 	extern Float_t Photon_lambdaRatio, Photon_ratioSeed, Photon_ratioS4, Photon_lamdbaDivCov;
 	extern Float_t Photon_SC_rawE_x_fEta;
+	extern Float_t Photon_secondMomentMaj, Photon_secondMomentMin, Photon_secondMomentAlpha;
+
 
   // ____________________________________________
   // mugamma / mumu / mumugamma information
@@ -299,6 +302,11 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 			Photon_lamdbaDivCov = 0.0;
 			if (Photon_covEtaEta != 0) Photon_lamdbaDivCov = (Photon_covEtaEta+Photon_covPhiPhi-sqrt((Photon_covEtaEta-Photon_covPhiPhi)*(Photon_covEtaEta-Photon_covPhiPhi)+4*Photon_covEtaPhi*Photon_covEtaPhi))/Photon_covEtaEta;
 			Photon_SC_rawE_x_fEta = Photon_SC_rawE * fEta(Photon_SC_Eta);
+			Photon_secondMomentMaj = myphoton->secondMomentMaj();
+			Photon_secondMomentMin = myphoton->secondMomentMin();
+			Photon_secondMomentAlpha = myphoton->secondMomentAlpha();
+
+
 
 // Read NN output from weight file
 			Photon_NNshapeOutput = reader->EvaluateMVA("MLP method");
