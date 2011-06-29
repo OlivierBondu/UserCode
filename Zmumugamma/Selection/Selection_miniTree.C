@@ -1466,19 +1466,22 @@ int main(int argc, char *argv[])
 			nbPhotonsAfterID[2]++;
 			TOTALnbPhotonsAfterID[2] += 1;
 
+/*
       if( myphoton->superCluster()->seedSeverity()==4 ){ // kWeird
         photonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because kWeird" << endl;
         continue;
       }
+*/
 			nbPhotonsAfterID[3]++;
 			TOTALnbPhotonsAfterID[3] += 1;
-
+/*
       if( myphoton->superCluster()->seedRecoFlag()==2 ){ // kOutOfTime
         photonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because kOutOfTime" << endl;
         continue;
       }
+*/
 			nbPhotonsAfterID[4]++;
 			TOTALnbPhotonsAfterID[4] += 1;
 
@@ -1765,7 +1768,7 @@ int main(int argc, char *argv[])
 			TLorentzVector mumugamma;
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
-			if( (mumugamma.M() < 30.0) || (150.0 < mumugamma.M())  )
+			if( (mumugamma.M() < 30.0) || (180.0 < mumugamma.M())  )
 			{
 				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
 				miniTree->Fill();
@@ -1961,17 +1964,21 @@ int main(int argc, char *argv[])
 		{
 			cout << "TOTALnbMuonsAfterID["<<i<<"]= " << TOTALnbMuonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuonID["<<i<<"]= " << TOTALnbEventsAfterMuonID[i] << endl;
 		}
+		cout << endl;
 		for(int i = 0; i < 3 ; i++)
 		{
 			cout << "TOTALnbDimuonsAfterID["<<i<<"]= " << TOTALnbDimuonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterDimuonID["<<i<<"]= " << TOTALnbEventsAfterDimuonID[i] << endl;
 		}
+		cout << endl;
 		for(int i = 0; i < 6 ; i++)
     {
       cout << "TOTALnbPhotonsAfterID["<<i<<"]= " << TOTALnbPhotonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterPhotonID["<<i<<"]= " << TOTALnbEventsAfterPhotonID[i] << endl;
 		}
+		cout << endl;
 		for(int i = 0; i < 8 ; i++)
 		{
 			cout << "TOTALnbMuMuGammaAfterID["<<i<<"]= " << TOTALnbMuMuGammaAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuMuGammaID["<<i<<"]= " << TOTALnbEventsAfterMuMuGammaID[i] << endl;
+			if(i == 6) cout << endl;
 		}
 
 // Writing stuff out
