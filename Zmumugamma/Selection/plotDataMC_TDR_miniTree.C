@@ -130,7 +130,7 @@ int main()
   name.push_back("selected-loose-EE-lowR9");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEE && Photon_r9 > .95");
   name.push_back("selected-loose-EE-highR9");
-*/
+
 	set_of_cuts.push_back("isTightMMG");
   name.push_back("selected-tight");
 	set_of_cuts.push_back("isTightMMG && Photon_isEB");
@@ -146,7 +146,7 @@ int main()
 	set_of_cuts.push_back("isTightMMG && Photon_isEE && Photon_r9 > .95");
   name.push_back("selected-tight-EE-highR9");
 
-/*	
+
 set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
   name.push_back("selected-loose-nomultiple");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEB && isMultipleCandidate==0");
@@ -159,7 +159,7 @@ set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
   name.push_back("selected-tight-EB-nomultiple");
 	set_of_cuts.push_back("isTightMMG && Photon_isEE && isMultipleCandidate==0");
   name.push_back("selected-tight-EE-nomultiple");
-
+*/
 	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05");
   name.push_back("selected-tight-EGM-10-006-pt10");
 	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEB");
@@ -220,7 +220,7 @@ for(int j=0; j < 9; j++)
 	set_of_cuts.push_back(temp);
 	name.push_back(name_temp);
 }
-*/
+
 
 
 	for(int i=0; i<set_of_cuts.size() ; i++)

@@ -17,6 +17,7 @@
 	Int_t Muon_eventPassHLT_Mu11;
 	Int_t nVertices;
 	Int_t nGenVertices;
+	Float_t weight_pileUp, weight_Xsection;
 
 	// ____________________________________________
 	// Muon variables
@@ -408,6 +409,8 @@ int main(int argc, char *argv[])
 	miniTree->Branch("isSelected", &isSelected, "isSelected/I");
 	miniTree->Branch("nVertices", &nVertices, "nVertices/I");
 	miniTree->Branch("nGenVertices", &nGenVertices, "nGenVertices/I");
+	miniTree->Branch("weight_pileUp", &weight_pileUp, "weight_pileUp/F");
+	miniTree->Branch("weight_Xsection", &weight_Xsection, "weight_Xsection/F");
 
 	miniTree_allmuons->Branch("iEvent", &iEvent, "iEvent/I");
 	miniTree_allmuons->Branch("iEventID", &iEventID, "iEventID/I");
@@ -895,6 +898,17 @@ int main(int argc, char *argv[])
 //	free(inputRunTree);
   string lastFile = "";
 
+	double integratedLuminosity = 714.78373;
+  double XSectionDYToMuMu = 1300.0 * 1.2416;
+  double XSectionTTJets = 94.0;
+  double XSectionWJetsToLNu = 7899.0;
+  double XSectionQCDMu = 349988.0;
+
+  double InitialNumberDYToMuMu = 2148325.0;
+  double InitialNumberTTJets = 1089625.0;
+  double InitialNumberWJetsToLNu = 5413258.0;
+  double InitialNumberQCDMu = 8797418.0;
+
 	double minPtHat = -100;
   double maxPtHat = 1000000;
   int verbosity = 0;
@@ -946,6 +960,31 @@ int main(int argc, char *argv[])
 		isAfterFSRCut1 = isAfterFSRCut2 = isAfterFSRCut3 = 0;
 		isAfterFSRCut4 = isMultipleCandidate = isAfterCut5 = isAfterCut6 = isAfterCut7 = isAfterCut8 = isAfterCut9 = isAfterCut10 = 0;
 		isSelected = 0;
+
+		weight_Xsection = weight_pileUp = 1.0;
+
+		string sample(sample_char);
+
+		if( sample == "DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3" ){
+			weight_Xsection = (double)(  (double)((double)(XSectionDYToMuMu) / (double)(InitialNumberDYToMuMu)) * (double)integratedLuminosity);
+			weight_pileUp = weight_DYToMuMu(nGenVertices+1);
+		}
+		if( sample == "QCD_Pt-20_MuEnrichedPt-10_TuneZ2_7TeV-pythia6" )
+		{
+			weight_Xsection = (double)(  (double)((double)(XSectionQCDMu) / (double)(InitialNumberQCDMu)) * (double)integratedLuminosity);
+			weight_pileUp = weight_QCDMu(nGenVertices+1);
+		}
+		if( sample == "TT_TuneZ2_7TeV-pythia6-tauola" )
+		{
+			weight_Xsection = (double)(  (double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity);
+			weight_pileUp = weight_TTJets(nGenVertices+1);
+		}
+		if( sample == "WToMuNu_TuneZ2_7TeV-pythia6" )
+		{
+			weight_Xsection = (double)(  (double)((double)(XSectionWJetsToLNu) / (double)(InitialNumberWJetsToLNu)) * (double)integratedLuminosity);
+			weight_pileUp = weight_WJetsToLNu(nGenVertices+1);
+		}
+
 
 		// ____________________________________________
 		// Muon variables
