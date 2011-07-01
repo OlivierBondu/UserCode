@@ -64,12 +64,12 @@ int main()
 	gROOT->ProcessLine(".x setTDRStyle.C");
 //	string Data = "miniTree_v2_Run2011A-May10ReReco.root";
 //	string Data = "miniTree_v2_Run2011A-PromptReco-v4_June17.root";
-	string Data = "miniTree_v4_Run2011A-PromptReco-v4_June17_ALL.root";
-	string FSR_DYToMuMu = "miniTree_v4_FSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
-	string nonFSR_DYToMuMu = "miniTree_v4_nonFSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
-	string TTJets = "miniTree_v4_TT_TuneZ2_7TeV-pythia6-tauola.root";
-	string WJetsToLNu = "miniTree_v4_WToMuNu_TuneZ2_7TeV-pythia6.root";
-	string QCDMu = "miniTree_v4_QCD_Pt-20_MuEnrichedPt-10_TuneZ2_7TeV-pythia6.root";
+	string Data = "miniTree_v5_Run2011A-PromptReco-v4_June17_ALL.root";
+	string FSR_DYToMuMu = "miniTree_v5_FSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
+	string nonFSR_DYToMuMu = "miniTree_v5_nonFSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
+	string TTJets = "miniTree_v5_TT_TuneZ2_7TeV-pythia6-tauola.root";
+	string WJetsToLNu = "miniTree_v5_WToMuNu_TuneZ2_7TeV-pythia6.root";
+	string QCDMu = "miniTree_v5_QCD_Pt-20_MuEnrichedPt-10_TuneZ2_7TeV-pythia6.root";
 
 	TFile *Data_File = new TFile(Data.c_str());
 	TTree* Data_miniTree = (TTree*) Data_File->Get("miniTree");
@@ -114,8 +114,8 @@ int main()
 	name.push_back("selected-04");
 	set_of_cuts.push_back("isVeryLooseMMG");
 	name.push_back("selected-veryloose");
-
-
+*/
+/*
 	set_of_cuts.push_back("isLooseMMG");
   name.push_back("selected-loose");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEB");
@@ -145,7 +145,7 @@ int main()
   name.push_back("selected-tight-EE-lowR9");
 	set_of_cuts.push_back("isTightMMG && Photon_isEE && Photon_r9 > .95");
   name.push_back("selected-tight-EE-highR9");
-
+*/
 
 set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
   name.push_back("selected-loose-nomultiple");
@@ -159,7 +159,7 @@ set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
   name.push_back("selected-tight-EB-nomultiple");
 	set_of_cuts.push_back("isTightMMG && Photon_isEE && isMultipleCandidate==0");
   name.push_back("selected-tight-EE-nomultiple");
-*/
+
 	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05");
   name.push_back("selected-tight-EGM-10-006-pt10");
 	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEB");

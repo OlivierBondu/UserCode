@@ -77,18 +77,9 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   // Get Histo_FSR_DYToMuMu from eventTree
   TH1F *Histo_FSR_DYToMuMu_temp = new TH1F();
   string variable_FSR_DYToMuMu = var + ">>Histo_FSR_DYToMuMu_temp" + limits;
-//	cout << "weight_DYToMuMu(10)= " << weight_DYToMuMu(10) << endl;
-	string cut_FSR_DYToMuMu = "(" + cut + ") * weight_DYToMuMu(nGenVertices+1)";
-//	string cut_FSR_DYToMuMu = "(" + cut + ") * nGenVertices";
-//	string cut_FSR_DYToMuMu = "weight_DYToMuMu(nGenVertices)";
-//	string cut_FSR_DYToMuMu = cut;
-//	string cut_FSR_DYToMuMu = "nGenVertices";
-//	cout << "cut_FSR_DYToMuMu= " << cut_FSR_DYToMuMu << endl;
-//	TString c2 = "weight_DYToMuMu(nGenVertices)";
-//	TFormula f1;
-//	f1.Analyze("weight_DYToMuMu(nGenVertices)");
+//	string cut_FSR_DYToMuMu = "(" + cut + ") * weight_DYToMuMu(nGenVertices+1)";
+	string cut_FSR_DYToMuMu = "(" + cut + ") * weight_pileUp * weight_Xsection";
   FSR_DYToMuMu_miniTree->Draw(variable_FSR_DYToMuMu.c_str(), cut_FSR_DYToMuMu.c_str());
-//  FSR_DYToMuMu_miniTree->Draw(variable_FSR_DYToMuMu.c_str(), c2);
   TH1F *Histo_FSR_DYToMuMu = (TH1F*)gDirectory->Get("Histo_FSR_DYToMuMu_temp");
   c1->Clear();
 
@@ -96,7 +87,8 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   // Get Histo_nonFSR_DYToMuMu from eventTree
   TH1F *Histo_nonFSR_DYToMuMu_temp = new TH1F();
   string variable_nonFSR_DYToMuMu = var + ">>Histo_nonFSR_DYToMuMu_temp" + limits;
-	string cut_nonFSR_DYToMuMu = "(" + cut + ") * weight_DYToMuMu(nGenVertices+1)";
+	string cut_nonFSR_DYToMuMu = "(" + cut + ") * weight_pileUp * weight_Xsection";
+//	string cut_nonFSR_DYToMuMu = "(" + cut + ") * weight_DYToMuMu(nGenVertices+1)";
 //	string cut_nonFSR_DYToMuMu = cut;
   nonFSR_DYToMuMu_miniTree->Draw(variable_nonFSR_DYToMuMu.c_str(), cut_nonFSR_DYToMuMu.c_str());
   TH1F *Histo_nonFSR_DYToMuMu = (TH1F*)gDirectory->Get("Histo_nonFSR_DYToMuMu_temp");
@@ -106,7 +98,8 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   // Get Histo_TTJets from eventTree
   TH1F *Histo_TTJets_temp = new TH1F();
   string variable_TTJets = var + ">>Histo_TTJets_temp" + limits;
-	string cut_TTJets = "(" + cut + ") * weight_TTJets(nGenVertices+1)";
+	string cut_TTJets = "(" + cut + ") * weight_pileUp * weight_Xsection";
+//	string cut_TTJets = "(" + cut + ") * weight_TTJets(nGenVertices+1)";
 //	string cut_TTJets = cut;
   TTJets_miniTree->Draw(variable_TTJets.c_str(), cut_TTJets.c_str());
   TH1F *Histo_TTJets = (TH1F*)gDirectory->Get("Histo_TTJets_temp");
@@ -115,7 +108,8 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   // Get Histo_WJetsToLNu from eventTree
   TH1F *Histo_WJetsToLNu_temp = new TH1F();
   string variable_WJetsToLNu = var + ">>Histo_WJetsToLNu_temp" + limits;
-	string cut_WJetsToLNu = "(" + cut + ") * weight_WJetsToLNu(nGenVertices+1)";
+	string cut_WJetsToLNu = "(" + cut + ") * weight_pileUp * weight_Xsection";
+//	string cut_WJetsToLNu = "(" + cut + ") * weight_WJetsToLNu(nGenVertices+1)";
 //	string cut_WJetsToLNu = cut;
   WJetsToLNu_miniTree->Draw(variable_WJetsToLNu.c_str(), cut_WJetsToLNu.c_str());
   TH1F *Histo_WJetsToLNu = (TH1F*)gDirectory->Get("Histo_WJetsToLNu_temp");
@@ -124,7 +118,8 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   // Get Histo_QCDMu from eventTree
   TH1F *Histo_QCDMu_temp = new TH1F();
   string variable_QCDMu = var + ">>Histo_QCDMu_temp" + limits;
-	string cut_QCDMu = "(" + cut + ") * weight_QCDMu(nGenVertices+1)";
+	string cut_QCDMu = "(" + cut + ") * weight_pileUp * weight_Xsection";
+//	string cut_QCDMu = "(" + cut + ") * weight_QCDMu(nGenVertices+1)";
 //	string cut_QCDMu = cut;
   QCDMu_miniTree->Draw(variable_QCDMu.c_str(), cut_QCDMu.c_str());
   TH1F *Histo_QCDMu = (TH1F*)gDirectory->Get("Histo_QCDMu_temp");
@@ -160,11 +155,11 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
 	double InitialNumberWJetsToLNu = 5413258.0;
 	double InitialNumberQCDMu = 8797418.0;
 
-  Histo_FSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionFSR_DYToMuMu) / (double)(InitialNumberFSR_DYToMuMu)) * (double)integratedLuminosity));
-  Histo_nonFSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionnonFSR_DYToMuMu) / (double)(InitialNumbernonFSR_DYToMuMu)) * (double)integratedLuminosity));
-  Histo_TTJets->Scale((double)(  (double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity));
-  Histo_WJetsToLNu->Scale((double)(  (double)((double)(XSectionWJetsToLNu) / (double)(InitialNumberWJetsToLNu)) * (double)integratedLuminosity));
-  Histo_QCDMu->Scale((double)(  (double)((double)(XSectionQCDMu) / (double)(InitialNumberQCDMu)) * (double)integratedLuminosity));
+//  Histo_FSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionFSR_DYToMuMu) / (double)(InitialNumberFSR_DYToMuMu)) * (double)integratedLuminosity));
+//  Histo_nonFSR_DYToMuMu->Scale((double)(  (double)((double)(XSectionnonFSR_DYToMuMu) / (double)(InitialNumbernonFSR_DYToMuMu)) * (double)integratedLuminosity));
+//  Histo_TTJets->Scale((double)(  (double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity));
+//  Histo_WJetsToLNu->Scale((double)(  (double)((double)(XSectionWJetsToLNu) / (double)(InitialNumberWJetsToLNu)) * (double)integratedLuminosity));
+//  Histo_QCDMu->Scale((double)(  (double)((double)(XSectionQCDMu) / (double)(InitialNumberQCDMu)) * (double)integratedLuminosity));
   // Adding histograms for binned samples
 //  Histo_QCD_Pt15->Add(Histo_QCD_Pt30);
 //  Histo_QCD_Pt15->Add(Histo_QCD_Pt80);
