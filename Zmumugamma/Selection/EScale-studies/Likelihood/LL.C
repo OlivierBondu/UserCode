@@ -39,21 +39,67 @@ void LL()
   RooRealVar etaData("etaData", "etaData", -3, 3);
 
 // Read data
-  RooDataSet *data = RooDataSet::read("Selected_DATA_eta_k.txt", RooArgList(etaData, mmgData, kData, ikData, sData));
+
+	TFile *file_Data = new TFile("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/Selection/miniTree_v5_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root");
+	TTree *tree_Data = (TTree*)file_Data->Get("miniTree");
+  RooRealVar Mmumugamma("Mmumugamma", "m_{#mu#mu#gamma}", 0.0, 300.0, "GeV");
+  RooRealVar Photon_isEB("Photon_isEB", "Photon_isEB", 0, 1);
+//  RooRealVar mmg_k("mmg_k", "k", 0.0, 8.0, "");
+  RooRealVar mmg_k("mmg_k", "k", -1.0, 3.0, "");
+//  RooRealVar mmg_ik("mmg_ik", "ik", -5.0, 6.0, "");
+  RooRealVar mmg_ik("mmg_ik", "ik", -1.0, 3.0, "");
+//  RooRealVar mmg_s("mmg_s", "s = E_{reco} / E_{kin.} - 1", -5.0, 5.0, "");
+  RooRealVar mmg_s("mmg_s", "s = E_{reco} / E_{kin.} - 1", -2.0, 2.0, "");
+  RooRealVar Photon_r9("Photon_r9", "Photon_r9", -2.0, 2.0);
+  RooRealVar isVeryLooseMMG("isVeryLooseMMG", "isVeryLooseMMG", -2.0, 2.0);
+  RooRealVar isLooseMMG("isLooseMMG", "isLooseMMG", -2.0, 2.0);
+  RooRealVar isTightMMG("isTightMMG", "isTightMMG", -2.0, 2.0);
+  RooRealVar isAfterFSRCut1("isAfterFSRCut1", "isAfterFSRCut1", -2.0, 2.0);
+  RooRealVar isAfterFSRCut2("isAfterFSRCut2", "isAfterFSRCut2", -2.0, 2.0);
+  RooRealVar isAfterFSRCut3("isAfterFSRCut3", "isAfterFSRCut3", -2.0, 2.0);
+  RooRealVar isAfterFSRCut4("isAfterFSRCut4", "isAfterFSRCut4", -2.0, 2.0);
+  RooRealVar nGenVertices("nGenVertices", "nGenVertices", -0.5, 50.5);
+	RooArgSet *ntplVars = new RooArgSet();
+	ntplVars->add(Mmumugamma);
+	ntplVars->add(Photon_isEB);
+	ntplVars->add(mmg_k);
+	ntplVars->add(mmg_ik);
+	ntplVars->add(mmg_s);
+	ntplVars->add(Photon_r9);
+	ntplVars->add(isVeryLooseMMG);
+	ntplVars->add(isLooseMMG);
+	ntplVars->add(isTightMMG);
+	ntplVars->add(isAfterFSRCut1);
+	ntplVars->add(isAfterFSRCut2);
+	ntplVars->add(isAfterFSRCut3);
+	ntplVars->add(isAfterFSRCut4);
+	ntplVars->add(nGenVertices);
+
+
+	RooDataSet *data = new RooDataSet("Data", "Data", tree_Data, *ntplVars);
+
 // Create data subsets
-  RooDataSet *EBdata = data->reduce("etaData<1.4442&&etaData>-1.4442");
-  RooDataSet *mmgEBdata = data->reduce(mmgData, "etaData<1.4442&&etaData>-1.4442");
-  RooDataSet *kEBdata = data->reduce(kData, "etaData<1.4442&&etaData>-1.4442");
-  RooDataSet *iEBdata = data->reduce(ikData, "etaData<1.4442&&etaData>-1.4442");
-  RooDataSet *sEBdata = data->reduce(sData, "etaData<1.4442&&etaData>-1.4442");
+/*
+  RooDataSet *EBdata = data->reduce("Photon_isEB && isLooseMMG");
+  RooDataSet *mmgEBdata = data->reduce(Mmumugamma, "Photon_isEB && isLooseMMG");
+	RooDataSet *kEBdata = data->reduce(mmg_k, "Photon_isEB && isLooseMMG");
+	RooDataSet *ikEBdata = data->reduce(mmg_ik, "Photon_isEB && isLooseMMG");
+	RooDataSet *sEBdata = data->reduce(mmg_s, "Photon_isEB && isLooseMMG");
+*/
+ RooDataSet *EBdata = data->reduce("Photon_isEB && isTightMMG");
+  RooDataSet *mmgEBdata = data->reduce(Mmumugamma, "Photon_isEB && isTightMMG");
+	RooDataSet *kEBdata = data->reduce(mmg_k, "Photon_isEB && isTightMMG");
+	RooDataSet *ikEBdata = data->reduce(mmg_ik, "Photon_isEB && isTightMMG");
+	RooDataSet *sEBdata = data->reduce(mmg_s, "Photon_isEB && isTightMMG");
 
 // Set data observables as constants
+/*
 	mmgData.setConstant();
 	kData.setConstant();
 	ikData.setConstant();
 	sData.setConstant();
 	etaData.setConstant();
-
+*/
 
 // Draw Data
 /*
@@ -67,6 +113,7 @@ void LL()
 	char x[50];
 	double s_alpha;
 	for(double alpha = 0.950 ; alpha <= 1.050 ; alpha += 0.001)
+//	for(double alpha = 0.950 ; alpha <= 0.971 ; alpha += 0.001)
 	{
 		sprintf(x,"%4.3f",alpha);
 		s_alpha = (alpha - 1) * 100;
@@ -78,21 +125,41 @@ void LL()
 		RooRealVar sMC("sMC","sMC",-2,2);
 		RooRealVar etaMC("etaMC", "etaMC", -3, 3);
 // Read mc file
-		RooDataSet *mc = RooDataSet::read(Form("Selected_MC_%s_eta_k.txt", x), RooArgList(etaMC, mmgMC, kMC, ikMC, sMC));
-		RooDataSet *EBmc = mc->reduce("etaMC<1.4442&&etaMC>-1.4442");
-		RooDataSet *mmgEBmc = mc->reduce(mmgMC, "etaMC<1.4442&&etaMC>-1.4442");
-		RooDataSet *kEBmc = mc->reduce(kMC, "etaMC<1.4442&&etaMC>-1.4442");
-		RooDataSet *sEBmc = mc->reduce(sMC, "etaMC<1.4442&&etaMC>-1.4442");
+/// /sps/cms/obondu/temp/test_batch/miniTree_ALL_0.997.root
+
+  TFile *file_MC = new TFile(Form("/sps/cms/obondu/temp/test_batch/miniTree_ALL_%s.root", x));
+  TTree *tree_MC = (TTree*)file_MC->Get("miniTree");
+
+	RooDataSet *mc = new RooDataSet("MC", "MC", tree_MC, *ntplVars);
+
+// Create data subsets
+
+  RooDataSet *EBmc = mc->reduce("Photon_isEB && isTightMMG");
+  RooDataSet *mmgEBmc = mc->reduce(Mmumugamma, "Photon_isEB && isTightMMG");
+	RooDataSet *kEBmc = mc->reduce(mmg_k, "Photon_isEB && isTightMMG");
+	RooDataSet *ikEBmc = mc->reduce(mmg_ik, "Photon_isEB && isTightMMG");
+	RooDataSet *sEBmc = mc->reduce(mmg_s, "Photon_isEB && isTightMMG");
+/*
+  RooDataSet *EBmc = mc->reduce("Photon_isEB && isLooseMMG");
+  RooDataSet *mmgEBmc = mc->reduce(Mmumugamma, "Photon_isEB && isLooseMMG");
+	RooDataSet *kEBmc = mc->reduce(mmg_k, "Photon_isEB && isLooseMMG");
+	RooDataSet *ikEBmc = mc->reduce(mmg_ik, "Photon_isEB && isLooseMMG");
+	RooDataSet *sEBmc = mc->reduce(mmg_s, "Photon_isEB && isLooseMMG");
+*/
 
 // Create PDF
-		RooKeysPdf *pdfmmgEBMC = new RooKeysPdf("pdfmmgEBMC", "pdfmmgEBMC", mmgMC,*mmgEBmc);
-		RooKeysPdf *pdfkEBMC = new RooKeysPdf("pdfkEBMC", "pdfkEBMC", kMC,*kEBmc);
-		RooKeysPdf *pdfsEBMC = new RooKeysPdf("pdfsEBMC", "pdfsEBMC", sMC,*sEBmc);
+	RooKeysPdf *pdfmmgEBMC = new RooKeysPdf("pdfmmgEBMC", "pdfmmgEBMC", Mmumugamma, *mmgEBmc);
+	RooKeysPdf *pdfkEBMC = new RooKeysPdf("pdfkEBMC", "pdfkEBMC", mmg_k, *kEBmc);
+	RooKeysPdf *pdfsEBMC = new RooKeysPdf("pdfsEBMC", "pdfsEBMC", mmg_s, *sEBmc);
+	
+//		RooKeysPdf *pdfmmgEBMC = new RooKeysPdf("pdfmmgEBMC", "pdfmmgEBMC", mmgMC,*mmgEBmc);
+//		RooKeysPdf *pdfkEBMC = new RooKeysPdf("pdfkEBMC", "pdfkEBMC", kMC,*kEBmc);
+//		RooKeysPdf *pdfsEBMC = new RooKeysPdf("pdfsEBMC", "pdfsEBMC", sMC,*sEBmc);
 
 // Draw PDF with MC
 /*
 		TCanvas *cMC = new TCanvas("MC", "MC");
-		RooPlot* kMCframe = kMC.frame();
+		RooPlot* kMCframe = mmg_k.frame();
 		kEBmc->plotOn(kMCframe);
 		pdfkEBMC->plotOn(kMCframe);
 		kMCframe->Draw();
@@ -106,16 +173,32 @@ void LL()
 */
 
 		//Double_t mmgEBnll = pdfmmgEBMC->chi2FitTo(*mmgEBdata).minNll();
-		RooAbsReal* mmgEBnll = pdfmmgEBMC->createChi2(*mmgEBdata);
-    RooAbsReal* kEBnll = pdfkEBMC->fitTo(*kEBdata)->minNll();
-    RooAbsReal* sEBnll = pdfsEBMC->fitTo(*sEBdata)->minNll();
+//		RooAbsReal* mmgEBnll = pdfmmgEBMC->createChi2(*mmgEBdata);
+
+//		Double_t kEBnll = pdfkEBMC->fitTo(*kEBdata, Save())->minNll();
+//    RooAbsReal* kEBnll = pdfkEBMC->fitTo(*kEBdata)->minNll();
+//		RooFitResult* k_result = new RooFitResult();
+//		k_result = (RooFitResult*)pdfkEBMC->fitTo(*kEBdata);
+//		RooFitResult* k_result = (RooFitResult*)pdfkEBMC->fitTo(*kEBdata, Save(), Range(0.98, 1.02));
+//		RooFitResult* s_result = (RooFitResult*)pdfsEBMC->fitTo(*sEBdata, Save(), Range(-0.02, 0.02));
+		RooFitResult* k_result = (RooFitResult*)pdfkEBMC->fitTo(*kEBdata, Save());
+		RooFitResult* s_result = (RooFitResult*)pdfsEBMC->fitTo(*sEBdata, Save());
+//		k_result->Print();
+//    cout << "k_result->minNll()" << k_result->minNll() << endl;
+//    RooAbsReal* sEBnll = pdfsEBMC->fitTo(*sEBdata)->minNll();
+
+		cout << s_alpha << "\t" << s_result->minNll() << endl;
+		LL_s->Fill(s_alpha, s_result->minNll());
+		cout << alpha << "\t" << k_result->minNll() << endl;
+		LL->Fill(alpha, k_result->minNll());
+/*
 		cout << s_alpha << "\t" << -(mmgEBnll->getVal()) << endl;
 		LL_mmg->Fill(s_alpha, -(mmgEBnll->getVal()));
 		cout << alpha << "\t" << -(kEBnll->getVal()) << endl;
 		LL->Fill(alpha, -(kEBnll->getVal()));
 		cout << s_alpha << "\t" << -(sEBnll->getVal()) << endl;
 		LL_s->Fill(s_alpha, -(sEBnll->getVal()));
-
+*/
 /*
 // Create NLL of MC to data
 		RooAbsReal* mmgEBnll = pdfmmgEBMC->createNLL(*mmgEBdata);
@@ -142,9 +225,10 @@ void LL()
 	} // end of loop over ikin
 
 // Draw nll
+
 	TCanvas *cLL = new TCanvas("cLL", "cLL");
 	LL->Draw("E1");
-	TF1 *p2kfit = new TF1("p2kfit","pol2", 0.95, 1.05);
+	TF1 *p2kfit = new TF1("p2kfit","pol2", 0.98, 1.02);
 	LL->Fit(p2kfit, "Rw");
 	double p0, p1, p2;
 	double p0err, p1err, p2err;
@@ -170,7 +254,7 @@ void LL()
 
 	TCanvas *cLL_s = new TCanvas("cLL_s", "cLL_s");
 	LL_s->Draw("E1");
-	TF1 *p2sfit = new TF1("p2sfit","pol2", -6.0, -6.0);
+	TF1 *p2sfit = new TF1("p2sfit","pol2", -2.0, 2.0);
 	LL_s->Fit(p2sfit, "Rw");
 	double p0_s, p1_s, p2_s;
 	double p0err_s, p1err_s, p2err_s;
@@ -189,11 +273,13 @@ void LL()
 	cout << endl;
 	if(p2_s >= 0.0) cout << "scale=\t" << (double)(- p1_s) / (double)(2 * p2_s) << endl;
 	if(p2_s >= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(2 * p2_s) ) << endl;
+	if(p2_s <= 0.0) cout << "scale=\t" << (double)(- p1_s) / (double)(- 2 * p2_s) << endl;
+	if(p2_s <= 0.0)	cout << "sigma=\t" << (double)(1.0) / (double)( sqrt(- 2 * p2_s) ) << endl;
 //	th2->Draw();
 	cLL_s->Draw();
 	cLL_s->Print("LL_s.gif");
 
-
+/*
 	TCanvas *cLL_mmg = new TCanvas("cLL_mmg", "cLL_mmg");
 	LL_mmg->Draw("E1");
 	TF1 *p2mmgfit = new TF1("p2mmgfit","pol2", -6.0, -6.0);
@@ -218,6 +304,6 @@ void LL()
 //	th2->Draw();
 	cLL_mmg->Draw();
 	cLL_mmg->Print("LL_mmg.gif");
-
+*/
 }
 
