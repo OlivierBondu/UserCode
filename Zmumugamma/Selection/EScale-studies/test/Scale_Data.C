@@ -24,8 +24,15 @@
 
 //gROOT->Reset();
 
-// RooStats headers
-//#include "RooStats/HLFactory.h"
+/*
+double weight_DYToMuMu(int nGenVertices)
+{
+	double weight[51] = {
+0, 0.192859, 0.37571, 0.98006, 1.47381, 2.13772, 1.97435, 1.75482, 1.61272, 1.30487, 0.858989, 0.593953, 0.406, 0.271559, 0.200834, 0.123192, 0.101752, 0.0724765, 0.0505275, 0.0609286, 0.0265446, 0.0178984, 0.0603881, 0, 0.00990419, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
+	return weight[nGenVertices];
+}
+*/
 
 void Scale_Data(){
 //	gStyle->SetOptTitle(0);
@@ -33,8 +40,8 @@ void Scale_Data(){
 	CMSstyle();
 	using namespace RooFit;
 
-	TFile* file_Data = new TFile("../../miniTree_v1_Run2011A_ALL.root");
-	TFile* file_MC = new TFile("/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/Selection/miniTree_v4_DYToMuMu_ALL.root");
+	TFile* file_Data = new TFile("../../miniTree_v7_Run2011A_ALL.root");
+	TFile* file_MC = new TFile("../../miniTree_v7_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root");
 	TTree* Tree_Data = (TTree*) file_Data->Get("miniTree");
 	TTree* Tree_MC = (TTree*) file_MC->Get("miniTree");
 
@@ -42,49 +49,66 @@ void Scale_Data(){
  
 	RooRealVar Mmumu("Mmumu", "Mmumu", 40, 80, "GeV");
 	RooRealVar Mmumugamma("Mmumugamma", "m_{#mu#mu#gamma}", 60, 120, "GeV");
-/*
-	RooRealVar Mmumugamma_5x5("Mmumugamma_5x5", "Mmumugamma_5x5", 60, 120, "GeV");
-	RooRealVar Mmumugamma_SC("Mmumugamma_SC", "Mmumugamma_SC", 60, 120, "GeV");
-	RooRealVar Mmumugamma_SCraw("Mmumugamma_SCraw", "Mmumugamma_SCraw", 60, 120, "GeV");
-*/
+
 	RooRealVar mmg_k("mmg_k", "k", 0.0, 2.0, ""); 
 	RooRealVar mmg_ik("mmg_ik", "mmg_ik", -500, 500, "");
 	RooRealVar mmg_s("mmg_s", "s = E_{reco} / E_{kin.} - 1", -1.0, 1.0, "");
 	RooRealVar mmg_logk("mmg_logk", "mmg_logk", -500, 500, ""); 
 	RooRealVar mmg_logik("mmg_logik", "mmg_logik", -500, 500, "");
 	RooRealVar mmg_logs("mmg_logs", "mmg_logs", -500, 500, "");
-/*
-	RooRealVar mmg_k_5x5("mmg_k_5x5", "mmg_k_5x5", -500, 500, "");
-	RooRealVar mmg_ik_5x5("mmg_ik_5x5", "mmg_ik_5x5", -500, 500, "");
-	RooRealVar mmg_s_5x5("mmg_s_5x5", "mmg_s_5x5", -500, 500, "");
-	RooRealVar mmg_logk_5x5("mmg_logk_5x5", "mmg_logk_5x5", -500, 500, "");
-	RooRealVar mmg_logik_5x5("mmg_logik_5x5", "mmg_logik_5x5", -500, 500, "");
-	RooRealVar mmg_logs_5x5("mmg_logs_5x5", "mmg_logs_5x5", -500, 500, "");
-	RooRealVar mmg_k_SC("mmg_k_SC", "mmg_k_SC", -500, 500, "");
-	RooRealVar mmg_ik_SC("mmg_ik_SC", "mmg_ik_SC", -500, 500, "");
-	RooRealVar mmg_s_SC("mmg_s_SC", "mmg_s_SC", -500, 500, "");
-	RooRealVar mmg_logk_SC("mmg_logk_SC", "mmg_logk_SC", -500, 500, "");
-	RooRealVar mmg_logik_SC("mmg_logik_SC", "mmg_logik_SC", -500, 500, "");
-	RooRealVar mmg_logs_SC("mmg_logs_SC", "mmg_logs_SC", -500, 500, "");
-	RooRealVar mmg_k_SCraw("mmg_k_SCraw", "mmg_k_SCraw", -500, 500, "");
-	RooRealVar mmg_ik_SCraw("mmg_ik_SCraw", "mmg_ik_SCraw", -500, 500, "");
-	RooRealVar mmg_s_SCraw("mmg_s_SCraw", "mmg_s_SCraw", -500, 500, "");
-	RooRealVar mmg_logk_SCraw("mmg_logk_SCraw", "mmg_logk_SCraw", -500, 500, "");
-	RooRealVar mmg_logik_SCraw("mmg_logik_SCraw", "mmg_logik_SCraw", -500, 500, "");
-	RooRealVar mmg_logs_SCraw("mmg_logs_SCraw", "mmg_logs_SCraw", -500, 500, "");
-*/
+	RooRealVar Photon_r9("Photon_r9", "Photon_r9", -2.0, 2.0);
+	RooRealVar isVeryLooseMMG("isVeryLooseMMG", "isVeryLooseMMG", -2.0, 2.0);
+	RooRealVar isLooseMMG("isLooseMMG", "isLooseMMG", -2.0, 2.0);
+	RooRealVar isTightMMG("isTightMMG", "isTightMMG", -2.0, 2.0);
+	RooRealVar isAfterFSRCut1("isAfterFSRCut1", "isAfterFSRCut1", -2.0, 2.0);
+	RooRealVar isAfterFSRCut2("isAfterFSRCut2", "isAfterFSRCut2", -2.0, 2.0);
+	RooRealVar isAfterFSRCut3("isAfterFSRCut3", "isAfterFSRCut3", -2.0, 2.0);
+	RooRealVar isAfterFSRCut4("isAfterFSRCut4", "isAfterFSRCut4", -2.0, 2.0);
+	RooRealVar isMultipleCandidate("isMultipleCandidate", "isMultipleCandidate", -2.0, 2.0);
+	RooRealVar nGenVerticess("nGenVertices", "nGenVertices", -0.5, 50.5);
+  RooRealVar weight_pileUp("weight_pileUp", "weight_pileUp", 0.0, 10000000);
+  RooRealVar weight_Xsection("weight_Xsection", "weight_Xsection", 0.0, 10000000);
+
 	
+
 	RooArgSet *ntplVars = new RooArgSet(Photon_isEB, Mmumu, Mmumugamma, mmg_k, mmg_ik, mmg_s, mmg_logk, mmg_logik, mmg_logs);
+ntplVars->add(Photon_r9);
+ntplVars->add(isVeryLooseMMG);
+ntplVars->add(isLooseMMG);
+ntplVars->add(isTightMMG);
+ntplVars->add(isAfterFSRCut1);
+ntplVars->add(isAfterFSRCut2);
+ntplVars->add(isAfterFSRCut3);
+ntplVars->add(isAfterFSRCut4);
+ntplVars->add(isMultipleCandidate);
+ntplVars->add(nGenVerticess);
+ntplVars->add(weight_pileUp);
+ntplVars->add(weight_Xsection);
+
 //	RooArgSet ntplVars(Mmumu, Mmumugamma, Mmumugamma_5x5, Mmumugamma_SC, Mmumugamma_SCraw, mmg_k, mmg_ik, mmg_s, mmg_logk, mmg_logik, mmg_logs, mmg_k_5x5, mmg_ik_5x5, mmg_s_5x5, mmg_logk_5x5, mmg_logik_5x5, mmg_logs_5x5, mmg_k_SC, mmg_ik_SC, mmg_s_SC, mmg_logk_SC, mmg_logik_SC, mmg_logs_SC, mmg_k_SCraw, mmg_ik_SCraw, mmg_s_SCraw, mmg_logk_SCraw, mmg_logik_SCraw, mmg_logs_SCraw);
-//	RooDataSet *Data = new RooDataSet("Data", "Data", Tree_Data, *ntplVars);
 //	RooMCSet *MC = new RooMCSet("MC", "MC", Tree_MC, *ntplVars);
-	RooDataSet *Data = new RooDataSet("MC", "MC", Tree_MC, *ntplVars);
-	bool isData = false;
-//	bool isData = true;
 
 	vector<string> set_of_cuts;
   vector<string> name;
 	vector<string> display;
+	vector<string> display_latex;
+	vector<double> mc_alpha;
+	vector<double> mc_alpha_err;
+	vector<double> mc_m0;
+	vector<double> mc_m0_err;
+	vector<double> mc_n;
+	vector<double> mc_n_err;
+	vector<double> mc_sigma;
+	vector<double> mc_sigma_err;
+
+	vector<double> data_alpha;
+	vector<double> data_alpha_err;
+	vector<double> data_m0;
+	vector<double> data_m0_err;
+	vector<double> data_n;
+	vector<double> data_n_err;
+	vector<double> data_sigma;
+	vector<double> data_sigma_err;
 
 /*
   set_of_cuts.push_back("Photon_isEB == 1");
@@ -96,21 +120,60 @@ void Scale_Data(){
   display.push_back("EE, loose m_{#mu#mu#gamma}");
 	name.push_back("EE_loose");
 */
-
-	set_of_cuts.push_back("Photon_isEB == 1 && Mmumugamma > 87.2 && Mmumugamma < 95.2");
-//  display.push_back("EB, tight m_{#mu#mu#gamma}");
-  display.push_back("ECAL Barrel");
+/*
+	set_of_cuts.push_back("Photon_isEB == 1 && isTightMMG && isMultipleCandidate == 0");
+  display.push_back("EB, tight m_{#mu#mu#gamma}");
+//  display.push_back("ECAL Barrel");
 	name.push_back("EB_tight");
 
-
-  set_of_cuts.push_back("Photon_isEB == 0 && Mmumugamma > 87.2 && Mmumugamma < 95.2");
-//  display.push_back("EE, tight m_{#mu#mu#gamma}");
-  display.push_back("ECAL Endcaps");
+  set_of_cuts.push_back("Photon_isEB == 0 && isTightMMG && isMultipleCandidate == 0");
+  display.push_back("EE, tight m_{#mu#mu#gamma}");
+//  display.push_back("ECAL Endcaps");
 	name.push_back("EE_tight");
+*/
 
-	const int size = set_of_cuts.size();
-	RooDataSet* Data_subset[size];
+	set_of_cuts.push_back("Photon_isEB == 1 && isTightMMG && isMultipleCandidate == 0 && Photon_r9 > 0.94");
+  display.push_back("EB, tight m_{#mu#mu#gamma}, r9 > .94");
+  display_latex.push_back("EB, tight $m_{\\mu\\mu\\gamma}$, $r9 > .94$");
+//  display.push_back("ECAL Barrel");
+	name.push_back("EB_tight-highR9");
+
+	set_of_cuts.push_back("Photon_isEB == 1 && isTightMMG && isMultipleCandidate == 0 && Photon_r9 < 0.94");
+  display.push_back("EB, tight m_{#mu#mu#gamma}, r9 < .94");
+  display_latex.push_back("EB, tight $m_{\\mu\\mu\\gamma}$, $r9 < .94$");
+//  display.push_back("ECAL Barrel");
+	name.push_back("EB_tight-lowR9");
+
+  set_of_cuts.push_back("Photon_isEB == 0 && isTightMMG && isMultipleCandidate == 0 && Photon_r9 > 0.95");
+  display.push_back("EE, tight m_{#mu#mu#gamma}, r9 > .95");
+  display_latex.push_back("EE, tight $m_{\\mu\\mu\\gamma}$, $r9 > .95$");
+//  display.push_back("ECAL Endcaps");
+	name.push_back("EE_tight-highR9");
+
+  set_of_cuts.push_back("Photon_isEB == 0 && isTightMMG && isMultipleCandidate == 0 && Photon_r9 < 0.95");
+  display.push_back("EE, tight m_{#mu#mu#gamma}, r9 < .95");
+  display_latex.push_back("EE, tight $m_{\\mu\\mu\\gamma}$, $r9 < .95$");
+//  display.push_back("ECAL Endcaps");
+	name.push_back("EE_tight-lowR9");
+
+
 //return;
+
+for(int idata=0; idata < 2; idata++){
+	RooDataSet *Data = new RooDataSet();
+	bool isData;
+	if(idata ==0)
+	{
+		Data = new RooDataSet("Data", "Data", Tree_Data, *ntplVars);
+		isData = true;
+	} else {
+		Data = new RooDataSet("MC", "MC", Tree_MC, *ntplVars, "", "weight_pileUp");
+		isData = false;
+	}
+
+const int size = set_of_cuts.size();
+	RooDataSet* Data_subset[size];
+
 
 for(int i=0; i<set_of_cuts.size() ; i++){
 
@@ -159,7 +222,7 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	TLatex latexLabel;
 	latexLabel.SetTextSize(0.06);
 	latexLabel.SetNDC();
-	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2011");
 	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
 	latexLabel.DrawLatex(0.70, 0.88, isData ? "DATA" : "MC");
 	latexLabel.DrawLatex(0.70, 0.82, display[i].c_str());
@@ -253,7 +316,7 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	TLatex latexLabel;
 	latexLabel.SetTextSize(0.06);
 	latexLabel.SetNDC();
-	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2011");
 	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
 	latexLabel.DrawLatex(0.70, 0.88, isData ? "DATA" : "MC");
 	latexLabel.DrawLatex(0.70, 0.82, display[i].c_str());
@@ -325,7 +388,7 @@ for(int i=0; i<set_of_cuts.size() ; i++){
   RooRealVar mmg_s_CB_m0("mmg_s_CB_m0", "CB #Delta m_{0}", 1.0, -5.0, 5.0, "GeV");  
   RooRealVar mmg_s_CB_sigma("mmg_s_CB_sigma", "CB #sigma", 0.45, 0.0, 0.5, "GeV");
   RooRealVar mmg_s_CB_alpha("mmg_s_CB_alpha", "CB #alpha", 1.0, 0.0, 10.0);
-  RooRealVar mmg_s_CB_n("mmg_s_CB_n", "CB n", 2.0, 0.5, 1000.0);
+  RooRealVar mmg_s_CB_n("mmg_s_CB_n", "CB n", 2.0, 0.5, 20.0);
 //  RooCBShape mmg_s_CrystalBall("mmg_s_CrystalBall","mmg_s_CrystalBall", mmg_s, mmg_s_CB_m0, mmg_s_CB_sigma, mmg_s_CB_alpha, mmg_s_CB_n);
   RooCBShape model("mmg_s_CrystalBall","mmg_s_CrystalBall", mmg_s, mmg_s_CB_m0, mmg_s_CB_sigma, mmg_s_CB_alpha, mmg_s_CB_n);
 
@@ -339,9 +402,35 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 //  RooFFTConvPdf model("mmg_s_BWxCB", "mmg_s_BWxCB", mmg_s, mmg_s_BW, mmg_s_CrystalBall);
 
 
+//	model.fitTo(*Data_subset[i], Range(-0.2, 0.2));
 	model.fitTo(*Data_subset[i]);
   RooArgSet* mmg_s_BWxCB_param = model.getVariables();
   mmg_s_BWxCB_param->Print("v");
+
+	if(isData)
+	{
+		data_alpha.push_back(mmg_s_CB_alpha.getVal());
+		data_alpha_err.push_back(mmg_s_CB_alpha.getError());
+		data_m0.push_back(mmg_s_CB_m0.getVal());
+		data_m0_err.push_back(mmg_s_CB_m0.getError());
+		data_sigma.push_back(mmg_s_CB_sigma.getVal());
+		data_sigma_err.push_back(mmg_s_CB_sigma.getError());
+		data_n.push_back(mmg_s_CB_n.getVal());
+		data_n_err.push_back(mmg_s_CB_n.getError());
+	} else {
+		mc_alpha.push_back(mmg_s_CB_alpha.getVal());
+		mc_alpha_err.push_back(mmg_s_CB_alpha.getError());
+		mc_m0.push_back(mmg_s_CB_m0.getVal());
+		mc_m0_err.push_back(mmg_s_CB_m0.getError());
+		mc_sigma.push_back(mmg_s_CB_sigma.getVal());
+		mc_sigma_err.push_back(mmg_s_CB_sigma.getError());
+		mc_n.push_back(mmg_s_CB_n.getVal());
+		mc_n_err.push_back(mmg_s_CB_n.getError());
+	}
+
+
+
+
 
 	TCanvas *mmg_s_BWxCB_canvas = new TCanvas("mmg_s_BWxCB_canvas", "mmg_s_BWxCB_canvas");
 	RooPlot* mmg_s_frame = mmg_s.frame(Title("k"));
@@ -355,11 +444,11 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	TLatex latexLabel;
 	latexLabel.SetNDC();
 	latexLabel.SetTextSize(0.03);
-	latexLabel.DrawLatex(0.13, 0.96, "CMS Preliminary 2010");
+	latexLabel.DrawLatex(0.13, 0.96, "CMS Preliminary 2011");
 	latexLabel.DrawLatex(0.42, 0.96, "#sqrt{s} = 7 TeV");
 	latexLabel.DrawLatex(0.57, 0.96, isData ? "DATA" : "Simulation");
 	latexLabel.SetTextSize(0.05);
-//	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2010");
+//	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2011");
 //	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
 //	latexLabel.DrawLatex(0.65, 0.88, isData ? "DATA" : "Simulation");
 	latexLabel.DrawLatex(0.65, 0.88, display[i].c_str());
@@ -422,9 +511,128 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	mmg_s_BWxCB_canvas->Print(Form("C/mmg_s_CB_%s_%s.C", isData?"DATA":"MC", name[i].c_str()));
 	system(Form("convert eps/mmg_s_CB_%s_%s.eps pdf/mmg_s_CB_%s_%s.pdf", isData?"DATA":"MC", name[i].c_str(), isData?"DATA":"MC", name[i].c_str()));
 
+} // end of loop over categories
+}// end of loop over data / mc
 
+// TWIKI TABLES
+cout << "|\t *DATA* \t|\t *m0* \t|\t *sigma* \t|\t *alpha* \t|\t *n* \t|" << endl; 
 
+for(int i=0; i < data_alpha.size(); i++)
+{
+	cout << "|\t" << name[i] << "\t"
+	<< "|\t" << data_m0[i] << " +- " << data_m0_err[i] << "\t"
+	<< "|\t" << data_sigma[i] << " +- " << data_sigma_err[i] << "\t"
+	<< "|\t" << data_alpha[i] << " +- " << data_alpha_err[i] << "\t"
+	<< "|\t" << data_n[i] << " +- " << data_n_err[i] << "\t|" << endl;
 }
+
+cout << "|\t *MC* \t|\t *m0* \t|\t *sigma* \t|\t *alpha* \t|\t *n* \t|" << endl; 
+
+for(int i=0; i < mc_alpha.size(); i++)
+{
+	cout << "|\t" << name[i] << "\t"
+	<< "|\t" << mc_m0[i] << " +- " << mc_m0_err[i] << "\t"
+	<< "|\t" << mc_sigma[i] << " +- " << mc_sigma_err[i] << "\t"
+	<< "|\t" << mc_alpha[i] << " +- " << mc_alpha_err[i] << "\t"
+	<< "|\t" << mc_n[i] << " +- " << mc_n_err[i] << "\t|" << endl;
+}
+
+cout << endl << endl;
+for(int i=0; i < mc_alpha.size(); i++)
+{
+	cout << "|\t *" << name[i] << "* \t|\t *m0* \t|\t *sigma* \t|\t *alpha* \t|\t *n* \t|" << endl;
+  cout << "|\t" << " data " << "\t"
+  << "|\t" << data_m0[i] << " +- " << data_m0_err[i] << "\t"
+  << "|\t" << data_sigma[i] << " +- " << data_sigma_err[i] << "\t"
+  << "|\t" << data_alpha[i] << " +- " << data_alpha_err[i] << "\t"
+  << "|\t" << data_n[i] << " +- " << data_n_err[i] << "\t|"
+	<< endl;
+  cout << "|\t" << " mc " << "\t"
+  << "|\t" << mc_m0[i] << " +- " << mc_m0_err[i] << "\t"
+  << "|\t" << mc_sigma[i] << " +- " << mc_sigma_err[i] << "\t"
+  << "|\t" << mc_alpha[i] << " +- " << mc_alpha_err[i] << "\t"
+  << "|\t" << mc_n[i] << " +- " << mc_n_err[i] << "\t|"
+	<< endl;
+	cout << "|\t" << " data - mc " << "\t"
+	<< "|\t" << setprecision (8) << fixed << data_m0[i] - mc_m0[i] << " +- " << sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "\t"
+	<< "|\t" << setprecision (8) << fixed << data_sigma[i] - mc_sigma[i] << " +- " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
+	<< "| | |"
+//	<< "|\t" << setprecision (8) << fixed << data_alpha[i] - mc_alpha[i] << " +- " << sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
+//	<< "|\t" << setprecision (8) << fixed << data_n[i] - mc_n[i] << " +- " << sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t|"
+	<< endl;
+	cout << "|\t" << " data - mc (%)" << "\t"
+	<< "|\t" << setprecision (5) << fixed << (data_m0[i] - mc_m0[i])*100.0 << " +- " << 100.0 * sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "\t"
+	<< "|\t" << setprecision (5) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " +- " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
+	<< "| | |"
+//	<< "|\t" << setprecision (5) << fixed << (data_alpha[i] - mc_alpha[i])*100.0 << " +- " << 100.0 * sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
+//	<< "|\t" << setprecision (5) << fixed << (data_n[i] - mc_n[i])*100.0 << " +- " << 100.0 * sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t|"
+	<< endl;
+}
+cout << endl << endl;
+cout << endl << endl;
+
+// LATEX TABLES
+cout << "\\begin{tabular}{ccccc}" << endl;
+cout << "DATA \t&\t $m_0$ \t&\t $\\sigma$ \t&\t $\\alpha$ \t&\t $n$ \t\\\\" << endl; 
+cout << "\\hline" << endl;
+for(int i=0; i < data_alpha.size(); i++)
+{
+	cout << "\t" << display_latex[i] << "\t"
+	<< "&\t$" << data_m0[i] << " \\pm " << data_m0_err[i] << "$\t"
+	<< "&\t$" << data_sigma[i] << " \\pm " << data_sigma_err[i] << "$\t"
+	<< "&\t$" << data_alpha[i] << " \\pm " << data_alpha_err[i] << "$\t"
+	<< "&\t$" << data_n[i] << " \\pm " << data_n_err[i] << "$\t\\\\" << endl;
+}
+cout << "\\end{tabular}" << endl;
+cout << "\\begin{tabular}{ccccc}" << endl;
+cout << "MC \t&\t $m_0$ \t&\t $\\sigma$ \t&\t $\\alpha$ \t&\t $n$ \t\\\\" << endl; 
+cout << "\\hline" << endl;
+
+for(int i=0; i < mc_alpha.size(); i++)
+{
+	cout << "\t" << display_latex[i] << "\t"
+	<< "&\t$" << mc_m0[i] << " \\pm " << mc_m0_err[i] << "$\t"
+	<< "&\t$" << mc_sigma[i] << " \\pm " << mc_sigma_err[i] << "$\t"
+	<< "&\t$" << mc_alpha[i] << " \\pm " << mc_alpha_err[i] << "$\t"
+	<< "&\t$" << mc_n[i] << " \\pm " << mc_n_err[i] << "$\t\\\\" << endl;
+}
+cout << "\\end{tabular}" << endl;
+
+cout << endl << endl;
+for(int i=0; i < mc_alpha.size(); i++)
+{
+	cout << "\\begin{tabular}{ccc}" << endl;
+	cout << display_latex[i] << "\t&\t $m_0$ \t&\t $\\sigma$ \\\\" << endl;
+	cout << "\\hline" << endl;
+  cout << "data " << "\t"
+  << "&\t$" << data_m0[i] << " \\pm " << data_m0_err[i] << "$\t"
+  << "&\t$" << data_sigma[i] << " \\pm " << data_sigma_err[i] << "$\t\\\\"
+//  << "&\t$" << data_alpha[i] << " \\pm " << data_alpha_err[i] << "$\t"
+//  << "&\t$" << data_n[i] << " \\pm " << data_n_err[i] << "$\t\\\\"
+	<< endl;
+  cout << "mc " << "\t"
+  << "&\t$" << mc_m0[i] << " \\pm " << mc_m0_err[i] << "$\t"
+  << "&\t$" << mc_sigma[i] << " \\pm " << mc_sigma_err[i] << "$\t\\\\"
+//  << "&\t$" << mc_alpha[i] << " \\pm " << mc_alpha_err[i] << "$\t"
+//  << "&\t$" << mc_n[i] << " \\pm " << mc_n_err[i] << "$\t\\\\"
+	<< endl;
+	cout << " data - mc " << "\t"
+	<< "&\t$" << setprecision (5) << fixed << data_m0[i] - mc_m0[i] << " \\pm " << sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "$\t"
+	<< "&\t$" << setprecision (5) << fixed << data_sigma[i] - mc_sigma[i] << " \\pm " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
+	<< " \\\\"
+//	<< "&\t" << setprecision (8) << fixed << data_alpha[i] - mc_alpha[i] << " \\pm " << sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
+//	<< "&\t" << setprecision (8) << fixed << data_n[i] - mc_n[i] << " \\pm " << sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t&"
+	<< endl;
+	cout << " data - mc (\\%)" << "\t"
+	<< "&\t$" << setprecision (4) << fixed << (data_m0[i] - mc_m0[i])*100.0 << " \\pm " << 100.0 * sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "$\t"
+	<< "&\t$" << setprecision (4) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " \\pm " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
+	<< " \\\\"
+//	<< "&\t" << setprecision (5) << fixed << (data_alpha[i] - mc_alpha[i])*100.0 << " \\pm " << 100.0 * sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
+//	<< "&\t" << setprecision (5) << fixed << (data_n[i] - mc_n[i])*100.0 << " \\pm " << 100.0 * sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t&"
+	<< endl;
+	cout << "\\end{tabular}" << endl;
+}
+
 
 return;
 }
