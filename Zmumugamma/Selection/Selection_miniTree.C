@@ -153,10 +153,19 @@ int main(int argc, char *argv[])
 		std::stringstream ss ( argv[4] );
 		ss >> EScale;
 	}
+	double EScale_inj = EScale;
 	
 // Optional argument is extra resolution
 	double EResolution = 0.0;
-	// TODO
+	if( argc > 5 )
+	{
+		std::stringstream ss ( argv[5] );
+		ss >> EResolution;
+	}
+	EResolution = (double)EResolution / (double)100.0;
+	TTimeStamp *time = new TTimeStamp();
+	TRandom3* generator = new TRandom3(time->GetNanoSec());
+		// TODO
 
 	gSystem->Load("libToto.so");
 	bool doHLT										= false;
@@ -898,7 +907,7 @@ int main(int argc, char *argv[])
 //	free(inputRunTree);
   string lastFile = "";
 
-	double integratedLuminosity = 714.78373;
+	double integratedLuminosity = 975.94723;
   double XSectionDYToMuMu = 1300.0 * 1.2416;
   double XSectionTTJets = 94.0;
   double XSectionWJetsToLNu = 7899.0;
@@ -923,6 +932,7 @@ int main(int argc, char *argv[])
 	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
 	// LOOP over events
+	cout << "generator->Gaus(EScale_inj, EResolution)= " <<  generator->Gaus(EScale_inj, EResolution) << endl;
 	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 //	for(unsigned int ievt=0; ievt<20000; ievt++)
 	{
@@ -1012,6 +1022,14 @@ int main(int argc, char *argv[])
 		// Photon variables
 		// ___________________________________________
 		NbPhotons = photons->GetEntries();
+		vector<double> Photon_scale;
+		if(argc > 5)
+		{ // If there is an extra resolution to smear the photon energy
+			Photon_scale.push_back(generator->Gaus(EScale_inj, EResolution));
+//			cout << "Photon_scale = " << Photon_scale[Photon_scale.size() -1] << endl;
+		} else {
+			Photon_scale.push_back(EScale_inj);
+		}
 		Pt_allPhotons = Eta_allPhotons = Phi_allPhotons = Cross_allPhotons = -99;
 		isNotCommissionned = -99;
 		isEBorEE_allPhotons = 1;
@@ -1128,7 +1146,7 @@ int main(int argc, char *argv[])
       }// end of loop over MC particles
  			if( ((isZgammaMC == 1) && (!MCsignal_in_phase_space)) || ((isZgammaMC == 2) && (MCsignal_in_phase_space)) )
       {
-        cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
+//        cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
         continue;
       }
       isAfterCutZJETVETO = 1;
@@ -1147,7 +1165,7 @@ int main(int argc, char *argv[])
       //cout << "dimuon.M()= " << dimuon.M() << endl;
       if( (dimuon.M() < 20.0) || (dimuon.M() > 500.0) )
       {
-        cout << "This is one event outside powheg range" << endl;
+        cout << "This event " << ievt << "is outside powheg range" << endl;
         Nb_events_outside_powheg_cuts++;
 				continue;
       }
@@ -1156,7 +1174,7 @@ int main(int argc, char *argv[])
 			// FSR-tagging
       if( mcMuMuGammaEvent->nZ() == 1 )
       {// consistency check
-        cerr << "There is " << mcMuMuGammaEvent->nFSR() << " fsr photons in the event" << endl;
+//        cerr << "There is " << mcMuMuGammaEvent->nFSR() << " fsr photons in the event" << endl;
         if( mcMuMuGammaEvent->nFSR() < 1 )
         {// if there is no fsr photon, don't bother
           MCsignal_in_phase_space = false;
@@ -1168,7 +1186,7 @@ int main(int argc, char *argv[])
             TRootParticle *myphoton;
             myphoton = (mcMuMuGammaEvent->photonFSR(imcphoton));
             // mc-acceptance cuts on photons
-            if( EScale*(myphoton->Pt()>8.0) && (abs(myphoton->Eta())<3.0) ) MCphotons_from_muons_from_Z = true;
+            if( (myphoton->Pt()>8.0) && (abs(myphoton->Eta())<3.0) ) MCphotons_from_muons_from_Z = true;
           }// end of loop over mc photons
           if( MCphotons_from_muons_from_Z )
           { // if there is a fsr photon passing acceptance cuts, then look at muons coming from the Z
@@ -1186,7 +1204,7 @@ int main(int argc, char *argv[])
 
 				if( ((isZgammaMC == 1) && (!MCsignal_in_phase_space)) || ((isZgammaMC == 2) && (MCsignal_in_phase_space)) )
         {
-          cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
+//          cerr<<"SAFE: photon(s) coming from muon, aborting event " << ievt << endl;
 
           continue;
         }
@@ -1524,7 +1542,7 @@ int main(int argc, char *argv[])
 			nbPhotonsAfterID[4]++;
 			TOTALnbPhotonsAfterID[4] += 1;
 
-      if( EScale*(myphoton->Pt()) <= 10.0 ){ // Transverse momentum
+      if( Photon_scale[iphoton]*(myphoton->Pt()) <= 10.0 ){ // Transverse momentum
         photonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because kOutOfTime" << endl;
         continue;
@@ -1640,7 +1658,7 @@ int main(int argc, char *argv[])
 			if( close_isoR03_hadEt >= 1.0)
 			{
 				if(verbosity>3) cerr << "candidate thrown because close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			} else {
@@ -1687,7 +1705,7 @@ int main(int argc, char *argv[])
 			if( far_isoR03_emEt >= 1.0) 
 			{
 				if(verbosity>4) cerr << "candidate thrown because far_isoR03_emEt= " << far_isoR03_emEt << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1727,7 +1745,7 @@ int main(int argc, char *argv[])
 			double min_DeltaR = min(deltaRphomu1, deltaRphomu2);
 			if( min_DeltaR >= 0.8 )
 			{
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1767,7 +1785,7 @@ int main(int argc, char *argv[])
 			double far_muonPt = (deltaRphomu1 > deltaRphomu2) ? mymuon1->Pt() : mymuon2->Pt();
 			if( far_muonPt <= 30.0 )
 			{
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1805,6 +1823,7 @@ int main(int argc, char *argv[])
 			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
 			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
 			TLorentzVector mumugamma;
+			EScale = Photon_scale[MuMuGammaCandidates[4][i_mmg].first];
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			if( (mumugamma.M() < 30.0) || (180.0 < mumugamma.M())  )
@@ -1857,6 +1876,7 @@ int main(int argc, char *argv[])
 			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
 			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
 			TLorentzVector mumugamma;
+			EScale = Photon_scale[MuMuGammaCandidates[5][i_mmg].first];
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())  )
@@ -1913,6 +1933,7 @@ int main(int argc, char *argv[])
 			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
 			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
 			TLorentzVector mumugamma;
+			EScale = Photon_scale[MuMuGammaCandidates[6][i_mmg].first];
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			if( (mumugamma.M() < 87.2) || (95.2 < mumugamma.M())  )
@@ -1955,7 +1976,7 @@ int main(int argc, char *argv[])
 	      myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
 	      mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
 	      mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
-	      FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
+	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, mcParticles, reader);
 				miniTree->Fill();
 	    }
 			continue;
@@ -1969,7 +1990,7 @@ int main(int argc, char *argv[])
 		myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
     mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
     mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
-    FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, mcParticles, reader);
+    FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, mcParticles, reader);
 		isSelected = 1;
 		nSelected++;
 		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;

@@ -13,6 +13,8 @@
 #include "TString.h"
 #include "TBits.h"
 #include "TMath.h"
+#include "TRandom3.h"
+#include "TTimeStamp.h"
 #include "TSystem.h"
 #include <sstream>
 #include <iostream>
