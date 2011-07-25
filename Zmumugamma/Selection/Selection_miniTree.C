@@ -167,6 +167,8 @@ int main(int argc, char *argv[])
 	TRandom3* generator = new TRandom3(time->GetNanoSec());
 		// TODO
 
+//	char* inputfile = argv[6];
+
 	gSystem->Load("libToto.so");
 	bool doHLT										= false;
 	bool doMC										 = (bool)(isZgammaMC >= 1);
@@ -197,6 +199,8 @@ int main(int argc, char *argv[])
 
 	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
 	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
+//	inputEventTree->Add(inputfile);
+//	inputRunTree->Add(inputfile);
 
 // INSERTFILES
 
@@ -851,7 +855,6 @@ int main(int argc, char *argv[])
   reader->AddVariable("pho_r19",&Photon_r19);
   reader->BookMVA("MLP method","/sps/cms/hbrun/DiPhotons41X/diPhotonMC/weights/TMVAClassification_MLP.weights.xml");
 
-
 	
 	// SETUP PARAMETERS	
 	unsigned int NbEvents = (int)inputEventTree->GetEntries();
@@ -907,14 +910,18 @@ int main(int argc, char *argv[])
 //	free(inputRunTree);
   string lastFile = "";
 
-	double integratedLuminosity = 975.94723;
+	double integratedLuminosity = 1078.19387;
   double XSectionDYToMuMu = 1300.0 * 1.2416;
-  double XSectionTTJets = 94.0;
+//  double XSectionDYToMuMu = 1626.0;
+//  double XSectionTTJets = 94.0;
+  double XSectionTTJets = 94.76;
   double XSectionWJetsToLNu = 7899.0;
   double XSectionQCDMu = 349988.0;
 
   double InitialNumberDYToMuMu = 2148325.0;
-  double InitialNumberTTJets = 1089625.0;
+//  double InitialNumberDYToMuMu = 8758510.0;
+//  double InitialNumberTTJets = 1089625.0;
+  double InitialNumberTTJets = 3701947.0;
   double InitialNumberWJetsToLNu = 5413258.0;
   double InitialNumberQCDMu = 8797418.0;
 
@@ -976,6 +983,7 @@ int main(int argc, char *argv[])
 		string sample(sample_char);
 
 		if( sample == "DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3" ){
+//		if( sample == "DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia" ){
 			weight_Xsection = (double)(  (double)((double)(XSectionDYToMuMu) / (double)(InitialNumberDYToMuMu)) * (double)integratedLuminosity);
 			weight_pileUp = weight_DYToMuMu(nGenVertices+1);
 		}
@@ -984,7 +992,8 @@ int main(int argc, char *argv[])
 			weight_Xsection = (double)(  (double)((double)(XSectionQCDMu) / (double)(InitialNumberQCDMu)) * (double)integratedLuminosity);
 			weight_pileUp = weight_QCDMu(nGenVertices+1);
 		}
-		if( sample == "TT_TuneZ2_7TeV-pythia6-tauola" )
+//		if( sample == "TT_TuneZ2_7TeV-pythia6-tauola" )
+		if( sample == "TTJets_TuneZ2_7TeV-madgraph-tauola_v2" )
 		{
 			weight_Xsection = (double)(  (double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity);
 			weight_pileUp = weight_TTJets(nGenVertices+1);
@@ -1023,12 +1032,18 @@ int main(int argc, char *argv[])
 		// ___________________________________________
 		NbPhotons = photons->GetEntries();
 		vector<double> Photon_scale;
-		if(argc > 5)
+		if( (argc > 5) && (EResolution != 0) )
 		{ // If there is an extra resolution to smear the photon energy
-			Photon_scale.push_back(generator->Gaus(EScale_inj, EResolution));
+			for(int iphoton = 0; iphoton < NbPhotons ; iphoton++)
+			{
+				Photon_scale.push_back(generator->Gaus(EScale_inj, EResolution));
+			}
 //			cout << "Photon_scale = " << Photon_scale[Photon_scale.size() -1] << endl;
 		} else {
-			Photon_scale.push_back(EScale_inj);
+			for(int iphoton = 0; iphoton < NbPhotons ; iphoton++)
+      {
+				Photon_scale.push_back(EScale_inj);
+			}
 		}
 		Pt_allPhotons = Eta_allPhotons = Phi_allPhotons = Cross_allPhotons = -99;
 		isNotCommissionned = -99;
@@ -1167,7 +1182,7 @@ int main(int argc, char *argv[])
       {
         cout << "This event " << ievt << "is outside powheg range" << endl;
         Nb_events_outside_powheg_cuts++;
-				continue;
+//				continue;
       }
 
 
@@ -1543,8 +1558,10 @@ int main(int argc, char *argv[])
 			TOTALnbPhotonsAfterID[4] += 1;
 
       if( Photon_scale[iphoton]*(myphoton->Pt()) <= 10.0 ){ // Transverse momentum
+				if(verbosity>2) cout << "\t\tmyphoton->Pt()= " << myphoton->Pt() << endl;
+				if(verbosity>2) cout << "\t\tPhoton_scale["<<iphoton<<"]= " << Photon_scale[iphoton] << endl;
         photonIsNotCommissioned.push_back(1);
-        if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because kOutOfTime" << endl;
+        if(verbosity>0) cerr << "\t\t\tphoton " << iphoton << " rejected because low pt" << endl;
         continue;
       }
 			nbPhotonsAfterID[5]++;
