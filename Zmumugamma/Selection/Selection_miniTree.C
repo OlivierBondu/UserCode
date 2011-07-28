@@ -911,15 +911,15 @@ int main(int argc, char *argv[])
   string lastFile = "";
 
 	double integratedLuminosity = 1078.19387;
-  double XSectionDYToMuMu = 1300.0 * 1.2416;
-//  double XSectionDYToMuMu = 1626.0;
+//  double XSectionDYToMuMu = 1300.0 * 1.2416;
+  double XSectionDYToMuMu = 1626.0;
 //  double XSectionTTJets = 94.0;
   double XSectionTTJets = 94.76;
   double XSectionWJetsToLNu = 7899.0;
   double XSectionQCDMu = 349988.0;
 
-  double InitialNumberDYToMuMu = 2148325.0;
-//  double InitialNumberDYToMuMu = 8758510.0;
+//  double InitialNumberDYToMuMu = 2148325.0;
+  double InitialNumberDYToMuMu = 29743564.0;
 //  double InitialNumberTTJets = 1089625.0;
   double InitialNumberTTJets = 3701947.0;
   double InitialNumberWJetsToLNu = 5413258.0;
@@ -982,8 +982,8 @@ int main(int argc, char *argv[])
 
 		string sample(sample_char);
 
-		if( sample == "DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3" ){
-//		if( sample == "DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia" ){
+//		if( sample == "DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3" ){
+		if( sample == "DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2" ){
 			weight_Xsection = (double)(  (double)((double)(XSectionDYToMuMu) / (double)(InitialNumberDYToMuMu)) * (double)integratedLuminosity);
 			weight_pileUp = weight_DYToMuMu(nGenVertices+1);
 		}
@@ -1178,13 +1178,14 @@ int main(int argc, char *argv[])
       TRootParticle dimuon;
       dimuon = *mymuplus + *mymuminus;
       //cout << "dimuon.M()= " << dimuon.M() << endl;
+/*
       if( (dimuon.M() < 20.0) || (dimuon.M() > 500.0) )
       {
         cout << "This event " << ievt << "is outside powheg range" << endl;
         Nb_events_outside_powheg_cuts++;
 //				continue;
       }
-
+*/
 
 			// FSR-tagging
       if( mcMuMuGammaEvent->nZ() == 1 )
