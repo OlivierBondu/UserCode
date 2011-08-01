@@ -154,10 +154,19 @@ int main(int argc, char *argv[])
 	
 	// Optional argument extra scale
 	double EScale = 1.0;
+	string correction = "";
+	bool isManualCorrectionsApplied = false;
 	if( argc > 4 )
 	{
-		std::stringstream ss ( argv[4] );
-		ss >> EScale;
+		correction = argv[4];
+		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") )
+		{
+			cout << correction << " correction set will be applied upstream" << endl;
+			isManualCorrectionsApplied = true;
+		} else {
+			std::stringstream ss ( argv[4] );
+			ss >> EScale;
+		}
 	}
 	double EScale_inj = EScale;
 	
@@ -1000,8 +1009,8 @@ int main(int argc, char *argv[])
 	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
 	// LOOP over events
-	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
-//	for(unsigned int ievt=0; ievt<20000; ievt++)
+//	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
+	for(unsigned int ievt=0; ievt<100; ievt++)
 	{
 		if(verbosity>4) cout << "analysing event ievt= " << ievt << endl;
 		nBeforeAllCuts++;
@@ -1100,9 +1109,31 @@ int main(int argc, char *argv[])
 			}
 //			cout << "Photon_scale = " << Photon_scale[Photon_scale.size() -1] << endl;
 		} else {
-			for(int iphoton = 0; iphoton < NbPhotons ; iphoton++)
-      {
-				Photon_scale.push_back(EScale_inj);
+			if( (argc > 4) && isManualCorrectionsApplied)
+			{
+        for(int iphoton = 0; iphoton < NbPhotons ; iphoton++)
+        {
+					TRootPhoton *myphotontocorrect;
+					myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
+          Photon_scale.push_back(photonManualCorrectionFactor(myphotontocorrect, correction));
+/*
+					cout << "myphotontocorrect->isEBPho()= " << myphotontocorrect->isEBPho() << endl;
+					cout << "myphotontocorrect->r9()= " << myphotontocorrect->r9() << endl;
+					cout << "brem= " << (double)(myphotontocorrect->superCluster()->phiWidth()) / (double)(myphotontocorrect->superCluster()->etaWidth()) << endl;
+					cout << "myphotontocorrect->superCluster()->rawEnergy()= " << myphotontocorrect->superCluster()->rawEnergy() << endl;
+					cout << "myphotontocorrect->preshowerEnergy()= " << myphotontocorrect->preshowerEnergy() << endl;
+*/
+					cout << "myphotontocorrect->Energy()= " << myphotontocorrect->Energy() << endl;
+					cout << "photonManualCorrectionFactor= " << Photon_scale[Photon_scale.size() - 1] << endl;
+					cout << "photonManualCorrectionFactor * myphotontocorrect->Energy()= " << Photon_scale[Photon_scale.size() - 1] * myphotontocorrect->Energy() << endl;
+					cout << endl << endl;
+//					return 2;
+        }
+			} else {
+				for(int iphoton = 0; iphoton < NbPhotons ; iphoton++)
+	      {
+					Photon_scale.push_back(EScale_inj);
+				}
 			}
 		}
 		Pt_allPhotons = Eta_allPhotons = Phi_allPhotons = Cross_allPhotons = -99;
