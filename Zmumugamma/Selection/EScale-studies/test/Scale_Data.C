@@ -47,11 +47,13 @@ void Scale_Data(){
 //	TFile* file_Data = new TFile("../../miniTree_v12_Run2011A-ZMu-05Jul2011ReReco-ECAL-v1.root");
 //	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-ZMu-05Jul2011ReReco-ECAL-v1.root");
 //	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-May10ReReco_PromptReco-v4_July6.root");
-	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-May10ReReco_PromptReco-v4_June17.root");
+//	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-May10ReReco_PromptReco-v4_June17.root");
+	TFile* file_Data = new TFile("../../miniTree_v16_DATA_875pb-1.root");
 //	TFile* file_MC = new TFile("../../miniTree_v11_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root");
 //	TFile* file_MC = new TFile("../../miniTree_v12_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root");
 //	TFile* file_MC = new TFile("../../miniTree_v12_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root");
-	TFile* file_MC = new TFile("../../miniTree_v13_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root");
+//	TFile* file_MC = new TFile("../../miniTree_v13_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root");
+	TFile* file_MC = new TFile("../../miniTree_v16_DYToMuMu.root");
 	TTree* Tree_Data = (TTree*) file_Data->Get("miniTree");
 	TTree* Tree_MC = (TTree*) file_MC->Get("miniTree");
 
@@ -204,64 +206,36 @@ ntplVars->add(Photon_isEE);
 				cutR9 = "1";
 				displayR9 = " ";
 			}
-			for( int ipt = 0 ; ipt < 13 ; ipt++ )
+			for( int ipt = 0 ; ipt < 6 ; ipt++ )
 //			for( int ipt = 4 ; ipt < 5 ; ipt++ )
 			{
 				string spt = "";
 				string cutpt = "";
 				string displaypt = "";
 				if( ipt == 0 ) {
-					spt = "-10_lt_pt_lt_11-";
-					cutpt = "10.0 < Photon_Et && Photon_Et < 11.0";
-					displaypt = "10.0 < p_{T} < 11.0";
-				} else if ( ipt == 1 ) {
-					spt = "-11_lt_pt_lt_12-";
-					cutpt = "11.0 < Photon_Et && Photon_Et < 12.0";
-					displaypt = "11.0 < p_{T} < 12.0";
-				} else if ( ipt == 2 ) {
-					spt = "-12_lt_pt_lt_13-";
-					cutpt = "12.0 < Photon_Et && Photon_Et < 13.0";
-					displaypt = "12.0 < p_{T} < 13.0";
-				} else if ( ipt == 3 ) {
-					spt = "-13_lt_pt_lt_14-";
-					cutpt = "13.0 < Photon_Et && Photon_Et < 14.0";
-					displaypt = "13.0 < p_{T} < 14.0";
-				} else if ( ipt == 4 ) {
-					spt = "-14_lt_pt_lt_15-";
-					cutpt = "14.0 < Photon_Et && Photon_Et < 15.0";
-					displaypt = "14.0 < p_{T} < 15.0";
-				} else if ( ipt == 5 ) {
 					spt = "-10_lt_pt_lt_12-";
 					cutpt = "10.0 < Photon_Et && Photon_Et < 12.0";
 					displaypt = "10.0 < p_{T} < 12.0";
-				} else if ( ipt == 6 ) {
-					spt = "-12_lt_pt_lt_14-";
-					cutpt = "12.0 < Photon_Et && Photon_Et < 14.0";
-					displaypt = "12.0 < p_{T} < 14.0";
-				} else if ( ipt == 7 ) {
-					spt = "-14_lt_pt_lt_16-";
-					cutpt = "14.0 < Photon_Et && Photon_Et < 16.0";
-					displaypt = "14.0 < p_{T} < 16.0";
-				} else if ( ipt == 8 ) {
-					spt = "-10_lt_pt_lt_12p5-";
-					cutpt = "10.0 < Photon_Et && Photon_Et < 12.5";
-					displaypt = "10.0 < p_{T} < 12.5";
-				} else if ( ipt == 9 ) {
-					spt = "-12p5_lt_pt_lt_15-";
-					cutpt = "12.5 < Photon_Et && Photon_Et < 15.0";
-					displaypt = "12.5 < p_{T} < 15.0";
-				} else if ( ipt == 10 ) {
-					spt = "-15_lt_pt_lt_17p5-";
-					cutpt = "15.0 < Photon_Et && Photon_Et < 17.5";
-					displaypt = "15.0 < p_{T} < 17.5";
-				} else if ( ipt == 11 ) {
-					spt = "-10_lt_pt_lt_13-";
-					cutpt = "10.0 < Photon_Et && Photon_Et < 13.0";
-					displaypt = "10.0 < p_{T} < 13.0";
-				} else if ( ipt == 12 ) {
-					spt = "-13_lt_pt_lt_16-";
-					cutpt = "13.0 < Photon_Et && Photon_Et < 16.0";
-					displaypt = "13.0 < p_{T} < 16.0";
+				} else if ( ipt == 1 ) {
+					spt = "-12_lt_pt_lt_15-";
+					cutpt = "12.0 < Photon_Et && Photon_Et < 15.0";
+					displaypt = "12.0 < p_{T} < 15.0";
+				} else if ( ipt == 2 ) {
+					spt = "-15_lt_pt_lt_20-";
+					cutpt = "15.0 < Photon_Et && Photon_Et < 20.0";
+					displaypt = "15.0 < p_{T} < 20.0";
+				} else if ( ipt == 3 ) {
+					spt = "-20_lt_pt_lt_25-";
+					cutpt = "20.0 < Photon_Et && Photon_Et < 25.0";
+					displaypt = "20.0 < p_{T} < 25.0";
+				} else if ( ipt == 4 ) {
+					spt = "-25_lt_pt_lt_30-";
+					cutpt = "25.0 < Photon_Et && Photon_Et < 30.0";
+					displaypt = "25.0 < p_{T} < 30.0";
+				} else if ( ipt == 5 ) {
+					spt = "-30_lt_pt_lt_inf-";
+					cutpt = "30.0 < Photon_Et";
+					displaypt = "30.0 < p_{T}";
 				} 
 
 				for( int irun = 0 ; irun < 6 ; irun++ )
