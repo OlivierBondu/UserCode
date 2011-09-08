@@ -74,6 +74,7 @@
 	Float_t Photon_SC_rawE_x_fEta;
 	Float_t Photon_SC_rawE_x_fEta_x_fBrem, Photon_SC_rawE_x_fEta_x_fBrem_AF, Photon_SC_rawE_x_fEta_x_fBrem_L, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta;
 	Float_t Photon_secondMomentMaj, Photon_secondMomentMin, Photon_secondMomentAlpha;
+	Float_t Photon_etaLAT, Photon_phiLAT, Photon_LAT, Photon_Zernike20, Photon_Zernike42, Photon_ESratio;
 
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
@@ -215,10 +216,10 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
-	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
-//		inputRunTree->Add("DYToMuMu_*root");
-//		inputRunTree->Add("DYToMuMu_*root");
+	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/SkimmedSamples/%s/%s*root", sample_char, sample_char));
+	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/SkimmedSamples/%s/%s*root", sample_char, sample_char));
+//		inputEventTree->Add("miniTree_TEST.root");
+//		inputRunTree->Add("miniTree_TEST.root");
 //	inputEventTree->Add(inputfile);
 //	inputRunTree->Add(inputfile);
 
@@ -745,6 +746,13 @@ int main(int argc, char *argv[])
 	miniTree->Branch("Photon_secondMomentMaj", &Photon_secondMomentMaj, "Photon_secondMomentMaj/F");
 	miniTree->Branch("Photon_secondMomentMin", &Photon_secondMomentMin, "Photon_secondMomentMin/F");
 	miniTree->Branch("Photon_secondMomentAlpha", &Photon_secondMomentAlpha, "Photon_secondMomentAlpha/F");
+
+	miniTree->Branch("Photon_etaLAT", &Photon_etaLAT, "Photon_etaLAT/F");
+	miniTree->Branch("Photon_phiLAT", &Photon_phiLAT, "Photon_phiLAT/F");
+	miniTree->Branch("Photon_LAT", &Photon_LAT, "Photon_LAT/F");
+	miniTree->Branch("Photon_Zernike20", &Photon_Zernike20, "Photon_Zernike20/F");
+	miniTree->Branch("Photon_Zernike42", &Photon_Zernike42, "Photon_Zernike42/F");
+	miniTree->Branch("Photon_ESratio", &Photon_ESratio, "Photon_ESratio/F");
 	  
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
@@ -980,7 +988,10 @@ int main(int argc, char *argv[])
 //	free(inputRunTree);
   string lastFile = "";
 
-	double integratedLuminosity = 1078.19387;
+//	double integratedLuminosity = 714.783728;
+//	double integratedLuminosity = 1078.19387;
+//	double integratedLuminosity = 1420.38;
+	double integratedLuminosity = (214.439 + 663.204);
 //  double XSectionDYToMuMu = 1300.0 * 1.2416;
   double XSectionDYToMuMu = 1626.0;
 //  double XSectionTTJets = 94.0;
@@ -1009,14 +1020,14 @@ int main(int argc, char *argv[])
 	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
 	// LOOP over events
-//	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
-	for(unsigned int ievt=0; ievt<100; ievt++)
+	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
+//	for(unsigned int ievt=0; ievt<100; ievt++)
 	{
 		if(verbosity>4) cout << "analysing event ievt= " << ievt << endl;
 		nBeforeAllCuts++;
 		isBeforeAllCuts = 1;
 		int nprint = (int)((double)NbEvents/(double)100.0);
-		if( (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEvents*100)<<" \% )"<<endl; }
+		if( (NbEvents >= 100) && (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEvents*100)<<" \% )"<<endl; }
 
 		iEvent = ievt;
 		inputEventTree->GetEvent(ievt);
@@ -1031,7 +1042,7 @@ int main(int argc, char *argv[])
 		iEventID = event->eventId();
 		iLumiID = event->luminosityBlock();
 		iRunID = event->runId();
-//		if(iRunID != 149291) continue;
+		if(iRunID > 166967) continue;
 		nVertices = vertices->GetEntries();
 		nGenVertices = vertices->GetEntries();
 		if( (isZgammaMC >= 1) )
@@ -1052,7 +1063,7 @@ int main(int argc, char *argv[])
 		string sample(sample_char);
 
 //		if( sample == "DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3" ){
-		if( (sample == "DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2") || (sample == "DYToMuMu") ){
+		if( (sample == "DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2") || (sample == "DYToMuMu") || (sample == "FSR_DYToMuMu") || (sample == "nonFSR_DYToMuMu") ){
 			weight_Xsection = (double)(  (double)((double)(XSectionDYToMuMu) / (double)(InitialNumberDYToMuMu)) * (double)integratedLuminosity);
 			weight_pileUp = weight_DYToMuMu(nGenVertices+1);
 		}
@@ -1160,6 +1171,7 @@ int main(int argc, char *argv[])
 		Photon_SC_rawE_x_fEta = -99.0;
 		Photon_SC_rawE_x_fEta_x_fBrem = Photon_SC_rawE_x_fEta_x_fBrem_AF = Photon_SC_rawE_x_fEta_x_fBrem_L = Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta = Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta = Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta = -99.0;
 		Photon_secondMomentMaj = Photon_secondMomentMin = Photon_secondMomentAlpha = -99.0;
+		Photon_etaLAT = Photon_phiLAT = Photon_LAT = Photon_Zernike20 = Photon_Zernike42 = Photon_ESratio = -99.0;
 
 		// ____________________________________________
 		// mugamma / mumu / mumugamma information

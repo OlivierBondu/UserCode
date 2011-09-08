@@ -45,6 +45,7 @@
 #include "interface/TRootTrack.h"
 #include "interface/TRootVertex.h"
 
+#include "corrections.h"
 
 using namespace std;
 
@@ -137,21 +138,24 @@ void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* part
 }
 
 
-double fEta(double eta) 
+double fEta(vector<double> param, double eta) 
 {
   double ieta = fabs(eta)*(5/0.087);
-  double p0 = 40.2198;  // should be 40.2198
-  double p1 = -3.03103e-6;  // should be -3.03103e-6
+  //double p0 = 40.2198;  // should be 40.2198
+  //double p1 = -3.03103e-6;  // should be -3.03103e-6
+  double p0 = param[0];  // should be 40.2198
+  double p1 = param[1];  // should be -3.03103e-6
   double feta = 1; 
 
   if ( ieta < p0 || fabs(eta) > 1.4442) feta = 1.0; 
-  else feta = 1.0/(1.0 + p1*(ieta-p0)*(ieta-p0));
+  else feta = (double)1.0/(double)(1.0 + p1*(ieta-p0)*(ieta-p0));
 
   return feta;
 }
 
 //double BremCor(double brem, int EndCaps, int New) 
-double BremCor(double brem, int EndCaps, string correctionSet) 
+double BremCor(vector<double> param, double brem)
+//, int EndCaps, string correctionSet) 
 {
   // brem == phiWidth/etaWidth of the SuperCluster 
   // e  == energy of the SuperCluster 
@@ -182,41 +186,44 @@ double BremCor(double brem, int EndCaps, string correctionSet)
 	//cout<<endl<<setprecision( 10 )<<"brem in function= "<<brem<<endl;
   if ( brem == 0 ) return 1.0;
 
-	if(EndCaps == 1) //End caps
-	{
+//	if(EndCaps == 1) //End caps
+//	{
 		//double bremLowThr  = 0.9;
-		double bremLowThr  = 0.8999999762;
+		double bremLowThr  = param[0];
 		//double bremHighThr = 6.5;
-		double bremHighThr = 6.5000000000;
+		double bremHighThr = param[1];
 //  if(New == 2) 
+/*
 		if( correctionSet == "Louis" ) 
 		{
 			bremLowThr  = 0.8;
 			bremHighThr = 4.5;
 		}
+*/
 		if ( brem < bremLowThr  ) brem = bremLowThr;
 		if ( brem > bremHighThr ) brem = bremHighThr;
 //  if(New == 0)
-  	if( correctionSet == "START42_V11" )
-  	{
+//  	if( correctionSet == "START42_V11" )
+//  	{
   		// Parameters provided in cfg file
   		//p0 = -0.12139999866485595703125;
    		//p0 = -0.07945;
-   		p0 = -0.0794499964;
+   		p0 = param[2];
   		//p1 = 0.2362000048160552978515625;
    		//p1 = 0.1298;
-   		p1 = 0.1298000067;
+   		p1 = param[3];
   		//p2 = 0.884700000286102294921875;
    		//p2 = 0.9147;
-   		p2 = 0.9146999717;
+   		p2 = param[4];
   		//p3 = -0.00193000002764165401458740234375;
    		//p3 = -0.001565;
-   		p3 = -0.0015650000;
+   		p3 = param[5];
   		//p4 = 1.05700004100799560546875;
    		//p4 = 0.9;
-   		p4 = 0.8999999762;
- 		}
+   		p4 = param[6];
+// 		}
 //  if(New == 1)
+/*
 		if( correctionSet == "Anne-Fleur" )
   	{
     	// Parameters provided in cfg file
@@ -235,8 +242,9 @@ double BremCor(double brem, int EndCaps, string correctionSet)
       p3 = -0.07402;
       p4 = 30.52;
   	}
-	}
-
+*/
+//	}
+/*
 if(EndCaps == 0) //Barrel
  {
   //double bremLowThr  = 1.1;
@@ -295,6 +303,7 @@ if(EndCaps == 0) //Barrel
   }
 
  }
+*/
 
   double threshold = p4;
 
@@ -308,55 +317,67 @@ if(EndCaps == 0) //Barrel
   if ( brem < threshold ) bremCorrection = p0*brem*brem + p1*brem + p2;
   else bremCorrection = a*brem*brem + b*brem + c;
 
-  return 1.0 / bremCorrection;
+  return (double)(1.0) / (double)(bremCorrection);
 }
 
 //double EtEtaCor(double et, double eta, int EndCaps, int New) 
-double EtEtaCor(double et, double eta, int EndCaps, string correctionSet) 
+//double EtEtaCor(double et, double eta, int EndCaps, string correctionSet) 
+double EtEtaCor(vector<double> param, double et, double eta, bool isEB) 
 { 
   
-  double etEtaCorrection = 0.; 
-  if(EndCaps != 0 && EndCaps != 1) return 1.0; 
+  double etEtaCorrection = 0.0; 
+//  if(EndCaps != 0 && EndCaps != 1) return 1.0; 
 
   // Barrel 
-  if ( EndCaps == 0 ) 
-  { 
+//  if ( EndCaps == 0 ) 
+//  { 
     /*double p0 = (params_->params())[ 9 + offset]  + (params_->params())[10 + offset]/ (et + (params_->params())[11 + offset]) + (params_->params())[12 + offset]/(et*et);  
     double p1 = (params_->params())[13 + offset]  + (params_->params())[14 + offset]/ (et + (params_->params())[15 + offset]) + (params_->params())[16 + offset]/(et*et);  
  
     etEtaCorrection = p0 +  p1 * atan((params_->params())[17 + offset]*((params_->params())[18 + offset]-fabs(eta))) + (params_->params())[19 + offset] * fabs(eta); 
  */
 //	if(New == 0)
-		if( correctionSet == "START42_V11" )
-  	{
+//		if( correctionSet == "START42_V11" )
+//  	{
 
+	if( isEB )
+	{
 		//double p0 = 1.00199997425079345703125 -0.742399990558624267578125/ (et + 0) + 0/(et*et);
 		//double p0 = 1.000 -0.698 / (et + 0) + 0/(et*et);
-		double p0 = 1.0000000000 -0.6980000138 / (et + 0.0000000000) + 0.0000000000/(et*et);
+		double p0 = param[0] + (double)(param[1]) / (double)(et + param[2]) + (double)(param[3])/(double)(et*et);
 		//double p1 = 0  + 0.555800020694732666015625/ (et + 2.375) + 0.18690000474452972412109375/(et*et);
 		//double p1 = 0  + 0.6605/ (et + 8.825) + 0.841/(et*et);
-		double p1 = 0.0000000000  + 0.6604999900/ (et + 8.8249998093) + 0.8410000205/(et*et);
+		double p1 = param[4] + (double)(param[5])/(double)(et + param[6]) + (double)(param[7])/(double)(et*et);
 		//etEtaCorrection = p0 +  p1 * atan(7.599999904632568359375*(1.08099997043609619140625-fabs(eta))) -0.00181000004522502422332763671875 * fabs(eta);
 		//etEtaCorrection = p0 +  p1 * atan(7.6*(1.081-fabs(eta))) -0.00181 * fabs(eta);
-		etEtaCorrection = p0 +  p1 * atan(7.5999999046*(1.0809999704-fabs(eta))) -0.0018100000 * fabs(eta);
+		etEtaCorrection = p0 +  p1 * atan(param[8]*(param[9]-fabs(eta))) + param[10] * fabs(eta);
+	} else {
+		double p0 = param[0] + (double)(param[1])/(double)(sqrt(et));
+		double p1 = param[2] + (double)(param[3])/(double)(sqrt(et));
+		double p2 = param[4] + (double)(param[5])/(double)(sqrt(et));
+		double p3 = param[6] + (double)(param[7])/(double)(sqrt(et));
+		etEtaCorrection = p0 + p1*fabs(eta) + p2*eta*eta + p3/fabs(eta);
+  }
 		//cout<<endl<<endl<<endl<<"p0 = "<<p0<<endl<<"p1 = "<<p1<<endl;
 		//cout<<"fCorr = "<<etEtaCorrection;
 		if ( etEtaCorrection < 0.5 ) etEtaCorrection = 0.5;
   		if ( etEtaCorrection > 1.5 ) etEtaCorrection = 1.5;
-	}
+//	}
 
 //	if(New == 1)
+/*
 	if( correctionSet == "Anne-Fleur" )
         {
                 double p0 = 0.9963 -0.1158/ (et + -4.189);
                 double p1 = 0.9009/ (et + 39.67) + 1.253/(et*et);
                 etEtaCorrection = p0 +  p1 * atan(7.6*(1.081-fabs(eta))) -0.00181 * fabs(eta);
         }
- } 
+*/
+// } 
   
   //End Caps
-  if ( EndCaps == 1 ) 
-  {
+//  if ( EndCaps == 1 ) 
+//  {
    /* 
     double p0 = (params_->params())[ 9 + offset] + (params_->params())[10 + offset]/sqrt(et); 
     double p1 = (params_->params())[11 + offset] + (params_->params())[12 + offset]/sqrt(et); 
@@ -366,6 +387,7 @@ double EtEtaCor(double et, double eta, int EndCaps, string correctionSet)
     etEtaCorrection = p0 + p1*fabs(eta) + p2*eta*eta + p3/fabs(eta); 
 */
 //	if(New == 0)
+/*
 	if( correctionSet == "START42_V11" )
         {
 		//double p0 = 2.2130000591278076171875 -17.29000091552734375/sqrt(et);
@@ -387,8 +409,10 @@ double EtEtaCor(double et, double eta, int EndCaps, string correctionSet)
 		if ( etEtaCorrection < 0.5 ) etEtaCorrection = 0.5;
   		if ( etEtaCorrection > 1.5 ) etEtaCorrection = 1.5;
 	}
+*/
 
 //	if(New == 1)
+/*
 	if( correctionSet == "Anne-Fleur" )
         {
                 double p0 = -1.513 -0.4142/sqrt(et);
@@ -403,6 +427,7 @@ double EtEtaCor(double et, double eta, int EndCaps, string correctionSet)
     		if ( 1./etEtaCorrection < 0.5 ) return et/0.5;
         }
  } 
+*/
  
   // cap the correction at 50%
   //if ( etEtaCorrection < 0.5 ) etEtaCorrection = 0.5;  
@@ -410,19 +435,28 @@ double EtEtaCor(double et, double eta, int EndCaps, string correctionSet)
  
   //std::cout << "ECEC fEtEta " << et/etEtaCorrection << std::endl;
   //return et/etEtaCorrection; 
-  return 1.0/etEtaCorrection;
+  return (double)(1.0)/(double)(etEtaCorrection);
 }
 
 double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 {
+	vector<double> param_Ceta;
+	vector<double> param_fbrem;
+	vector<double> param_feteta;
+	parameters_Ceta(param_Ceta, correctionSet);
+//	cout << "param_Ceta[0]= " << param_Ceta[0] << endl;
+	parameters_fbrem(param_fbrem, correctionSet, myphoton->isEBPho());
+	parameters_feteta(param_feteta, correctionSet, myphoton->isEBPho());
 //	cout << "myphoton->superCluster()->Eta()= " << myphoton->superCluster()->Eta() << endl;
-	double f_eta = fEta(myphoton->superCluster()->Eta());
+	//double f_eta = fEta(myphoton->superCluster()->Eta());
+	double f_eta = fEta(param_Ceta, myphoton->superCluster()->Eta());
 //	cout << "f_eta= " << f_eta << endl;
 
 	double brem = (double)(myphoton->superCluster()->phiWidth()) / (double)(myphoton->superCluster()->etaWidth());
 //	cout << "brem= " << brem << endl;
 //	cout << "myphoton->isEEPho()= " << myphoton->isEEPho() << endl;
-	double f_brem = BremCor(brem, myphoton->isEEPho(), correctionSet);
+	//double f_brem = BremCor(brem, myphoton->isEEPho(), correctionSet);
+	double f_brem = BremCor(param_fbrem, brem);
 //	cout << "f_brem= " << f_brem << endl;
 
 //	cout << "myphoton->superCluster()->rawEnergy()= " << myphoton->superCluster()->rawEnergy() << endl;
@@ -431,7 +465,7 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 //	cout << "sc_e= " << sc_e << endl;
 	double sc_et = sc_e * (sin(myphoton->superCluster()->Theta()));
 //	cout << "sc_et= " << sc_et << endl;
-	double f_et_eta = EtEtaCor(f_brem * sc_et, myphoton->superCluster()->Eta(), myphoton->isEEPho(), correctionSet);
+	double f_et_eta = EtEtaCor(param_feteta, f_brem * sc_et, myphoton->superCluster()->Eta(), myphoton->isEBPho());
 //	cout << "f_et_eta= " <<  f_et_eta << endl;
 
 //	cout << "myphoton->Energy()= " << myphoton->Energy() << endl;
@@ -457,6 +491,7 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 		cout << "myphoton->e5x5()= " << endl;
 		return (double)(myphoton->e5x5()) / (double)(myphoton->Energy());
 	}
+
 }
 
 
@@ -580,6 +615,7 @@ int main(int argc, char *argv[]);
 	extern Float_t Photon_lambdaRatio, Photon_ratioSeed, Photon_ratioS4, Photon_lamdbaDivCov;
 	extern Float_t Photon_SC_rawE_x_fEta, Photon_SC_rawE_x_fEta_x_fBrem, Photon_SC_rawE_x_fEta_x_fBrem_AF, Photon_SC_rawE_x_fEta_x_fBrem_L, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta;
 	extern Float_t Photon_secondMomentMaj, Photon_secondMomentMin, Photon_secondMomentAlpha;
+	extern Float_t Photon_etaLAT, Photon_phiLAT, Photon_LAT, Photon_Zernike20, Photon_Zernike42, Photon_ESratio;
 
 
   // ____________________________________________
@@ -713,11 +749,12 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 			if (Photon_E5x5 != 0)  Photon_ratioS4 = Photon_E2x2/Photon_E5x5;
 			Photon_lamdbaDivCov = 0.0;
 			if (Photon_covEtaEta != 0) Photon_lamdbaDivCov = (Photon_covEtaEta+Photon_covPhiPhi-sqrt((Photon_covEtaEta-Photon_covPhiPhi)*(Photon_covEtaEta-Photon_covPhiPhi)+4*Photon_covEtaPhi*Photon_covEtaPhi))/Photon_covEtaEta;
-			Photon_SC_rawE_x_fEta = Photon_SC_rawE * fEta(Photon_SC_Eta);
+//			Photon_SC_rawE_x_fEta = Photon_SC_rawE * fEta(Photon_SC_Eta);
 			
 //			Photon_SC_rawE_x_fEta_x_fBrem = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 0);
 //			Photon_SC_rawE_x_fEta_x_fBrem_AF = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 1);
 //			Photon_SC_rawE_x_fEta_x_fBrem_L = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 2);
+/*
 			Photon_SC_rawE_x_fEta_x_fBrem = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11");
 			Photon_SC_rawE_x_fEta_x_fBrem_AF = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur");
 			Photon_SC_rawE_x_fEta_x_fBrem_L = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis");
@@ -725,20 +762,27 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 			float etraw_fEta_fBrem = Photon_SC_rawE_x_fEta_x_fBrem/cosh(Photon_SC_Eta);
 			float etraw_fEta_fBrem_AF = Photon_SC_rawE_x_fEta_x_fBrem_AF/cosh(Photon_SC_Eta);
 			float etraw_fEta_fBrem_L = Photon_SC_rawE_x_fEta_x_fBrem_L/cosh(Photon_SC_Eta);
-
+*/
 //			Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 0) * EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEEPho(), 0);
 //			Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 0) * EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), 1);
 //			Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 0) * EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), 1);
+/*
 			Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11") * EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEEPho(), "START42_V11");
 			Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11") * EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur");
 			Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11") * EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur");
-
+*/
 
 			Photon_secondMomentMaj = myphoton->secondMomentMaj();
 			Photon_secondMomentMin = myphoton->secondMomentMin();
 			Photon_secondMomentAlpha = myphoton->secondMomentAlpha();
 
-
+			Photon_etaLAT = myphoton->etaLAT();
+			Photon_phiLAT = myphoton->phiLAT();
+			Photon_LAT = myphoton->lat();
+			Photon_Zernike20 = myphoton->zernike20();
+			Photon_Zernike42 = myphoton->zernike42();
+			Photon_ESratio = myphoton->superCluster()->esRatio();
+	
 
 // Read NN output from weight file
 			Photon_NNshapeOutput = reader->EvaluateMVA("MLP method");
@@ -824,6 +868,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     Py_SCraw = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
     Pz_SCraw = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy());
 
+/*
     Px_SCraw_fEta = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
     Py_SCraw_fEta = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
     Pz_SCraw_fEta = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
@@ -853,22 +898,23 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     Pz_SCraw_fEta_fBrem_fEtEta = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11")) * (EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEEPho(), "START42_V11"));
     Pz_SCraw_fEta_fBrem_AF_fEtEta  = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur")) * (EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur"));
     Pz_SCraw_fEta_fBrem_L_fEtEta  = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis")) * (EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur"));
-
+*/
 
 
     TLorentzVector mumugamma;
     TLorentzVector mumuSC;
     TLorentzVector mumu5x5;
     TLorentzVector mumuSC_raw;
-    TLorentzVector mumuSC_raw_fEta;
+/*    TLorentzVector mumuSC_raw_fEta;
 	
     TLorentzVector mumuSC_raw_fEta_fBrem, mumuSC_raw_fEta_fBrem_AF, mumuSC_raw_fEta_fBrem_L, mumuSC_raw_fEta_fBrem_fEtEta, mumuSC_raw_fEta_fBrem_AF_fEtEta, mumuSC_raw_fEta_fBrem_L_fEtEta;
-
+*/
 
     TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
     TLorentzVector *PhotonSC = new TLorentzVector( EScale*Px_SC, EScale*Py_SC, EScale*Pz_SC, EScale*(myphoton->superCluster()->Mag()) );
     TLorentzVector *Photon5x5 = new TLorentzVector(EScale*Px_5x5 , EScale*Py_5x5, EScale*Pz_5x5, EScale*(myphoton->e5x5()));
     TLorentzVector *PhotonSC_raw = new TLorentzVector(EScale*Px_SCraw , EScale*Py_SCraw, EScale*Pz_SCraw, EScale*(myphoton->superCluster()->rawEnergy()));
+/*
     TLorentzVector *PhotonSC_raw_fEta = new TLorentzVector(EScale*Px_SCraw_fEta , EScale*Py_SCraw_fEta, EScale*Pz_SCraw_fEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta)));
 
     TLorentzVector *PhotonSC_raw_fEta_fBrem = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem, EScale*Py_SCraw_fEta_fBrem, EScale*Pz_SCraw_fEta_fBrem, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11")));
@@ -883,7 +929,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     TLorentzVector *PhotonSC_raw_fEta_fBrem_AF_fEtEta = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_AF_fEtEta, EScale*Py_SCraw_fEta_fBrem_AF_fEtEta, EScale*Pz_SCraw_fEta_fBrem_AF_fEtEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur"))*(EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur")));
 
     TLorentzVector *PhotonSC_raw_fEta_fBrem_L_fEtEta = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_L_fEtEta, EScale*Py_SCraw_fEta_fBrem_L_fEtEta, EScale*Pz_SCraw_fEta_fBrem_L_fEtEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis"))*(EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur")));
-
+*/
 
 
 
@@ -892,6 +938,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     mumuSC = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC);
     mumu5x5 = (*leadingMuon) + (*subleadingMuon) + (*Photon5x5);
     mumuSC_raw = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw);
+/*
     mumuSC_raw_fEta = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw_fEta);
 
     mumuSC_raw_fEta_fBrem = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw_fEta_fBrem);
@@ -900,11 +947,12 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     mumuSC_raw_fEta_fBrem_fEtEta = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw_fEta_fBrem_fEtEta);
     mumuSC_raw_fEta_fBrem_AF_fEtEta = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw_fEta_fBrem_AF_fEtEta);
     mumuSC_raw_fEta_fBrem_L_fEtEta = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw_fEta_fBrem_L_fEtEta);
-
+*/
     double mumugammaInvMass = mumugamma.M();
     double mumuSCInvMass = mumuSC.M();
     double mumu5x5InvMass = mumu5x5.M();
     double mumuSC_rawInvMass = mumuSC_raw.M();
+/*
     double mumuSC_rawInvMass_fEta = mumuSC_raw_fEta.M();
     
     double mumuSC_rawInvMass_fEta_fBrem = mumuSC_raw_fEta_fBrem.M();
@@ -913,7 +961,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     double mumuSC_rawInvMass_fEta_fBrem_fEtEta = mumuSC_raw_fEta_fBrem_fEtEta.M();
     double mumuSC_rawInvMass_fEta_fBrem_AF_fEtEta = mumuSC_raw_fEta_fBrem_AF_fEtEta.M();
     double mumuSC_rawInvMass_fEta_fBrem_L_fEtEta = mumuSC_raw_fEta_fBrem_L_fEtEta.M();
-
+*/
     Mmumugamma = mumugammaInvMass;
 //		if( ((Mmumugamma>97.2) && (Mmumugamma<110.0)) || ((Mmumugamma>70.0) && (Mmumugamma<87.2)) ) cout << "isVeryLooseMMG:isLooseMMG:isTightMMG " << isVeryLooseMMG << isLooseMMG << isTightMMG << "\t\t\tMmumugamma= " << Mmumugamma << endl;
 //		cout << "ievt= " << iEvent << "\t\tVL:L:T:M " << isVeryLooseMMG << isLooseMMG << isTightMMG << isMultipleCandidate << "\t\t\tMmumugamma= " << Mmumugamma << endl;
@@ -921,6 +969,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     Mmumugamma_SC = mumuSCInvMass;
     Mmumugamma_5x5 = mumu5x5InvMass;
     Mmumugamma_SCraw = mumuSC_rawInvMass;
+/*
     Mmumugamma_SCraw_fEta = mumuSC_rawInvMass_fEta;
    
     Mmumugamma_SCraw_fEta_fBrem = mumuSC_rawInvMass_fEta_fBrem;
@@ -929,7 +978,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     Mmumugamma_SCraw_fEta_fBrem_fEtEta = mumuSC_rawInvMass_fEta_fBrem_fEtEta;
     Mmumugamma_SCraw_fEta_fBrem_AF_fEtEta = mumuSC_rawInvMass_fEta_fBrem_AF_fEtEta;
     Mmumugamma_SCraw_fEta_fBrem_L_fEtEta = mumuSC_rawInvMass_fEta_fBrem_L_fEtEta;
-
+*/
     mumugamma.Clear();
     mumuSC.Clear();
     mumu5x5.Clear();
@@ -938,7 +987,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     PhotonSC->Clear();
     Photon5x5->Clear();
     PhotonSC_raw->Clear();
-    PhotonSC_raw_fEta->Clear();
+//    PhotonSC_raw_fEta->Clear();
 
     mmg_k = (double)(pow(91.1876,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
     mmg_ik = (double)(pow(Mmumugamma,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
