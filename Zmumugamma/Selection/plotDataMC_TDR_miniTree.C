@@ -26,37 +26,38 @@
 #include <iomanip>
 #include <sstream>
 #include <TLatex.h>
+#include "TProof.h"
 
 #include "DrawDataMC.h"
 //#include "DrawDataMC.C"
-
-//#include "interface/TRootBardak.h"
-//#include "interface/TRootBeamSpot.h"
-//#include "interface/TRootCluster.h"
-//#include "interface/TRootEcalRecHit.h"
-//#include "interface/TRootElectron.h"
-//#include "interface/TRootEvent.h"
-//#include "interface/TRootJet.h"
-//#include "interface/TRootMCParticle.h"
-//#include "interface/TRootMCPhoton.h"
-//#include "interface/TRootMET.h"
-//#include "interface/TRootMuon.h"
-//#include "interface/TRootParticle.h"
-//#include "interface/TRootPhoton.h"
-//#include "interface/TRootRun.h"
-//#include "interface/TRootSignalEvent.h"
-//#include "interface/TRootSuperCluster.h"
-//#include "interface/TRootTopTop.h"
-//#include "interface/TRootTrack.h"
-//#include "interface/TRootVertex.h"
-
 //#pragma optimize 0
 
 using namespace std;
 	
 //int plotDataMC_TDR_miniTree()
-int main()
+int main(int argc, char *argv[])
 {
+
+  cout << "argc= " << argc << endl;
+  for(int iarg = 0 ; iarg < argc; iarg++)
+  {
+    cout << "argv[" << iarg << "]= " << argv[iarg] << endl;
+  }
+  if( argc == 1 )
+  {
+    cerr << "arguments should be passed !! (lot #)" << endl;
+    return 1;
+  }
+
+	int lot = 0;
+	if( argc > 1 )
+  {
+		std::stringstream ss ( argv[1] );
+    ss >> lot;
+  }
+
+
+
 	string selection = "loose";
 //	gSystem->Load("libToto.so");
 	gROOT->ProcessLine(".L DrawDataMC.h+");
@@ -64,12 +65,33 @@ int main()
 	gROOT->ProcessLine(".x setTDRStyle.C");
 //	string Data = "miniTree_v2_Run2011A-May10ReReco.root";
 //	string Data = "miniTree_v2_Run2011A-PromptReco-v4_June17.root";
-	string Data = "miniTree_v5_Run2011A-PromptReco-v4_June17_ALL.root";
-	string FSR_DYToMuMu = "miniTree_v5_FSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
-	string nonFSR_DYToMuMu = "miniTree_v5_nonFSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
-	string TTJets = "miniTree_v5_TT_TuneZ2_7TeV-pythia6-tauola.root";
-	string WJetsToLNu = "miniTree_v5_WToMuNu_TuneZ2_7TeV-pythia6.root";
-	string QCDMu = "miniTree_v5_QCD_Pt-20_MuEnrichedPt-10_TuneZ2_7TeV-pythia6.root";
+//	string Data = "miniTree_v7_Run2011A_ALL.root";
+//	string Data = "miniTree_v11_Run2011A_July6_ALL.root";
+//	string Data = "miniTree_v12_Run2011A-ZMu-05Jul2011ReReco-ECAL-v1.root";
+//	string Data = "miniTree_v13_Run2011A-ZMu-05Jul2011ReReco-ECAL-v1.root";
+//	string Data = "miniTree_v14_VGamma_Run2011A-May10ReReco_PromptReco-v4_June17.root";
+	string Data = "miniTree_v16_DATA_875pb-1.root";
+//	string FSR_DYToMuMu = "miniTree_v12_FSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
+//	string nonFSR_DYToMuMu = "miniTree_v12_nonFSR_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
+//	string FSR_DYToMuMu = "miniTree_v12_FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root";
+//	string nonFSR_DYToMuMu = "miniTree_v12_nonFSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root";
+//	string FSR_DYToMuMu = "miniTree_v13_FSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root";
+//	string nonFSR_DYToMuMu = "miniTree_v13_nonFSR_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root";
+//	string FSR_DYToMuMu = "miniTree_v14_VGamma_FSR_DYToMuMu.root";
+//	string nonFSR_DYToMuMu = "miniTree_v14_VGamma_nonFSR_DYToMuMu.root";
+	string FSR_DYToMuMu = "miniTree_v16_FSR_DYToMuMu.root";
+	string nonFSR_DYToMuMu = "miniTree_v16_nonFSR_DYToMuMu.root";
+//	string TTJets = "miniTree_v12_TT_TuneZ2_7TeV-pythia6-tauola.root";
+//	string TTJets = "miniTree_v12_TTJets_TuneZ2_7TeV-madgraph-tauola_v2.root";
+//	string TTJets = "miniTree_v13_TTJets_TuneZ2_7TeV-madgraph-tauola_v2.root";
+//	string WJetsToLNu = "miniTree_v13_WToMuNu_TuneZ2_7TeV-pythia6.root";
+//	string QCDMu = "miniTree_v13_QCD_Pt-20_MuEnrichedPt-10_TuneZ2_7TeV-pythia6.root";
+//	string TTJets = "miniTree_v14_VGamma_TTJets_TuneZ2_7TeV-madgraph-tauola_v2.root";
+//	string WJetsToLNu = "miniTree_v14_VGamma_WToMuNu_TuneZ2_7TeV-pythia6.root";
+//	string QCDMu = "miniTree_v14_VGamma_QCD_Pt-20_MuEnrichedPt-10_TuneZ2_7TeV-pythia6.root";
+	string TTJets = "miniTree_v16_TTJets_TuneZ2_7TeV-madgraph-tauola_v2.root";
+	string WJetsToLNu = "miniTree_v16_WToMuNu_TuneZ2_7TeV-pythia6.root";
+	string QCDMu = "miniTree_v16_QCD_Pt-20_MuEnrichedPt-10_TuneZ2_7TeV-pythia6.root";
 
 	TFile *Data_File = new TFile(Data.c_str());
 	TTree* Data_miniTree = (TTree*) Data_File->Get("miniTree");
@@ -101,21 +123,24 @@ int main()
 
 	vector<string> set_of_cuts;
 	vector<string> name;
-/*
+
+if( lot == 0 )
+{
 	set_of_cuts.push_back("isMMGCandidate");
 	name.push_back("selected-00-beforeFSRcuts");
 	set_of_cuts.push_back("isAfterFSRCut1");
-	name.push_back("selected-01");
+	name.push_back("selected-01-after-CloseMuonHcalIsolation-cut");
 	set_of_cuts.push_back("isAfterFSRCut2");
-	name.push_back("selected-02");
+	name.push_back("selected-02-after-FarMuonEcalIsolation-cut");
 	set_of_cuts.push_back("isAfterFSRCut3");
-	name.push_back("selected-03");
+	name.push_back("selected-03-after-minDeltaRPhotonMuon-cut");
 	set_of_cuts.push_back("isAfterFSRCut4");
-	name.push_back("selected-04");
+	name.push_back("selected-04-after-FarMuonPt-cut");
 	set_of_cuts.push_back("isVeryLooseMMG");
-	name.push_back("selected-veryloose");
-*/
-/*
+	name.push_back("selected-05-after-verylooseMuMuGammaMassWindow-cut");
+}
+if( lot == 1 )
+{
 	set_of_cuts.push_back("isLooseMMG");
   name.push_back("selected-loose");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEB");
@@ -130,7 +155,14 @@ int main()
   name.push_back("selected-loose-EE-lowR9");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEE && Photon_r9 > .95");
   name.push_back("selected-loose-EE-highR9");
-
+}
+if( lot == 22 )
+{
+	set_of_cuts.push_back("isTightMMG");
+  name.push_back("selected-tight");
+}
+if( lot == 2 )
+{
 	set_of_cuts.push_back("isTightMMG");
   name.push_back("selected-tight");
 	set_of_cuts.push_back("isTightMMG && Photon_isEB");
@@ -145,9 +177,10 @@ int main()
   name.push_back("selected-tight-EE-lowR9");
 	set_of_cuts.push_back("isTightMMG && Photon_isEE && Photon_r9 > .95");
   name.push_back("selected-tight-EE-highR9");
-*/
-
-set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
+}
+if( lot == 3 )
+{
+	set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
   name.push_back("selected-loose-nomultiple");
 	set_of_cuts.push_back("isLooseMMG && Photon_isEB && isMultipleCandidate==0");
   name.push_back("selected-loose-EB-nomultiple");
@@ -159,14 +192,35 @@ set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
   name.push_back("selected-tight-EB-nomultiple");
 	set_of_cuts.push_back("isTightMMG && Photon_isEE && isMultipleCandidate==0");
   name.push_back("selected-tight-EE-nomultiple");
-
-	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05");
+}
+if( lot == 4 )
+{
+	string egm10006 = "Photon_hasPixelSeed == 0 && (Photon_dR04isoHollowTrkCone - (deltaRNear < .4 )*MuonN_Pt) < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05";
+//	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && " + egm10006 + " && Photon_Et > 10.0");
   name.push_back("selected-tight-EGM-10-006-pt10");
-	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEB");
+//	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEB");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && " + egm10006 + " && Photon_Et > 10.0 && Photon_isEB");
   name.push_back("selected-tight-EGM-10-006-pt10-EB");
-	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEE");
+//	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 10.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEE");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && " + egm10006 + " && Photon_Et > 10.0 && Photon_isEE");
   name.push_back("selected-tight-EGM-10-006-pt10-EE");
 
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && " + egm10006 + " && Photon_Et > 20.0");
+  name.push_back("selected-tight-EGM-10-006-pt20");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && " + egm10006 + " && Photon_Et > 20.0 && Photon_isEB");
+  name.push_back("selected-tight-EGM-10-006-pt20-EB");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && " + egm10006 + " && Photon_Et > 20.0 && Photon_isEE");
+  name.push_back("selected-tight-EGM-10-006-pt20-EE");
+
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && " + egm10006 + " && Photon_Et > 30.0");
+  name.push_back("selected-tight-EGM-10-006-pt30");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && " + egm10006 + " && Photon_Et > 30.0 && Photon_isEB");
+  name.push_back("selected-tight-EGM-10-006-pt30-EB");
+	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && " + egm10006 + " && Photon_Et > 30.0 && Photon_isEE");
+  name.push_back("selected-tight-EGM-10-006-pt30-EE");
+
+/*
 	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 30.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05");
   name.push_back("selected-tight-EGM-10-006-pt30");
 	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 30.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEB");
@@ -180,7 +234,10 @@ set_of_cuts.push_back("isLooseMMG && isMultipleCandidate==0");
   name.push_back("selected-tight-EGM-10-006-pt20-EB");
 	set_of_cuts.push_back("isTightMMG && isMultipleCandidate==0 && Photon_hasPixelSeed == 0 && Photon_dR04isoHollowTrkCone < 2.0 && Photon_dR04isoEcalRecHit < 4.2 && Photon_dR04isoHcalRecHit < 2.2 && Photon_Et > 20.0 && ((Photon_isEB && Photon_sigmaIetaIeta < .01) || (Photon_isEE && Photon_sigmaIetaIeta < .03) ) && Photon_HoE < 0.05 && Photon_isEE");
   name.push_back("selected-tight-EGM-10-006-pt20-EE");
-
+*/
+}
+if( lot == 5 )
+{
 
 string selection_ID[9];
 string name_selection_ID[9];
@@ -188,7 +245,7 @@ string name_selection_ID[9];
 	name_selection_ID[0] = "wo-eta";
   selection_ID[1] =  "Photon_hasPixelSeed==0";
 	name_selection_ID[1] =  "wo-hasPixelSeed";
-  selection_ID[2] =  "Photon_dR04isoHollowTrkCone<2";
+  selection_ID[2] =  "(Photon_dR04isoHollowTrkCone  - (deltaRNear < .4 )*MuonN_Pt) < 2.0";
 	name_selection_ID[2] =  "wo-dR04isoHollowTrkCone";
   selection_ID[3] =  "Photon_dR04isoEcalRecHit<4.2";
 	name_selection_ID[3] =  "wo-dR04isoEcalRecHit";
@@ -202,7 +259,6 @@ string name_selection_ID[9];
 	name_selection_ID[7] =   "wo-HoE";
   selection_ID[8] =   "(!((abs(Photon_SC_Eta)>1.4442)&&(abs(Photon_SC_Eta)<1.566)))";
 	name_selection_ID[8] =   "wo-crack";
-
 for(int j=0; j < 9; j++)
 {
 	string temp = "isTightMMG && isMultipleCandidate==0";
@@ -220,7 +276,13 @@ for(int j=0; j < 9; j++)
 	set_of_cuts.push_back(temp);
 	name.push_back(name_temp);
 }
-
+}
+if( lot == 99 )
+{
+	set_of_cuts.push_back("isMMGCandidate");
+	name.push_back("selected-00-beforeFSRcuts");
+}
+//	TProof * p = TProof::Open("ccaplmaster.in2p3.fr");
 
 
 	for(int i=0; i<set_of_cuts.size() ; i++)
@@ -231,8 +293,8 @@ for(int j=0; j < 9; j++)
 //	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Ptmumu", "Ptmumu", "(100,0,200)", set_of_cuts[i], name[i], "p_{T}^{#mu#mu} [GeV]", true, false, c1);
 
 
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu", "(150,0,300)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
-		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu_extended", "(30,30,90)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
+		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu", "(30,30,90)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
+//		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumu", "Mmumu_extended", "(30,30,90)", set_of_cuts[i], name[i], "m_{#mu#mu} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma", "(250,0,250)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma_extended", "(60,60,120)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma} [GeV]", true, false, c1);
 		DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Mmumugamma", "Mmumugamma_zoom", "(48,85,97)", set_of_cuts[i], name[i], "m_{#mu#mu#gamma} [GeV]", true, false, c1);
@@ -288,7 +350,9 @@ for(int j=0; j < 9; j++)
 	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_dR04isoEcalRecHit", "Photon_dR04isoEcalRecHit", "(92, -3.0, 20.0)", set_of_cuts[i], name[i], "dR04isoEcalRecHit", true, false, c1);
 	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_dR04isoHcalRecHit", "Photon_dR04isoHcalRecHit", "(84, -1.0, 20.0)", set_of_cuts[i], name[i], "dR04isoHcalRecHit", true, false, c1);
 	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_dR04isoHollowTrkCone", "Photon_dR04isoHollowTrkCone", "(62, -.5, 15.0)", set_of_cuts[i], name[i], "dR04isoHollowTrkCone", true, false, c1);
-
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_secondMomentMaj", "Photon_secondMomentMaj", "(40, 0.0, 2.0)", set_of_cuts[i], name[i], "secondMomentMaj", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_secondMomentMin", "Photon_secondMomentMin", "(50, 0.0, 0.5)", set_of_cuts[i], name[i], "secondMomentMin", true, false, c1);
+	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_secondMomentAlpha", "Photon_secondMomentAlpha", "(32, -1.6, 1.6)", set_of_cuts[i], name[i], "secondMomentAlpha", true, false, c1);
 
 	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_r9", "Photon_r9_finer", "(120,0.0,1.2)", set_of_cuts[i], name[i], "E^{3x3} / E^{SC}", true, false, c1);
 	DrawDataMCplot(Data_miniTree, FSR_DYToMuMu_miniTree, nonFSR_DYToMuMu_miniTree, QCDMu_miniTree, TTJets_miniTree, WJetsToLNu_miniTree, "Photon_r19", "Photon_r19", "(45, 0.0, 0.9)", set_of_cuts[i], name[i], "r19", true, false, c1);

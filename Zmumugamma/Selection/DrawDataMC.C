@@ -141,17 +141,27 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
   // // Normalize MC to Data number of entries
 //  double integratedLuminosity = 510.8801;
 //	double integratedLuminosity = 203.9036;
-  double integratedLuminosity = 714.78373;
+//  double integratedLuminosity = 714.78373;
+  double integratedLuminosity = (214.439 + 663.204);
+//  double integratedLuminosity = 975.94723;
+//	double integratedLuminosity = 1091.14253;
+//	double integratedLuminosity = 1078.19387;
 
-  double XSectionFSR_DYToMuMu = 1300.0 * 1.2416;
-  double XSectionnonFSR_DYToMuMu = 1300.0 * 1.2416;
-  double XSectionTTJets = 94.0;
+//  double XSectionFSR_DYToMuMu = 1300.0 * 1.2416;
+  double XSectionFSR_DYToMuMu = 1626.0;
+//  double XSectionFSR_DYToMuMu = 1300.0 * 1.2416;
+  double XSectionnonFSR_DYToMuMu = 1626.0;
+//  double XSectionTTJets = 94.0;
+  double XSectionTTJets = 94.76;
 	double XSectionWJetsToLNu = 7899.0;
 	double XSectionQCDMu = 349988.0;
 
-  double InitialNumberFSR_DYToMuMu = 2148325.0;
-  double InitialNumbernonFSR_DYToMuMu = 2148325.0;
-  double InitialNumberTTJets = 1089625.0;
+//  double InitialNumberFSR_DYToMuMu = 2148325.0;
+//  double InitialNumbernonFSR_DYToMuMu = 2148325.0;
+  double InitialNumberFSR_DYToMuMu = 29743564.0;
+  double InitialNumbernonFSR_DYToMuMu = 29743564.0;
+//  double InitialNumberTTJets = 1089625.0;
+  double InitialNumberTTJets = 3701947.0;
 	double InitialNumberWJetsToLNu = 5413258.0;
 	double InitialNumberQCDMu = 8797418.0;
 
@@ -167,15 +177,62 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
 //  Histo_QCD_Pt15->Add(Histo_QCD_Pt300);
 //  Histo_QCD_Pt15->Add(Histo_QCD_Pt470);
 
+	double integral_data = Data_miniTree->GetEntries(cut.c_str());
+	FSR_DYToMuMu_miniTree->Draw("weight_pileUp >> temp_pileup(100,0,100)", cut.c_str());
+  FSR_DYToMuMu_miniTree->Draw("weight_Xsection >> temp_weight(100,0,10)", cut.c_str());
+	double integral_signal = FSR_DYToMuMu_miniTree->GetEntries(cut.c_str()) * (((TH1F*)gDirectory->Get("temp_weight"))->GetMean()) * (((TH1F*)gDirectory->Get("temp_pileup"))->GetMean());
+	double integral_bg = 0;
+	nonFSR_DYToMuMu_miniTree->Draw("weight_pileUp >> temp_pileup(100,0,100)", cut.c_str());
+  nonFSR_DYToMuMu_miniTree->Draw("weight_Xsection >> temp_weight(100,0,10)", cut.c_str());
+	integral_bg += nonFSR_DYToMuMu_miniTree->GetEntries(cut.c_str()) * (((TH1F*)gDirectory->Get("temp_weight"))->GetMean()) * (((TH1F*)gDirectory->Get("temp_pileup"))->GetMean());
+	TTJets_miniTree->Draw("weight_pileUp >> temp_pileup(100,0,100)", cut.c_str());
+  TTJets_miniTree->Draw("weight_Xsection >> temp_weight(100,0,10)", cut.c_str());
+	integral_bg += TTJets_miniTree->GetEntries(cut.c_str()) * (((TH1F*)gDirectory->Get("temp_weight"))->GetMean()) * (((TH1F*)gDirectory->Get("temp_pileup"))->GetMean());
+	WJetsToLNu_miniTree->Draw("weight_pileUp >> temp_pileup(100,0,100)", cut.c_str());
+  WJetsToLNu_miniTree->Draw("weight_Xsection >> temp_weight(100,0,10)", cut.c_str());
+	integral_bg += WJetsToLNu_miniTree->GetEntries(cut.c_str()) * (((TH1F*)gDirectory->Get("temp_weight"))->GetMean()) * (((TH1F*)gDirectory->Get("temp_pileup"))->GetMean());
+	QCDMu_miniTree->Draw("weight_pileUp >> temp_pileup(100,0,100)", cut.c_str());
+  QCDMu_miniTree->Draw("weight_Xsection >> temp_weight(100,0,10)", cut.c_str());
+	integral_bg += QCDMu_miniTree->GetEntries(cut.c_str()) * (((TH1F*)gDirectory->Get("temp_weight"))->GetMean()) * (((TH1F*)gDirectory->Get("temp_pileup"))->GetMean());
+	double integral_mc = integral_bg + integral_signal; 
+	c1->Clear();
+
+//	cout << "data= " << integral_data << endl;
+//	cout << "mc= " << integral_mc << " = " << integral_signal << " (signal) + " << integral_bg << " (bg)" << endl;
+//	double integral_data = Data_miniTree->GetEntries(cut.c_str());
+//	cout << "Data_miniTree->GetEntries(cut.c_str())= " << Data_miniTree->GetEntries(cut.c_str()) << "\t\tHisto_Data->Integral()= " << Histo_Data->Integral(0, Histo_Data->GetNbinsX()+1) << endl;
+//	double integral_signal = FSR_DYToMuMu_miniTree->GetEntries(cut.c_str());
+//	cout << setprecision(5) << fixed;
+//	cout << "FSR_DYToMuMu_miniTree->GetEntries(cut.c_str())=" << FSR_DYToMuMu_miniTree->GetEntries(cut.c_str()) << endl;
+//	cout << "Histo_FSR_DYToMuMu->Integral()= " << Histo_FSR_DYToMuMu->Integral() << endl;
+//	cout << "Histo_FSR_DYToMuMu->Integral(0, Histo_FSR_DYToMuMu->GetNbinsX()+1)= " << Histo_FSR_DYToMuMu->Integral(0, Histo_FSR_DYToMuMu->GetNbinsX()+1) << endl;
+//	cout << "FSR_DYToMuMu_miniTree->GetEntries(cut_FSR_DYToMuMu)= " << FSR_DYToMuMu_miniTree->GetEntries(cut_FSR_DYToMuMu.c_str()) << endl;
+//	 * (double)(  (double)((double)(XSectionFSR_DYToMuMu) / (double)(InitialNumberFSR_DYToMuMu)) * (double)integratedLuminosity) << "\t\tHisto_FSR_DYToMuMu->Integral()= " << Histo_FSR_DYToMuMu->Integral(0, Histo_FSR_DYToMuMu->GetNbinsX()+1) << "\t\tFSR_DYToMuMu_miniTree->GetEntries(cut_FSR_DYToMuMu)= " << FSR_DYToMuMu_miniTree->GetEntries(cut_FSR_DYToMuMu.c_str()) << endl;
+//	FSR_DYToMuMu_miniTree->Draw("weight_pileUp >> temp_pileup(100,0,100)", cut.c_str());
+//	cout << "test0= " << (((TH1F*)gDirectory->Get("temp_pileup"))->Integral()) << endl;
+//	cout << "test1= " << (((TH1F*)gDirectory->Get("temp_pileup"))->GetMean()) << endl;
+//	FSR_DYToMuMu_miniTree->Draw("weight_Xsection >> temp_weight(100,0,10)", cut.c_str());
+//	cout << "test2= " << (((TH1F*)gDirectory->Get("temp_weight"))->Integral()) << endl;
+//	cout << "test3= " << (((TH1F*)gDirectory->Get("temp_weight"))->GetMean()) << endl;
+//	cout << "test4= " << FSR_DYToMuMu_miniTree->GetEntries(cut.c_str()) * (((TH1F*)gDirectory->Get("temp_weight"))->GetMean()) * (((TH1F*)gDirectory->Get("temp_pileup"))->GetMean()) << endl;
+//	double integral_bg = nonFSR_DYToMuMu_miniTree->GetEntries(cut.c_str()) + TTJets_miniTree->GetEntries(cut.c_str()) + WJetsToLNu_miniTree->GetEntries(cut.c_str()) + QCDMu_miniTree->GetEntries(cut.c_str());
+//	double integral_mc = FSR_DYToMuMu_miniTree->GetEntries(cut.c_str()) + nonFSR_DYToMuMu_miniTree->GetEntries(cut.c_str()) + TTJets_miniTree->GetEntries(cut.c_str()) + WJetsToLNu_miniTree->GetEntries(cut.c_str()) + QCDMu_miniTree->GetEntries(cut.c_str());
+
 	Histo_WJetsToLNu->Add(Histo_QCDMu);
 	Histo_TTJets->Add(Histo_WJetsToLNu);
 	Histo_nonFSR_DYToMuMu->Add(Histo_TTJets);
 	Histo_FSR_DYToMuMu->Add(Histo_nonFSR_DYToMuMu);
 
-	double integral_data = Histo_Data->Integral();
-	double integral_signal = (double)(Histo_FSR_DYToMuMu->Integral()) - (double)(Histo_nonFSR_DYToMuMu->Integral());
-	double integral_bg = (double)(Histo_nonFSR_DYToMuMu->Integral());
-	double integral_mc = (double)(Histo_FSR_DYToMuMu->Integral());
+
+//	double integral_data = Histo_Data->Integral();
+//	double integral_signal = (double)(Histo_FSR_DYToMuMu->Integral()) - (double)(Histo_nonFSR_DYToMuMu->Integral());
+//	double integral_bg = (double)(Histo_nonFSR_DYToMuMu->Integral());
+//	double integral_mc = (double)(Histo_FSR_DYToMuMu->Integral());
+
+//	double integral_data = Histo_Data->Integral(0, Histo_Data->GetNbinsX()+1);
+//	double integral_signal = (double)(Histo_FSR_DYToMuMu->Integral(0, Histo_FSR_DYToMuMu->GetNbinsX()+1)) - (double)(Histo_nonFSR_DYToMuMu->Integral(0, Histo_nonFSR_DYToMuMu->GetNbinsX()+1));
+//	double integral_bg = (double)(Histo_nonFSR_DYToMuMu->Integral(0, Histo_nonFSR_DYToMuMu->GetNbinsX()+1));
+//	double integral_mc = (double)(Histo_FSR_DYToMuMu->Integral(0, Histo_FSR_DYToMuMu->GetNbinsX()+1));
 
 	// Total MC histo for comupting min/max
 //	TH1F *Histo_allMC = new TH1F(*Histo_QCD_Mu_Pt20to30);
@@ -339,7 +396,7 @@ void DrawDataMCplot(TTree *Data_miniTree, TTree *FSR_DYToMuMu_miniTree, TTree *n
 //  Histo_Data->GetYaxis()->SetRangeUser(YMin_lin, YMax_lin);
 //  Histo_Data->Draw("E1sames");
   Histo_Data->Draw("E1");
-  legend->AddEntry(Histo_Data->GetName(), "Data June17 json", "lp");
+  legend->AddEntry(Histo_Data->GetName(), "Data", "lp");
 
   // // Second: draw MC on the same canvas
 //  Histo_InclusiveMu15->SetLineColor(kBlack);
@@ -524,8 +581,8 @@ if( doFit ){
 
   TLatex latexLabel;
   std::ostringstream intLumiString;
-  intLumiString << setprecision (2) << fixed << integratedLuminosity;
-  string intLumiText = "#intL= " + intLumiString.str() + " pb^{-1}";
+  intLumiString << setprecision (2) << fixed << (double)integratedLuminosity/(double)1000.0;
+  string intLumiText = "#intL= " + intLumiString.str() + " fb^{-1}";
   latexLabel.SetTextSize(0.03);
   latexLabel.SetNDC();
   latexLabel.DrawLatex(0.13, 0.96, "CMS Preliminary 2011");
