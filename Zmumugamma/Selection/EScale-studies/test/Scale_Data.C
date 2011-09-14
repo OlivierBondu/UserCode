@@ -206,90 +206,157 @@ ntplVars->add(Photon_isEE);
 				cutR9 = "1";
 				displayR9 = " ";
 			}
-			for( int ipt = 0 ; ipt < 6 ; ipt++ )
+			for( int ipt = 0 ; ipt < 7 ; ipt++ )
 //			for( int ipt = 4 ; ipt < 5 ; ipt++ )
 			{
 				string spt = "";
 				string cutpt = "";
 				string displaypt = "";
+				string srun = "";
+				string cutrun = "";
+				string displayrun = "";
+				srun = "-inclusive_run-";
+				cutrun = "1";
+				displayrun = " ";
 				if( ipt == 0 ) {
 					spt = "-10_lt_pt_lt_12-";
 					cutpt = "10.0 < Photon_Et && Photon_Et < 12.0";
 					displaypt = "10.0 < p_{T} < 12.0";
-				} else if ( ipt == 1 ) {
+						// #######################################
+						set_of_cuts.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str()));
+						set_of_cuts_DATA.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str(), cutrun.c_str()));
+						display.push_back(Form("%s, tight m_{#mu#mu#gamma}", sEB.c_str()));
+						display2.push_back(Form("%s, %s", displayR9.c_str(), displaypt.c_str()));
+					  display_DATA.push_back(Form("%s", displayrun.c_str()));
+					  display_latex.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$", sEB.c_str(), displayR9.c_str(), displaypt.c_str()));
+					  display_latex_DATA.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$, $%s$",  sEB.c_str(), displayR9.c_str(), displaypt.c_str(), displayrun.c_str()));
+						name.push_back(Form("%s_tight%s%s", sEB.c_str(), sR9.c_str(), spt.c_str()));
+						name_DATA.push_back(Form("%s_tight%s%s%s", sEB.c_str(), sR9.c_str(), spt.c_str(), srun.c_str()));
+					} else if ( ipt == 1 ) {
 					spt = "-12_lt_pt_lt_15-";
 					cutpt = "12.0 < Photon_Et && Photon_Et < 15.0";
 					displaypt = "12.0 < p_{T} < 15.0";
-				} else if ( ipt == 2 ) {
+						// #######################################
+						set_of_cuts.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str()));
+						set_of_cuts_DATA.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str(), cutrun.c_str()));
+						display.push_back(Form("%s, tight m_{#mu#mu#gamma}", sEB.c_str()));
+						display2.push_back(Form("%s, %s", displayR9.c_str(), displaypt.c_str()));
+					  display_DATA.push_back(Form("%s", displayrun.c_str()));
+					  display_latex.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$", sEB.c_str(), displayR9.c_str(), displaypt.c_str()));
+					  display_latex_DATA.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$, $%s$",  sEB.c_str(), displayR9.c_str(), displaypt.c_str(), displayrun.c_str()));
+						name.push_back(Form("%s_tight%s%s", sEB.c_str(), sR9.c_str(), spt.c_str()));
+						name_DATA.push_back(Form("%s_tight%s%s%s", sEB.c_str(), sR9.c_str(), spt.c_str(), srun.c_str()));
+					} else if ( ipt == 2 ) {
 					spt = "-15_lt_pt_lt_20-";
 					cutpt = "15.0 < Photon_Et && Photon_Et < 20.0";
 					displaypt = "15.0 < p_{T} < 20.0";
-				} else if ( ipt == 3 ) {
+						// #######################################
+						set_of_cuts.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str()));
+						set_of_cuts_DATA.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str(), cutrun.c_str()));
+						display.push_back(Form("%s, tight m_{#mu#mu#gamma}", sEB.c_str()));
+						display2.push_back(Form("%s, %s", displayR9.c_str(), displaypt.c_str()));
+					  display_DATA.push_back(Form("%s", displayrun.c_str()));
+					  display_latex.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$", sEB.c_str(), displayR9.c_str(), displaypt.c_str()));
+					  display_latex_DATA.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$, $%s$",  sEB.c_str(), displayR9.c_str(), displaypt.c_str(), displayrun.c_str()));
+						name.push_back(Form("%s_tight%s%s", sEB.c_str(), sR9.c_str(), spt.c_str()));
+						name_DATA.push_back(Form("%s_tight%s%s%s", sEB.c_str(), sR9.c_str(), spt.c_str(), srun.c_str()));
+					} else if ( ipt == 3 ) {
 					spt = "-20_lt_pt_lt_25-";
 					cutpt = "20.0 < Photon_Et && Photon_Et < 25.0";
 					displaypt = "20.0 < p_{T} < 25.0";
-				} else if ( ipt == 4 ) {
+						// #######################################
+						set_of_cuts.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str()));
+						set_of_cuts_DATA.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str(), cutrun.c_str()));
+						display.push_back(Form("%s, tight m_{#mu#mu#gamma}", sEB.c_str()));
+						display2.push_back(Form("%s, %s", displayR9.c_str(), displaypt.c_str()));
+					  display_DATA.push_back(Form("%s", displayrun.c_str()));
+					  display_latex.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$", sEB.c_str(), displayR9.c_str(), displaypt.c_str()));
+					  display_latex_DATA.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$, $%s$",  sEB.c_str(), displayR9.c_str(), displaypt.c_str(), displayrun.c_str()));
+						name.push_back(Form("%s_tight%s%s", sEB.c_str(), sR9.c_str(), spt.c_str()));
+						name_DATA.push_back(Form("%s_tight%s%s%s", sEB.c_str(), sR9.c_str(), spt.c_str(), srun.c_str()));
+					} else if ( ipt == 4 ) {
 					spt = "-25_lt_pt_lt_30-";
 					cutpt = "25.0 < Photon_Et && Photon_Et < 30.0";
 					displaypt = "25.0 < p_{T} < 30.0";
-				} else if ( ipt == 5 ) {
+						// #######################################
+						set_of_cuts.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str()));
+						set_of_cuts_DATA.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str(), cutrun.c_str()));
+						display.push_back(Form("%s, tight m_{#mu#mu#gamma}", sEB.c_str()));
+						display2.push_back(Form("%s, %s", displayR9.c_str(), displaypt.c_str()));
+					  display_DATA.push_back(Form("%s", displayrun.c_str()));
+					  display_latex.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$", sEB.c_str(), displayR9.c_str(), displaypt.c_str()));
+					  display_latex_DATA.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$, $%s$",  sEB.c_str(), displayR9.c_str(), displaypt.c_str(), displayrun.c_str()));
+						name.push_back(Form("%s_tight%s%s", sEB.c_str(), sR9.c_str(), spt.c_str()));
+						name_DATA.push_back(Form("%s_tight%s%s%s", sEB.c_str(), sR9.c_str(), spt.c_str(), srun.c_str()));
+					} else if ( ipt == 5 ) {
 					spt = "-30_lt_pt_lt_inf-";
 					cutpt = "30.0 < Photon_Et";
 					displaypt = "30.0 < p_{T}";
-				} 
+						// #######################################
+						set_of_cuts.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str()));
+						set_of_cuts_DATA.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str(), cutrun.c_str()));
+						display.push_back(Form("%s, tight m_{#mu#mu#gamma}", sEB.c_str()));
+						display2.push_back(Form("%s, %s", displayR9.c_str(), displaypt.c_str()));
+					  display_DATA.push_back(Form("%s", displayrun.c_str()));
+					  display_latex.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$", sEB.c_str(), displayR9.c_str(), displaypt.c_str()));
+					  display_latex_DATA.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$, $%s$",  sEB.c_str(), displayR9.c_str(), displaypt.c_str(), displayrun.c_str()));
+						name.push_back(Form("%s_tight%s%s", sEB.c_str(), sR9.c_str(), spt.c_str()));
+						name_DATA.push_back(Form("%s_tight%s%s%s", sEB.c_str(), sR9.c_str(), spt.c_str(), srun.c_str()));
+					} else if ( ipt == 6 ) {
+          spt = "-inclusivept-";
+          cutpt = "1";
+          displaypt = "inclusive p_{T}";
 
-				for( int irun = 0 ; irun < 6 ; irun++ )
-//				for( int irun = 0 ; irun < 1 ; irun++ )
-				{
-					string srun = "";
-					string cutrun = "";
-					string displayrun = "";
-					if( irun == 0 ) {
-						srun = "-160431_lt_run_lt_163869-";
-						cutrun = "160431 < iRunID && iRunID < 163869";
-						displayrun = "160431 < run < 163869";
-					} else if ( irun == 1 ) {
-						srun = "-165071_lt_run_lt_165970-";
-						cutrun = "165071 < iRunID && iRunID < 165970";
-						displayrun = "165071 < run < 165970";
-					} else if ( irun == 2 ) {
-						srun = "-165971_lt_run_lt_166502-";
-						cutrun = "165971 < iRunID && iRunID < 166502";
-						displayrun = "165971 < run < 166502";
-					} else if ( irun == 3 ) {
-						srun = "-166503_lt_run_lt_166861-";
-						cutrun = "166503 < iRunID && iRunID < 166861";
-						displayrun = "166503 < run < 166861";
-					} else if ( irun == 4 ) {
-						srun = "-166862_lt_run_lt_167784-";
-						cutrun = "166862 < iRunID && iRunID < 167784";
-						displayrun = "166862 < run < 167784";
-					}	else {
-						srun = "-inclusive_run-";
-						cutrun = "1";
-						displayrun = " ";
-					}				
-					// #######################################
-					set_of_cuts.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str()));
-					set_of_cuts_DATA.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str(), cutrun.c_str()));
-					display.push_back(Form("%s, tight m_{#mu#mu#gamma}", sEB.c_str()));
-					display2.push_back(Form("%s, %s", displayR9.c_str(), displaypt.c_str()));
-				  display_DATA.push_back(Form("%s", displayrun.c_str()));
-				  display_latex.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$", sEB.c_str(), displayR9.c_str(), displaypt.c_str()));
-				  display_latex_DATA.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$, $%s$",  sEB.c_str(), displayR9.c_str(), displaypt.c_str(), displayrun.c_str()));
-					name.push_back(Form("%s_tight%s%s", sEB.c_str(), sR9.c_str(), spt.c_str()));
-					name_DATA.push_back(Form("%s_tight%s%s%s", sEB.c_str(), sR9.c_str(), spt.c_str(), srun.c_str()));
-
-//					set_of_cuts_DATA.push_back("Photon_isEB == 1 && isTightMMG && isMultipleCandidate == 0 && Photon_r9 > 0.94 && 160431 < iRunID && iRunID < 163869");
-//				  display.push_back("EB, tight m_{#mu#mu#gamma}, r9 > .94");
-//				  display_DATA.push_back("160431 < Run < 163869");
-//				  display_latex.push_back("EB, tight $m_{\\mu\\mu\\gamma}$, $r9 > .94$");
-//				  display_latex_DATA.push_back("EB, tight $m_{\\mu\\mu\\gamma}$, $r9 > .94$, 160431 < Run < 163869");
-//				  name.push_back("EB_tight-highR9");
-//				  name_DATA.push_back("EB_tight-highR9_160431_lt_Run_lt163869");
-
-					// #######################################
-
+					for( int irun = 0 ; irun < 6 ; irun++ )
+	//				for( int irun = 0 ; irun < 1 ; irun++ )
+					{
+						if( irun == 0 ) {
+							srun = "-160431_lt_run_lt_163869-";
+							cutrun = "160431 < iRunID && iRunID < 163869";
+							displayrun = "160431 < run < 163869";
+						} else if ( irun == 1 ) {
+							srun = "-165071_lt_run_lt_165970-";
+							cutrun = "165071 < iRunID && iRunID < 165970";
+							displayrun = "165071 < run < 165970";
+						} else if ( irun == 2 ) {
+							srun = "-165971_lt_run_lt_166502-";
+							cutrun = "165971 < iRunID && iRunID < 166502";
+							displayrun = "165971 < run < 166502";
+						} else if ( irun == 3 ) {
+							srun = "-166503_lt_run_lt_166861-";
+							cutrun = "166503 < iRunID && iRunID < 166861";
+							displayrun = "166503 < run < 166861";
+						} else if ( irun == 4 ) {
+							srun = "-166862_lt_run_lt_166967-";
+							cutrun = "166862 < iRunID && iRunID < 166967";
+							displayrun = "166862 < run < 166967";
+						}	else {
+							srun = "-inclusive_run-";
+							cutrun = "1";
+							displayrun = " ";
+						}				
+						// #######################################
+						set_of_cuts.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str()));
+						set_of_cuts_DATA.push_back(Form("Photon_is%s == 1 && isTightMMG && isMultipleCandidate == 0 && %s && %s && %s", sEB.c_str(), cutR9.c_str(), cutpt.c_str(), cutrun.c_str()));
+						display.push_back(Form("%s, tight m_{#mu#mu#gamma}", sEB.c_str()));
+						display2.push_back(Form("%s, %s", displayR9.c_str(), displaypt.c_str()));
+					  display_DATA.push_back(Form("%s", displayrun.c_str()));
+					  display_latex.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$", sEB.c_str(), displayR9.c_str(), displaypt.c_str()));
+					  display_latex_DATA.push_back(Form("%s, tight $m_{\\mu\\mu\\gamma}$, $%s$, $%s$, $%s$",  sEB.c_str(), displayR9.c_str(), displaypt.c_str(), displayrun.c_str()));
+						name.push_back(Form("%s_tight%s%s", sEB.c_str(), sR9.c_str(), spt.c_str()));
+						name_DATA.push_back(Form("%s_tight%s%s%s", sEB.c_str(), sR9.c_str(), spt.c_str(), srun.c_str()));
+	
+	//					set_of_cuts_DATA.push_back("Photon_isEB == 1 && isTightMMG && isMultipleCandidate == 0 && Photon_r9 > 0.94 && 160431 < iRunID && iRunID < 163869");
+	//				  display.push_back("EB, tight m_{#mu#mu#gamma}, r9 > .94");
+	//				  display_DATA.push_back("160431 < Run < 163869");
+	//				  display_latex.push_back("EB, tight $m_{\\mu\\mu\\gamma}$, $r9 > .94$");
+	//				  display_latex_DATA.push_back("EB, tight $m_{\\mu\\mu\\gamma}$, $r9 > .94$, 160431 < Run < 163869");
+	//				  name.push_back("EB_tight-highR9");
+	//				  name_DATA.push_back("EB_tight-highR9_160431_lt_Run_lt163869");
+	
+						// #######################################
+	
+        	} 
 				}
 			}
 		}
@@ -732,7 +799,7 @@ cout << "|\t *DATA* \t|\t *s* \t|\t *sigma* \t|\t *alpha* \t|\t *n* \t|" << endl
 
 for(int i=0; i < data_alpha.size(); i++)
 {
-	cout << "|\t" << name_DATA[i] << "\t"
+	cout << setprecision (3) << fixed  << "|\t" << name_DATA[i] << "\t"
 	<< "|\t" << data_m0[i] << " +- " << data_m0_err[i] << "\t"
 	<< "|\t" << data_sigma[i] << " +- " << data_sigma_err[i] << "\t"
 	<< "|\t" << data_alpha[i] << " +- " << data_alpha_err[i] << "\t"
@@ -743,7 +810,7 @@ cout << "|\t *MC* \t|\t *s* \t|\t *sigma* \t|\t *alpha* \t|\t *n* \t|" << endl;
 
 for(int i=0; i < mc_alpha.size(); i++)
 {
-	cout << "|\t" << name[i] << "\t"
+	cout << setprecision (3) << fixed  << "|\t" << name[i] << "\t"
 	<< "|\t" << mc_m0[i] << " +- " << mc_m0_err[i] << "\t"
 	<< "|\t" << mc_sigma[i] << " +- " << mc_sigma_err[i] << "\t"
 	<< "|\t" << mc_alpha[i] << " +- " << mc_alpha_err[i] << "\t"
@@ -754,40 +821,40 @@ cout << endl << endl;
 for(int i=0; i < mc_alpha.size(); i++)
 {
 	cout << "|\t *" << name_DATA[i] << "* \t|\t *s* \t|\t *sigma* \t|\t *alpha* \t|\t *n* \t|" << endl;
-  cout << "|\t" << " data " << "\t"
+  cout << setprecision (3) << fixed  << "|\t" << " data " << "\t"
   << "|\t" << data_m0[i] << " +- " << data_m0_err[i] << "\t"
   << "|\t" << data_sigma[i] << " +- " << data_sigma_err[i] << "\t"
   << "|\t" << data_alpha[i] << " +- " << data_alpha_err[i] << "\t"
   << "|\t" << data_n[i] << " +- " << data_n_err[i] << "\t|"
 	<< endl;
-  cout << "|\t" << " data (%)" << "\t"
+  cout << setprecision (3) << fixed  << "|\t" << " data (%)" << "\t"
   << "|\t" << 100.0 * data_m0[i] << " +- " << 100.0 * data_m0_err[i] << "\t"
   << "|\t" << 100.0 * data_sigma[i] << " +- " << 100.0 * data_sigma_err[i] << "\t"
   << "|\t\t"
   << "|\t\t|"
 	<< endl;
-  cout << "|\t" << " mc " << "\t"
+  cout << setprecision (3) << fixed  << "|\t" << " mc " << "\t"
   << "|\t" << mc_m0[i] << " +- " << mc_m0_err[i] << "\t"
   << "|\t" << mc_sigma[i] << " +- " << mc_sigma_err[i] << "\t"
   << "|\t" << mc_alpha[i] << " +- " << mc_alpha_err[i] << "\t"
   << "|\t" << mc_n[i] << " +- " << mc_n_err[i] << "\t|"
 	<< endl;
-  cout << "|\t" << " mc (%)" << "\t"
+  cout << setprecision (3) << fixed  << "|\t" << " mc (%)" << "\t"
   << "|\t" << 100.0 * mc_m0[i] << " +- " << 100.0 * mc_m0_err[i] << "\t"
   << "|\t" << 100.0 * mc_sigma[i] << " +- " << 100.0 * mc_sigma_err[i] << "\t"
   << "|\t\t"
   << "|\t\t|"
 	<< endl;
-	cout << "|\t" << " data - mc " << "\t"
-	<< "|\t" << setprecision (8) << fixed << data_m0[i] - mc_m0[i] << " +- " << sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "\t"
-	<< "|\t" << setprecision (8) << fixed << data_sigma[i] - mc_sigma[i] << " +- " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
+	cout << setprecision (3) << fixed  << "|\t" << " data - mc " << "\t"
+	<< "|\t" << setprecision (3) << fixed << data_m0[i] - mc_m0[i] << " +- " << sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "\t"
+	<< "|\t" << setprecision (3) << fixed << data_sigma[i] - mc_sigma[i] << " +- " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
 	<< "| | |"
 //	<< "|\t" << setprecision (8) << fixed << data_alpha[i] - mc_alpha[i] << " +- " << sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
 //	<< "|\t" << setprecision (8) << fixed << data_n[i] - mc_n[i] << " +- " << sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t|"
 	<< endl;
-	cout << "|\t" << " data - mc (%)" << "\t"
-	<< "|\t" << setprecision (5) << fixed << (data_m0[i] - mc_m0[i])*100.0 << " +- " << 100.0 * sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "\t"
-	<< "|\t" << setprecision (5) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " +- " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
+	cout << setprecision (3) << fixed  << "|\t" << " data - mc (%)" << "\t"
+	<< "|\t" << setprecision (3) << fixed << (data_m0[i] - mc_m0[i])*100.0 << " +- " << 100.0 * sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "\t"
+	<< "|\t" << setprecision (3) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " +- " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
 	<< "| | |"
 //	<< "|\t" << setprecision (5) << fixed << (data_alpha[i] - mc_alpha[i])*100.0 << " +- " << 100.0 * sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
 //	<< "|\t" << setprecision (5) << fixed << (data_n[i] - mc_n[i])*100.0 << " +- " << 100.0 * sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t|"
@@ -807,13 +874,13 @@ for(int i=0; i < mc_alpha.size(); i++)
 //  << "|\t" << data_alpha[i] << " +- " << data_alpha_err[i] << "\t"
 //  << "|\t" << data_n[i] << " +- " << data_n_err[i] << "\t|"
 //	<< endl;
-  cout << "|\t" << " data " << "\t"
+  cout << setprecision (3) << fixed  << "|\t" << " data " << "\t"
   << "|\t" << 1.0 * ((double)(1.0)/(double)(1.0 + data_m0[i])) << " +- " << 1.0 * ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) << "\t"
   << "|\t" << 1.0 * data_sigma[i] << " +- " << 1.0 * data_sigma_err[i] << "\t"
   << "|\t\t"
   << "|\t\t|"
 	<< endl;
-  cout << "|\t" << " data (%)" << "\t"
+  cout << setprecision (3) << fixed  << "|\t" << " data (%)" << "\t"
   << "|\t" << 100.0 * ((double)(1.0)/(double)(1.0 + data_m0[i])) << " +- " << 100.0 * ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) << "\t"
   << "|\t" << 100.0 * data_sigma[i] << " +- " << 100.0 * data_sigma_err[i] << "\t"
   << "|\t\t"
@@ -825,28 +892,28 @@ for(int i=0; i < mc_alpha.size(); i++)
 //  << "|\t" << mc_alpha[i] << " +- " << mc_alpha_err[i] << "\t"
 //  << "|\t" << mc_n[i] << " +- " << mc_n_err[i] << "\t|"
 //	<< endl;
-  cout << "|\t" << " mc " << "\t"
+  cout << setprecision (3) << fixed  << "|\t" << " mc " << "\t"
   << "|\t" << 1.0 * ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " +- " << 1.0 * ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2))) << "\t"
   << "|\t" << 1.0 * mc_sigma[i] << " +- " << 1.0 * mc_sigma_err[i] << "\t"
   << "|\t\t"
   << "|\t\t|"
 	<< endl;
-  cout << "|\t" << " mc (%)" << "\t"
+  cout << setprecision (3) << fixed  << "|\t" << " mc (%)" << "\t"
   << "|\t" << 100.0 * ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " +- " << 100.0 * ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2))) << "\t"
   << "|\t" << 100.0 * mc_sigma[i] << " +- " << 100.0 * mc_sigma_err[i] << "\t"
   << "|\t\t"
   << "|\t\t|"
 	<< endl;
-	cout << "|\t" << " data - mc " << "\t"
-	<< "|\t" << setprecision (8) << fixed << ((double)(1.0)/(double)(1.0 + data_m0[i])) - ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " +- " << sqrt( ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2)))*((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) + ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))*((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))) << "\t"
-	<< "|\t" << setprecision (8) << fixed << data_sigma[i] - mc_sigma[i] << " +- " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
+	cout << setprecision (3) << fixed  << "|\t" << " data - mc " << "\t"
+	<< "|\t" << setprecision (3) << fixed << ((double)(1.0)/(double)(1.0 + data_m0[i])) - ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " +- " << sqrt( ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2)))*((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) + ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))*((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))) << "\t"
+	<< "|\t" << setprecision (3) << fixed << data_sigma[i] - mc_sigma[i] << " +- " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
 	<< "| | |"
 //	<< "|\t" << setprecision (8) << fixed << data_alpha[i] - mc_alpha[i] << " +- " << sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
 //	<< "|\t" << setprecision (8) << fixed << data_n[i] - mc_n[i] << " +- " << sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t|"
 	<< endl;
-	cout << "|\t" << " data - mc (%)" << "\t"
-	<< "|\t" << setprecision (5) << fixed << (((double)(1.0)/(double)(1.0 + data_m0[i])) - ((double)(1.0)/(double)(1.0 + mc_m0[i])))*100.0 << " +- " << 100.0 * sqrt( ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2)))*((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) + ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))*((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))) << "\t"
-	<< "|\t" << setprecision (5) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " +- " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
+	cout << setprecision (3) << fixed  << "|\t" << " data - mc (%)" << "\t"
+	<< "|\t" << setprecision (3) << fixed << (((double)(1.0)/(double)(1.0 + data_m0[i])) - ((double)(1.0)/(double)(1.0 + mc_m0[i])))*100.0 << " +- " << 100.0 * sqrt( ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2)))*((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) + ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))*((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))) << "\t"
+	<< "|\t" << setprecision (3) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " +- " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "\t"
 	<< "| | |"
 //	<< "|\t" << setprecision (5) << fixed << (data_alpha[i] - mc_alpha[i])*100.0 << " +- " << 100.0 * sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
 //	<< "|\t" << setprecision (5) << fixed << (data_n[i] - mc_n[i])*100.0 << " +- " << 100.0 * sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t|"
@@ -862,7 +929,7 @@ cout << "\\hline" << endl;
 for(int i=0; i < data_alpha.size(); i++)
 {
 	cout << "\t" << display_latex_DATA[i] << "\t"
-	<< "&\t$" << data_m0[i] << " \\pm " << data_m0_err[i] << "$\t"
+	<< setprecision (3) << fixed  << "&\t$" << data_m0[i] << " \\pm " << data_m0_err[i] << "$\t"
 	<< "&\t$" << data_sigma[i] << " \\pm " << data_sigma_err[i] << "$\t"
 	<< "&\t$" << data_alpha[i] << " \\pm " << data_alpha_err[i] << "$\t"
 	<< "&\t$" << data_n[i] << " \\pm " << data_n_err[i] << "$\t\\\\" << endl;
@@ -875,7 +942,7 @@ cout << "\\hline" << endl;
 for(int i=0; i < mc_alpha.size(); i++)
 {
 	cout << "\t" << display_latex[i] << "\t"
-	<< "&\t$" << mc_m0[i] << " \\pm " << mc_m0_err[i] << "$\t"
+	<< setprecision (3) << fixed  << "&\t$" << mc_m0[i] << " \\pm " << mc_m0_err[i] << "$\t"
 	<< "&\t$" << mc_sigma[i] << " \\pm " << mc_sigma_err[i] << "$\t"
 	<< "&\t$" << mc_alpha[i] << " \\pm " << mc_alpha_err[i] << "$\t"
 	<< "&\t$" << mc_n[i] << " \\pm " << mc_n_err[i] << "$\t\\\\" << endl;
@@ -891,7 +958,7 @@ cout << "\\hline" << endl;
 for(int i=0; i < data_alpha.size(); i++)
 {
 	cout << "\t" << display_latex_DATA[i] << "\t"
-	<< "&\t$" << 100.0 * data_m0[i] << " \\pm " << 100.0 * data_m0_err[i] << "$\t"
+	<< setprecision (3) << fixed  << "&\t$" << 100.0 * data_m0[i] << " \\pm " << 100.0 * data_m0_err[i] << "$\t"
 	<< "&\t$" << 100.0 * data_sigma[i] << " \\pm " << 100.0 * data_sigma_err[i] << "$\t"
 	<< "&\t$" << data_alpha[i] << " \\pm " << data_alpha_err[i] << "$\t"
 	<< "&\t$" << data_n[i] << " \\pm " << data_n_err[i] << "$\t\\\\" << endl;
@@ -904,7 +971,7 @@ cout << "\\hline" << endl;
 for(int i=0; i < mc_alpha.size(); i++)
 {
 	cout << "\t" << display_latex[i] << "\t"
-	<< "&\t$" << 100.0 * mc_m0[i] << " \\pm " << 100.0 * mc_m0_err[i] << "$\t"
+	<< setprecision (3) << fixed  << "&\t$" << 100.0 * mc_m0[i] << " \\pm " << 100.0 * mc_m0_err[i] << "$\t"
 	<< "&\t$" << 100.0 * mc_sigma[i] << " \\pm " << 100.0 * mc_sigma_err[i] << "$\t"
 	<< "&\t$" << mc_alpha[i] << " \\pm " << mc_alpha_err[i] << "$\t"
 	<< "&\t$" << mc_n[i] << " \\pm " << mc_n_err[i] << "$\t\\\\" << endl;
@@ -920,39 +987,39 @@ for(int i=0; i < mc_alpha.size(); i++)
 	cout << display_latex_DATA[i] << "\t&\t $s$ \t&\t $\\sigma$ \\\\" << endl;
 	cout << "\\hline" << endl;
   cout << "data " << "\t"
-  << "&\t$" << data_m0[i] << " \\pm " << data_m0_err[i] << "$\t"
+  << setprecision (3) << fixed  << "&\t$" << data_m0[i] << " \\pm " << data_m0_err[i] << "$\t"
   << "&\t$" << data_sigma[i] << " \\pm " << data_sigma_err[i] << "$\t\\\\"
 //  << "&\t$" << data_alpha[i] << " \\pm " << data_alpha_err[i] << "$\t"
 //  << "&\t$" << data_n[i] << " \\pm " << data_n_err[i] << "$\t\\\\"
 	<< endl;
   cout << "data (\\%)" << "\t"
-  << "&\t$" << 100.0 * data_m0[i] << " \\pm " << 100.0 * data_m0_err[i] << "$\t"
+  << setprecision (3) << fixed  << "&\t$" << 100.0 * data_m0[i] << " \\pm " << 100.0 * data_m0_err[i] << "$\t"
   << "&\t$" << 100.0 * data_sigma[i] << " \\pm " << 100.0 * data_sigma_err[i] << "$\t\\\\"
 //  << "&\t$" << data_alpha[i] << " \\pm " << data_alpha_err[i] << "$\t"
 //  << "&\t$" << data_n[i] << " \\pm " << data_n_err[i] << "$\t\\\\"
 	<< endl;
   cout << "mc " << "\t"
-  << "&\t$" << mc_m0[i] << " \\pm " << mc_m0_err[i] << "$\t"
+  << setprecision (3) << fixed  << "&\t$" << mc_m0[i] << " \\pm " << mc_m0_err[i] << "$\t"
   << "&\t$" << mc_sigma[i] << " \\pm " << mc_sigma_err[i] << "$\t\\\\"
 //  << "&\t$" << mc_alpha[i] << " \\pm " << mc_alpha_err[i] << "$\t"
 //  << "&\t$" << mc_n[i] << " \\pm " << mc_n_err[i] << "$\t\\\\"
 	<< endl;
   cout << "mc (\\%)" << "\t"
-  << "&\t$" << 100.0 * mc_m0[i] << " \\pm " << 100.0 * mc_m0_err[i] << "$\t"
+  << setprecision (3) << fixed  << "&\t$" << 100.0 * mc_m0[i] << " \\pm " << 100.0 * mc_m0_err[i] << "$\t"
   << "&\t$" << 100.0 * mc_sigma[i] << " \\pm " << 100.0 * mc_sigma_err[i] << "$\t\\\\"
 //  << "&\t$" << mc_alpha[i] << " \\pm " << mc_alpha_err[i] << "$\t"
 //  << "&\t$" << mc_n[i] << " \\pm " << mc_n_err[i] << "$\t\\\\"
 	<< endl;
 	cout << " data - mc " << "\t"
-	<< "&\t$" << setprecision (5) << fixed << data_m0[i] - mc_m0[i] << " \\pm " << sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "$\t"
-	<< "&\t$" << setprecision (5) << fixed << data_sigma[i] - mc_sigma[i] << " \\pm " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
+	<< "&\t$" << setprecision (3) << fixed << data_m0[i] - mc_m0[i] << " \\pm " << sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "$\t"
+	<< "&\t$" << setprecision (3) << fixed << data_sigma[i] - mc_sigma[i] << " \\pm " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
 	<< " \\\\"
 //	<< "&\t" << setprecision (8) << fixed << data_alpha[i] - mc_alpha[i] << " \\pm " << sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
 //	<< "&\t" << setprecision (8) << fixed << data_n[i] - mc_n[i] << " \\pm " << sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t&"
 	<< endl;
 	cout << " data - mc (\\%)" << "\t"
-	<< "&\t$" << setprecision (4) << fixed << (data_m0[i] - mc_m0[i])*100.0 << " \\pm " << 100.0 * sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "$\t"
-	<< "&\t$" << setprecision (4) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " \\pm " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
+	<< "&\t$" << setprecision (3) << fixed << (data_m0[i] - mc_m0[i])*100.0 << " \\pm " << 100.0 * sqrt( data_m0_err[i]*data_m0_err[i] + mc_m0_err[i]*mc_m0_err[i]) << "$\t"
+	<< "&\t$" << setprecision (3) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " \\pm " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
 	<< " \\\\"
 //	<< "&\t" << setprecision (5) << fixed << (data_alpha[i] - mc_alpha[i])*100.0 << " \\pm " << 100.0 * sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
 //	<< "&\t" << setprecision (5) << fixed << (data_n[i] - mc_n[i])*100.0 << " \\pm " << 100.0 * sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t&"
@@ -967,39 +1034,39 @@ for(int i=0; i < mc_alpha.size(); i++)
 	cout << display_latex_DATA[i] << "\t&\t $f$ \t&\t $\\sigma$ \\\\" << endl;
 	cout << "\\hline" << endl;
   cout << "data " << "\t"
-  << "&\t$" << ((double)(1.0)/(double)(1.0 + data_m0[i])) << " \\pm " << ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) << "$\t"
+  << setprecision (3) << fixed << "&\t$" << ((double)(1.0)/(double)(1.0 + data_m0[i])) << " \\pm " << ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) << "$\t"
   << "&\t$" << data_sigma[i] << " \\pm " << data_sigma_err[i] << "$\t\\\\"
 //  << "&\t$" << data_alpha[i] << " \\pm " << data_alpha_err[i] << "$\t"
 //  << "&\t$" << data_n[i] << " \\pm " << data_n_err[i] << "$\t\\\\"
 	<< endl;
   cout << "data (\\%)" << "\t"
-  << "&\t$" << 100.0 * ((double)(1.0)/(double)(1.0 + data_m0[i])) << " \\pm " << 100.0 * ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) << "$\t"
+  << setprecision (3) << fixed << "&\t$" << 100.0 * ((double)(1.0)/(double)(1.0 + data_m0[i])) << " \\pm " << 100.0 * ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) << "$\t"
   << "&\t$" << 100.0 * data_sigma[i] << " \\pm " << 100.0 * data_sigma_err[i] << "$\t\\\\"
 //  << "&\t$" << data_alpha[i] << " \\pm " << data_alpha_err[i] << "$\t"
 //  << "&\t$" << data_n[i] << " \\pm " << data_n_err[i] << "$\t\\\\"
 	<< endl;
   cout << "mc " << "\t"
-  << "&\t$" << ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " \\pm " << ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2))) << "$\t"
+  << setprecision (3) << fixed << "&\t$" << ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " \\pm " << ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2))) << "$\t"
   << "&\t$" << mc_sigma[i] << " \\pm " << mc_sigma_err[i] << "$\t\\\\"
 //  << "&\t$" << mc_alpha[i] << " \\pm " << mc_alpha_err[i] << "$\t"
 //  << "&\t$" << mc_n[i] << " \\pm " << mc_n_err[i] << "$\t\\\\"
 	<< endl;
   cout << "mc (\\%)" << "\t"
-  << "&\t$" << 100.0 * ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " \\pm " << 100.0 * ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2))) << "$\t"
+  << setprecision (3) << fixed << "&\t$" << 100.0 * ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " \\pm " << 100.0 * ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2))) << "$\t"
   << "&\t$" << 100.0 * mc_sigma[i] << " \\pm " << 100.0 * mc_sigma_err[i] << "$\t\\\\"
 //  << "&\t$" << mc_alpha[i] << " \\pm " << mc_alpha_err[i] << "$\t"
 //  << "&\t$" << mc_n[i] << " \\pm " << mc_n_err[i] << "$\t\\\\"
 	<< endl;
 	cout << " data - mc " << "\t"
-	<< "&\t$" << setprecision (5) << fixed << ((double)(1.0)/(double)(1.0 + data_m0[i])) - ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " \\pm " << sqrt( ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2)))*((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) + ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))*((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))) << "$\t"
-	<< "&\t$" << setprecision (5) << fixed << data_sigma[i] - mc_sigma[i] << " \\pm " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
+	<< "&\t$" << setprecision (3) << fixed << ((double)(1.0)/(double)(1.0 + data_m0[i])) - ((double)(1.0)/(double)(1.0 + mc_m0[i])) << " \\pm " << sqrt( ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2)))*((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) + ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))*((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))) << "$\t"
+	<< "&\t$" << setprecision (3) << fixed << data_sigma[i] - mc_sigma[i] << " \\pm " << sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
 	<< " \\\\"
 //	<< "&\t" << setprecision (8) << fixed << data_alpha[i] - mc_alpha[i] << " \\pm " << sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
 //	<< "&\t" << setprecision (8) << fixed << data_n[i] - mc_n[i] << " \\pm " << sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t&"
 	<< endl;
 	cout << " data - mc (\\%)" << "\t"
-	<< "&\t$" << setprecision (4) << fixed << (((double)(1.0)/(double)(1.0 + data_m0[i])) - ((double)(1.0)/(double)(1.0 + mc_m0[i])))*100.0 << " \\pm " << 100.0 * sqrt( ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2)))*((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) + ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))*((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))) << "$\t"
-	<< "&\t$" << setprecision (4) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " \\pm " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
+	<< "&\t$" << setprecision (3) << fixed << (((double)(1.0)/(double)(1.0 + data_m0[i])) - ((double)(1.0)/(double)(1.0 + mc_m0[i])))*100.0 << " \\pm " << 100.0 * sqrt( ((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2)))*((double)(data_m0_err[i])/(double)(pow(1.0 + data_m0[i], 2))) + ((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))*((double)(mc_m0_err[i])/(double)(pow(1.0 + mc_m0[i], 2)))) << "$\t"
+	<< "&\t$" << setprecision (3) << fixed << (data_sigma[i] - mc_sigma[i])*100.0 << " \\pm " << 100.0 * sqrt( data_sigma_err[i]*data_sigma_err[i] + mc_sigma_err[i]*mc_sigma_err[i]) << "$\t"
 	<< " \\\\"
 //	<< "&\t" << setprecision (5) << fixed << (data_alpha[i] - mc_alpha[i])*100.0 << " \\pm " << 100.0 * sqrt( data_alpha_err[i]*data_alpha_err[i] + mc_alpha_err[i]*mc_alpha_err[i]) << "\t"
 //	<< "&\t" << setprecision (5) << fixed << (data_n[i] - mc_n[i])*100.0 << " \\pm " << 100.0 * sqrt( data_n_err[i]*data_n_err[i] + mc_n_err[i]*mc_n_err[i]) << "\t&"
