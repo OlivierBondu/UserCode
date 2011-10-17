@@ -137,14 +137,6 @@ void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* part
   return;
 }
 
-double photonIsInCrack(double sc_abs_eta)
-{
-	return (sc_abs_eta < 0.018 ||
-		(sc_abs_eta >0.423 && sc_abs_eta <0.461) ||
-		(sc_abs_eta >0.770 && sc_abs_eta <0.806) ||
-		(sc_abs_eta >1.127 && sc_abs_eta <1.163) ||
-		(sc_abs_eta >1.460 && sc_abs_eta <1.558));
-}
 
 double fEta(vector<double> param, double eta) 
 {
@@ -448,12 +440,6 @@ double EtEtaCor(vector<double> param, double et, double eta, bool isEB)
 
 double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 {
-	int verbositybis = 0;
-	if( photonIsInCrack(    fabs(myphoton->superCluster()->Eta())   ) )
-	{
-		if( verbositybis > 0) cout << "Photon is in crack" << endl;
-		return 1.0;
-	}
 	vector<double> param_Ceta;
 	vector<double> param_fbrem;
 	vector<double> param_feteta;
@@ -485,33 +471,32 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 //	cout << "myphoton->Energy()= " << myphoton->Energy() << endl;
 	if( (myphoton->isEBPho()) && (myphoton->r9()<0.94) )
 	{
-		if( verbositybis > 0) cout << "f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()= " << f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy() << endl;
+		cout << "f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()= " << f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy() << endl;
 		return (double)(f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()) / (double)(myphoton->Energy());
 	}
 	if( (myphoton->isEBPho()) && (myphoton->r9()>0.94) )
 	{
-		if( verbositybis > 0) cout << "f_eta * myphoton->e5x5()= " << f_eta * myphoton->e5x5() << endl;
+		cout << "f_eta * myphoton->e5x5()= " << f_eta * myphoton->e5x5() << endl;
 		return (double)(f_eta * myphoton->e5x5()) / (double)(myphoton->Energy());
 	}
 	if( (myphoton->isEEPho()) && (myphoton->r9()<0.95) )
 	{
 //		cout << "f_et_eta * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
 //		return (double)(f_et_eta * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())) / (double)(myphoton->Energy());
-		if( verbositybis > 0) cout << "f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
+		cout << "f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
 		return (double)(f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())) / (double)(myphoton->Energy());
 	}
-	if( (myphoton->isEEPho()) && (myphoton->r9()>0.95) )
+	if( (myphoton->isEEPho()) && (myphoton->r9()>0.94) )
 	{
-		if( verbositybis > 0) cout << "(myphoton->e5x5() + myphoton->preshowerEnergy())= " << (myphoton->e5x5() + myphoton->preshowerEnergy()) <<  endl;
-		return (double)(myphoton->e5x5() + myphoton->preshowerEnergy()) / (double)(myphoton->Energy());
+		cout << "myphoton->e5x5()= " << endl;
+		return (double)(myphoton->e5x5()) / (double)(myphoton->Energy());
 	}
 
 }
 
 
 
-void findConversionMCtruth(TRootPhoton *myPhoton, TClonesArray *theMCphotons, int &Photon_MCisConverted, float &Photon_MCconvEoverP, float &Photon_MCconvMass, float &Photon_MCconvCotanTheta, float &Photon_MCconvVertexX, float &Photon_MCconvVertexY, float &Photon_MCconvVertexZ)
-{
+void findConversionMCtruth(TRootPhoton *myPhoton, TClonesArray *theMCphotons, int &Photon_MCisConverted, float &Photon_MCconvEoverP, float &Photon_MCconvMass, float &Photon_MCconvCotanTheta, float &Photon_MCconvVertexX, float &Photon_MCconvVertexY, float &Photon_MCconvVertexZ){
 float dr = 0;
 int theIteMin = -1000;
 float theDiff;
@@ -552,48 +537,6 @@ else {
 }
 
 
-
-double PtMuonsConefunction(TRootMuon *mymuon, TRootPhoton *myphoton, double deltaR)
-{
-        double PtMuonsCone = 0;
-    
-        double dzCut = 0.0;
-        TRootTrack *trackbis = (TRootTrack*)mymuon->innerTrack();
-        dzCut = trackbis->vz() - myphoton->vz();
-        double etLow_ = 0.0;
-        double lip_ = 0.2;
-        double drb_ = 0.1;
-        if(dzCut < lip_ && mymuon->innerTrack().Et() > 0 && fabs(mymuon->dB()) < drb_)
-        {
-                double dr = DeltaR(mymuon->innerTrack().Eta(), mymuon->innerTrack().Phi(), myphoton->Eta(), myphoton->Phi());
-                double deta = mymuon->innerTrack().Eta() - myphoton->Eta();
-                if(fabs(myphoton->Eta()) < 1.479)
-                {
-                        double extRadius_ = deltaR;
-                        double intRadiusBarrel_ = 0.04;
-                        double stripBarrel_ = 0.015;
-                        if(fabs(dr) < extRadius_ && fabs(dr) >= intRadiusBarrel_ && fabs(deta) >= stripBarrel_)    
-                        {
-                            PtMuonsCone = mymuon->innerTrack().Pt();
-                            //cout<<"mymuon->innerTrack().Pt() = "<<mymuon->innerTrack().Pt()<<endl;
-                        }
-                }
-                else
-                {
-                        double extRadius_ = deltaR;
-                        double intRadiusBarrel_ = 0.04;
-                        double stripBarrel_ = 0.015;
-                        if(fabs(dr) < extRadius_ && fabs(dr) >= intRadiusBarrel_ && fabs(deta) >= stripBarrel_)
-                        {
-                            PtMuonsCone = mymuon->innerTrack().Pt();
-                            //cout<<"mymuon->innerTrack().Pt() = "<<mymuon->innerTrack().Pt()<<endl;
-                        }
-                }
-
-        }
-
-        return PtMuonsCone;
-}
 
 
 int main(int argc, char *argv[]);
@@ -658,7 +601,6 @@ int main(int argc, char *argv[]);
   extern Int_t Photon_convNTracks, Photon_isConverted;
   extern Float_t Photon_convEoverP, Photon_convMass, Photon_convCotanTheta, Photon_convLikely, Photon_convVertexX, Photon_convVertexY, Photon_convVertexZ;
   extern Float_t Photon_E, Photon_Et, Photon_E2x2, Photon_E3x3, Photon_E5x5, Photon_Emax, Photon_E2nd;
-	extern Float_t Photon_Ecorr_o_Ereco;
   extern Float_t Photon_r19, Photon_r9, Photon_cross;
   extern Float_t Photon_caloConeSize, Photon_PreshEnergy, Photon_HoE;
   extern Float_t Photon_sigmaEtaEta, Photon_sigmaIetaIeta;
@@ -671,7 +613,6 @@ int main(int argc, char *argv[]);
   extern Float_t Photon_SC_Eta, Photon_SC_Phi, Photon_SC_brem;
   extern Float_t Photon_SC_E, Photon_SC_Et, Photon_SC_rawE, Photon_SC_rawEt;
 	extern Float_t Photon_lambdaRatio, Photon_ratioSeed, Photon_ratioS4, Photon_lamdbaDivCov;
-	extern Float_t Photon_ratioS4_corrected;
 	extern Float_t Photon_SC_rawE_x_fEta, Photon_SC_rawE_x_fEta_x_fBrem, Photon_SC_rawE_x_fEta_x_fBrem_AF, Photon_SC_rawE_x_fEta_x_fBrem_L, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta;
 	extern Float_t Photon_secondMomentMaj, Photon_secondMomentMin, Photon_secondMomentAlpha;
 	extern Float_t Photon_etaLAT, Photon_phiLAT, Photon_LAT, Photon_Zernike20, Photon_Zernike42, Photon_ESratio;
@@ -758,7 +699,6 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 
  
       Photon_E = EScale*(myphoton->Energy());
-			Photon_Ecorr_o_Ereco = EScale;
       Photon_Et = EScale*(myphoton->Et());
       Photon_E2x2 = EScale*(myphoton->e2x2());
       Photon_E3x3 = EScale*(myphoton->e3x3());
@@ -807,8 +747,6 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 			if (Photon_SC_rawE != 0) Photon_ratioSeed = Photon_Emax/Photon_SC_rawE; 
 			Photon_ratioS4 = 0.0;
 			if (Photon_E5x5 != 0)  Photon_ratioS4 = Photon_E2x2/Photon_E5x5;
-			if(Photon_isEB) Photon_ratioS4_corrected = 1.008 * Photon_ratioS4;
-			if(Photon_isEE) Photon_ratioS4_corrected = 1.008074 * Photon_ratioS4;
 			Photon_lamdbaDivCov = 0.0;
 			if (Photon_covEtaEta != 0) Photon_lamdbaDivCov = (Photon_covEtaEta+Photon_covPhiPhi-sqrt((Photon_covEtaEta-Photon_covPhiPhi)*(Photon_covEtaEta-Photon_covPhiPhi)+4*Photon_covEtaPhi*Photon_covEtaPhi))/Photon_covEtaEta;
 //			Photon_SC_rawE_x_fEta = Photon_SC_rawE * fEta(Photon_SC_Eta);
