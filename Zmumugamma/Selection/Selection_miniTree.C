@@ -189,6 +189,13 @@ int main(int argc, char *argv[])
 
 //	TProof * p = TProof::Open("ccaplmaster.in2p3.fr");
 	gSystem->Load("libToto.so");
+//	gSystem->Load("libFWCoreFWLite.so");
+//	gSystem->Load("libDataFormatsFWLite.so");
+//	AutoLibraryLoader::enable();
+//	#include "DataFormats/GeometryVector/interface/GlobalPoint.h"
+//	#include "AutoLibraryLoader.h"
+//	TruncatedPyramid a;
+
 	bool doHLT										= false;
 	bool doMC										 = (bool)(isZgammaMC >= 1);
 	bool doJetMC									= false;
@@ -940,8 +947,8 @@ int main(int argc, char *argv[])
 
 	
 	// SETUP PARAMETERS	
-	unsigned int NbEvents = (int)inputEventTree->GetEntries();
-//	unsigned int NbEvents = 50000;
+//	unsigned int NbEvents = (int)inputEventTree->GetEntries();
+	unsigned int NbEvents = 40000;
 //	bool powheg = false;
 	bool powheg = true;
 	bool signal = false;
@@ -996,7 +1003,10 @@ int main(int argc, char *argv[])
 //	double integratedLuminosity = 714.783728;
 //	double integratedLuminosity = 1078.19387;
 //	double integratedLuminosity = 1420.38;
-	double integratedLuminosity = (214.439 + 663.204);
+//	double integratedLuminosity = 872.995;
+//	double integratedLuminosity = 2.148*1000.0;
+//	double integratedLuminosity = 1.131*1000.0 + 370.915 + 636.440;
+	double integratedLuminosity = 2.138 * 1000.0;
 //  double XSectionDYToMuMu = 1300.0 * 1.2416;
   double XSectionDYToMuMu = 1626.0;
 //  double XSectionTTJets = 94.0;

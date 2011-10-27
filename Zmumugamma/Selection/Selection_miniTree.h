@@ -21,7 +21,39 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
-
+//	#include "CMSSW_RELEASE_BASE/src/FWCore/FWLite/interface/AutoLibraryLoader.h"
+//	#include "FWCore/FWLite/interface/AutoLibraryLoader.h"
+/*
+	#include "DataFormats/FWLite/interface/Handle.h"
+#include "DataFormats/FWLite/interface/Event.h"
+#include "DataFormats/Math/interface/LorentzVector.h"
+#include "TFile.h"
+#include "TH1.h"
+#include "TCanvas.h"
+#include "TLegend.h"
+#include "TStyle.h"
+#include "TROOT.h"
+#include "TTree.h"
+#include "TBenchmark.h"
+#include "Math/GenVector/LorentzVector.h"
+*/
+//	#include "Geometry/CaloGeometry/interface/CaloCellGeometry.h"
+//	#include "Geometry/CaloGeometry/interface/TruncatedPyramid.h"
+/*
+	#include "RecoEcal/EgammaCoreTools/plugins/EcalClusterCrackCorrection.h"
+#include "DataFormats/EgammaReco/interface/BasicClusterFwd.h"
+#include "DataFormats/EgammaReco/interface/BasicCluster.h"
+#include "RecoEcal/EgammaCoreTools/interface/PositionCalc.h"
+#include "DataFormats/EcalDetId/interface/EBDetId.h"
+#include "Geometry/CaloTopology/interface/CaloSubdetectorTopology.h"
+#include "Geometry/CaloGeometry/interface/CaloSubdetectorGeometry.h"
+#include "Geometry/CaloGeometry/interface/CaloGeometry.h"
+#include "Geometry/CaloGeometry/interface/CaloCellGeometry.h"
+#include "Geometry/Records/interface/IdealGeometryRecord.h"
+#include "Geometry/Records/interface/CaloGeometryRecord.h"
+#include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
+	#include "Geometry/CaloGeometry/interface/TruncatedPyramid.h"
+*/
 //#pragma optimize 0
 
 #include "interface/TRootBardak.h"
@@ -47,13 +79,17 @@
 
 #include "corrections.h"
 
+
 using namespace std;
+
 
 double weight_DYToMuMu(int nGenVertices)
 {
 	double weight[51] = {
-//0, 0.192859, 0.37571, 0.98006, 1.47381, 2.13772, 1.97435, 1.75482, 1.61272, 1.30487, 0.858989, 0.593953, 0.406, 0.271559, 0.200834, 0.123192, 0.101752, 0.0724765, 0.0505275, 0.0609286, 0.0265446, 0.0178984, 0.0603881, 0, 0.00990419, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-0, 0.115446, 0.515513, 1.02729, 1.65565, 2.07852, 2.20219, 2.04419, 1.71476, 1.31424, 0.953279, 0.653809, 0.435285, 0.280843, 0.174236, 0.107087, 0.0646172, 0.0383951, 0.0221918, 0.0132036, 0.00758329, 0.00439256, 0.00246895, 0.00144276, 0.000825138, 0.000477362, 0.000267711, 0.000149803, 9.07888e-05, 4.86278e-05, 2.65074e-05, 1.6692e-05, 9.69296e-06, 6.1014e-06, 3.17422e-06, 1.73845e-06, 1.01719e-06, 4.02585e-07, 3.57171e-07, 2.42991e-07, 4.82115e-08, 8.47143e-08, 2.44069e-08, 3.45819e-09, 1.92746e-09, 5.2817e-10, 0, 0, 0, 0, 0
+//0, 0.192859, 0.37571, 0.98006, 1.47381, 2.13772, 1.97435, 1.75482, 1.61272, 1.30487, 0.858989, 0.593953, 0.406, 0.271559, 0.200834, 0.123192, 0.101752, 0.0724765, 0.0505275, 0.0609286, 0.0265446, 0.0178984, 0.0603881, 0, 0.00990419, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // OLD WEIGHTS
+//0, 0.115446, 0.515513, 1.02729, 1.65565, 2.07852, 2.20219, 2.04419, 1.71476, 1.31424, 0.953279, 0.653809, 0.435285, 0.280843, 0.174236, 0.107087, 0.0646172, 0.0383951, 0.0221918, 0.0132036, 0.00758329, 0.00439256, 0.00246895, 0.00144276, 0.000825138, 0.000477362, 0.000267711, 0.000149803, 9.07888e-05, 4.86278e-05, 2.65074e-05, 1.6692e-05, 9.69296e-06, 6.1014e-06, 3.17422e-06, 1.73845e-06, 1.01719e-06, 4.02585e-07, 3.57171e-07, 2.42991e-07, 4.82115e-08, 8.47143e-08, 2.44069e-08, 3.45819e-09, 1.92746e-09, 5.2817e-10, 0, 0, 0, 0, 0 // 1.08 fb-1 weights
+//0, 0.0915201, 0.286926, 0.639599, 1.16829, 1.65978, 1.98307, 2.06783, 1.94177, 1.66125, 1.34215, 1.02361, 0.756878, 0.541833, 0.37269, 0.253777, 0.169549, 0.111478, 0.0712554, 0.0468585, 0.0297301, 0.0190149, 0.0117964, 0.00760589, 0.0047984, 0.00306177, 0.00189382, 0.00116894, 0.000781657, 0.000462128, 0.00027822, 0.000193639, 0.00012439, 8.67046e-05, 5.00054e-05, 3.03964e-05, 1.9764e-05, 8.70322e-06, 8.60144e-06, 6.52623e-06, 1.44569e-06, 2.83908e-06, 9.15026e-07, 1.45156e-07, 9.06489e-08, 2.78505e-08, 0, 0, 0, 0, 0 // May10_Promptv4_166967 875 pb-1
+0, 0.0697492, 0.277338, 0.597883, 1.05665, 1.4726, 1.75588, 1.86228, 1.81436, 1.64308, 1.43293, 1.20171, 0.993666, 0.80724, 0.637799, 0.503612, 0.392809, 0.302783, 0.227302, 0.175508, 0.130473, 0.097424, 0.0702176, 0.0522872, 0.0378402, 0.0274927, 0.0192099, 0.0132837, 0.00986686, 0.00642414, 0.00422281, 0.00318206, 0.0021952, 0.00163065, 0.000995066, 0.00063582, 0.000432042, 0.000197814, 0.000202393, 0.000158411, 3.6097e-05, 7.27648e-05, 2.4037e-05, 3.90475e-06, 2.49611e-06, 7.85061e-07, 0, 0, 0, 0, 0// May10_Promptv4_Aug05_Promptv6 2.15 fb-1
 };
 	return weight[nGenVertices];
 }
@@ -61,24 +97,30 @@ double weight_DYToMuMu(int nGenVertices)
 double weight_TTJets(int nGenVertices)
 {
 	double weight[51] = {
-//0, 0, 0.333378, 0.723157, 1.19322, 1.49033, 1.58834, 1.44156, 1.2383, 0.980278, 0.764237, 0.616463, 0.502961, 0.415539, 0.340722, 0.312991, 0.247561, 0.235585, 0.22141, 0.235256, 0.247388, 0.283565, 0.460907, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-0, 0, 0.243413, 0.821845, 1.27575, 1.57447, 1.71148, 1.59537, 1.3914, 1.10501, 0.86792, 0.649448, 0.473748, 0.350538, 0.255107, 0.177246, 0.123198, 0.0876263, 0.0682639, 0.0440952, 0.0290569, 0.0199671, 0.013285, 0.00856315, 0.00384906, 0.00349844, 0.00408291, 0.000806618, 0.000526854, 0.000221726, 0.000382953, 0.000130345, 0, 0, 4.71268e-06, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//0, 0, 0.333378, 0.723157, 1.19322, 1.49033, 1.58834, 1.44156, 1.2383, 0.980278, 0.764237, 0.616463, 0.502961, 0.415539, 0.340722, 0.312991, 0.247561, 0.235585, 0.22141, 0.235256, 0.247388, 0.283565, 0.460907, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // OLD WEIGHTS
+//0, 0, 0.243413, 0.821845, 1.27575, 1.57447, 1.71148, 1.59537, 1.3914, 1.10501, 0.86792, 0.649448, 0.473748, 0.350538, 0.255107, 0.177246, 0.123198, 0.0876263, 0.0682639, 0.0440952, 0.0290569, 0.0199671, 0.013285, 0.00856315, 0.00384906, 0.00349844, 0.00408291, 0.000806618, 0.000526854, 0.000221726, 0.000382953, 0.000130345, 0, 0, 4.71268e-06, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // 1.08 fb-1 weights
+//0, 0, 0.13548, 0.511688, 0.900224, 1.25728, 1.54119, 1.61381, 1.5756, 1.39678, 1.22197, 1.01679, 0.823759, 0.676297, 0.545672, 0.420042, 0.32326, 0.254419, 0.219188, 0.15649, 0.113917, 0.0864353, 0.0634745, 0.0451429, 0.0223833, 0.0224388, 0.028883, 0.00629418, 0.00453602, 0.00210715, 0.00401945, 0.00151209, 0, 0, 7.42417e-05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // May10_Promptv4_166967 875 pb-1
+0, 0, 0.130953, 0.478315, 0.814199, 1.11549, 1.36463, 1.4534, 1.47222, 1.38149, 1.30462, 1.19369, 1.08147, 1.00757, 0.93383, 0.83356, 0.748923, 0.691019, 0.699203, 0.586132, 0.499935, 0.442856, 0.377828, 0.310338, 0.176515, 0.201486, 0.292975, 0.0715264, 0.0572582, 0.0292919, 0.061007, 0.0248481, 0, 0, 0.00147735, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0// May10_Promptv4_Aug05_Promptv6 2.15 fb-1
 };
 	return weight[nGenVertices];
 }
 double weight_WJetsToLNu(int nGenVertices)
 {
 	double weight[51] = {
-//0, 0, 0.330484, 0.67655, 1.23639, 1.44633, 1.56369, 1.63896, 1.20385, 1.06055, 0.727991, 0.54883, 0.514699, 0.452454, 0.377948, 0.366865, 0.244431, 0.161619, 0.1228, 0.162598, 0, 0.05807, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-0, 0, 0.38522, 0.765474, 1.34675, 1.51834, 1.58669, 1.61271, 1.15202, 0.989275, 0.663074, 0.488727, 0.448501, 0.386062, 0.315953, 0.300622, 0.196432, 0.127445, 0.0950729, 0.123675, 0, 0.0427233, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//0, 0, 0.330484, 0.67655, 1.23639, 1.44633, 1.56369, 1.63896, 1.20385, 1.06055, 0.727991, 0.54883, 0.514699, 0.452454, 0.377948, 0.366865, 0.244431, 0.161619, 0.1228, 0.162598, 0, 0.05807, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // OLD WEIGHTS
+//0, 0, 0.38522, 0.765474, 1.34675, 1.51834, 1.58669, 1.61271, 1.15202, 0.989275, 0.663074, 0.488727, 0.448501, 0.386062, 0.315953, 0.300622, 0.196432, 0.127445, 0.0950729, 0.123675, 0, 0.0427233, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // 1.08 fb-1 weights
+//0, 0, 0.214407, 0.476591, 0.950324, 1.21246, 1.42882, 1.63135, 1.30453, 1.25049, 0.933561, 0.765159, 0.779859, 0.744833, 0.675822, 0.712423, 0.515419, 0.370029, 0.305269, 0.438912, 0, 0.184945, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // May10_Promptv4_166967 875 pb-1
+0, 0, 0.207242, 0.445507, 0.859512, 1.07573, 1.26513, 1.46919, 1.21893, 1.2368, 0.996704, 0.898286, 1.02384, 1.10968, 1.15656, 1.41378, 1.19411, 1.00502, 0.973797, 1.64394, 0, 0.947574, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0// May10_Promptv4_Aug05_Promptv6 2.15 fb-1
 };
   return weight[nGenVertices];
 }
 double  weight_QCDMu(int nGenVertices)
 {
   double weight[51] = {
-//0, 0, 0.344937, 0.735201, 1.12576, 1.38418, 1.61134, 1.46404, 1.24484, 0.943461, 0.786307, 0.635055, 0.536248, 0.4083, 0.377607, 0.251284, 0.299158, 0.313975, 0.429412, 0.189526, 0.162392, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-0, 0, 0.402067, 0.831834, 1.22624, 1.4531, 1.63504, 1.44059, 1.19124, 0.880055, 0.71619, 0.565509, 0.467278, 0.348386, 0.315668, 0.205911, 0.240412, 0.247585, 0.332455, 0.144157, 0.121435, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+//0, 0, 0.344937, 0.735201, 1.12576, 1.38418, 1.61134, 1.46404, 1.24484, 0.943461, 0.786307, 0.635055, 0.536248, 0.4083, 0.377607, 0.251284, 0.299158, 0.313975, 0.429412, 0.189526, 0.162392, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // OLD WEIGHTS
+//0, 0, 0.402067, 0.831834, 1.22624, 1.4531, 1.63504, 1.44059, 1.19124, 0.880055, 0.71619, 0.565509, 0.467278, 0.348386, 0.315668, 0.205911, 0.240412, 0.247585, 0.332455, 0.144157, 0.121435, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // 1.08 fb-1 weights
+//0, 0, 0.223783, 0.517908, 0.865289, 1.16036, 1.47235, 1.45725, 1.34894, 1.11243, 1.00834, 0.88537, 0.812509, 0.672146, 0.675212, 0.487973, 0.630818, 0.718851, 1.06748, 0.511602, 0.476084, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // May10_Promptv4_166967 875 pb-1
+0, 0, 0.216306, 0.484129, 0.782602, 1.0295, 1.30368, 1.31239, 1.26043, 1.10026, 1.07655, 1.03941, 1.0667, 1.00138, 1.15552, 0.968367, 1.46147, 1.95245, 3.40521, 1.9162, 2.08934, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // May10_Promptv4_Aug05_Promptv6 2.15 fb-1
 };
   return weight[nGenVertices];
 }
@@ -137,13 +179,30 @@ void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* part
   return;
 }
 
-double photonIsInCrack(double sc_abs_eta)
+int photonIsInCrack(double sc_abs_eta, double sc_abs_phi)
 {
-	return (sc_abs_eta < 0.018 ||
+	double phiCrackSize = (double)(21.5) / (double) (1290.0);
+	double phiCrackPosition = (double)(TMath::Pi()) / (double)(9.0);
+	double phiOffset = -(double)(10.0 * TMath::Pi()) / (double)(180.0);
+	bool isInEtaCrack = (sc_abs_eta < 0.018 ||
 		(sc_abs_eta >0.423 && sc_abs_eta <0.461) ||
 		(sc_abs_eta >0.770 && sc_abs_eta <0.806) ||
 		(sc_abs_eta >1.127 && sc_abs_eta <1.163) ||
 		(sc_abs_eta >1.460 && sc_abs_eta <1.558));
+	bool isInPhiCrack = (	(sc_abs_phi + phiOffset) < phiCrackSize ||
+		( (1.0*phiCrackPosition - phiCrackSize) < (sc_abs_phi + phiOffset) && (sc_abs_phi + phiOffset) < (1.0*phiCrackPosition + phiCrackSize) ) ||
+		( (2.0*phiCrackPosition - phiCrackSize) < (sc_abs_phi + phiOffset) && (sc_abs_phi + phiOffset) < (2.0*phiCrackPosition + phiCrackSize) ) ||
+		( (3.0*phiCrackPosition - phiCrackSize) < (sc_abs_phi + phiOffset) && (sc_abs_phi + phiOffset) < (3.0*phiCrackPosition + phiCrackSize) ) ||
+		( (4.0*phiCrackPosition - phiCrackSize) < (sc_abs_phi + phiOffset) && (sc_abs_phi + phiOffset) < (4.0*phiCrackPosition + phiCrackSize) ) ||
+		( (5.0*phiCrackPosition - phiCrackSize) < (sc_abs_phi + phiOffset) && (sc_abs_phi + phiOffset) < (5.0*phiCrackPosition + phiCrackSize) ) ||
+		( (6.0*phiCrackPosition - phiCrackSize) < (sc_abs_phi + phiOffset) && (sc_abs_phi + phiOffset) < (6.0*phiCrackPosition + phiCrackSize) ) ||
+		( (7.0*phiCrackPosition - phiCrackSize) < (sc_abs_phi + phiOffset) && (sc_abs_phi + phiOffset) < (7.0*phiCrackPosition + phiCrackSize) ) ||
+		( (8.0*phiCrackPosition - phiCrackSize) < (sc_abs_phi + phiOffset) && (sc_abs_phi + phiOffset) < (8.0*phiCrackPosition + phiCrackSize) ) ||
+		( (9.0*phiCrackPosition - phiCrackSize) < (sc_abs_phi + phiOffset) ) );
+//	isInPhiCrack = false;
+	if (isInEtaCrack) return 1;
+	if (isInPhiCrack) return 2;
+	return 0;
 }
 
 double fEta(vector<double> param, double eta) 
@@ -448,10 +507,11 @@ double EtEtaCor(vector<double> param, double et, double eta, bool isEB)
 
 double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 {
-	int verbositybis = 0;
-	if( photonIsInCrack(    fabs(myphoton->superCluster()->Eta())   ) )
+	int verbositybis = 1;
+	int photonIsInCrack_ = photonIsInCrack(    fabs(myphoton->superCluster()->Eta()), fabs(myphoton->superCluster()->Phi())   );
+	if( photonIsInCrack_ > 0 )
 	{
-		if( verbositybis > 0) cout << "Photon is in crack" << endl;
+		if( verbositybis > 0) cout << "Photon is in crack : " << ((photonIsInCrack_ == 1) ? "Eta" : "Phi") << endl;
 		return 1.0;
 	}
 	vector<double> param_Ceta;
@@ -485,24 +545,24 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 //	cout << "myphoton->Energy()= " << myphoton->Energy() << endl;
 	if( (myphoton->isEBPho()) && (myphoton->r9()<0.94) )
 	{
-		if( verbositybis > 0) cout << "f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()= " << f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy() << endl;
+		if( verbositybis > 1) cout << "f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()= " << f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy() << endl;
 		return (double)(f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()) / (double)(myphoton->Energy());
 	}
 	if( (myphoton->isEBPho()) && (myphoton->r9()>0.94) )
 	{
-		if( verbositybis > 0) cout << "f_eta * myphoton->e5x5()= " << f_eta * myphoton->e5x5() << endl;
+		if( verbositybis > 1) cout << "f_eta * myphoton->e5x5()= " << f_eta * myphoton->e5x5() << endl;
 		return (double)(f_eta * myphoton->e5x5()) / (double)(myphoton->Energy());
 	}
 	if( (myphoton->isEEPho()) && (myphoton->r9()<0.95) )
 	{
 //		cout << "f_et_eta * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
 //		return (double)(f_et_eta * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())) / (double)(myphoton->Energy());
-		if( verbositybis > 0) cout << "f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
+		if( verbositybis > 1) cout << "f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
 		return (double)(f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())) / (double)(myphoton->Energy());
 	}
 	if( (myphoton->isEEPho()) && (myphoton->r9()>0.95) )
 	{
-		if( verbositybis > 0) cout << "(myphoton->e5x5() + myphoton->preshowerEnergy())= " << (myphoton->e5x5() + myphoton->preshowerEnergy()) <<  endl;
+		if( verbositybis > 1) cout << "(myphoton->e5x5() + myphoton->preshowerEnergy())= " << (myphoton->e5x5() + myphoton->preshowerEnergy()) <<  endl;
 		return (double)(myphoton->e5x5() + myphoton->preshowerEnergy()) / (double)(myphoton->Energy());
 	}
 
@@ -558,8 +618,8 @@ double PtMuonsConefunction(TRootMuon *mymuon, TRootPhoton *myphoton, double delt
         double PtMuonsCone = 0;
     
         double dzCut = 0.0;
-        TRootTrack *trackbis = (TRootTrack*)mymuon->innerTrack();
-        dzCut = trackbis->vz() - myphoton->vz();
+        TRootTrack trackbis = (TRootTrack)mymuon->innerTrack();
+        dzCut = trackbis.vz() - myphoton->vz();
         double etLow_ = 0.0;
         double lip_ = 0.2;
         double drb_ = 0.1;
