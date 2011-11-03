@@ -52,51 +52,60 @@ int main(int argc, char *argv[])
 	{
 		cout << "argv[" << iarg << "]= " << argv[iarg] << endl;
 	}
-	
-	if( argc == 1 )
-	{
-		cerr << "arguments should be passed !! sample (outputname) (isZgammaMC) (extra scale) (extra resolution)" << endl;
-		return 1;
-	}
-	// First argument is sample
-	char* sample_char = argv[1];
-//	char* sample_char2 = argv[1];
-
-	// Optional argument : output root file
-	string sample = argv[1];
-	if( argc > 2 )
-	{
-		sample = argv[2];
-	}
+  if( argc == 1 )
+  {
+    cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC)" << endl;
+    return 1;
+  }
 
 
-	// Optional argument : isZgammaMC
-	int isZgammaMC = 0;
-	if( argc > 3 )
-	{
-		std::stringstream ss ( argv[3] );
-		ss >> isZgammaMC;
-	}
+
 	
-	// Optional argument extra scale
-	double EScale = 1.0;
-	if( argc > 4 )
-	{
-		std::stringstream ss ( argv[4] );
-		ss >> EScale;
-	}
-	
-// Optional argument is extra resolution
-	double EResolution = 0.0;
-	// TODO
+ // ******************************************
+  // First argument is sample
+  // ******************************************
+  char* sample_char = argv[1];
+//  char* sample_char2 = argv[1];
+
+  // ******************************************
+  // Optional argument : output root file
+  // ******************************************
+  string sample = argv[1];
+  if( argc > 2 )
+  {
+    sample = argv[2];
+  }
+
+
+  // ******************************************
+  // Optional argument : ijob
+  // ******************************************
+  int ijob = -1;
+  if( argc > 3 )
+  {
+    std::stringstream ss ( argv[3] );
+    ss >> ijob;
+  }
+
+  // ******************************************
+  // Optional argument : isZgammaMC
+  // ******************************************
+  int isZgammaMC = 0;
+  if( argc > 4 )
+  {
+    std::stringstream ss ( argv[4] );
+    ss >> isZgammaMC;
+  }
+
+
 
 	gSystem->Load("libToto.so");
 	bool doHLT										= false;
-	bool doMC										 = (bool)(isZgammaMC >= 1);
+	bool doMC										 = true;
 	bool doJetMC									= false;
 	bool doMETMC									= false;
 	bool doPDFInfo								= false;
-	bool doSignalMuMuGamma				= (bool)(isZgammaMC >= 1);
+	bool doSignalMuMuGamma				= true;
 	bool doSignalTopTop					 = false;
 	bool doPhotonConversionMC		 = false;
 	bool doBeamSpot							 = false;
@@ -118,12 +127,12 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
-	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
+	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
 
 // INSERTFILES
 
-	TFile* OutputRootFile = new TFile(Form("miniTree_pileUp_%s.root", sample.c_str()), "RECREATE");
+	TFile* OutputRootFile = new TFile(Form("miniTree_pileUp_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
 	
 	TBranch* event_br = 0;
 	TRootEvent* event = 0;
@@ -320,10 +329,26 @@ int main(int argc, char *argv[])
 	int TOTALnbMuMuGammaAfterID[8] = {0};
 	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
-	TH1D* pileup = new TH1D("pileup", "pileup", 51, -0.5, 50.5);
+//	TH1D* pileup = new TH1D("pileup", "pileup", 51, -0.5, 50.5);
+	TH1D* pileup = new TH1D("pileup", "pileup", 36, -0.5, 35.5);
+
+
+  int NbEventsPerJob = NbEvents;
+  int NbEventsBegin = 0;
+  int NbEventsEnd = NbEvents;
+  if( ijob != -1 )
+  {
+    NbEventsPerJob = 250000;
+    NbEventsBegin = ijob * NbEventsPerJob;
+    NbEventsEnd = min( (ijob + 1)* NbEventsPerJob - 1 , (int)NbEvents);
+    NbEvents = NbEventsEnd - NbEventsBegin;
+    cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
+  }
+
 
 	// LOOP over events
-	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
+  for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
+//	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 //	for(unsigned int ievt=0; ievt<20000; ievt++)
 	{
 		if(verbosity>4) cout << "analysing event ievt= " << ievt << endl;
@@ -336,11 +361,11 @@ int main(int argc, char *argv[])
 		// ____________________________________________
 		// Event information
 		// ____________________________________________
-		nVertices = vertices->GetEntries();
-		if( (isZgammaMC >= 1) )
-    {
+//		nVertices = vertices->GetEntries();
+//		if( (isZgammaMC >= 1) )
+//    {
 			nVertices = event->nInTimePUVertices();
-    }
+//    }
 		pileup->Fill(nVertices);
 //		miniTree->Fill();
 

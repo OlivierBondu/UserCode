@@ -61,18 +61,8 @@ int main()
 	string selection = "loose";
 	gSystem->Load("libToto.so");
 	gROOT->ProcessLine(".x setTDRStyle.C");
-//	string Data = "miniTree_v2_DATA_2011_ALL.root"; 
-//	string Data = "miniTree_v2_DoubleMu-Run2011A_160404-163369_vALL_v02.root"; 
-//	string Data = "miniTree_v2_DoubleMu-Run2011A_160404-163757_vALL.root";
-	string Data = "/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/Selection/miniTree_v1_Run2011A-ZMu-May10ReReco.root";
-//	string DYToMuMu = "/sps/cms/obondu/CMSSW_4_1_2/src/Zmumugamma/Selection/miniTree_v4_DoubleMu-Run2011A_160404-163869_vALL.root";
-	string OLD_Data = "miniTree_v4_DoubleMu-Run2011A_160404-163869_vALL.root";
-//	string OLD_DYToMuMu = "../Selection/miniTree_DYToMuMu_v3.root";
-//	string OLD_DYToMuMu = "miniTree_v3_DYToMuMu_ALL.root";
-//	string OLD_Data = "miniTree_v3_Run2010_ALL.root";
-//	string OLD_Data = "miniTree_test.root";
-//	string WJetsToLNu = "miniTree_v3_WJets.root";
-//	string QCDMu = "miniTree_v3_QCD.root"; 
+	string Data = "miniTree_v01_Run2011A_03Oct+05Aug+05Jul.root"; 
+	string OLD_Data = "miniTree_v01_Run2011B-ZMu-PromptSkim-v1.root";
 
 	TFile *Data_File = new TFile(Data.c_str());
 	TTree* Data_miniTree = (TTree*) Data_File->Get("miniTree");

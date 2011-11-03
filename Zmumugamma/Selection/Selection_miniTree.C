@@ -132,14 +132,19 @@ int main(int argc, char *argv[])
 	
 	if( argc == 1 )
 	{
-		cerr << "arguments should be passed !! sample (outputname) (isZgammaMC) (extra scale) (extra resolution)" << endl;
+		cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC) (low m_mumu cut) (high m_mumu cut) (extra scale) (extra resolution)" << endl;
 		return 1;
 	}
+
+	// ******************************************
 	// First argument is sample
+	// ******************************************
 	char* sample_char = argv[1];
 //	char* sample_char2 = argv[1];
 
+	// ******************************************
 	// Optional argument : output root file
+	// ******************************************
 	string sample = argv[1];
 	if( argc > 2 )
 	{
@@ -147,37 +152,73 @@ int main(int argc, char *argv[])
 	}
 
 
-	// Optional argument : isZgammaMC
-	int isZgammaMC = 0;
+	// ******************************************
+	// Optional argument : ijob
+	// ******************************************
+	int ijob = -1;
 	if( argc > 3 )
 	{
 		std::stringstream ss ( argv[3] );
+		ss >> ijob;
+	}
+
+	// ******************************************
+	// Optional argument : isZgammaMC
+	// ******************************************
+	int isZgammaMC = 0;
+	if( argc > 4 )
+	{
+		std::stringstream ss ( argv[4] );
 		ss >> isZgammaMC;
 	}
+
+	// ******************************************
+	// Optional argument : low_m_mumu
+	// ******************************************
+	double low_m_mumu = 40.0;
+	if( argc > 5 )
+	{
+		std::stringstream ss ( argv[5] );
+		ss >> low_m_mumu;
+	}
+
+	// ******************************************
+	// Optional argument : high_m_mumu
+	// ******************************************
+	double high_m_mumu = 80.0;
+	if( argc > 6 )
+	{
+		std::stringstream ss ( argv[6] );
+		ss >> high_m_mumu;
+	}
 	
+	// ******************************************
 	// Optional argument extra scale
+	// ******************************************
 	double EScale = 1.0;
 	string correction = "";
 	bool isManualCorrectionsApplied = false;
-	if( argc > 4 )
+	if( argc > 7 )
 	{
-		correction = argv[4];
+		correction = argv[7];
 		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") )
 		{
 			cout << correction << " correction set will be applied upstream" << endl;
 			isManualCorrectionsApplied = true;
 		} else {
-			std::stringstream ss ( argv[4] );
+			std::stringstream ss ( argv[7] );
 			ss >> EScale;
 		}
 	}
 	double EScale_inj = EScale;
 	
-// Optional argument is extra resolution
+	// ******************************************
+	// Optional argument is extra resolution
+	// ******************************************
 	double EResolution = 0.0;
-	if( argc > 5 )
+	if( argc > 8 )
 	{
-		std::stringstream ss ( argv[5] );
+		std::stringstream ss ( argv[8] );
 		ss >> EResolution;
 	}
 	EResolution = (double)EResolution / (double)100.0;
@@ -203,7 +244,7 @@ int main(int argc, char *argv[])
 	bool doPDFInfo								= false;
 	bool doSignalMuMuGamma				= (bool)(isZgammaMC >= 1);
 	bool doSignalTopTop					 = false;
-	bool doPhotonConversionMC		 = true;
+	bool doPhotonConversionMC		 = false;
 	bool doBeamSpot							 = false;
 	bool doPrimaryVertex					= true;
 	bool doZeePrimaryVertex			 = false;
@@ -225,16 +266,58 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/SkimmedSamples/%s/%s*root", sample_char, sample_char));
-	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/SkimmedSamples/%s/%s*root", sample_char, sample_char));
+//	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
+//	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
 //		inputEventTree->Add("miniTree_TEST.root");
 //		inputRunTree->Add("miniTree_TEST.root");
 //	inputEventTree->Add(inputfile);
 //	inputRunTree->Add(inputfile);
+//	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part*.root");
+//	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part*.root");
+
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part0.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part0.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part1.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part1.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part10.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part10.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part11.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part11.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part12.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part12.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part13.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part13.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part14.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part14.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part15.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part15.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part16.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part16.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part17.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part17.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part18.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part18.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part2.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part2.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part3.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part3.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part4.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part4.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part5.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part5.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part6.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part6.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part7.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part7.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part8.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part8.root");
+	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part9.root");
+	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part9.root");
+
 
 // INSERTFILES
 
-	TFile* OutputRootFile = new TFile(Form("miniTree_%s.root", sample.c_str()), "RECREATE");
+	TFile* OutputRootFile = new TFile(Form("miniTree_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
 	
 	TBranch* event_br = 0;
 	TRootEvent* event = 0;
@@ -947,8 +1030,8 @@ int main(int argc, char *argv[])
 
 	
 	// SETUP PARAMETERS	
-//	unsigned int NbEvents = (int)inputEventTree->GetEntries();
-	unsigned int NbEvents = 40000;
+	unsigned int NbEvents = (int)inputEventTree->GetEntries();
+//	unsigned int NbEvents = 40000;
 //	bool powheg = false;
 	bool powheg = true;
 	bool signal = false;
@@ -1006,7 +1089,8 @@ int main(int argc, char *argv[])
 //	double integratedLuminosity = 872.995;
 //	double integratedLuminosity = 2.148*1000.0;
 //	double integratedLuminosity = 1.131*1000.0 + 370.915 + 636.440;
-	double integratedLuminosity = 2.138 * 1000.0;
+//	double integratedLuminosity = 2.138 * 1000.0;
+	double integratedLuminosity = 4009.87400;
 //  double XSectionDYToMuMu = 1300.0 * 1.2416;
   double XSectionDYToMuMu = 1626.0;
 //  double XSectionTTJets = 94.0;
@@ -1034,15 +1118,28 @@ int main(int argc, char *argv[])
 	int TOTALnbMuMuGammaAfterID[8] = {0};
 	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
+	int NbEventsPerJob = NbEvents;
+	int NbEventsBegin = 0;
+  int NbEventsEnd = NbEvents;
+	if( ijob != -1 )
+	{
+		NbEventsPerJob = 250000;
+		NbEventsBegin = ijob * NbEventsPerJob;
+		NbEventsEnd = min( (ijob + 1)* NbEventsPerJob - 1 , (int)NbEvents);
+	  NbEvents = NbEventsEnd - NbEventsBegin;
+		cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
+	}
+
 	// LOOP over events
-	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
+	for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
+//	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 //	for(unsigned int ievt=0; ievt<100; ievt++)
 	{
 		if(verbosity>4) cout << "analysing event ievt= " << ievt << endl;
 		nBeforeAllCuts++;
 		isBeforeAllCuts = 1;
-		int nprint = (int)((double)NbEvents/(double)100.0);
-		if( (NbEvents >= 100) && (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEvents*100)<<" \% )"<<endl; }
+		int nprint = (int)((double)NbEventsPerJob/(double)100.0);
+		if( (NbEvents >= 100) && (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEventsPerJob*100)<<" \% )"<<endl; }
 
 		iEvent = ievt;
 		inputEventTree->GetEvent(ievt);
@@ -1077,23 +1174,22 @@ int main(int argc, char *argv[])
 
 		string sample(sample_char);
 
-//		if( sample == "DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3" ){
-		if( (sample == "DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2") || (sample == "DYToMuMu") || (sample == "FSR_DYToMuMu") || (sample == "nonFSR_DYToMuMu") ){
+		if( sample.find("DYToMuMu") != string::npos )
+		{
 			weight_Xsection = (double)(  (double)((double)(XSectionDYToMuMu) / (double)(InitialNumberDYToMuMu)) * (double)integratedLuminosity);
 			weight_pileUp = weight_DYToMuMu(nGenVertices+1);
 		}
-		if( sample == "QCD_Pt-20_MuEnrichedPt-10_TuneZ2_7TeV-pythia6" )
+		if( sample.find("QCD") != string::npos )
 		{
 			weight_Xsection = (double)(  (double)((double)(XSectionQCDMu) / (double)(InitialNumberQCDMu)) * (double)integratedLuminosity);
 			weight_pileUp = weight_QCDMu(nGenVertices+1);
 		}
-//		if( sample == "TT_TuneZ2_7TeV-pythia6-tauola" )
-		if( sample == "TTJets_TuneZ2_7TeV-madgraph-tauola_v2" )
+		if( sample.find("TTJets") != string::npos )
 		{
 			weight_Xsection = (double)(  (double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity);
 			weight_pileUp = weight_TTJets(nGenVertices+1);
 		}
-		if( sample == "WToMuNu_TuneZ2_7TeV-pythia6" )
+		if( sample.find("WToMuNu") != string::npos )
 		{
 			weight_Xsection = (double)(  (double)((double)(XSectionWJetsToLNu) / (double)(InitialNumberWJetsToLNu)) * (double)integratedLuminosity);
 			weight_pileUp = weight_WJetsToLNu(nGenVertices+1);
@@ -1598,7 +1694,7 @@ int main(int argc, char *argv[])
 			TRootMuon *Muon2 = (TRootMuon*) muons->At(IDofMuons[1][i_dimuons].second);
 			TLorentzVector mumu;
 			mumu = (*Muon1) + (*Muon2);
-			if( (40.0 < mumu.M()) && (mumu.M() < 80.0) )
+			if( (low_m_mumu < mumu.M()) && (mumu.M() < high_m_mumu) )
 			{
 				numberOfDimuons[2] += 1;
 				IDofMuons[2][i_dimuons] = make_pair(IDofMuons[1][i_dimuons].first, IDofMuons[1][i_dimuons].second);
@@ -1807,7 +1903,8 @@ int main(int argc, char *argv[])
 			if( close_isoR03_hadEt >= 1.0)
 			{
 				if(verbosity>3) cerr << "candidate thrown because close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			} else {
@@ -1854,7 +1951,8 @@ int main(int argc, char *argv[])
 			if( far_isoR03_emEt >= 1.0) 
 			{
 				if(verbosity>4) cerr << "candidate thrown because far_isoR03_emEt= " << far_isoR03_emEt << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1894,7 +1992,8 @@ int main(int argc, char *argv[])
 			double min_DeltaR = min(deltaRphomu1, deltaRphomu2);
 			if( min_DeltaR >= 0.8 )
 			{
-				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1934,7 +2033,8 @@ int main(int argc, char *argv[])
 			double far_muonPt = (deltaRphomu1 > deltaRphomu2) ? mymuon1->Pt() : mymuon2->Pt();
 			if( far_muonPt <= 30.0 )
 			{
-				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -1977,7 +2077,8 @@ int main(int argc, char *argv[])
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			if( (mumugamma.M() < 30.0) || (180.0 < mumugamma.M())  )
 			{
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -2031,7 +2132,8 @@ int main(int argc, char *argv[])
 			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())  )
 			{
 //				cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
@@ -2089,7 +2191,8 @@ int main(int argc, char *argv[])
 			{
 //				cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				miniTree->Fill();
 				continue;
@@ -2125,7 +2228,8 @@ int main(int argc, char *argv[])
 	      myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
 	      mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
 	      mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
-	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 	    }
 			continue;
@@ -2139,7 +2243,8 @@ int main(int argc, char *argv[])
 		myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
     mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
     mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
-    FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//    FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+    FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 		isSelected = 1;
 		nSelected++;
 		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;
@@ -2168,25 +2273,25 @@ int main(int argc, char *argv[])
 		nAfterCut10++;
 	} // fin boucle sur evts LOOP
 
-		cout << "Nb_events_outside_powheg_cuts= " << Nb_events_outside_powheg_cuts << endl << endl;
+	 	cout << "Nb_events_outside_powheg_cuts= " << Nb_events_outside_powheg_cuts << endl << endl;
 		for(int i = 0; i < 12 ; i++)
 		{
-			cout << "TOTALnbMuonsAfterID["<<i<<"]= " << TOTALnbMuonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuonID["<<i<<"]= " << TOTALnbEventsAfterMuonID[i] << endl;
+			cout << "TOTALnbMuonsAfterID["<<i<<"]=\t" << TOTALnbMuonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuonID["<<i<<"]=\t" << TOTALnbEventsAfterMuonID[i] << endl;
 		}
 		cout << endl;
 		for(int i = 0; i < 3 ; i++)
 		{
-			cout << "TOTALnbDimuonsAfterID["<<i<<"]= " << TOTALnbDimuonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterDimuonID["<<i<<"]= " << TOTALnbEventsAfterDimuonID[i] << endl;
+			cout << "TOTALnbDimuonsAfterID["<<i<<"]=\t" << TOTALnbDimuonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterDimuonID["<<i<<"]=\t" << TOTALnbEventsAfterDimuonID[i] << endl;
 		}
 		cout << endl;
 		for(int i = 0; i < 6 ; i++)
     {
-      cout << "TOTALnbPhotonsAfterID["<<i<<"]= " << TOTALnbPhotonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterPhotonID["<<i<<"]= " << TOTALnbEventsAfterPhotonID[i] << endl;
+      cout << "TOTALnbPhotonsAfterID["<<i<<"]=\t" << TOTALnbPhotonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterPhotonID["<<i<<"]=\t" << TOTALnbEventsAfterPhotonID[i] << endl;
 		}
 		cout << endl;
 		for(int i = 0; i < 8 ; i++)
 		{
-			cout << "TOTALnbMuMuGammaAfterID["<<i<<"]= " << TOTALnbMuMuGammaAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuMuGammaID["<<i<<"]= " << TOTALnbEventsAfterMuMuGammaID[i] << endl;
+			cout << "TOTALnbMuMuGammaAfterID["<<i<<"]=\t" << TOTALnbMuMuGammaAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuMuGammaID["<<i<<"]=\t" << TOTALnbEventsAfterMuMuGammaID[i] << endl;
 			if(i == 6) cout << endl;
 		}
 

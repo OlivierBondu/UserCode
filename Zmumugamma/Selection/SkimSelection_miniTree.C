@@ -31,12 +31,15 @@ int main(int argc, char *argv[])
 
 	// Optional argument : isZgammaMC
 	int isZgammaMC = 0;
+	int n;
 	if( argc > 3 )
 	{
 		std::stringstream ss ( argv[3] );
-		ss >> isZgammaMC;
+//		ss >> isZgammaMC;
+		ss >> n;
 	}
 
+//	int n = 18;
 //	TProof * p = TProof::Open("ccaplmaster.in2p3.fr");
 	gSystem->Load("libToto.so");
 	bool doHLT										= false;
@@ -68,15 +71,17 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
-	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_3_patch2/src/Zmumugamma/RecoSamples/%s/%s*root", sample_char, sample_char));
+	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
 //		inputRunTree->Add("DYToMuMu_*root");
 //		inputRunTree->Add("DYToMuMu_*root");
 //	inputEventTree->Add(inputfile);
 //	inputRunTree->Add(inputfile);
 
 
-	TFile* OutputRootFile = new TFile(Form("../SkimmedSamples/%s/%s.root", sample.c_str(), sample.c_str()), "RECREATE");
+//	TFile* OutputRootFile = new TFile(Form("../SkimmedSamples/%s/%s_part%i.root", sample.c_str(), sample.c_str(), n), "RECREATE");
+//	TFile* OutputRootFile = new TFile(Form("%s.root", sample.c_str()), "RECREATE");
+	TFile* OutputRootFile = new TFile(Form("%s_part%i.root", sample.c_str(), n), "RECREATE");
 	TTree *outputEventTree = inputEventTree->CloneTree(0);	
 	TTree *outputRunTree = inputRunTree->CloneTree(0);	
 	
@@ -332,14 +337,31 @@ int main(int argc, char *argv[])
 	int TOTALnbMuMuGammaAfterID[8] = {0};
 	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
+
+
+
+
+
+
+
+
+
+
+
+	int NbEventsPerJob = 500000;
+	int NbEventsBegin = n * NbEventsPerJob;
+	int NbEventsEnd = min( (n + 1)* NbEventsPerJob - 1 , (int)NbEvents);
+	NbEvents = NbEventsEnd - NbEventsBegin;
 	// LOOP over events
-	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
+	cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
+	for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
+//	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 //	for(unsigned int ievt=0; ievt<100; ievt++)
 	{
 		if(verbosity>4) cout << "analysing event ievt= " << ievt << endl;
 		nBeforeAllCuts++;
-		int nprint = (int)((double)NbEvents/(double)100.0);
-		if( (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEvents*100)<<" \% )"<<endl; }
+		int nprint = (int)((double)NbEventsPerJob/(double)100.0);
+		if( (ievt % nprint)==0 ){ cout<< ievt <<" events done over "<<NbEvents<<" ( "<<ceil((double)ievt/(double)NbEventsPerJob*100)<<" \% )"<<endl; }
 
 		Int_t iEvent = ievt;
 		inputEventTree->GetEvent(ievt);
@@ -728,7 +750,8 @@ int main(int argc, char *argv[])
 			TRootMuon *Muon2 = (TRootMuon*) muons->At(IDofMuons[1][i_dimuons].second);
 			TLorentzVector mumu;
 			mumu = (*Muon1) + (*Muon2);
-			if( (40.0 < mumu.M()) && (mumu.M() < 80.0) )
+//			if( (40.0 < mumu.M()) && (mumu.M() < 80.0) )
+			if( (30.0 < mumu.M()) && (mumu.M() < 90.0) )
 			{
 				numberOfDimuons[2] += 1;
 				IDofMuons[2][i_dimuons] = make_pair(IDofMuons[1][i_dimuons].first, IDofMuons[1][i_dimuons].second);
