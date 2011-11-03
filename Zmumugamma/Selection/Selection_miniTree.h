@@ -21,41 +21,6 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
-//	#include "CMSSW_RELEASE_BASE/src/FWCore/FWLite/interface/AutoLibraryLoader.h"
-//	#include "FWCore/FWLite/interface/AutoLibraryLoader.h"
-/*
-	#include "DataFormats/FWLite/interface/Handle.h"
-#include "DataFormats/FWLite/interface/Event.h"
-#include "DataFormats/Math/interface/LorentzVector.h"
-#include "TFile.h"
-#include "TH1.h"
-#include "TCanvas.h"
-#include "TLegend.h"
-#include "TStyle.h"
-#include "TROOT.h"
-#include "TTree.h"
-#include "TBenchmark.h"
-#include "Math/GenVector/LorentzVector.h"
-*/
-//	#include "Geometry/CaloGeometry/interface/CaloCellGeometry.h"
-//	#include "Geometry/CaloGeometry/interface/TruncatedPyramid.h"
-/*
-	#include "RecoEcal/EgammaCoreTools/plugins/EcalClusterCrackCorrection.h"
-#include "DataFormats/EgammaReco/interface/BasicClusterFwd.h"
-#include "DataFormats/EgammaReco/interface/BasicCluster.h"
-#include "RecoEcal/EgammaCoreTools/interface/PositionCalc.h"
-#include "DataFormats/EcalDetId/interface/EBDetId.h"
-#include "Geometry/CaloTopology/interface/CaloSubdetectorTopology.h"
-#include "Geometry/CaloGeometry/interface/CaloSubdetectorGeometry.h"
-#include "Geometry/CaloGeometry/interface/CaloGeometry.h"
-#include "Geometry/CaloGeometry/interface/CaloCellGeometry.h"
-#include "Geometry/Records/interface/IdealGeometryRecord.h"
-#include "Geometry/Records/interface/CaloGeometryRecord.h"
-#include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
-	#include "Geometry/CaloGeometry/interface/TruncatedPyramid.h"
-*/
-//#pragma optimize 0
-
 #include "interface/TRootBardak.h"
 #include "interface/TRootBeamSpot.h"
 #include "interface/TRootCluster.h"
@@ -85,11 +50,13 @@ using namespace std;
 
 double weight_DYToMuMu(int nGenVertices)
 {
-	double weight[51] = {
+	double weight[36] = {
 //0, 0.192859, 0.37571, 0.98006, 1.47381, 2.13772, 1.97435, 1.75482, 1.61272, 1.30487, 0.858989, 0.593953, 0.406, 0.271559, 0.200834, 0.123192, 0.101752, 0.0724765, 0.0505275, 0.0609286, 0.0265446, 0.0178984, 0.0603881, 0, 0.00990419, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // OLD WEIGHTS
 //0, 0.115446, 0.515513, 1.02729, 1.65565, 2.07852, 2.20219, 2.04419, 1.71476, 1.31424, 0.953279, 0.653809, 0.435285, 0.280843, 0.174236, 0.107087, 0.0646172, 0.0383951, 0.0221918, 0.0132036, 0.00758329, 0.00439256, 0.00246895, 0.00144276, 0.000825138, 0.000477362, 0.000267711, 0.000149803, 9.07888e-05, 4.86278e-05, 2.65074e-05, 1.6692e-05, 9.69296e-06, 6.1014e-06, 3.17422e-06, 1.73845e-06, 1.01719e-06, 4.02585e-07, 3.57171e-07, 2.42991e-07, 4.82115e-08, 8.47143e-08, 2.44069e-08, 3.45819e-09, 1.92746e-09, 5.2817e-10, 0, 0, 0, 0, 0 // 1.08 fb-1 weights
 //0, 0.0915201, 0.286926, 0.639599, 1.16829, 1.65978, 1.98307, 2.06783, 1.94177, 1.66125, 1.34215, 1.02361, 0.756878, 0.541833, 0.37269, 0.253777, 0.169549, 0.111478, 0.0712554, 0.0468585, 0.0297301, 0.0190149, 0.0117964, 0.00760589, 0.0047984, 0.00306177, 0.00189382, 0.00116894, 0.000781657, 0.000462128, 0.00027822, 0.000193639, 0.00012439, 8.67046e-05, 5.00054e-05, 3.03964e-05, 1.9764e-05, 8.70322e-06, 8.60144e-06, 6.52623e-06, 1.44569e-06, 2.83908e-06, 9.15026e-07, 1.45156e-07, 9.06489e-08, 2.78505e-08, 0, 0, 0, 0, 0 // May10_Promptv4_166967 875 pb-1
-0, 0.0697492, 0.277338, 0.597883, 1.05665, 1.4726, 1.75588, 1.86228, 1.81436, 1.64308, 1.43293, 1.20171, 0.993666, 0.80724, 0.637799, 0.503612, 0.392809, 0.302783, 0.227302, 0.175508, 0.130473, 0.097424, 0.0702176, 0.0522872, 0.0378402, 0.0274927, 0.0192099, 0.0132837, 0.00986686, 0.00642414, 0.00422281, 0.00318206, 0.0021952, 0.00163065, 0.000995066, 0.00063582, 0.000432042, 0.000197814, 0.000202393, 0.000158411, 3.6097e-05, 7.27648e-05, 2.4037e-05, 3.90475e-06, 2.49611e-06, 7.85061e-07, 0, 0, 0, 0, 0// May10_Promptv4_Aug05_Promptv6 2.15 fb-1
+//0, 0.0697492, 0.277338, 0.597883, 1.05665, 1.4726, 1.75588, 1.86228, 1.81436, 1.64308, 1.43293, 1.20171, 0.993666, 0.80724, 0.637799, 0.503612, 0.392809, 0.302783, 0.227302, 0.175508, 0.130473, 0.097424, 0.0702176, 0.0522872, 0.0378402, 0.0274927, 0.0192099, 0.0132837, 0.00986686, 0.00642414, 0.00422281, 0.00318206, 0.0021952, 0.00163065, 0.000995066, 0.00063582, 0.000432042, 0.000197814, 0.000202393, 0.000158411, 3.6097e-05, 7.27648e-05, 2.4037e-05, 3.90475e-06, 2.49611e-06, 7.85061e-07, 0, 0, 0, 0, 0// May10_Promptv4_Aug05_Promptv6 2.15 fb-1
+0, 0, 0.00419895, 0.0501903, 0.324344, 1.41023, 2.43948, 2.504, 2.10814, 1.75313, 1.61091, 1.40119, 1.25931, 1.14953, 0.970073, 0.672993, 0.356685, 0.14207, 0.0472661, 0.014344, 0.00481347, 0.001252, 8.89355e-05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0// Nov03 2011 ; PU_S6
+
 };
 	return weight[nGenVertices];
 }
@@ -781,7 +748,8 @@ int main(int argc, char *argv[]);
 
 
 
-int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TClonesArray* mcPhotons, TMVA::Reader* reader){
+//int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TClonesArray* mcPhotons, TMVA::Reader* reader){
+int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
 
       // Fill photon stuff
       Photon_Eta = myphoton->Eta();
@@ -809,11 +777,12 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
       Photon_convVertexY = myphoton->convVertex().y();
       Photon_convVertexZ = myphoton->convVertex().z();
 
+/*
       if (doPhotonConversionMC)
       {
-		findConversionMCtruth(myphoton, mcPhotons, Photon_MCisConverted, Photon_MCconvEoverP, Photon_MCconvMass, Photon_MCconvCotanTheta, Photon_MCconvVertexX, Photon_MCconvVertexY, Photon_MCconvVertexZ);
+				findConversionMCtruth(myphoton, mcPhotons, Photon_MCisConverted, Photon_MCconvEoverP, Photon_MCconvMass, Photon_MCconvCotanTheta, Photon_MCconvVertexX, Photon_MCconvVertexY, Photon_MCconvVertexZ);
       }
-
+*/
 
 
  
