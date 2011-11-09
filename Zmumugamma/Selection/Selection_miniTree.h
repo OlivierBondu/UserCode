@@ -48,25 +48,29 @@
 using namespace std;
 
 
-double weight_DYToMuMu(int nGenVertices)
+double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 {
-	double weight[36] = {
-//0, 0.192859, 0.37571, 0.98006, 1.47381, 2.13772, 1.97435, 1.75482, 1.61272, 1.30487, 0.858989, 0.593953, 0.406, 0.271559, 0.200834, 0.123192, 0.101752, 0.0724765, 0.0505275, 0.0609286, 0.0265446, 0.0178984, 0.0603881, 0, 0.00990419, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // OLD WEIGHTS
-//0, 0.115446, 0.515513, 1.02729, 1.65565, 2.07852, 2.20219, 2.04419, 1.71476, 1.31424, 0.953279, 0.653809, 0.435285, 0.280843, 0.174236, 0.107087, 0.0646172, 0.0383951, 0.0221918, 0.0132036, 0.00758329, 0.00439256, 0.00246895, 0.00144276, 0.000825138, 0.000477362, 0.000267711, 0.000149803, 9.07888e-05, 4.86278e-05, 2.65074e-05, 1.6692e-05, 9.69296e-06, 6.1014e-06, 3.17422e-06, 1.73845e-06, 1.01719e-06, 4.02585e-07, 3.57171e-07, 2.42991e-07, 4.82115e-08, 8.47143e-08, 2.44069e-08, 3.45819e-09, 1.92746e-09, 5.2817e-10, 0, 0, 0, 0, 0 // 1.08 fb-1 weights
-//0, 0.0915201, 0.286926, 0.639599, 1.16829, 1.65978, 1.98307, 2.06783, 1.94177, 1.66125, 1.34215, 1.02361, 0.756878, 0.541833, 0.37269, 0.253777, 0.169549, 0.111478, 0.0712554, 0.0468585, 0.0297301, 0.0190149, 0.0117964, 0.00760589, 0.0047984, 0.00306177, 0.00189382, 0.00116894, 0.000781657, 0.000462128, 0.00027822, 0.000193639, 0.00012439, 8.67046e-05, 5.00054e-05, 3.03964e-05, 1.9764e-05, 8.70322e-06, 8.60144e-06, 6.52623e-06, 1.44569e-06, 2.83908e-06, 9.15026e-07, 1.45156e-07, 9.06489e-08, 2.78505e-08, 0, 0, 0, 0, 0 // May10_Promptv4_166967 875 pb-1
-//0, 0.0697492, 0.277338, 0.597883, 1.05665, 1.4726, 1.75588, 1.86228, 1.81436, 1.64308, 1.43293, 1.20171, 0.993666, 0.80724, 0.637799, 0.503612, 0.392809, 0.302783, 0.227302, 0.175508, 0.130473, 0.097424, 0.0702176, 0.0522872, 0.0378402, 0.0274927, 0.0192099, 0.0132837, 0.00986686, 0.00642414, 0.00422281, 0.00318206, 0.0021952, 0.00163065, 0.000995066, 0.00063582, 0.000432042, 0.000197814, 0.000202393, 0.000158411, 3.6097e-05, 7.27648e-05, 2.4037e-05, 3.90475e-06, 2.49611e-06, 7.85061e-07, 0, 0, 0, 0, 0// May10_Promptv4_Aug05_Promptv6 2.15 fb-1
-0, 0, 0.00419895, 0.0501903, 0.324344, 1.41023, 2.43948, 2.504, 2.10814, 1.75313, 1.61091, 1.40119, 1.25931, 1.14953, 0.970073, 0.672993, 0.356685, 0.14207, 0.0472661, 0.014344, 0.00481347, 0.001252, 8.89355e-05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0// Nov03 2011 ; PU_S6
-//0, 0, 0.00126977, 0.0230463, 0.203327, 1.07616, 2.08245, 2.28388, 1.99976, 1.68898, 1.58258, 1.41129, 1.32724, 1.30215, 1.19746, 0.942886, 0.575914, 0.271399, 0.107312, 0.0405825, 0.0169426, 0.00561874, 0.000500778, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0// Nov03 2011 ; PU_S4
-};
+	if( lumi_set == "Nov03" )
+	{
+		if( pu_set == "PU_S6" )
+		{
+			double weight[36] = {0, 0, 0.00419895, 0.0501903, 0.324344, 1.41023, 2.43948, 2.504, 2.10814, 1.75313, 1.61091, 1.40119, 1.25931, 1.14953, 0.970073, 0.672993, 0.356685, 0.14207, 0.0472661, 0.014344, 0.00481347, 0.001252, 8.89355e-05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Nov03 2011 ; PU_S6
+			return weight[nGenVertices];
+		}
+
+		if( pu_set == "PU_S4" )
+		{
+	    double weight[36] = {0, 0, 0.00126977, 0.0230463, 0.203327, 1.07616, 2.08245, 2.28388, 1.99976, 1.68898, 1.58258, 1.41129, 1.32724, 1.30215, 1.19746, 0.942886, 0.575914, 0.271399, 0.107312, 0.0405825, 0.0169426, 0.00561874, 0.000500778, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Nov03 2011 ; PU_S4
+			return weight[nGenVertices];
+		}
+	}
+	double weight[36] = {0.0};
 	return weight[nGenVertices];
 }
 
 double weight_TTJets(int nGenVertices)
 {
 	double weight[51] = {
-//0, 0, 0.333378, 0.723157, 1.19322, 1.49033, 1.58834, 1.44156, 1.2383, 0.980278, 0.764237, 0.616463, 0.502961, 0.415539, 0.340722, 0.312991, 0.247561, 0.235585, 0.22141, 0.235256, 0.247388, 0.283565, 0.460907, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // OLD WEIGHTS
-//0, 0, 0.243413, 0.821845, 1.27575, 1.57447, 1.71148, 1.59537, 1.3914, 1.10501, 0.86792, 0.649448, 0.473748, 0.350538, 0.255107, 0.177246, 0.123198, 0.0876263, 0.0682639, 0.0440952, 0.0290569, 0.0199671, 0.013285, 0.00856315, 0.00384906, 0.00349844, 0.00408291, 0.000806618, 0.000526854, 0.000221726, 0.000382953, 0.000130345, 0, 0, 4.71268e-06, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // 1.08 fb-1 weights
-//0, 0, 0.13548, 0.511688, 0.900224, 1.25728, 1.54119, 1.61381, 1.5756, 1.39678, 1.22197, 1.01679, 0.823759, 0.676297, 0.545672, 0.420042, 0.32326, 0.254419, 0.219188, 0.15649, 0.113917, 0.0864353, 0.0634745, 0.0451429, 0.0223833, 0.0224388, 0.028883, 0.00629418, 0.00453602, 0.00210715, 0.00401945, 0.00151209, 0, 0, 7.42417e-05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // May10_Promptv4_166967 875 pb-1
 0, 0, 0.130953, 0.478315, 0.814199, 1.11549, 1.36463, 1.4534, 1.47222, 1.38149, 1.30462, 1.19369, 1.08147, 1.00757, 0.93383, 0.83356, 0.748923, 0.691019, 0.699203, 0.586132, 0.499935, 0.442856, 0.377828, 0.310338, 0.176515, 0.201486, 0.292975, 0.0715264, 0.0572582, 0.0292919, 0.061007, 0.0248481, 0, 0, 0.00147735, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0// May10_Promptv4_Aug05_Promptv6 2.15 fb-1
 };
 	return weight[nGenVertices];
@@ -74,9 +78,6 @@ double weight_TTJets(int nGenVertices)
 double weight_WJetsToLNu(int nGenVertices)
 {
 	double weight[51] = {
-//0, 0, 0.330484, 0.67655, 1.23639, 1.44633, 1.56369, 1.63896, 1.20385, 1.06055, 0.727991, 0.54883, 0.514699, 0.452454, 0.377948, 0.366865, 0.244431, 0.161619, 0.1228, 0.162598, 0, 0.05807, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // OLD WEIGHTS
-//0, 0, 0.38522, 0.765474, 1.34675, 1.51834, 1.58669, 1.61271, 1.15202, 0.989275, 0.663074, 0.488727, 0.448501, 0.386062, 0.315953, 0.300622, 0.196432, 0.127445, 0.0950729, 0.123675, 0, 0.0427233, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // 1.08 fb-1 weights
-//0, 0, 0.214407, 0.476591, 0.950324, 1.21246, 1.42882, 1.63135, 1.30453, 1.25049, 0.933561, 0.765159, 0.779859, 0.744833, 0.675822, 0.712423, 0.515419, 0.370029, 0.305269, 0.438912, 0, 0.184945, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // May10_Promptv4_166967 875 pb-1
 0, 0, 0.207242, 0.445507, 0.859512, 1.07573, 1.26513, 1.46919, 1.21893, 1.2368, 0.996704, 0.898286, 1.02384, 1.10968, 1.15656, 1.41378, 1.19411, 1.00502, 0.973797, 1.64394, 0, 0.947574, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0// May10_Promptv4_Aug05_Promptv6 2.15 fb-1
 };
   return weight[nGenVertices];
@@ -84,9 +85,6 @@ double weight_WJetsToLNu(int nGenVertices)
 double  weight_QCDMu(int nGenVertices)
 {
   double weight[51] = {
-//0, 0, 0.344937, 0.735201, 1.12576, 1.38418, 1.61134, 1.46404, 1.24484, 0.943461, 0.786307, 0.635055, 0.536248, 0.4083, 0.377607, 0.251284, 0.299158, 0.313975, 0.429412, 0.189526, 0.162392, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // OLD WEIGHTS
-//0, 0, 0.402067, 0.831834, 1.22624, 1.4531, 1.63504, 1.44059, 1.19124, 0.880055, 0.71619, 0.565509, 0.467278, 0.348386, 0.315668, 0.205911, 0.240412, 0.247585, 0.332455, 0.144157, 0.121435, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // 1.08 fb-1 weights
-//0, 0, 0.223783, 0.517908, 0.865289, 1.16036, 1.47235, 1.45725, 1.34894, 1.11243, 1.00834, 0.88537, 0.812509, 0.672146, 0.675212, 0.487973, 0.630818, 0.718851, 1.06748, 0.511602, 0.476084, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // May10_Promptv4_166967 875 pb-1
 0, 0, 0.216306, 0.484129, 0.782602, 1.0295, 1.30368, 1.31239, 1.26043, 1.10026, 1.07655, 1.03941, 1.0667, 1.00138, 1.15552, 0.968367, 1.46147, 1.95245, 3.40521, 1.9162, 2.08934, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // May10_Promptv4_Aug05_Promptv6 2.15 fb-1
 };
   return weight[nGenVertices];
@@ -124,7 +122,6 @@ void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* part
     //cout<<"mygenparticle->Mag() = "<<mygenparticle->Mag()<<endl;
     if (DeltaR(mygenparticle->Eta(), mygenparticle->Phi(), myparticle->Eta(), myparticle->Phi())<0.3){
       if ( (mygenparticle->status()==1) && ( (particle_pdgId==0)?true:((mygenparticle->type())==particle_pdgId) ) ){
-        //HistoMCpartStatus1InConeId->Fill(mygenparticle->type());
         NbMCpartInCone++;
         if (fabs( (mygenparticle->Pt()) - (myparticle->Pt()) )<bestPtdiff){
           bestPtdiff=fabs(mygenparticle->Pt()-myparticle->Pt());
@@ -175,8 +172,6 @@ int photonIsInCrack(double sc_abs_eta, double sc_abs_phi)
 double fEta(vector<double> param, double eta) 
 {
   double ieta = fabs(eta)*(5/0.087);
-  //double p0 = 40.2198;  // should be 40.2198
-  //double p1 = -3.03103e-6;  // should be -3.03103e-6
   double p0 = param[0];  // should be 40.2198
   double p1 = param[1];  // should be -3.03103e-6
   double feta = 1; 
@@ -187,9 +182,7 @@ double fEta(vector<double> param, double eta)
   return feta;
 }
 
-//double BremCor(double brem, int EndCaps, int New) 
 double BremCor(vector<double> param, double brem)
-//, int EndCaps, string correctionSet) 
 {
   // brem == phiWidth/etaWidth of the SuperCluster 
   // e  == energy of the SuperCluster 
@@ -207,137 +200,23 @@ double BremCor(vector<double> param, double brem)
   double p2 = 0;
   double p3 = 0;
   double p4 = 0;
-/*
-  int offset;
-  if ( EndCaps == 0 ) offset = 0; //Barrel
-  else if ( EndCaps == 1 ) offset = 20; //End caps
-  else {
-    // not supported, produce no correction
-    return 1.0;
-  }
-*/
+
   //Make No Corrections if brem is invalid! 
 	//cout<<endl<<setprecision( 10 )<<"brem in function= "<<brem<<endl;
   if ( brem == 0 ) return 1.0;
 
-//	if(EndCaps == 1) //End caps
-//	{
 		//double bremLowThr  = 0.9;
 		double bremLowThr  = param[0];
 		//double bremHighThr = 6.5;
 		double bremHighThr = param[1];
-//  if(New == 2) 
-/*
-		if( correctionSet == "Louis" ) 
-		{
-			bremLowThr  = 0.8;
-			bremHighThr = 4.5;
-		}
-*/
+
 		if ( brem < bremLowThr  ) brem = bremLowThr;
 		if ( brem > bremHighThr ) brem = bremHighThr;
-//  if(New == 0)
-//  	if( correctionSet == "START42_V11" )
-//  	{
-  		// Parameters provided in cfg file
-  		//p0 = -0.12139999866485595703125;
-   		//p0 = -0.07945;
    		p0 = param[2];
-  		//p1 = 0.2362000048160552978515625;
-   		//p1 = 0.1298;
    		p1 = param[3];
-  		//p2 = 0.884700000286102294921875;
-   		//p2 = 0.9147;
    		p2 = param[4];
-  		//p3 = -0.00193000002764165401458740234375;
-   		//p3 = -0.001565;
    		p3 = param[5];
-  		//p4 = 1.05700004100799560546875;
-   		//p4 = 0.9;
    		p4 = param[6];
-// 		}
-//  if(New == 1)
-/*
-		if( correctionSet == "Anne-Fleur" )
-  	{
-    	// Parameters provided in cfg file
-      p0 = -0.07667;
-      p1 = 0.1407;
-      p2 = 0.9157;
-      p3 = 0.00251;
-      p4 = 1.117;
-  	}
-//  if(New == 2)//mes corrections
-		if( correctionSet == "Louis" )
-  	{
-      p0 = -0.004003;
-      p1 = 0.003938;
-      p2 = 0.9638;
-      p3 = -0.07402;
-      p4 = 30.52;
-  	}
-*/
-//	}
-/*
-if(EndCaps == 0) //Barrel
- {
-  //double bremLowThr  = 1.1;
-  double bremLowThr  = 1.1000000238;
-  //double bremHighThr = 8.0;
-  double bremHighThr = 8.0000000000;
-//  if(New == 2)
-	if( correctionSet == "Louis" )
-  {
-        bremLowThr  = 0.7;
-        bremHighThr = 4.9;
-  }
-  if ( brem < bremLowThr  ) brem = bremLowThr;
-  if ( brem > bremHighThr ) brem = bremHighThr;
-
-//  if(New == 0)
-	if( correctionSet == "START42_V11" )
-  {
-	// Parameters provided in cfg file
-  	//p0 = -0.051849998533725738525390625;
-  	//p0 = -0.05289;
-  	p0 = -0.0528899990;
-  	//p1 = 0.135399997234344482421875;
-  	//p1 = 0.1374;  
-  	p1 = 0.1374000013;  
-  	//p2 = 0.91649997234344482421875;
-  	//p2 = 0.9141;
-  	p2 = 0.9140999913;
-  	//p3 = -0.000562599976547062397003173828125;
-  	//p3 = -0.000669;
-  	p3 = -0.0006690000;
-  	//p4 = 1.3849999904632568359375;
-  	//p4 = 1.38;
-  	p4 = 1.3799999952;
-  }
-
-//  if(New == 1)
-	if( correctionSet == "Anne-Fleur" )
-  {
-        // Parameters provided in cfg file
-        p0 = -0.002362;
-        p1 = 0.004314;
-        p2 = 1.001;
-        p3 = 0.0003413;
-        p4 = 3.124;
-  }
-
-//  if(New == 2)//mes corrections
-	if( correctionSet == "Louis" )
-  {
-        p0 = -0.001492;
-        p1 = 0.0001637;
-        p2 = 1.003;
-        p3 = -0.03081;
-        p4 = 136.7;
-  }
-
- }
-*/
 
   double threshold = p4;
 
@@ -354,36 +233,15 @@ if(EndCaps == 0) //Barrel
   return (double)(1.0) / (double)(bremCorrection);
 }
 
-//double EtEtaCor(double et, double eta, int EndCaps, int New) 
-//double EtEtaCor(double et, double eta, int EndCaps, string correctionSet) 
 double EtEtaCor(vector<double> param, double et, double eta, bool isEB) 
 { 
   
   double etEtaCorrection = 0.0; 
-//  if(EndCaps != 0 && EndCaps != 1) return 1.0; 
-
-  // Barrel 
-//  if ( EndCaps == 0 ) 
-//  { 
-    /*double p0 = (params_->params())[ 9 + offset]  + (params_->params())[10 + offset]/ (et + (params_->params())[11 + offset]) + (params_->params())[12 + offset]/(et*et);  
-    double p1 = (params_->params())[13 + offset]  + (params_->params())[14 + offset]/ (et + (params_->params())[15 + offset]) + (params_->params())[16 + offset]/(et*et);  
- 
-    etEtaCorrection = p0 +  p1 * atan((params_->params())[17 + offset]*((params_->params())[18 + offset]-fabs(eta))) + (params_->params())[19 + offset] * fabs(eta); 
- */
-//	if(New == 0)
-//		if( correctionSet == "START42_V11" )
-//  	{
 
 	if( isEB )
 	{
-		//double p0 = 1.00199997425079345703125 -0.742399990558624267578125/ (et + 0) + 0/(et*et);
-		//double p0 = 1.000 -0.698 / (et + 0) + 0/(et*et);
 		double p0 = param[0] + (double)(param[1]) / (double)(et + param[2]) + (double)(param[3])/(double)(et*et);
-		//double p1 = 0  + 0.555800020694732666015625/ (et + 2.375) + 0.18690000474452972412109375/(et*et);
-		//double p1 = 0  + 0.6605/ (et + 8.825) + 0.841/(et*et);
 		double p1 = param[4] + (double)(param[5])/(double)(et + param[6]) + (double)(param[7])/(double)(et*et);
-		//etEtaCorrection = p0 +  p1 * atan(7.599999904632568359375*(1.08099997043609619140625-fabs(eta))) -0.00181000004522502422332763671875 * fabs(eta);
-		//etEtaCorrection = p0 +  p1 * atan(7.6*(1.081-fabs(eta))) -0.00181 * fabs(eta);
 		etEtaCorrection = p0 +  p1 * atan(param[8]*(param[9]-fabs(eta))) + param[10] * fabs(eta);
 	} else {
 		double p0 = param[0] + (double)(param[1])/(double)(sqrt(et));
@@ -392,128 +250,50 @@ double EtEtaCor(vector<double> param, double et, double eta, bool isEB)
 		double p3 = param[6] + (double)(param[7])/(double)(sqrt(et));
 		etEtaCorrection = p0 + p1*fabs(eta) + p2*eta*eta + p3/fabs(eta);
   }
-		//cout<<endl<<endl<<endl<<"p0 = "<<p0<<endl<<"p1 = "<<p1<<endl;
-		//cout<<"fCorr = "<<etEtaCorrection;
 		if ( etEtaCorrection < 0.5 ) etEtaCorrection = 0.5;
   		if ( etEtaCorrection > 1.5 ) etEtaCorrection = 1.5;
-//	}
-
-//	if(New == 1)
-/*
-	if( correctionSet == "Anne-Fleur" )
-        {
-                double p0 = 0.9963 -0.1158/ (et + -4.189);
-                double p1 = 0.9009/ (et + 39.67) + 1.253/(et*et);
-                etEtaCorrection = p0 +  p1 * atan(7.6*(1.081-fabs(eta))) -0.00181 * fabs(eta);
-        }
-*/
-// } 
-  
   //End Caps
-//  if ( EndCaps == 1 ) 
-//  {
-   /* 
-    double p0 = (params_->params())[ 9 + offset] + (params_->params())[10 + offset]/sqrt(et); 
-    double p1 = (params_->params())[11 + offset] + (params_->params())[12 + offset]/sqrt(et); 
-    double p2 = (params_->params())[13 + offset] + (params_->params())[14 + offset]/sqrt(et); 
-    double p3 = (params_->params())[15 + offset] + (params_->params())[16 + offset]/sqrt(et); 
-  
-    etEtaCorrection = p0 + p1*fabs(eta) + p2*eta*eta + p3/fabs(eta); 
-*/
-//	if(New == 0)
-/*
-	if( correctionSet == "START42_V11" )
-        {
-		//double p0 = 2.2130000591278076171875 -17.29000091552734375/sqrt(et);
-		//double p0 = -3.516 -2.362/sqrt(et);	
-		double p0 = -3.5160000324 -2.3619999886/sqrt(et);	
-		//double p1 = -0.59899997711181640625 + 8.87399959564208984375/sqrt(et);
-		//double p1 = 2.151 + 1.572/sqrt(et);
-		double p1 = 2.1510000229 + 1.5720000267/sqrt(et);
-		//double p2 = 0.0963200032711029052734375 -1.4570000171661376953125/sqrt(et); 
-    //double p2 = -0.336 -0.2807/sqrt(et);
-    double p2 = -0.3359999955 -0.2806999981/sqrt(et);
-		//double p3 = -0.758400022983551025390625 + 10.28999996185302734375/sqrt(et); 
-		//double p3 = 3.2 + 0/sqrt(et); 	
-		double p3 = 3.2000000477 + 0.0000000000/sqrt(et); 	
-		//etEtaCorrection = p0 + p1*fabs(eta) + p2*eta*eta + p3/fabs(eta);
-		etEtaCorrection = p0 + p1*fabs(eta) + p2*eta*eta + p3/fabs(eta);
-		//cout<<endl<<endl<<endl<<"p0 = "<<p0<<endl<<"p1 = "<<p1<<endl<<"p2 = "<<p2<<endl<<"p3 = "<<p3<<endl;
-        	//cout<<"fCorr = "<<etEtaCorrection; 
-		if ( etEtaCorrection < 0.5 ) etEtaCorrection = 0.5;
-  		if ( etEtaCorrection > 1.5 ) etEtaCorrection = 1.5;
-	}
-*/
-
-//	if(New == 1)
-/*
-	if( correctionSet == "Anne-Fleur" )
-        {
-                double p0 = -1.513 -0.4142/sqrt(et);
-                double p1 = 1.239 + 0.2625/sqrt(et);
-                double p2 = -0.2016 -0.02905/sqrt(et);
-                double p3 = 1.7 + 0.0/sqrt(et);
-				if ( fabs(eta) < 1.6 ) eta = 1.6;
-        if ( fabs(eta) > 2.6 ) eta = 2.6;
-				etEtaCorrection = p0 + p1*fabs(eta) + p2*eta*eta + p3/fabs(eta);
-		
-    		if ( 1./etEtaCorrection > 1.2 ) return et/1.2;
-    		if ( 1./etEtaCorrection < 0.5 ) return et/0.5;
-        }
- } 
-*/
- 
-  // cap the correction at 50%
-  //if ( etEtaCorrection < 0.5 ) etEtaCorrection = 0.5;  
-  //if ( etEtaCorrection > 1.5 ) etEtaCorrection = 1.5;   
- 
-  //std::cout << "ECEC fEtEta " << et/etEtaCorrection << std::endl;
-  //return et/etEtaCorrection; 
+   
   return (double)(1.0)/(double)(etEtaCorrection);
 }
 
 double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 {
-	int verbositybis = 1;
+	int verbositybis = 0;
 	int photonIsInCrack_ = photonIsInCrack(    fabs(myphoton->superCluster()->Eta()), fabs(myphoton->superCluster()->Phi())   );
 	if( photonIsInCrack_ > 0 )
 	{
 		if( verbositybis > 0) cout << "Photon is in crack : " << ((photonIsInCrack_ == 1) ? "Eta" : "Phi") << endl;
-		return 1.0;
+//		return 1.0; // IF COMMENTED, BE SURE CRACK CORRECTIONS ARE TURNED ON BELOW
 	}
 	vector<double> param_Ceta;
 	vector<double> param_fbrem;
 	vector<double> param_feteta;
 	parameters_Ceta(param_Ceta, correctionSet);
-//	cout << "param_Ceta[0]= " << param_Ceta[0] << endl;
 	parameters_fbrem(param_fbrem, correctionSet, myphoton->isEBPho());
 	parameters_feteta(param_feteta, correctionSet, myphoton->isEBPho());
-//	cout << "myphoton->superCluster()->Eta()= " << myphoton->superCluster()->Eta() << endl;
-	//double f_eta = fEta(myphoton->superCluster()->Eta());
 	double f_eta = fEta(param_Ceta, myphoton->superCluster()->Eta());
-//	cout << "f_eta= " << f_eta << endl;
-
 	double brem = (double)(myphoton->superCluster()->phiWidth()) / (double)(myphoton->superCluster()->etaWidth());
-//	cout << "brem= " << brem << endl;
-//	cout << "myphoton->isEEPho()= " << myphoton->isEEPho() << endl;
-	//double f_brem = BremCor(brem, myphoton->isEEPho(), correctionSet);
 	double f_brem = BremCor(param_fbrem, brem);
-//	cout << "f_brem= " << f_brem << endl;
-
-//	cout << "myphoton->superCluster()->rawEnergy()= " << myphoton->superCluster()->rawEnergy() << endl;
-//	cout << "myphoton->preshowerEnergy()= " << myphoton->preshowerEnergy() << endl;
 	double sc_e = (myphoton->isEBPho()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
-//	cout << "sc_e= " << sc_e << endl;
+	double sc_e_noCrack = (myphoton->isEBPho()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
+	double f_crack = myphoton->superCluster()->crackCorrectionEtaPhi();
 	double sc_et = sc_e * (sin(myphoton->superCluster()->Theta()));
-//	cout << "sc_et= " << sc_et << endl;
+  double sc_et_noCrack = sc_e_noCrack * (sin(myphoton->superCluster()->Theta()));
 	double f_et_eta = EtEtaCor(param_feteta, f_brem * sc_et, myphoton->superCluster()->Eta(), myphoton->isEBPho());
-//	cout << "f_et_eta= " <<  f_et_eta << endl;
+  double f_et_eta_noCrack = EtEtaCor(param_feteta, f_brem * sc_et_noCrack, myphoton->superCluster()->Eta(), myphoton->isEBPho());
 
-//	cout << "myphoton->Energy()= " << myphoton->Energy() << endl;
 	if( (myphoton->isEBPho()) && (myphoton->r9()<0.94) )
 	{
+    if( verbositybis > 1) cout << "###\tmyphoton->superCluster()->crackCorrectionEta()= " << myphoton->superCluster()->crackCorrectionEta() << endl;
+    if( verbositybis > 1) cout << "###\tmyphoton->superCluster()->crackCorrectionPhi()= " << myphoton->superCluster()->crackCorrectionPhi() << endl;
+    if( verbositybis > 1) cout << "###\tmyphoton->superCluster()->crackCorrectionEtaPhi()= " << myphoton->superCluster()->crackCorrectionEtaPhi() << endl;
 		if( verbositybis > 1) cout << "f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()= " << f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy() << endl;
-		return (double)(f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()) / (double)(myphoton->Energy());
+    if( verbositybis > 1) cout << "###\tf_et_eta_noCrack * f_brem * f_eta * sc_e_noCrack * f_crack= " << f_et_eta_noCrack * f_brem * f_eta * sc_e_noCrack * f_crack << endl;
+// WITH CRACK CORRECTIONS
+    return (double)(f_et_eta_noCrack * f_brem * sc_e_noCrack * f_crack) / (double)(myphoton->Energy());
+// WITHOUT CRACK CORRECTIONS
+//		return (double)(f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()) / (double)(myphoton->Energy());
 	}
 	if( (myphoton->isEBPho()) && (myphoton->r9()>0.94) )
 	{
@@ -522,8 +302,6 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 	}
 	if( (myphoton->isEEPho()) && (myphoton->r9()<0.95) )
 	{
-//		cout << "f_et_eta * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
-//		return (double)(f_et_eta * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())) / (double)(myphoton->Energy());
 		if( verbositybis > 1) cout << "f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
 		return (double)(f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())) / (double)(myphoton->Energy());
 	}
