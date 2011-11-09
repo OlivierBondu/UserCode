@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
 	// Optional argument : isZgammaMC
 	int isZgammaMC = 0;
-	int n;
+	int n = -1;
 	if( argc > 3 )
 	{
 		std::stringstream ss ( argv[3] );
@@ -347,10 +347,16 @@ int main(int argc, char *argv[])
 
 
 
-
-	int NbEventsPerJob = 500000;
+	
+	int NbEventsPerJob = 250000;
 	int NbEventsBegin = n * NbEventsPerJob;
 	int NbEventsEnd = min( (n + 1)* NbEventsPerJob - 1 , (int)NbEvents);
+	if( n == -1 )
+	{
+		NbEventsPerJob = NbEvents;
+		NbEventsBegin = 0;
+		NbEventsEnd = NbEvents;
+	}
 	NbEvents = NbEventsEnd - NbEventsBegin;
 	// LOOP over events
 	cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
