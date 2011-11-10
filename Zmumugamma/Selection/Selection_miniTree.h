@@ -238,7 +238,7 @@ double EtEtaCor(vector<double> param, double et, double eta, bool isEB)
   
   double etEtaCorrection = 0.0; 
 
-	if( isEB )
+	if( isEB )//need to verify!!
 	{
 		double p0 = param[0] + (double)(param[1]) / (double)(et + param[2]) + (double)(param[3])/(double)(et*et);
 		double p1 = param[4] + (double)(param[5])/(double)(et + param[6]) + (double)(param[7])/(double)(et*et);
