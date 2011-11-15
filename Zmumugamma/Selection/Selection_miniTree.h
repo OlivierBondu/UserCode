@@ -517,6 +517,9 @@ int main(int argc, char *argv[]);
   extern Float_t Photon_SC_rawE_x_fEta_o_MC_E, Photon_E_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E;
 
   extern Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
+  extern mmg_k_Photon_MC_MmumuReco, mmg_ik_Photon_MC_MmumuReco, mmg_s_Photon_MC_MmumuReco, mmg_logk_Photon_MC_MmumuReco, mmg_logik_Photon_MC_MmumuReco, mmg_logs_Photon_MC_MmumuReco;
+  extern Float_t mmg_k_Photon_Gen, mmg_ik_Photon_Gen, mmg_s_Photon_Gen, mmg_logk_Photon_Gen, mmg_logik_Photon_Gen, mmg_logs_Photon_Gen;
+  extern Float_t mmg_k_Photon_Gen_MmumuReco, mmg_ik_Photon_Gen_MmumuReco, mmg_s_Photon_Gen_MmumuReco, mmg_logk_Photon_Gen_MmumuReco, mmg_logik_Photon_Gen_MmumuReco, mmg_logs_Photon_Gen_MmumuReco;
   extern Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
   extern Float_t Mmumu_MMG_MC, Mmumugamma_MMG_MC, mmg_k_MMG_MC, mmg_ik_MMG_MC, mmg_s_MMG_MC, mmg_logk_MMG_MC, mmg_logik_MMG_MC, mmg_logs_MMG_MC;
 
@@ -1067,6 +1070,29 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
       mmg_logk_Photon_MC = log(mmg_k_Photon_MC);
       mmg_logik_Photon_MC = log(mmg_ik_Photon_MC);
       mmg_logs_Photon_MC = log(mmg_s_Photon_MC);
+
+      mmg_k_Photon_MC_MmumuReco = (double)(pow(91.1876,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma_Photon_MC,2) - pow(Mmumu,2));
+      mmg_ik_Photon_MC_MmumuReco = (double)(pow(Mmumugamma_Photon_MC,2) - pow(Mmumu,2)) / (double)(pow(91.1876,2) - pow(Mmumu,2) );
+      mmg_s_Photon_MC_MmumuReco = mmg_ik_Photon_MC_MmumuReco -1.0;
+      mmg_logk_Photon_MC_MmumuReco = log(mmg_k_Photon_MC_MmumuReco);
+      mmg_logik_Photon_MC_MmumuReco = log(mmg_ik_Photon_MC_MmumuReco);
+      mmg_logs_Photon_MC_MmumuReco = log(mmg_s_Photon_MC_MmumuReco);
+
+
+      mmg_k_Photon_Gen = (double)(pow(Mmumugamma_Photon_MC,2) - pow(Mmumu_Photon_MC,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu_Photon_MC,2));
+      mmg_ik_Photon_Gen = (double)(pow(Mmumugamma,2) - pow(Mmumu_Photon_MC,2)) / (double)(pow(Mmumugamma_Photon_MC,2) - pow(Mmumu_Photon_MC,2) );
+      mmg_s_Photon_Gen = mmg_ik_Photon_Gen -1.0;
+      mmg_logk_Photon_Gen = log(mmg_k_Photon_Gen);
+      mmg_logik_Photon_Gen = log(mmg_ik_Photon_Gen);
+      mmg_logs_Photon_Gen = log(mmg_s_Photon_Gen); 
+
+      mmg_k_Photon_Gen_MmumuReco = (double)(pow(Mmumugamma_Photon_MC,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
+      mmg_ik_Photon_Gen_MmumuReco = (double)(pow(Mmumugamma,2) - pow(Mmumu,2)) / (double)(pow(Mmumugamma_Photon_MC,2) - pow(Mmumu,2) );
+      mmg_s_Photon_Gen_MmumuReco = mmg_ik_Photon_Gen_MmumuReco -1.0;
+      mmg_logk_Photon_Gen_MmumuReco = log(mmg_k_Photon_Gen_MmumuReco);
+      mmg_logik_Photon_Gen_MmumuReco = log(mmg_ik_Photon_Gen_MmumuReco);
+      mmg_logs_Photon_Gen_MmumuReco = log(mmg_s_Photon_Gen_MmumuReco);	
+
 
       mmg_k_Muons_MC = (double)(pow(91.1876,2) - pow(Mmumu_Muons_MC,2) ) / (double)(pow(Mmumugamma_Muons_MC,2) - pow(Mmumu_Muons_MC,2));
       mmg_ik_Muons_MC = (double)(pow(Mmumugamma_Muons_MC,2) - pow(Mmumu_Muons_MC,2)) / (double)(pow(91.1876,2) - pow(Mmumu_Muons_MC,2) );
