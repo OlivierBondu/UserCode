@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
 	
 	if( argc == 1 )
 	{
-		cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC) (low m_mumu cut) (high m_mumu cut) (extra scale) (extra resolution)" << endl;
+		cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (extra scale) (extra resolution)" << endl;
 		return 1;
 	}
 
@@ -163,7 +163,7 @@ int main(int argc, char *argv[])
 	}
 
 	// ******************************************
-	// Optional argument : isZgammaMC
+	// Optional argument : isZgammaMC (1: FSR -- 2: nonFSR -- 3: MC info)
 	// ******************************************
 	int isZgammaMC = 0;
 	if( argc > 4 )
@@ -173,12 +173,39 @@ int main(int argc, char *argv[])
 	}
 
 	// ******************************************
+  // Optional argument : lumi set used
+  // ******************************************
+	string lumi_set = "";
+	double integratedLuminosity = 1.0;
+  if( argc > 5 )
+  {
+		lumi_set = argv[5];
+		if( lumi_set == "May10" ) integratedLuminosity = 216.122;
+		if( lumi_set == "Promptv4" ) integratedLuminosity = 924.829;
+		if( lumi_set == "July05" ) integratedLuminosity = 1.131*1000.0;
+		if( lumi_set == "Aug05" ) integratedLuminosity = 368.037;
+		if( lumi_set == "Oct03" ) integratedLuminosity = 658.886;
+		if( lumi_set == "2011A" ) integratedLuminosity = 216.122 + 924.829 + 368.037 + 658.886;
+		if( lumi_set == "2011B" ) integratedLuminosity = 1.842*1000.0;
+		if( lumi_set == "2011" ) integratedLuminosity = 216.122 + 924.829 + 368.037 + 658.886 + 1.842*1000.0;
+  }
+
+	// ******************************************
+  // Optional argument : pile-up scenario used
+  // ******************************************
+	string pu_set = "";
+  if( argc > 6 )
+  {
+		pu_set = argv[6];
+  }
+
+	// ******************************************
 	// Optional argument : low_m_mumu
 	// ******************************************
 	double low_m_mumu = 40.0;
-	if( argc > 5 )
+	if( argc > 7 )
 	{
-		std::stringstream ss ( argv[5] );
+		std::stringstream ss ( argv[7] );
 		ss >> low_m_mumu;
 	}
 
@@ -186,9 +213,9 @@ int main(int argc, char *argv[])
 	// Optional argument : high_m_mumu
 	// ******************************************
 	double high_m_mumu = 80.0;
-	if( argc > 6 )
+	if( argc > 8 )
 	{
-		std::stringstream ss ( argv[6] );
+		std::stringstream ss ( argv[8] );
 		ss >> high_m_mumu;
 	}
 	
@@ -198,15 +225,15 @@ int main(int argc, char *argv[])
 	double EScale = 1.0;
 	string correction = "";
 	bool isManualCorrectionsApplied = false;
-	if( argc > 7 )
+	if( argc > 9 )
 	{
-		correction = argv[7];
+		correction = argv[9];
 		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") )
 		{
 			cout << correction << " correction set will be applied upstream" << endl;
 			isManualCorrectionsApplied = true;
 		} else {
-			std::stringstream ss ( argv[7] );
+			std::stringstream ss ( argv[9] );
 			ss >> EScale;
 		}
 	}
@@ -216,9 +243,9 @@ int main(int argc, char *argv[])
 	// Optional argument is extra resolution
 	// ******************************************
 	double EResolution = 0.0;
-	if( argc > 8 )
+	if( argc > 10 )
 	{
-		std::stringstream ss ( argv[8] );
+		std::stringstream ss ( argv[10] );
 		ss >> EResolution;
 	}
 	EResolution = (double)EResolution / (double)100.0;
@@ -242,7 +269,7 @@ int main(int argc, char *argv[])
 	bool doJetMC									= false;
 	bool doMETMC									= false;
 	bool doPDFInfo								= false;
-	bool doSignalMuMuGamma				= (bool)(isZgammaMC >= 1);
+	bool doSignalMuMuGamma				= (bool)(isZgammaMC == 1 || isZgammaMC == 2);
 	bool doSignalTopTop					 = false;
 	bool doPhotonConversionMC		 = false;
 	bool doBeamSpot							 = false;
@@ -266,15 +293,15 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-//	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
-//	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
+	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
+	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
 //		inputEventTree->Add("miniTree_TEST.root");
 //		inputRunTree->Add("miniTree_TEST.root");
 //	inputEventTree->Add(inputfile);
 //	inputRunTree->Add(inputfile);
 //	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part*.root");
 //	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part*.root");
-
+/*
 	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part0.root");
 	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part0.root");
 	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part1.root");
@@ -313,7 +340,7 @@ int main(int argc, char *argv[])
 	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part8.root");
 	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part9.root");
 	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part9.root");
-
+*/
 
 // INSERTFILES
 
@@ -1036,7 +1063,7 @@ int main(int argc, char *argv[])
 	bool powheg = true;
 	bool signal = false;
 	bool stew = false;
-	bool zjet_veto = (bool)(isZgammaMC >= 1);
+	bool zjet_veto = (bool)(isZgammaMC == 1 || isZgammaMC == 2);
 	cout << "Nb of events : " << NbEvents << endl;
 	cout << "Signal is: " << signal <<endl;
 	cout << "Stew is: " << stew << endl;
@@ -1090,7 +1117,7 @@ int main(int argc, char *argv[])
 //	double integratedLuminosity = 2.148*1000.0;
 //	double integratedLuminosity = 1.131*1000.0 + 370.915 + 636.440;
 //	double integratedLuminosity = 2.138 * 1000.0;
-	double integratedLuminosity = 4009.87400;
+//	double integratedLuminosity = 4009.87400;
 //  double XSectionDYToMuMu = 1300.0 * 1.2416;
   double XSectionDYToMuMu = 1626.0;
 //  double XSectionTTJets = 94.0;
@@ -1157,7 +1184,7 @@ int main(int argc, char *argv[])
 //		if(iRunID > 166967) continue;
 		nVertices = vertices->GetEntries();
 		nGenVertices = vertices->GetEntries();
-		if( (isZgammaMC >= 1) )
+		if( (isZgammaMC == 1) || (isZgammaMC == 2) )
 		{
 			nGenVertices = event->nInTimePUVertices();
 		}
@@ -1172,29 +1199,26 @@ int main(int argc, char *argv[])
 
 		weight_Xsection = weight_pileUp = 1.0;
 
-		string sample(sample_char);
+		string sample_in(sample_char);
 
-		if( sample.find("DYToMuMu") != string::npos )
+		if( sample_in.find("DYToMuMu") != string::npos )
 		{
 			weight_Xsection = (double)(  (double)((double)(XSectionDYToMuMu) / (double)(InitialNumberDYToMuMu)) * (double)integratedLuminosity);
-			weight_pileUp = weight_DYToMuMu(nGenVertices+1);
-		}
-		if( sample.find("QCD") != string::npos )
+			weight_pileUp = weight_DYToMuMu(nGenVertices+1, lumi_set, pu_set);
+		} else if( sample_in.find("QCD") != string::npos )
 		{
 			weight_Xsection = (double)(  (double)((double)(XSectionQCDMu) / (double)(InitialNumberQCDMu)) * (double)integratedLuminosity);
 			weight_pileUp = weight_QCDMu(nGenVertices+1);
-		}
-		if( sample.find("TTJets") != string::npos )
+		} else if( sample_in.find("TTJets") != string::npos )
 		{
 			weight_Xsection = (double)(  (double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity);
 			weight_pileUp = weight_TTJets(nGenVertices+1);
-		}
-		if( sample.find("WToMuNu") != string::npos )
+		} else if( sample_in.find("WToMuNu") != string::npos )
 		{
 			weight_Xsection = (double)(  (double)((double)(XSectionWJetsToLNu) / (double)(InitialNumberWJetsToLNu)) * (double)integratedLuminosity);
 			weight_pileUp = weight_WJetsToLNu(nGenVertices+1);
 		}
-
+//cout << "nGenVertices= " << nGenVertices << "\tweight_pileUp= " << weight_pileUp << endl;
 
 		// ____________________________________________
 		// Muon variables
