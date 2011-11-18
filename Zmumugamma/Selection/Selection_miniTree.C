@@ -114,13 +114,12 @@
   Float_t Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E;	
 
 	Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
-	Float_t mmg_k_Photon_MC_MmumuReco, mmg_ik_Photon_MC_MmumuReco, mmg_s_Photon_MC_MmumuReco, mmg_logk_Photon_MC_MmumuReco, mmg_logik_Photon_MC_MmumuReco, mmg_logs_Photon_MC_MmumuReco;
-	Float_t mmg_k_Photon_Gen, mmg_ik_Photon_Gen, mmg_s_Photon_Gen, mmg_logk_Photon_Gen, mmg_logik_Photon_Gen, mmg_logs_Photon_Gen;
-	Float_t mmg_k_Photon_Gen_MmumuReco, mmg_ik_Photon_Gen_MmumuReco, mmg_s_Photon_Gen_MmumuReco, mmg_logk_Photon_Gen_MmumuReco, mmg_logik_Photon_Gen_MmumuReco, mmg_logs_Photon_Gen_MmumuReco;	
 	Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
 	Float_t Mmumu_MMG_MC, Mmumugamma_MMG_MC, mmg_k_MMG_MC, mmg_ik_MMG_MC, mmg_s_MMG_MC, mmg_logk_MMG_MC, mmg_logik_MMG_MC, mmg_logs_MMG_MC;
 
-
+	Float_t mmg_k_MZ, mmg_ik_MZ, mmg_s_MZ, mmg_logk_MZ, mmg_logik_MZ, mmg_logs_MZ;
+	Float_t mmg_k_MZ_Photon_MC, mmg_ik_MZ_Photon_MC, mmg_s_MZ_Photon_MC, mmg_logk_MZ_Photon_MC, mmg_logik_MZ_Photon_MC, mmg_logs_MZ_Photon_MC;
+	Float_t mmg_k_MZ_Muons_MC, mmg_ik_MZ_Muons_MC, mmg_s_MZ_Muons_MC, mmg_logk_MZ_Muons_MC, mmg_logik_MZ_Muons_MC, mmg_logs_MZ_Muons_MC;
 
 //int Selection_miniTree()
 int main(int argc, char *argv[])
@@ -1028,24 +1027,6 @@ int main(int argc, char *argv[])
 	miniTree->Branch("mmg_logk_Photon_MC", &mmg_logk_Photon_MC, "mmg_logk_Photon_MC/F");
 	miniTree->Branch("mmg_logik_Photon_MC", &mmg_logik_Photon_MC, "mmg_logik_Photon_MC/F");
 	miniTree->Branch("mmg_logs_Photon_MC", &mmg_logs_Photon_MC, "mmg_logs_Photon_MC/F");
-	miniTree->Branch("mmg_k_Photon_MC_MmumuReco", &mmg_k_Photon_MC_MmumuReco, "mmg_k_Photon_MC_MmumuReco/F");
-        miniTree->Branch("mmg_ik_Photon_MC_MmumuReco", &mmg_ik_Photon_MC_MmumuReco, "mmg_ik_Photon_MC_MmumuReco/F");
-        miniTree->Branch("mmg_s_Photon_MC_MmumuReco", &mmg_s_Photon_MC_MmumuReco, "mmg_s_Photon_MC_MmumuReco/F");
-        miniTree->Branch("mmg_logk_Photon_MC_MmumuReco", &mmg_logk_Photon_MC_MmumuReco, "mmg_logk_Photon_MC_MmumuReco/F");
-        miniTree->Branch("mmg_logik_Photon_MC_MmumuReco", &mmg_logik_Photon_MC_MmumuReco, "mmg_logik_Photon_MC_MmumuReco/F");
-        miniTree->Branch("mmg_logs_Photon_MC_MmumuReco", &mmg_logs_Photon_MC_MmumuReco, "mmg_logs_Photon_MC_MmumuReco/F");	
-	miniTree->Branch("mmg_k_Photon_Gen", &mmg_k_Photon_Gen, "mmg_k_Photon_Gen/F");
-        miniTree->Branch("mmg_ik_Photon_Gen", &mmg_ik_Photon_Gen, "mmg_ik_Photon_Gen/F");
-        miniTree->Branch("mmg_s_Photon_Gen", &mmg_s_Photon_Gen, "mmg_s_Photon_Gen/F");
-        miniTree->Branch("mmg_logk_Photon_Gen", &mmg_logk_Photon_Gen, "mmg_logk_Photon_Gen/F");
-        miniTree->Branch("mmg_logik_Photon_Gen", &mmg_logik_Photon_Gen, "mmg_logik_Photon_Gen/F");
-        miniTree->Branch("mmg_logs_Photon_Gen", &mmg_logs_Photon_Gen, "mmg_logs_Photon_Gen/F");	
-	miniTree->Branch("mmg_k_Photon_Gen_MmumuReco", &mmg_k_Photon_Gen_MmumuReco, "mmg_k_Photon_Gen_MmumuReco/F");
-        miniTree->Branch("mmg_ik_Photon_Gen_MmumuReco", &mmg_ik_Photon_Gen_MmumuReco, "mmg_ik_Photon_Gen_MmumuReco/F");
-        miniTree->Branch("mmg_s_Photon_Gen_MmumuReco", &mmg_s_Photon_Gen_MmumuReco, "mmg_s_Photon_Gen_MmumuReco/F");
-        miniTree->Branch("mmg_logk_Photon_Gen_MmumuReco", &mmg_logk_Photon_Gen_MmumuReco, "mmg_logk_Photon_Gen_MmumuReco/F");
-        miniTree->Branch("mmg_logik_Photon_Gen_MmumuReco", &mmg_logik_Photon_Gen_MmumuReco, "mmg_logik_Photon_Gen_MmumuReco/F");
-        miniTree->Branch("mmg_logs_Photon_Gen_MmumuReco", &mmg_logs_Photon_Gen_MmumuReco, "mmg_logs_Photon_Gen_MmumuReco/F");
 	miniTree->Branch("Mmumu_Muons_MC", &Mmumu_Muons_MC, "Mmumu_Muons_MC/F");
 	miniTree->Branch("Mmumugamma_Muons_MC", &Mmumugamma_Muons_MC, "Mmumugamma_Muons_MC/F");
 	miniTree->Branch("mmg_k_Muons_MC", &mmg_k_Muons_MC, "mmg_k_Muons_MC/F");
@@ -1062,6 +1043,28 @@ int main(int argc, char *argv[])
 	miniTree->Branch("mmg_logk_MMG_MC", &mmg_logk_MMG_MC, "mmg_logk_MMG_MC/F");
 	miniTree->Branch("mmg_logik_MMG_MC", &mmg_logik_MMG_MC, "mmg_logik_MMG_MC/F");
 	miniTree->Branch("mmg_logs_MMG_MC", &mmg_logs_MMG_MC, "mmg_logs_MMG_MC/F");
+
+	miniTree->Branch("mmg_k_MZ", &mmg_k_MZ, "mmg_k_MZ/F");
+        miniTree->Branch("mmg_ik_MZ", &mmg_ik_MZ, "mmg_ik_MZ/F");
+        miniTree->Branch("mmg_s_MZ", &mmg_s_MZ, "mmg_s_MZ/F");
+        miniTree->Branch("mmg_logk_MZ", &mmg_logk_MZ, "mmg_logk_MZ/F");
+        miniTree->Branch("mmg_logik_MZ", &mmg_logik_MZ, "mmg_logik_MZ/F");
+        miniTree->Branch("mmg_logs_MZ", &mmg_logs_MZ, "mmg_logs_MZ/F");
+	miniTree->Branch("mmg_k_MZ_Photon_MC", &mmg_k_MZ_Photon_MC, "mmg_k_MZ_Photon_MC/F");
+        miniTree->Branch("mmg_ik_MZ_Photon_MC", &mmg_ik_MZ_Photon_MC, "mmg_ik_MZ_Photon_MC/F");
+        miniTree->Branch("mmg_s_MZ_Photon_MC", &mmg_s_MZ_Photon_MC, "mmg_s_MZ_Photon_MC/F");
+        miniTree->Branch("mmg_logk_MZ_Photon_MC", &mmg_logk_MZ_Photon_MC, "mmg_logk_MZ_Photon_MC/F");
+        miniTree->Branch("mmg_logik_MZ_Photon_MC", &mmg_logik_MZ_Photon_MC, "mmg_logik_MZ_Photon_MC/F");
+        miniTree->Branch("mmg_logs_MZ_Photon_MC", &mmg_logs_MZ_Photon_MC, "mmg_logs_MZ_Photon_MC/F");
+	miniTree->Branch("mmg_k_MZ_Muons_MC", &mmg_k_MZ_Muons_MC, "mmg_k_MZ_Muons_MC/F");
+        miniTree->Branch("mmg_ik_MZ_Muons_MC", &mmg_ik_MZ_Muons_MC, "mmg_ik_MZ_Muons_MC/F");
+        miniTree->Branch("mmg_s_MZ_Muons_MC", &mmg_s_MZ_Muons_MC, "mmg_s_MZ_Muons_MC/F");
+        miniTree->Branch("mmg_logk_MZ_Muons_MC", &mmg_logk_MZ_Muons_MC, "mmg_logk_MZ_Muons_MC/F");
+        miniTree->Branch("mmg_logik_MZ_Muons_MC", &mmg_logik_MZ_Muons_MC, "mmg_logik_MZ_Muons_MC/F");
+        miniTree->Branch("mmg_logs_MZ_Muons_MC", &mmg_logs_MZ_Muons_MC, "mmg_logs_MZ_Muons_MC/F");
+
+
+
 
   TMVA::Reader* reader = new TMVA::Reader( "!Color:!Silent" );
   reader->AddVariable("pho_cEP",&Photon_covEtaPhi);
@@ -1369,11 +1372,13 @@ int main(int argc, char *argv[])
 		Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E = Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E  = Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E  = Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E  = Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E  = Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E  = -99.0;
 
 		Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;
-		mmg_k_Photon_MC_MmumuReco = mmg_ik_Photon_MC_MmumuReco = mmg_s_Photon_MC_MmumuReco = mmg_logk_Photon_MC_MmumuReco = mmg_logik_Photon_MC_MmumuReco = mmg_logs_Photon_MC_MmumuReco = -99.0;
-		mmg_k_Photon_Gen = mmg_ik_Photon_Gen = mmg_s_Photon_Gen = mmg_logk_Photon_Gen = mmg_logik_Photon_Gen = mmg_logs_Photon_Gen = -99.0;
-		mmg_k_Photon_Gen_MmumuReco = mmg_ik_Photon_Gen_MmumuReco = mmg_s_Photon_Gen_MmumuReco = mmg_logk_Photon_Gen_MmumuReco = mmg_logik_Photon_Gen_MmumuReco = mmg_logs_Photon_Gen_MmumuReco = -99.0;
 		Mmumu_Muons_MC = Mmumugamma_Muons_MC = mmg_k_Muons_MC = mmg_ik_Muons_MC = mmg_s_Muons_MC = mmg_logk_Muons_MC = mmg_logik_Muons_MC = mmg_logs_Muons_MC = -99.0;
 		Mmumu_MMG_MC = Mmumugamma_MMG_MC = mmg_k_MMG_MC = mmg_ik_MMG_MC = mmg_s_MMG_MC = mmg_logk_MMG_MC = mmg_logik_MMG_MC = mmg_logs_MMG_MC = -99.0;
+
+	
+		mmg_k_MZ = mmg_ik_MZ = mmg_s_MZ = mmg_logk_MZ = mmg_logik_MZ = mmg_logs_MZ = -99.0;		       
+		mmg_k_MZ_Photon_MC = mmg_ik_MZ_Photon_MC = mmg_s_MZ_Photon_MC = mmg_logk_MZ_Photon_MC = mmg_logik_MZ_Photon_MC = mmg_logs_MZ_Photon_MC = -99.0;		
+		mmg_k_MZ_Muons_MC = mmg_ik_MZ_Muons_MC = mmg_s_MZ_Muons_MC = mmg_logk_MZ_Muons_MC = mmg_logik_MZ_Muons_MC = mmg_logs_MZ_Muons_MC = -99.0;
 
 		// ____________________________________________
 		// END OF INITIALIZATION
