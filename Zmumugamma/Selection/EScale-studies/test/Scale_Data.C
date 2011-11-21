@@ -1,8 +1,14 @@
 // ROOT headers
+#include "TROOT.h"
+#include "TStyle.h"
 #include "TCanvas.h"
 #include "TF1.h"
 #include "TFile.h"
 #include "TTree.h"
+#include <TLatex.h>
+#include "TSystem.h"
+//#include "TProof.h"
+#include "TIterator.h"
 
 // RooFit headers
 #include "RooAbsPdf.h"
@@ -16,12 +22,17 @@
 #include "RooRealVar.h"
 #include "RooWorkspace.h"
 #include "RooFFTConvPdf.h"
-#include "CMSStyle.C"
+#include "RooCBShape.h"
+#include "RooBreitWigner.h"
+#include "RooGaussian.h"
+
+// C++ headers
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <TLatex.h>
-#include "TProof.h"
+
+// Style headers
+#include "CMSStyle.C"
 
 //gROOT->Reset();
 
@@ -36,6 +47,7 @@ double weight_DYToMuMu(int nGenVertices)
 */
 
 void Scale_Data(){
+//int main(){
 //	gStyle->SetOptTitle(0);
 	gROOT->ProcessLine(".x setTDRStyle.C");
 	CMSstyle();
@@ -48,12 +60,13 @@ void Scale_Data(){
 //	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-ZMu-05Jul2011ReReco-ECAL-v1.root");
 //	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-May10ReReco_PromptReco-v4_July6.root");
 //	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-May10ReReco_PromptReco-v4_June17.root");
-	TFile* file_Data = new TFile("../../miniTree_v16_DATA_875pb-1.root");
+	TFile* file_Data = new TFile("../../miniTree_v01_Run2011-all.root");
 //	TFile* file_MC = new TFile("../../miniTree_v11_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root");
 //	TFile* file_MC = new TFile("../../miniTree_v12_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root");
 //	TFile* file_MC = new TFile("../../miniTree_v12_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root");
 //	TFile* file_MC = new TFile("../../miniTree_v13_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root");
-	TFile* file_MC = new TFile("../../miniTree_v16_DYToMuMu.root");
+//	TFile* file_MC = new TFile("../../miniTree_v16_DYToMuMu.root");
+	TFile* file_MC = new TFile("../../miniTree_v08_DYToMuMu_S6_2011_40_partALL.root");
 	TTree* Tree_Data = (TTree*) file_Data->Get("miniTree");
 	TTree* Tree_MC = (TTree*) file_MC->Get("miniTree");
 
@@ -187,7 +200,8 @@ ntplVars->add(Photon_isEE);
 		string sEB = "";
 		if( iEB == 0 ) sEB = "EB";
 		else sEB = "EE";
-		for( int ir9 = 0 ; ir9 < 3 ; ir9++ )
+//		for( int ir9 = 0 ; ir9 < 3 ; ir9++ )
+		for( int ir9 = 0 ; ir9 < 2 ; ir9++ )
 //		for( int ir9 = 0 ; ir9 < 1 ; ir9++ )
 		{
 			string sR9 = "";
@@ -196,17 +210,20 @@ ntplVars->add(Photon_isEE);
 			if( ir9 == 0 ){
 				sR9 = "-highR9-";
 				if( iEB == 0 ){ cutR9 = "Photon_r9 > 0.94"; displayR9 = "R_{9} > .94"; }
-				else { cutR9 = "Photon_r9 > 0.95"; displayR9 = "R_{9} > .95"; }
+//				else { cutR9 = "Photon_r9 > 0.95"; displayR9 = "R_{9} > .95"; }
+				else { cutR9 = "Photon_r9 > 0.94"; displayR9 = "R_{9} > .94"; }
 			} else if (ir9 == 1 ){
 				sR9 = "-lowR9-";
         if( iEB == 0 ) { cutR9 = "Photon_r9 < 0.94"; displayR9 = "R_{9} < .94"; }
-        else { cutR9 = "Photon_r9 <0.95"; displayR9 = "R_{9} < .95"; }
+//        else { cutR9 = "Photon_r9 <0.95"; displayR9 = "R_{9} < .95"; }
+        else { cutR9 = "Photon_r9 <0.94"; displayR9 = "R_{9} < .94"; }
 			} else {
 				sR9 = "-inclusiveR9-";
 				cutR9 = "1";
 				displayR9 = " ";
 			}
-			for( int ipt = 0 ; ipt < 7 ; ipt++ )
+//			for( int ipt = 0 ; ipt < 7 ; ipt++ )
+			for( int ipt = 6 ; ipt < 7 ; ipt++ )
 //			for( int ipt = 4 ; ipt < 5 ; ipt++ )
 			{
 				string spt = "";
@@ -307,8 +324,9 @@ ntplVars->add(Photon_isEE);
           cutpt = "1";
           displaypt = "inclusive p_{T}";
 
-					for( int irun = 0 ; irun < 6 ; irun++ )
-	//				for( int irun = 0 ; irun < 1 ; irun++ )
+//					for( int irun = 0 ; irun < 6 ; irun++ )
+					for( int irun = 5 ; irun < 6 ; irun++ )
+//					for( int irun = 0 ; irun < 1 ; irun++ )
 					{
 						if( irun == 0 ) {
 							srun = "-160431_lt_run_lt_163869-";
@@ -419,6 +437,7 @@ ntplVars->add(Photon_isEE);
 //return;
 
 for(int idata=0; idata < 2; idata++){
+
 	RooDataSet *Data = new RooDataSet();
 	bool isData;
 	if(idata ==0)
@@ -439,207 +458,8 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	if( idata == 0 ) Data_subset[i] = (RooDataSet*)Data->reduce(set_of_cuts_DATA[i].c_str());
   else Data_subset[i] = (RooDataSet*)Data->reduce(set_of_cuts[i].c_str());
 
-/*	
-// ***************************************************************
-// ***** Mmumugamma fit
-// ***************************************************************
 
 
-	// BREIT-WIGNER
-	RooRealVar mmg_BW_mean("mmg_BW_mean", "BW m_{0}",  91.188, 85.0, 95.0,"GeV");
-	RooRealVar mmg_BW_width("mmg_BW_width", "BW #Gamma", 2.45, 2.0,3.0,"GeV");
-	mmg_BW_mean.setConstant();
-	mmg_BW_width.setConstant();
-	RooBreitWigner mmg_BW("mmg_BW", "mmg_BW", Mmumugamma, mmg_BW_mean, mmg_BW_width);
-
-
-	// CRYSTALBALL
-  RooRealVar mmg_CB_m0("mmg_CB_m0", "CB #Delta m_{0}", 0.0, -10.0, 10.0, "GeV");  
-  RooRealVar mmg_CB_sigma("mmg_CB_sigma", "CB #sigma", 1.45, 0.01, 5.0, "GeV");
-  RooRealVar mmg_CB_alpha("mmg_CB_alpha", "CB #alpha", 0.98, 0.01, 10.0);
-  RooRealVar mmg_CB_n("mmg_CB_n", "CB n", 3.8, 0.5, 50.0);
-  RooCBShape mmg_CrystalBall("mmg_CrystalBall","mmg_CrystalBall", Mmumugamma, mmg_CB_m0, mmg_CB_sigma, mmg_CB_alpha, mmg_CB_n);
-
-	// CONVOLUTION
-	RooFFTConvPdf mmg_BWxCB("mmg_BWxCB", "mmg_BWxCB", Mmumugamma, mmg_BW, mmg_CrystalBall);
-
-	mmg_BWxCB.fitTo(*Data_subset[i]);
-	RooArgSet* mmg_BWxCB_param = mmg_BWxCB.getVariables();
-	mmg_BWxCB_param->Print("v");
-
-	TCanvas* mmg_BWxCB_canvas = new TCanvas("mmg_BWxCB_canvas", "mmg_BWxCB_canvas");
-	RooPlot* mmg_BWxCB_frame = Mmumugamma.frame(Title("m_{#mu#mu#gamma} fitted with Z^{0} Breit-Wigner convoluted with  a Crystal Ball"));
-//	RooPlot* mmg_BWxCB_frame = Mmumugamma.frame(Title(" "));
-	Data_subset[i]->plotOn(mmg_BWxCB_frame, Name("data"));
-	mmg_BWxCB.plotOn(mmg_BWxCB_frame, Name("model"));
-//	mmg_BWxCB.paramOn(mmg_BWxCB_frame, Format("NEU", AutoPrecision(2)), Parameters(RooArgSet(mmg_BW_mean, mmg_BW_width, mmg_CB_m0, mmg_CB_sigma, mmg_CB_alpha, mmg_CB_n)), ShowConstants(kTRUE));
-	mmg_BWxCB_frame->Draw();
-
-
-	Double_t mmg_BWxCB_chi2_ndf = mmg_BWxCB_frame->chiSquare("model", "data", 4);
-	cout << "mmg_BWxCB_chi2_ndf= " << mmg_BWxCB_chi2_ndf << endl;
-
-	TLatex latexLabel;
-	latexLabel.SetTextSize(0.06);
-	latexLabel.SetNDC();
-	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2011");
-	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
-	latexLabel.DrawLatex(0.70, 0.88, isData ? "DATA" : "MC");
-	latexLabel.DrawLatex(0.70, 0.82, display[i].c_str());
-	latexLabel.SetTextSize(0.03);
-
-	TIterator *it = (TIterator*) mmg_BWxCB_param->createIterator();	
-//	cout << mmg_BWxCB_param->getRealValue("BW #Gamma") << endl;
-//	mmg_BWxCB_param->printValue(cout);
-//	it->Next()->Print();
-//	mmg_BW_width.Print();
-//	cout << "mmg_BW_width.GetName()= " << mmg_BW_width.GetName() << "\tmmg_BW_width.getVal()= " << mmg_BW_width.getVal() << endl;
-	RooRealVar* obj = new RooRealVar();
-	double position = 0.82;
-	gStyle->SetOptTitle(0);
-	position -= 0.04;
-	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
-	while(( (RooRealVar*)obj = it->Next()) != 0)
-	{
-		if( ! strcmp(((char*)obj->GetName()), "Mmumugamma") ) continue;
-//		cout << "obj->getTitle()= " << obj->getTitle() << endl; // char*
-//		cout << "obj->GetName()= " << obj->GetName() << endl; // char*
-//		cout << "obj->getVal()= " << obj->getVal() << endl; // Double_t
-//		cout << "obj->getError()= " << obj->getError() << endl; // Double_t
-//		cout << "obj->getUnit()= " << obj->getUnit() << endl; // Text_t
-//		cout << endl;
-		position -= 0.04;
-//		double plaf = (double)obj->getVal();
-//		cout << "plaf= " << plaf << endl;
-		std::ostringstream valueStream;
-		if( (double)obj->getError() != 0.0 )
-		{
-			valueStream << setprecision (3) << fixed << (double)obj->getVal() << " +- " << (double)obj->getError();
-		} else {
-			 valueStream << setprecision (3) << fixed << (double)obj->getVal();
-		}
-		string valueString = valueStream.str();
-		latexLabel.DrawLatex(0.20, position, Form("%s = %s %s", obj->GetTitle(), valueString.c_str(), (char*)obj->getUnit()));
-//		latexLabel.DrawLatex(0.18, position, Form("%s = %d \pm %d (%s)", obj->GetTitle(), (double)obj->getVal(), (double)obj->getError(), (char*)obj->getUnit()));
-	}
-//	cout << "it->Next()->GetName()= " << it->Next()->GetName() << "\tit->Next()->getVal()= " << it->Next()->getVal() << endl;
-
-	position -= 0.04;
-	std::ostringstream valueStream;
-	valueStream << setprecision (4) << fixed << (double)mmg_BWxCB_chi2_ndf;
-	string valueString = valueStream.str();
-	latexLabel.DrawLatex(0.20, position, Form("#chi^{2} / ndf = %s", valueString.c_str()));
-
-//	Data_subset[i]->Clear();
-	mmg_BWxCB_canvas->Print(Form("gif/mmg_BWxCB_%s.gif", name[i].c_str()));
-	mmg_BWxCB_canvas->Print(Form("eps/mmg_BWxCB_%s.eps", name[i].c_str()));
-	mmg_BWxCB_canvas->Print(Form("png/mmg_BWxCB_%s.png", name[i].c_str()));
-	mmg_BWxCB_canvas->Print(Form("C/mmg_BWxCB_%s.C", name[i].c_str()));
-	system(Form("convert eps/mmg_BWxCB_%s.eps pdf/mmg_BWxCB_%s.pdf", name[i].c_str(), name[i].c_str()));
-
-*/
-// ***************************************************************
-// ***** k fit
-// ***************************************************************
-/*
-  // CRYSTALBALL
-  RooRealVar mmg_k_CB_m0("mmg_k_CB_m0", "CB #Delta m_{0}", 1.0, -5.0, 5.0, "GeV");  
-  RooRealVar mmg_k_CB_sigma("mmg_k_CB_sigma", "CB #sigma", 0.45, 0.01, 0.5, "GeV");
-  RooRealVar mmg_k_CB_alpha("mmg_k_CB_alpha", "CB #alpha", -1.0, -10.01, 10.0);
-  RooRealVar mmg_k_CB_n("mmg_k_CB_n", "CB n", 2.0, 0.5, 500.0);
-//  RooCBShape mmg_k_CrystalBall("mmg_k_CrystalBall","mmg_k_CrystalBall", mmg_k, mmg_k_CB_m0, mmg_k_CB_sigma, mmg_k_CB_alpha, mmg_k_CB_n);
-  RooCBShape model("mmg_k_CrystalBall","mmg_k_CrystalBall", mmg_k, mmg_k_CB_m0, mmg_k_CB_sigma, mmg_k_CB_alpha, mmg_k_CB_n);
-
-	// BREIT-WIGNER
-	RooRealVar mmg_k_BW_mean("mmg_k_BW_mean", "BW m_{0}", 0.0 , -2.0, 2.0 ,"GeV");
-	RooRealVar mmg_k_BW_width("mmg_k_BW_width", "BW #Gamma", 1.0, 0.0, 5.0,"GeV");
-	RooBreitWigner mmg_k_BW("mmg_k_BW", "mmg_k_BW", mmg_k, mmg_k_BW_mean, mmg_k_BW_width);
-
-
-  // CONVOLUTION
-//  RooFFTConvPdf model("mmg_k_BWxCB", "mmg_k_BWxCB", mmg_k, mmg_k_BW, mmg_k_CrystalBall);
-
-
-	model.fitTo(*Data_subset[i]);
-  RooArgSet* mmg_k_BWxCB_param = model.getVariables();
-  mmg_k_BWxCB_param->Print("v");
-
-	TCanvas *mmg_k_BWxCB_canvas = new TCanvas("mmg_k_BWxCB_canvas", "mmg_k_BWxCB_canvas");
-	RooPlot* mmg_k_frame = mmg_k.frame(Title("k"));
-	Data_subset[i]->plotOn(mmg_k_frame, Name("data"));
-	model.plotOn(mmg_k_frame, Name("model"));
-	mmg_k_frame->Draw();
-
-//	Double_t mmg_k_BWxCB_chi2_ndf = mmg_k_frame->chiSquare("model", "data", 6);
-	Double_t mmg_k_BWxCB_chi2_ndf = mmg_k_frame->chiSquare("model", "data", 4);
-	cout << "mmg_k_BWxCB_chi2_ndf= " << mmg_k_BWxCB_chi2_ndf << endl;	
-	TLatex latexLabel;
-	latexLabel.SetTextSize(0.06);
-	latexLabel.SetNDC();
-	latexLabel.DrawLatex(0.20, 0.88, "CMS Preliminary 2011");
-	latexLabel.DrawLatex(0.20, 0.82, "#sqrt{s} = 7 TeV");
-	latexLabel.DrawLatex(0.70, 0.88, isData ? "DATA" : "MC");
-	latexLabel.DrawLatex(0.70, 0.82, display[i].c_str());
-	latexLabel.SetTextSize(0.03);
-
-	TIterator *it = (TIterator*) mmg_k_BWxCB_param->createIterator();	
-//	cout << mmg_k_BWxCB_param->getRealValue("BW #Gamma") << endl;
-//	mmg_k_BWxCB_param->printValue(cout);
-//	it->Next()->Print();
-//	mmg_BW_width.Print();
-//	cout << "mmg_BW_width.GetName()= " << mmg_BW_width.GetName() << "\tmmg_BW_width.getVal()= " << mmg_BW_width.getVal() << endl;
-	RooRealVar* obj = new RooRealVar();
-	double position = 0.82;
-	gStyle->SetOptTitle(0);
-	position -= 0.04;
-//	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
-	latexLabel.DrawLatex(0.20, position, "Fit: Crystal-Ball");
-	while(( (RooRealVar*)obj = it->Next()) != 0)
-	{
-		if( ! strcmp(((char*)obj->GetName()), "mmg_k") ) continue;
-//		cout << "obj->getTitle()= " << obj->getTitle() << endl; // char*
-//		cout << "obj->GetName()= " << obj->GetName() << endl; // char*
-//		cout << "obj->getVal()= " << obj->getVal() << endl; // Double_t
-//		cout << "obj->getError()= " << obj->getError() << endl; // Double_t
-//		cout << "obj->getUnit()= " << obj->getUnit() << endl; // Text_t
-//		cout << endl;
-		position -= 0.04;
-//		double plaf = (double)obj->getVal();
-//		cout << "plaf= " << plaf << endl;
-		std::ostringstream valueStream;
-		if( (double)obj->getError() != 0.0 )
-		{
-			valueStream << setprecision (3) << fixed << (double)obj->getVal() << " +- " << (double)obj->getError();
-		} else {
-			 valueStream << setprecision (3) << fixed << (double)obj->getVal();
-		}
-		string valueString = valueStream.str();
-		latexLabel.DrawLatex(0.20, position, Form("%s = %s %s", obj->GetTitle(), valueString.c_str(), (char*)obj->getUnit()));
-//		latexLabel.DrawLatex(0.18, position, Form("%s = %d \pm %d (%s)", obj->GetTitle(), (double)obj->getVal(), (double)obj->getError(), (char*)obj->getUnit()));
-	}
-//	cout << "it->Next()->GetName()= " << it->Next()->GetName() << "\tit->Next()->getVal()= " << it->Next()->getVal() << endl;
-
-	position -= 0.04;
-	std::ostringstream valueStream;
-	valueStream << setprecision (4) << fixed << (double)mmg_k_BWxCB_chi2_ndf;
-	string valueString = valueStream.str();
-	latexLabel.DrawLatex(0.20, position, Form("#chi^{2} / ndf = %s", valueString.c_str()));
-*/
-//	Data_subset[i]->Clear();
-/*
-	mmg_k_BWxCB_canvas->Print(Form("gif/mmg_k_BWxCB_%s.gif", name[i].c_str()));
-	mmg_k_BWxCB_canvas->Print(Form("eps/mmg_k_BWxCB_%s.eps", name[i].c_str()));
-	mmg_k_BWxCB_canvas->Print(Form("png/mmg_k_BWxCB_%s.png", name[i].c_str()));
-	mmg_k_BWxCB_canvas->Print(Form("C/mmg_k_BWxCB_%s.C", name[i].c_str()));
-	system(Form("convert eps/mmg_k_BWxCB_%s.eps pdf/mmg_k_BWxCB_%s.pdf", name[i].c_str(), name[i].c_str()));
-*/
-/*
-	mmg_k_BWxCB_canvas->Print(Form("gif/mmg_k_CB_%s_%s.gif", isData?"DATA":"MC", name[i].c_str()));
-	mmg_k_BWxCB_canvas->Print(Form("eps/mmg_k_CB_%s_%s.eps", isData?"DATA":"MC", name[i].c_str()));
-	mmg_k_BWxCB_canvas->Print(Form("png/mmg_k_CB_%s_%s.png", isData?"DATA":"MC", name[i].c_str()));
-	mmg_k_BWxCB_canvas->Print(Form("C/mmg_k_CB_%s_%s.C", isData?"DATA":"MC", name[i].c_str()));
-	system(Form("convert eps/mmg_k_CB_%s_%s.eps pdf/mmg_k_CB_%s_%s.pdf", isData?"DATA":"MC", name[i].c_str(), isData?"DATA":"MC", name[i].c_str()));
-*/
 
 // ***************************************************************
 // ***** s fit
@@ -725,20 +545,28 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	if( idata == 0 ) latexLabel.DrawLatex(0.65, 0.72, display_DATA[i].c_str());
 	latexLabel.SetTextSize(0.03);
 
-	TIterator *it = (TIterator*) mmg_s_BWxCB_param->createIterator();	
+//	TIterator *it = (TIterator*) mmg_s_BWxCB_param->createIterator();	
+	TIter *it = (TIter*) mmg_s_BWxCB_param->createIterator();	
 //	cout << mmg_s_BWxCB_param->getRealValue("BW #Gamma") << endl;
 //	mmg_s_BWxCB_param->printValue(cout);
 //	it->Next()->Print();
 //	mmg_BW_width.Print();
 //	cout << "mmg_BW_width.GetName()= " << mmg_BW_width.GetName() << "\tmmg_BW_width.getVal()= " << mmg_BW_width.getVal() << endl;
-	RooRealVar* obj = new RooRealVar();
+//	RooRealVar* obj = new RooRealVar();
+//	TObject* tobj = 0;
+	RooRealVar* obj = NULL;
 	double position = 0.92;
 	gStyle->SetOptTitle(0);
 	position -= 0.04;
 //	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
 	latexLabel.DrawLatex(0.20, position, "Fit: Crystal-Ball + Gaussian");
-	while(( (RooRealVar*)obj = it->Next()) != 0)
+//	(RooRealVar*)obj = it->Next();
+//	for(RooRealVar* obj = new RooRealVar(); obj != 0 ; (RooRealVar*)obj = it->Next() )
+//	while( ( (RooRealVar*)obj = it->Next() ) != 0 )
+//	while(tobj = it->Next() )
+	while((obj=(RooRealVar*)it->Next()))
 	{
+//		RooRealVar* obj = dynamic_cast<RooRealVar*>(tobj);
 		if( ! strcmp(((char*)obj->GetName()), "mmg_s") ) continue;
 //		cout << "obj->getTitle()= " << obj->getTitle() << endl; // char*
 //		cout << "obj->GetName()= " << obj->GetName() << endl; // char*
@@ -759,8 +587,11 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 		string valueString = valueStream.str();
 		latexLabel.DrawLatex(0.20, position, Form("%s = %s %s", obj->GetTitle(), valueString.c_str(), (char*)obj->getUnit()));
 //		latexLabel.DrawLatex(0.18, position, Form("%s = %d \pm %d (%s)", obj->GetTitle(), (double)obj->getVal(), (double)obj->getError(), (char*)obj->getUnit()));
+//		(RooRealVar*)obj = it->Next();
 	}
+
 //	cout << "it->Next()->GetName()= " << it->Next()->GetName() << "\tit->Next()->getVal()= " << it->Next()->getVal() << endl;
+
 
 	position -= 0.04;
 	std::ostringstream valueStream;
@@ -769,13 +600,7 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	latexLabel.DrawLatex(0.20, position, Form("#chi^{2} / ndf = %s", valueString.c_str()));
 
 //	Data_subset[i]->Clear();
-/*
-	mmg_s_BWxCB_canvas->Print(Form("gif/mmg_s_BWxCB_%s.gif", name[i].c_str()));
-	mmg_s_BWxCB_canvas->Print(Form("eps/mmg_s_BWxCB_%s.eps", name[i].c_str()));
-	mmg_s_BWxCB_canvas->Print(Form("png/mmg_s_BWxCB_%s.png", name[i].c_str()));
-	mmg_s_BWxCB_canvas->Print(Form("C/mmg_s_BWxCB_%s.C", name[i].c_str()));
-	system(Form("convert eps/mmg_s_BWxCB_%s.eps pdf/mmg_s_BWxCB_%s.pdf", name[i].c_str(), name[i].c_str()));
-*/
+
 	if( idata == 0 )
 	{
 		mmg_s_BWxCB_canvas->Print(Form("gif/mmg_s_CB_%s_%s.gif", isData?"DATA":"MC", name_DATA[i].c_str()));
@@ -790,8 +615,8 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 		mmg_s_BWxCB_canvas->Print(Form("C/mmg_s_CB_%s_%s.C", isData?"DATA":"MC", name[i].c_str()));
 		system(Form("convert eps/mmg_s_CB_%s_%s.eps pdf/mmg_s_CB_%s_%s.pdf", isData?"DATA":"MC", name[i].c_str(), isData?"DATA":"MC", name[i].c_str()));
 	}
-
 } // end of loop over categories
+
 }// end of loop over data / mc
 
 // TWIKI TABLES
@@ -1073,7 +898,6 @@ for(int i=0; i < mc_alpha.size(); i++)
 	<< endl;
 	cout << "\\end{tabular}" << endl;
 }
-
 
 return;
 }
