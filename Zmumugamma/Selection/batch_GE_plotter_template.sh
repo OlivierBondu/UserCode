@@ -5,7 +5,6 @@
 #$ -l fsize=1G
 #$ -q medium
 #$ -l sps=1
-###$ -l hpss=1
 #$ -N NAME
 ### Merge the stdout et stderr in a single file
 #$ -j y
@@ -13,7 +12,7 @@
 #$ -cwd
 ###$ -m be
 ### set array job indices 'min-max:interval'
-#$ -t 1-16
+#$ -t 1-6
 
 syntax="${0} {parameter}"
 #if [[ -z ${6} ]]
@@ -51,25 +50,24 @@ echo ""
 
 # COPY HEADER FILES TO WORKER
 echo "COPY HEADER FILES TO WORKER"
-#mkdir ${TMPDIR}/interface
-#cp ${SPSDIR}/UserCode/IpnTreeProducer/interface/*h ${TMPDIR}/interface/
-if [[ ! -e ${TMPDIR}/interface ]]
-then
-  mkdir ${TMPDIR}/interface
-	cp ${SPSDIR}/UserCode/IpnTreeProducer/interface/*h ${TMPDIR}/interface/
-fi
+cp ${SPSDIR}/Zmumugamma/Selection/DrawDataMC.h ${TMPDIR}/
+cp ${SPSDIR}/Zmumugamma/Selection/setTDRStyle.C ${TMPDIR}/
 
 echo "USER=${USER}"
 
-# COPY IpnTree LIB FILE TO WORKER
-#mkdir ${TMPDIR}/lib
-#cp ${SPSDIR}/UserCode/IpnTreeProducer/src/libToto.so ${TMPDIR}/lib/
-echo "COPY IpnTree LIB FILE TO WORKER"
-if [[ ! -e ${TMPDIR}/lib ]]
-then
-	mkdir ${TMPDIR}/lib
-	cp ${SPSDIR}/UserCode/IpnTreeProducer/src/libToto.so ${TMPDIR}/lib/
-fi
+# COPY miniTrees TO WORKER
+echo "COPY miniTrees TO WORKER"
+for sample in `echo "Data FSR_DYToMuMu nonFSR_DYToMuMu TTJets WJetsToLNu QCDMu"`
+do
+	miniTree=`cat ${SPSDIR}/Zmumugamma/Selection/plotDataMC_TDR_miniTree.C | grep -v "//" | grep "string ${sample}" | cut -d \" -f 2 | sed -e "s/%s/LUMI/g"`
+	echo "Copying ${miniTree}"
+	cp ${SPSDIR}/Zmumugamma/Selection/${miniTree} ${TMPDIR}/
+done
+
+for img in `echo "C png gif pdf eps"`
+do
+	mkdir ${TMPDIR}/${img}
+done
 
 echo "USER=${USER}"
 
@@ -83,7 +81,7 @@ echo "USER=${USER}"
 
 # COPY EXECUTABLE TO WORKER
 echo "COPY EXECUTABLE TO WORKER"
-cp ${SPSDIR}/Zmumugamma/Selection/Apply_v10.exe ${TMPDIR}/
+cp ${SPSDIR}/Zmumugamma/Selection/PLOT.exe ${TMPDIR}/
 
 echo "pwd; ls -als"
 pwd; ls -als
@@ -94,8 +92,7 @@ echo "USER=${USER}"
 # EXECUTE JOB
 echo "EXECUTE JOB"
 cd ${TMPDIR}/
-#./Apply_v10.exe ${1} ${2} ${3} ${4} ${5} ${6} 2> ${2}.err | tee ${2}.out
-./Apply_v10.exe ${1} ${2} ${ijob} ${3} ${4} ${5} ${6} ${7} 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
+PLOT.exe ${1} ${ijob}
 
 echo "pwd; ls -als"
 pwd; ls -als
@@ -103,16 +100,20 @@ echo ""
 
 # GET BACK OUTPUT FILES TO SPS
 echo "GET BACK OUTPUT FILES TO SPS AND REMOVE THEM FROM DISTANT DIR"
-mv ${TMPDIR}/miniTree_${2}_part${ijob}*root ${SPSDIR}/Zmumugamma/Selection/
-mv ${TMPDIR}/${2}_part${ijob}*out ${SPSDIR}/Zmumugamma/Selection/
-mv ${TMPDIR}/${2}_part${ijob}*err ${SPSDIR}/Zmumugamma/Selection/
-rm ${TMPDIR}/Apply_v10.exe
-
-#"cd ${SPSDIR}/Zmumugamma/Selection/"
-#cd ${SPSDIR}/Zmumugamma/Selection/
-#echo "pwd; ls -als"
-#pwd; ls -als
-#echo ""
+for img in `echo "C png gif pdf eps"`
+do
+	cp -r ${TMPDIR}/${img} ${SPSDIR}/Zmumugamma/Selection/${2}
+	rm -r ${TMPDIR}/${img}
+done
+for sample in `echo "Data FSR_DYToMuMu nonFSR_DYToMuMu TTJets WJetsToLNu QCDMu"`
+do
+  miniTree=`cat ${SPSDIR}/Zmumugamma/Selection/plotDataMC_TDR_miniTree.C | grep -v "//" | grep "string ${sample}" | cut -d \" -f 2 | sed -e "s/%s/LUMI/g"`
+  echo "Deleting ${miniTree}"
+  rm ${TMPDIR}/${miniTree}
+done
+rm ${TMPDIR}/PLOT.exe
+rm ${TMPDIR}/DrawDataMC.h 
+rm ${TMPDIR}/setTDRStyle.C
 
 
 
