@@ -51,47 +51,63 @@ gStyle->SetOptStat(0);
 
 TCanvas *c1 = new TCanvas("c1", "c1");
 TCanvas *c2 = new TCanvas("c2", "c2");
-bool dorun = true;
+bool dorun = false;
 bool dopt = true;
-
+bool dotruth = true;
+string infile = "oups";
 
 		
-for(int iestimator=0 ; iestimator < 2 ; iestimator++)
+for(int iestimator=0 ; iestimator < 1 ; iestimator++)
 {
 	string string_estimator = iestimator==0 ? "s" : "f";
-	for(int idata=0 ; idata < 2 ; idata++)
+	for(int idata=1 ; idata < 2 ; idata++)
 	{
 		string string_data = idata==0 ? "DATA" : "MC";
 		TTree *tree = new TTree();
-		tree->ReadFile(idata==0 ? "VGamma_875pb-1_v2_f_DATA.out" : "VGamma_875pb-1_v2_f_MC.out", "EBEE/I:R9/I:PT/I:RUN/I:F/F:DELTAF/F");
+		TTree *treeTruth = new TTree();
+		tree->ReadFile(idata==0 ? Form("%s_%s_DATA.out", infile.c_str(), string_estimator.c_str()) : Form("%s_%s_MC.out", infile.c_str(), string_estimator.c_str()), "EBEE/I:R9/I:PT/I:RUN/I:F/F:DELTAF/F");
+//		treeTruth->ReadFile("truth.out", "EBEE/I:R9/I:PT/I:RUN/I:F/F:DELTAF/F");
+		treeTruth->ReadFile("truth_bfg_baseline.txt", "EBEE/I:R9/I:PT/I:RUN/I:F/F:DELTAF/F");
 //		tree->ReadFile(idata==0 ? "info_data.raw" : "vgamma_f_MC.out", "EBEE/I:R9/I:PT/I:RUN/I:F/F:DELTAF/F");
 //		tree->ReadFile("vgamma_f_MC.out", "EBEE/I:R9/I:PT/I:RUN/I:F/F:DELTAF/F");
 		for(int iEBEE=0 ; iEBEE < 2 ; iEBEE++)
 		{
-			for(int iR9=0 ; iR9 < 3 ; iR9++)
+			//for(int iR9=0 ; iR9 < 3 ; iR9++)
+			for(int iR9=0 ; iR9 < 2 ; iR9++)
 			{
 				if( dopt )
 				{
-		
 				c1->cd();
+				const Long64_t NTruth = treeTruth->Draw("PT:F:DELTAF", Form("EBEE == %i && R9 == %i && RUN == 5", iEBEE, iR9));
 				const Long64_t N = tree->Draw("PT:F:DELTAF", Form("EBEE == %i && R9 == %i && RUN == 5", iEBEE, iR9));
 				c2->cd();
+				TGraphErrors *grTruth = new TGraphErrors(NTruth, treeTruth->GetV1(), treeTruth->GetV2(), 0, treeTruth->GetV3());
 				TGraphErrors *gr = new TGraphErrors(N, tree->GetV1(), tree->GetV2(), 0, tree->GetV3());
-				gr->Draw("AP");
-				double xmin = gr->GetXaxis()->GetXmin() - (gr->GetXaxis()->GetXmax() - 6.0);
-				gr->GetXaxis()->SetLimits(xmin, gr->GetXaxis()->GetXmax());
-				gr->GetXaxis()->SetTitle("p_{T}");
-				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(0.0), "[10 ; 12]");
-				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(1.0), "[12 ; 15]");
-				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(2.0), "[15 ; 20]");
-				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(3.0), "[20 ; 25]");
-				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(4.0), "[25 ; 30]");
-				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(5.0), "[30 ; inf[");
-				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(6.0), "[10 ; inf[");
-				gr->SetMaximum(1.075);
-				gr->SetMinimum(0.925);
-				gr->GetXaxis()->LabelsOption("h");
-				gr->GetYaxis()->SetTitle( string_estimator.c_str() );
+				gr->SetMarkerColor(kRed);
+				TMultiGraph *mg = new TMultiGraph();
+				mg->Add(gr);
+				mg->Add(grTruth);
+				mg->Draw("AP");
+//				grTruth->Draw("AP");
+//				gr->Draw("AP");
+				double xmin = mg->GetXaxis()->GetXmin() - (mg->GetXaxis()->GetXmax() - 5.0);
+				mg->GetXaxis()->SetLimits(xmin, mg->GetXaxis()->GetXmax());
+				mg->GetXaxis()->SetTitle("p_{T}");
+				mg->GetXaxis()->SetBinLabel(mg->GetXaxis()->FindBin(0.0), "[10 ; 12]");
+				mg->GetXaxis()->SetBinLabel(mg->GetXaxis()->FindBin(1.0), "[12 ; 15]");
+				mg->GetXaxis()->SetBinLabel(mg->GetXaxis()->FindBin(2.0), "[15 ; 20]");
+				mg->GetXaxis()->SetBinLabel(mg->GetXaxis()->FindBin(3.0), "[20 ; 25]");
+				mg->GetXaxis()->SetBinLabel(mg->GetXaxis()->FindBin(4.0), "[25 ; 30]");
+				mg->GetXaxis()->SetBinLabel(mg->GetXaxis()->FindBin(5.0), "[30 ; inf[");
+//				mg->GetXaxis()->SetBinLabel(mg->GetXaxis()->FindBin(6.0), "[10 ; inf[");
+/*
+				double Ymax = iestimator==0 ? 13.0 : 1.075;
+				double Ymin = iestimator==0 ? -6.0 : 0.925;
+				mg->SetMaximum(Ymax);
+				mg->SetMinimum(Ymin);
+*/
+				mg->GetXaxis()->LabelsOption("h");
+				mg->GetYaxis()->SetTitle( Form("%s (%)", string_estimator.c_str()) );
 				TLatex latexLabel;
 			  latexLabel.SetNDC();
 			  latexLabel.SetTextSize(0.04);
@@ -144,8 +160,10 @@ for(int iestimator=0 ; iestimator < 2 ; iestimator++)
 				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(3.0), "166503-166861");
 				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(4.0), "166862-166967");
 				gr->GetXaxis()->SetBinLabel(gr->GetXaxis()->FindBin(5.0), "all");
-				gr->SetMaximum(1.075);
-				gr->SetMinimum(0.925);
+				double Ymax = iestimator==0 ? 10.0 : 1.075;
+				double Ymin = iestimator==0 ? -10.0 : 0.925;
+				gr->SetMaximum(Ymax);
+				gr->SetMinimum(Ymin);
 				gr->GetXaxis()->LabelsOption("v");
 				gr->GetYaxis()->SetTitle( string_estimator.c_str() );
 				TLatex latexLabel;

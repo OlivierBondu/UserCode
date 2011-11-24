@@ -30,6 +30,7 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
+#include <string>
 
 // Style headers
 #include "CMSStyle.C"
@@ -46,7 +47,7 @@ double weight_DYToMuMu(int nGenVertices)
 }
 */
 
-void Scale_Data(){
+void Scale_Data(string lumi = "2011", int low = 40, int high = 80){
 //int main(){
 //	gStyle->SetOptTitle(0);
 	gROOT->ProcessLine(".x setTDRStyle.C");
@@ -60,13 +61,14 @@ void Scale_Data(){
 //	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-ZMu-05Jul2011ReReco-ECAL-v1.root");
 //	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-May10ReReco_PromptReco-v4_July6.root");
 //	TFile* file_Data = new TFile("../../miniTree_v13_Run2011A-May10ReReco_PromptReco-v4_June17.root");
-	TFile* file_Data = new TFile("../../miniTree_v01_Run2011-all.root");
+//	TFile* file_Data = new TFile("../../miniTree_v01_Run2011-all.root");
+	TFile* file_Data = new TFile(Form("../../miniTree_v12_%s_%i_%i_partALL.root", lumi.c_str(), low, high));
 //	TFile* file_MC = new TFile("../../miniTree_v11_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root");
 //	TFile* file_MC = new TFile("../../miniTree_v12_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root");
 //	TFile* file_MC = new TFile("../../miniTree_v12_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root");
 //	TFile* file_MC = new TFile("../../miniTree_v13_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root");
 //	TFile* file_MC = new TFile("../../miniTree_v16_DYToMuMu.root");
-	TFile* file_MC = new TFile("../../miniTree_v08_DYToMuMu_S6_2011_40_partALL.root");
+	TFile* file_MC = new TFile(Form("../../miniTree_v10_DYToMuMu_S6_%s_%i_%i_partALL.root", lumi.c_str(), low, high));
 	TTree* Tree_Data = (TTree*) file_Data->Get("miniTree");
 	TTree* Tree_MC = (TTree*) file_MC->Get("miniTree");
 
@@ -210,20 +212,20 @@ ntplVars->add(Photon_isEE);
 			if( ir9 == 0 ){
 				sR9 = "-highR9-";
 				if( iEB == 0 ){ cutR9 = "Photon_r9 > 0.94"; displayR9 = "R_{9} > .94"; }
-//				else { cutR9 = "Photon_r9 > 0.95"; displayR9 = "R_{9} > .95"; }
-				else { cutR9 = "Photon_r9 > 0.94"; displayR9 = "R_{9} > .94"; }
+				else { cutR9 = "Photon_r9 > 0.95"; displayR9 = "R_{9} > .95"; }
+//				else { cutR9 = "Photon_r9 > 0.94"; displayR9 = "R_{9} > .94"; }
 			} else if (ir9 == 1 ){
 				sR9 = "-lowR9-";
         if( iEB == 0 ) { cutR9 = "Photon_r9 < 0.94"; displayR9 = "R_{9} < .94"; }
-//        else { cutR9 = "Photon_r9 <0.95"; displayR9 = "R_{9} < .95"; }
-        else { cutR9 = "Photon_r9 <0.94"; displayR9 = "R_{9} < .94"; }
+        else { cutR9 = "Photon_r9 <0.95"; displayR9 = "R_{9} < .95"; }
+//        else { cutR9 = "Photon_r9 <0.94"; displayR9 = "R_{9} < .94"; }
 			} else {
 				sR9 = "-inclusiveR9-";
 				cutR9 = "1";
 				displayR9 = " ";
 			}
-//			for( int ipt = 0 ; ipt < 7 ; ipt++ )
-			for( int ipt = 6 ; ipt < 7 ; ipt++ )
+			for( int ipt = 0 ; ipt < 5 ; ipt++ )
+//			for( int ipt = 6 ; ipt < 7 ; ipt++ )
 //			for( int ipt = 4 ; ipt < 5 ; ipt++ )
 			{
 				string spt = "";
@@ -545,26 +547,20 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	if( idata == 0 ) latexLabel.DrawLatex(0.65, 0.72, display_DATA[i].c_str());
 	latexLabel.SetTextSize(0.03);
 
-//	TIterator *it = (TIterator*) mmg_s_BWxCB_param->createIterator();	
-	TIter *it = (TIter*) mmg_s_BWxCB_param->createIterator();	
+	TIterator *it = (TIterator*) mmg_s_BWxCB_param->createIterator();	
+//	TIter *it = (TIter*) mmg_s_BWxCB_param->createIterator();	
 //	cout << mmg_s_BWxCB_param->getRealValue("BW #Gamma") << endl;
 //	mmg_s_BWxCB_param->printValue(cout);
 //	it->Next()->Print();
 //	mmg_BW_width.Print();
 //	cout << "mmg_BW_width.GetName()= " << mmg_BW_width.GetName() << "\tmmg_BW_width.getVal()= " << mmg_BW_width.getVal() << endl;
-//	RooRealVar* obj = new RooRealVar();
-//	TObject* tobj = 0;
-	RooRealVar* obj = NULL;
+	RooRealVar* obj = new RooRealVar();
 	double position = 0.92;
 	gStyle->SetOptTitle(0);
 	position -= 0.04;
 //	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
 	latexLabel.DrawLatex(0.20, position, "Fit: Crystal-Ball + Gaussian");
-//	(RooRealVar*)obj = it->Next();
-//	for(RooRealVar* obj = new RooRealVar(); obj != 0 ; (RooRealVar*)obj = it->Next() )
-//	while( ( (RooRealVar*)obj = it->Next() ) != 0 )
-//	while(tobj = it->Next() )
-	while((obj=(RooRealVar*)it->Next()))
+	while(( (RooRealVar*)obj = it->Next()) != 0)
 	{
 //		RooRealVar* obj = dynamic_cast<RooRealVar*>(tobj);
 		if( ! strcmp(((char*)obj->GetName()), "mmg_s") ) continue;

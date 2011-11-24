@@ -10,6 +10,9 @@ then
 fi
 
 outputPrefix="${1}"
+#inputfile="VGamma_875pb-1_v2.out"
+inputfile="fits_S6_2011_40_80.eo"
+
 
 if [[ -e ${outputPrefix}_s_DATA.out ]]
 then
@@ -52,20 +55,28 @@ echo "#################################################"
 					do
 						sample=`echo "${EBEE}_tight-${r9}--${pt}--${run}"`
 #						echo ${sample}
-	#					cat VGamma_875pb-1_v2.out | grep "${EBEE}_tight-${r9}--${pt}--${run}.*f = (1/(1+s))"					
-	#					line=`grep -A 6 "${EBEE}_tight-${r9}--${pt}--${run}.*f = (1/(1+s))" VGamma_875pb-1_v2.out | grep "data - mc" | grep -v "(%)"`
+	#					cat ${inputfile} | grep "${EBEE}_tight-${r9}--${pt}--${run}.*f = (1/(1+s))"					
+	#					line=`grep -A 6 "${EBEE}_tight-${r9}--${pt}--${run}.*f = (1/(1+s))" ${inputfile} | grep "data - mc" | grep -v "(%)"`
 						if [[ "${data}" == "DATA" ]]
 						then
-							line=`grep -A 2 "${EBEE}_tight-${r9}--${pt}--${run}.*${var}\*" VGamma_875pb-1_v2.out | grep "data" | grep -v "(%)"`
-							f=`echo ${line} | awk '{print $4}'`
-							deltaf=`echo ${line} | awk '{print $6}'`
+#							line=`grep -A 2 "${EBEE}_tight-${r9}--${pt}--${run}.*${var}\*" ${inputfile} | grep "data" | grep -v "(%)"`
+#							f=`echo ${line} | awk '{print $4}'`
+#							deltaf=`echo ${line} | awk '{print $6}'`
+							line=`grep -A 2 "${EBEE}_tight-${r9}--${pt}--${run}.*${var}\*" ${inputfile} | grep "data" | grep "(%)"`
+							f=`echo ${line} | awk '{print $5}'`
+#							deltaf=`echo ${line} | awk '{print $7}'`
+							deltaf=`echo ${line} | awk '{print $9}'` #sigma
 						elif [[ "${data}" == "MC" ]]
 						then
-							line=`grep -A 4 "${EBEE}_tight-${r9}--${pt}--${run}.*${var}\*" VGamma_875pb-1_v2.out | grep "mc" | grep -v "(%)"`
-							f=`echo ${line} | awk '{print $4}'`
-							deltaf=`echo ${line} | awk '{print $6}'`
+#							line=`grep -A 4 "${EBEE}_tight-${r9}--${pt}--${run}.*${var}\*" ${inputfile} | grep "mc" | grep -v "(%)"`
+#							f=`echo ${line} | awk '{print $4}'`
+#							deltaf=`echo ${line} | awk '{print $6}'`
+							line=`grep -A 4 "${EBEE}_tight-${r9}--${pt}--${run}.*${var}\*" ${inputfile} | grep "mc" | grep "(%)"`
+							f=`echo ${line} | awk '{print $5}'`
+							deltaf=`echo ${line} | awk '{print $7}'`
+							deltaf=`echo ${line} | awk '{print $9}'` #sigma
 						fi
-	#					line=`grep -A 2 "${EBEE}_tight-${r9}--${pt}--${run}.*f = (1/(1+s))" VGamma_875pb-1_v2.out | grep "data" | grep -v "(%)"`
+	#					line=`grep -A 2 "${EBEE}_tight-${r9}--${pt}--${run}.*f = (1/(1+s))" ${inputfile} | grep "data" | grep -v "(%)"`
 	#					f=`echo ${line} | awk '{print $6}'`
 	#					deltaf=`echo ${line} | awk '{print $8}'`
 						line=`echo -e "${sample}\t${f}\t${deltaf}"`
