@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
 	if( argc > 9 )
 	{
 		correction = argv[9];
-		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") )
+		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") || (correction == "ETHZ") )
 		{
 			cout << correction << " correction set will be applied upstream" << endl;
 			isManualCorrectionsApplied = true;
@@ -1174,7 +1174,7 @@ int main(int argc, char *argv[])
   int NbEventsEnd = NbEvents;
 	if( ijob != -1 )
 	{
-		NbEventsPerJob = 250000;
+		NbEventsPerJob = 200000;
 		NbEventsBegin = ijob * NbEventsPerJob;
 		NbEventsEnd = min( (ijob + 1)* NbEventsPerJob - 1 , (int)NbEvents);
 	  NbEvents = NbEventsEnd - NbEventsBegin;
