@@ -1,5 +1,8 @@
+// TMVA headers
 #include "TMVA/Reader.h"
 #include "TMVA/Tools.h"
+
+// ROOT headers
 #include "TF1.h"
 #include "TH1F.h"
 #include "TH2F.h"
@@ -16,11 +19,15 @@
 #include "TRandom3.h"
 #include "TTimeStamp.h"
 #include "TSystem.h"
-#include "TProof.h"
+//#include "TProof.h"
+
+// C++ headers
 #include <sstream>
 #include <iostream>
 #include <fstream>
 #include <utility>
+
+// IpnTreeProducer headers
 #include "interface/TRootBardak.h"
 #include "interface/TRootBeamSpot.h"
 #include "interface/TRootCluster.h"
@@ -42,6 +49,7 @@
 #include "interface/TRootTrack.h"
 #include "interface/TRootVertex.h"
 
+// personal headers
 #include "corrections.h"
 
 
@@ -232,92 +240,53 @@ int photonIsInCrack(double sc_abs_eta, double sc_abs_phi)
 	return 0;
 }
 
-double fEta(vector<double> param, double eta) 
+//float ETHZ_getValue(bool isEB, float SC_rawE, float SC_Eta, float ES_E, float phiWidth, float etaWidth, float f_eta)
+float ETHZ_getValue(TRootPhoton *myphoton, float f_eta)
 {
-  double ieta = fabs(eta)*(5/0.087);
-  double p0 = param[0];  // should be 40.2198
-  double p1 = param[1];  // should be -3.03103e-6
-  double feta = 1; 
+	int mode = 1;
+  float corr = 1.;
+  float corr2 = 1.;
+  float energy = 0;
 
-  if ( ieta < p0 || fabs(eta) > 1.4442) feta = 1.0; 
-  else feta = (double)1.0/(double)(1.0 + p1*(ieta-p0)*(ieta-p0));
+  if (myphoton->isEBPho()){
+//    float cetacorr = fEta(myphoton->superCluster()->rawEnergy(), myphoton->superCluster()->Eta(), 0)/myphoton->superCluster()->rawEnergy();
+		float cetacorr = f_eta;
 
-  return feta;
-}
-
-double BremCor(vector<double> param, double brem)
-{
-  // brem == phiWidth/etaWidth of the SuperCluster 
-  // e  == energy of the SuperCluster 
-  // first parabola (for br > threshold) 
-  // p0 + p1*x + p2*x^2 
-  // second parabola (for br <= threshold) 
-  // ax^2 + bx + c, make y and y' the same in threshold 
-  // y = p0 + p1*threshold + p2*threshold^2  
-  // yprime = p1 + 2*p2*threshold 
-  // a = p3 
-  // b = yprime - 2*a*threshold 
-  // c = y - a*threshold^2 - b*threshold 
-  double p0 = 0;
-  double p1 = 0;
-  double p2 = 0;
-  double p3 = 0;
-  double p4 = 0;
-
-  //Make No Corrections if brem is invalid! 
-	//cout<<endl<<setprecision( 10 )<<"brem in function= "<<brem<<endl;
-  if ( brem == 0 ) return 1.0;
-
-		//double bremLowThr  = 0.9;
-		double bremLowThr  = param[0];
-		//double bremHighThr = 6.5;
-		double bremHighThr = param[1];
-
-		if ( brem < bremLowThr  ) brem = bremLowThr;
-		if ( brem > bremHighThr ) brem = bremHighThr;
-   		p0 = param[2];
-   		p1 = param[3];
-   		p2 = param[4];
-   		p3 = param[5];
-   		p4 = param[6];
-
-  double threshold = p4;
-
-  double y = p0*threshold*threshold + p1*threshold + p2;
-  double yprime = 2*p0*threshold + p1;
-  double a = p3;
-  double b = yprime - 2*a*threshold;
-  double c = y - a*threshold*threshold - b*threshold;
-
-  double bremCorrection = 1.0;
-  if ( brem < threshold ) bremCorrection = p0*brem*brem + p1*brem + p2;
-  else bremCorrection = a*brem*brem + b*brem + c;
-
-  return (double)(1.0) / (double)(bremCorrection);
-}
-
-double EtEtaCor(vector<double> param, double et, double eta, bool isEB) 
-{ 
-  
-  double etEtaCorrection = 0.0; 
-
-	if( isEB )//need to verify!!
-	{
-		double p0 = param[0] + (double)(param[1]) / (double)(et + param[2]) + (double)(param[3])/(double)(et*et);
-		double p1 = param[4] + (double)(param[5])/(double)(et + param[6]) + (double)(param[7])/(double)(et*et);
-		etEtaCorrection = p0 +  p1 * atan(param[8]*(param[9]-fabs(eta))) + param[10] * fabs(eta);
-	} else {
-		double p0 = param[0] + (double)(param[1])/(double)(sqrt(et));
-		double p1 = param[2] + (double)(param[3])/(double)(sqrt(et));
-		double p2 = param[4] + (double)(param[5])/(double)(sqrt(et));
-		double p3 = param[6] + (double)(param[7])/(double)(sqrt(et));
-		etEtaCorrection = p0 + p1*fabs(eta) + p2*eta*eta + p3/fabs(eta);
+    energy = myphoton->superCluster()->rawEnergy()*cetacorr; //previously in CMSSW
   }
-		if ( etEtaCorrection < 0.5 ) etEtaCorrection = 0.5;
-  		if ( etEtaCorrection > 1.5 ) etEtaCorrection = 1.5;
-  //End Caps
-   
-  return (double)(1.0)/(double)(etEtaCorrection);
+  else if (myphoton->isEEPho()){
+    energy = myphoton->superCluster()->rawEnergy()+myphoton->preshowerEnergy();
+  }
+
+  float newEnergy = energy;
+
+  if (mode==0){ //Electron
+
+    corr = ETHZ_fBremEta(myphoton->superCluster()->phiWidth()/myphoton->superCluster()->etaWidth(), myphoton->superCluster()->Eta(), 0);
+
+    float et = energy*TMath::Sin(2*TMath::ATan(TMath::Exp(-myphoton->superCluster()->Eta())))/corr;
+
+    if (myphoton->isEBPho()) corr2 = corr * ETHZ_fEt(et, 0);
+    if (myphoton->isEEPho()) corr2 = corr * ETHZ_fEnergy(energy/corr, 1);
+
+    newEnergy = energy/corr2; 
+
+  }
+
+  if (mode==1){ //low R9 Photons
+
+    corr = ETHZ_fBremEta(myphoton->superCluster()->phiWidth()/myphoton->superCluster()->etaWidth(), myphoton->superCluster()->Eta(), 1);
+
+    float et = energy*TMath::Sin(2*TMath::ATan(TMath::Exp(-myphoton->superCluster()->Eta())))/corr;
+
+    if (myphoton->isEBPho()) corr2 = corr * ETHZ_fEt(et, 2);
+    if (myphoton->isEEPho()) corr2 = corr * ETHZ_fEnergy(energy/corr, 3);
+
+    newEnergy = energy/corr2; 
+
+  }
+
+  return newEnergy;
 }
 
 double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
@@ -329,51 +298,63 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 		if( verbositybis > 0) cout << "Photon is in crack : " << ((photonIsInCrack_ == 1) ? "Eta" : "Phi") << endl;
 //		return 1.0; // IF COMMENTED, BE SURE CRACK CORRECTIONS ARE TURNED ON BELOW
 	}
-	vector<double> param_Ceta;
-	vector<double> param_fbrem;
-	vector<double> param_feteta;
-	parameters_Ceta(param_Ceta, correctionSet);
-	parameters_fbrem(param_fbrem, correctionSet, myphoton->isEBPho());
-	parameters_feteta(param_feteta, correctionSet, myphoton->isEBPho());
-	double f_eta = fEta(param_Ceta, myphoton->superCluster()->Eta());
-	double brem = (double)(myphoton->superCluster()->phiWidth()) / (double)(myphoton->superCluster()->etaWidth());
-	double f_brem = BremCor(param_fbrem, brem);
-	double sc_e = (myphoton->isEBPho()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
-	double sc_e_noCrack = (myphoton->isEBPho()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
-	double f_crack = myphoton->superCluster()->crackCorrectionEtaPhi();
-	double sc_et = sc_e * (sin(myphoton->superCluster()->Theta()));
-  double sc_et_noCrack = sc_e_noCrack * (sin(myphoton->superCluster()->Theta()));
-	double f_et_eta = EtEtaCor(param_feteta, f_brem * sc_et, myphoton->superCluster()->Eta(), myphoton->isEBPho());
-  double f_et_eta_noCrack = EtEtaCor(param_feteta, f_brem * sc_et_noCrack, myphoton->superCluster()->Eta(), myphoton->isEBPho());
 
-	if( (myphoton->isEBPho()) && (myphoton->r9()<0.94) )
+	vector<double> param_Ceta;
+	parameters_Ceta(param_Ceta, correctionSet);
+	double f_eta = fEta(param_Ceta, myphoton->superCluster()->Eta());
+
+	if( correctionSet == "ETHZ" )
 	{
-    if( verbositybis > 1) cout << "###\tmyphoton->superCluster()->crackCorrectionEta()= " << myphoton->superCluster()->crackCorrectionEta() << endl;
-    if( verbositybis > 1) cout << "###\tmyphoton->superCluster()->crackCorrectionPhi()= " << myphoton->superCluster()->crackCorrectionPhi() << endl;
-    if( verbositybis > 1) cout << "###\tmyphoton->superCluster()->crackCorrectionEtaPhi()= " << myphoton->superCluster()->crackCorrectionEtaPhi() << endl;
-		if( verbositybis > 1) cout << "f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()= " << f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy() << endl;
-    if( verbositybis > 1) cout << "###\tf_et_eta_noCrack * f_brem * f_eta * sc_e_noCrack * f_crack= " << f_et_eta_noCrack * f_brem * f_eta * sc_e_noCrack * f_crack << endl;
+		if( verbositybis > 1) cout << "ETHZ_getValue(myphoton, f_eta)= " << ETHZ_getValue(myphoton, f_eta) << endl;
+		return ETHZ_getValue(myphoton, f_eta) / (double)(myphoton->Energy());
+	} else {
+		vector<double> param_fbrem;
+		vector<double> param_feteta;
+		parameters_fbrem(param_fbrem, correctionSet, myphoton->isEBPho());
+		parameters_feteta(param_feteta, correctionSet, myphoton->isEBPho());
+		double brem = (double)(myphoton->superCluster()->phiWidth()) / (double)(myphoton->superCluster()->etaWidth());
+		double f_brem = BremCor(param_fbrem, brem);
+		double sc_e = (myphoton->isEBPho()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
+		double sc_e_noCrack = (myphoton->isEBPho()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
+		double f_crack = myphoton->superCluster()->crackCorrectionEtaPhi();
+		double sc_et = sc_e * (sin(myphoton->superCluster()->Theta()));
+	  double sc_et_noCrack = sc_e_noCrack * (sin(myphoton->superCluster()->Theta()));
+		double f_et_eta = EtEtaCor(param_feteta, f_brem * sc_et, myphoton->superCluster()->Eta(), myphoton->isEBPho());
+	  double f_et_eta_noCrack = EtEtaCor(param_feteta, f_brem * sc_et_noCrack, myphoton->superCluster()->Eta(), myphoton->isEBPho());
+	  if( verbositybis > 1)
+		{
+			cout << "###\tmyphoton->superCluster()->crackCorrectionEta()= " << myphoton->superCluster()->crackCorrectionEta() << endl;
+    	cout << "###\tmyphoton->superCluster()->crackCorrectionPhi()= " << myphoton->superCluster()->crackCorrectionPhi() << endl;
+    	cout << "###\tmyphoton->superCluster()->crackCorrectionEtaPhi()= " << myphoton->superCluster()->crackCorrectionEtaPhi() << endl;
+		}
+		if( (myphoton->isEBPho()) && (myphoton->r9()<0.94) )
+		{
+	    if( verbositybis > 1)
+			{
+				cout << "f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()= " << f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy() << endl;
+    		cout << "###\tf_et_eta_noCrack * f_brem * f_eta * sc_e_noCrack * f_crack= " << f_et_eta_noCrack * f_brem * f_eta * sc_e_noCrack * f_crack << endl;
+			}
 // WITH CRACK CORRECTIONS
     return (double)(f_et_eta_noCrack * f_brem * sc_e_noCrack * f_crack) / (double)(myphoton->Energy());
 // WITHOUT CRACK CORRECTIONS
 //		return (double)(f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()) / (double)(myphoton->Energy());
-	}
-	if( (myphoton->isEBPho()) && (myphoton->r9()>0.94) )
-	{
-		if( verbositybis > 1) cout << "f_eta * myphoton->e5x5()= " << f_eta * myphoton->e5x5() << endl;
-		return (double)(f_eta * myphoton->e5x5()) / (double)(myphoton->Energy());
-	}
-	if( (myphoton->isEEPho()) && (myphoton->r9()<0.95) )
-	{
-		if( verbositybis > 1) cout << "f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
-		return (double)(f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())) / (double)(myphoton->Energy());
-	}
-	if( (myphoton->isEEPho()) && (myphoton->r9()>0.95) )
-	{
-		if( verbositybis > 1) cout << "(myphoton->e5x5() + myphoton->preshowerEnergy())= " << (myphoton->e5x5() + myphoton->preshowerEnergy()) <<  endl;
-		return (double)(myphoton->e5x5() + myphoton->preshowerEnergy()) / (double)(myphoton->Energy());
-	}
-
+		}
+		if( (myphoton->isEBPho()) && (myphoton->r9()>0.94) )
+		{
+			if( verbositybis > 1) cout << "f_eta * myphoton->e5x5()= " << f_eta * myphoton->e5x5() << endl;
+			return (double)(f_eta * myphoton->e5x5()) / (double)(myphoton->Energy());
+		}
+		if( (myphoton->isEEPho()) && (myphoton->r9()<0.95) )
+		{
+			if( verbositybis > 1) cout << "f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
+			return (double)(f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())) / (double)(myphoton->Energy());
+		}
+		if( (myphoton->isEEPho()) && (myphoton->r9()>0.95) )
+		{
+			if( verbositybis > 1) cout << "(myphoton->e5x5() + myphoton->preshowerEnergy())= " << (myphoton->e5x5() + myphoton->preshowerEnergy()) <<  endl;
+			return (double)(myphoton->e5x5() + myphoton->preshowerEnergy()) / (double)(myphoton->Energy());
+		}
+	} // end if classical corrections
 }
 
 
