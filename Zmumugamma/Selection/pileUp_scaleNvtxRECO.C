@@ -44,13 +44,50 @@ int pileUp_scaleNvtxRECO()
 // Get true distribution from lumiDB information :
 //	string Data = "pileUp_Run2011A-June17.root";
 //	string Data = "pileUp_Run2011A-ZMu-05Jul2011ReReco-ECAL-v1_ALL.root";
-	string Data = "Cert_pileup.root";
+//	string Data = "pileUp_Data_May10.root";
+//	string Data = "Cert_160404-163869_7TeV_May10ReReco_Collisions11_JSON_v3.pileupTruth_v2_finebin.root";
+  string Data = "Cert_160404-163869_7TeV_May10ReReco_Collisions11_JSON_v3.pileup_v2.root";
+//  string Data = "pileUp_Data_Promptv4.root";
+//  string Data = "Cert_165088-167913_7TeV_PromptReco_JSON.pileupTruth_v2_finebin.root";
+//  string Data = "Cert_165088-167913_7TeV_PromptReco_JSON.pileup_v2.root";
+//  string Data = "pileUp_Data_July05.root";
+//  string Data = "Cert_160404-167913_July05.root";
+//  string Data = "Cert_160404-167913_July05_v2.root";
+//  string Data = "pileUp_Data_Aug05.root";
+//  string Data = "Cert_170249-172619_7TeV_ReReco5Aug_Collisions11_JSON_v2.pileupTruth_v2_finebin.root";
+//  string Data = "Cert_170249-172619_7TeV_ReReco5Aug_Collisions11_JSON_v2.pileup_v2.root";
+//  string Data = "pileUp_Data_Oct03.root";
+//  string Data = "Cert_172620-173692_PromptReco_JSON.pileupTruth_v2_finebin.root";
+//  string Data = "Cert_172620-173692_PromptReco_JSON.pileup_v2.root";
+//  string Data = "pileUp_Data_2011A.root";
+//  string Data = "Cert_160404-173692_2011A.root";
+//  string Data = "Cert_160404-173692_2011A_v2.root";
+//  string Data = "pileUp_Data_2011B.root";
+//  string Data = "Cert_175832-180252_2011B.root";
+//  string Data = "Cert_175832-180252_2011B_v2.root";
+//  string Data = "pileUp_Data_2011.root";
+//  string Data = "Cert_160404-180252_2011.root";
+//  string Data = "Cert_160404-180252_2011_v2.root";
+/*
+Cert_175832-177515_PromptReco_JSON.pileup_v2.root
+Cert_177718_178078_7TeV_PromptReco_Collisons11_JSON.pileup_v2.root
+Cert_178098-180252_7TeV_PromptReco_Collisions11_JSON.pileup_v2.root
+*/
+/*
+Cert_175832-177515_PromptReco_JSON.pileupTruth_v2_finebin.root
+Cert_177718_178078_7TeV_PromptReco_Collisons11_JSON.pileupTruth_v2_finebin.root
+Cert_177878-179431_7TeV_PromptReco_Collisions11_JSON.pileupTruth_v2_finebin.root
+Cert_178098-180252_7TeV_PromptReco_Collisions11_JSON.pileupTruth_v2_finebin.root
+*/
 	TFile* data_file = new TFile(Data.c_str());
 	TH1D* data_histo = (TH1D*)data_file->Get("pileup");
 	double data_integral = data_histo->Integral();
+	cout << "data_integral= " << data_integral << endl;
 //	TH1D* data_pdf = new TH1D("data_pdf", "data_pdf", 51, -0.5, 50.5);
 	TH1D* data_pdf = new TH1D("data_pdf", "data_pdf", 36, -0.5, 35.5);
+//	TH1D* data_pdf = new TH1D("data_pdf", "data_pdf", 1000, 0.0, 25);
 	data_pdf->Add(data_histo);
+//	data_pdf->Rebin(40);
 	data_pdf->Scale((double)(1.0)/(double)(data_integral) );
 	cout << data_pdf->GetBinContent(0) << "\t" << data_pdf->GetBinContent(1) << endl;
 	data_pdf->Draw();
@@ -58,20 +95,36 @@ int pileUp_scaleNvtxRECO()
 // Get MC distribution before selection but after skim (for now, will switch to before skim whenever possible)
 //	string DYToMuMu = "miniTree_pileUp_v2_DYToMuMu_M-20_TuneZ2_7TeV-pythia6_v3.root";
 //	string DYToMuMu = "miniTree_pileUp_v2_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root";
-	string DYToMuMu = "miniTree_pileUp_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_partALL.root";
+//	string DYToMuMu = "miniTree_pileUp_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_partALL.root";
+//	string DYToMuMu = "miniTree_pileUp_pileUp_v02_DYToMuMu_PU_S6_partALL.root";
+//	string DYToMuMu = "miniTree_pileUp_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_partALL.root";
+	string DYToMuMu = "miniTree_pileUp_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v6_partALL.root";
+//	string DYToMuMu = "miniTree_pileUp_pileUp_v02_DYToMuMu_PU_S6_partALL.root";
 	TFile* DYToMuMu_file = new TFile(DYToMuMu.c_str());
 	TH1D* DYToMuMu_histo = (TH1D*)DYToMuMu_file->Get("pileup");
 	double DYToMuMu_integral = DYToMuMu_histo->Integral();
+	cout << "DYToMuMu_integral= " << DYToMuMu_integral << endl;
 //	TH1D* DYToMuMu_pdf = new TH1D("DYToMuMu_pdf", "DYToMuMu_pdf", 51, -0.5, 50.5);
 	TH1D* DYToMuMu_pdf = new TH1D("DYToMuMu_pdf", "DYToMuMu_pdf", 36, -0.5, 35.5);
+//	TH1D* DYToMuMu_pdf = new TH1D("DYToMuMu_pdf", "DYToMuMu_pdf", 1000, 0.0, 25.0);
 	DYToMuMu_pdf->Add(DYToMuMu_histo);
+//	DYToMuMu_pdf->Rebin(40);
 	DYToMuMu_pdf->Scale((double)(1.0)/(double)(DYToMuMu_integral) );
 //	TH1D* DYToMuMu_weights = new TH1D("DYToMuMu_weights", "DYToMuMu_weights", 51, -0.5, 50.5);
 	TH1D* DYToMuMu_weights = new TH1D("DYToMuMu_weights", "DYToMuMu_weights", 36, -0.5, 35.5);
+//	TH1D* DYToMuMu_weights = new TH1D("DYToMuMu_weights", "DYToMuMu_weights", 1000, 0.0, 25.0);
+//	TH1D* DYToMuMu_weights = new TH1D("DYToMuMu_weights", "DYToMuMu_weights", 25, 0.0, 25.0);
 	DYToMuMu_weights->Divide(data_pdf, DYToMuMu_pdf);
 //	double DYToMuMu_weights_integral = DYToMuMu_weights->Integral();
 //	DYToMuMu_weights->Scale( (double)(1.0)/(double)(DYToMuMu_weights_integral) );
 
+	TH1D* DYToMuMu_reweighted = new TH1D("DYToMuMu_reweighted", "DYToMuMu_reweighted", 36, -.5, 35.5);
+//	TH1D* DYToMuMu_reweighted = new TH1D("DYToMuMu_reweighted", "DYToMuMu_reweighted", 1000, 0.0, 25.0);
+	DYToMuMu_reweighted->Add(DYToMuMu_histo);
+//	DYToMuMu_reweighted->Rebin(40);
+	DYToMuMu_reweighted->Multiply(DYToMuMu_weights);
+	double DYToMuMu_reweighted_integral = DYToMuMu_reweighted->Integral();
+	DYToMuMu_reweighted->Scale((double)(1.0)/(double)(DYToMuMu_reweighted_integral));
 //	string TTJets = "miniTree_pileUp_v2_TT_TuneZ2_7TeV-pythia6-tauola.root";
 //	string TTJets = "miniTree_pileUp_v2_TTJets_TuneZ2_7TeV-madgraph-tauola_v2.root";
 //  TFile* TTJets_file = new TFile(TTJets.c_str());
@@ -122,6 +175,8 @@ int pileUp_scaleNvtxRECO()
 	TFile* weights_file = new TFile("pileUp_weights_June17.root", "recreate");
 	weights_file->cd();
 	DYToMuMu_weights->Write();
+	DYToMuMu_reweighted->Write();
+	data_pdf->Write();
 //	TTJets_weights->Write();
 //	QCDMu_weights->Write();
 //	WJetsToLNu_weights->Write();
