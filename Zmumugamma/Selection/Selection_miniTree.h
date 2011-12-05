@@ -243,7 +243,7 @@ int photonIsInCrack(double sc_abs_eta, double sc_abs_phi)
 //float ETHZ_getValue(bool isEB, float SC_rawE, float SC_Eta, float ES_E, float phiWidth, float etaWidth, float f_eta)
 float ETHZ_getValue(TRootPhoton *myphoton, float f_eta)
 {
-	int mode = 1;
+	int mode = 1; // Photons !
   float corr = 1.;
   float corr2 = 1.;
   float energy = 0;
@@ -289,7 +289,7 @@ float ETHZ_getValue(TRootPhoton *myphoton, float f_eta)
   return newEnergy;
 }
 
-double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
+double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet, TClonesArray* clusters, TClonesArray* superClusters, TClonesArray* photons)
 {
 	int verbositybis = 0;
 	int photonIsInCrack_ = photonIsInCrack(    fabs(myphoton->superCluster()->Eta()), fabs(myphoton->superCluster()->Phi())   );
@@ -306,7 +306,14 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet)
 	if( correctionSet == "ETHZ" )
 	{
 		if( verbositybis > 1) cout << "ETHZ_getValue(myphoton, f_eta)= " << ETHZ_getValue(myphoton, f_eta) << endl;
+		if( ((myphoton->isEBPho()) && (myphoton->r9()>0.94)) || ((myphoton->isEEPho()) && (myphoton->r9()>0.95)) ) return 1.0;
 		return ETHZ_getValue(myphoton, f_eta) / (double)(myphoton->Energy());
+	} else if( correctionSet == "Dynamic" )
+	{
+		cout << "We have: " << endl;
+		cout << "photons->GetEntries()= " << photons->GetEntries() << endl;
+		cout << "superClusters->GetEntries()= " << superClusters->GetEntries() << endl;
+		cout << "clusters->GetEntries()= " << clusters->GetEntries() << endl;
 	} else {
 		vector<double> param_fbrem;
 		vector<double> param_feteta;

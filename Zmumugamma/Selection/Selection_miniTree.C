@@ -230,7 +230,7 @@ int main(int argc, char *argv[])
 	if( argc > 9 )
 	{
 		correction = argv[9];
-		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") || (correction == "ETHZ") )
+		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") || (correction == "ETHZ") || (correction == "Dynamic") )
 		{
 			cout << correction << " correction set will be applied upstream" << endl;
 			isManualCorrectionsApplied = true;
@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
 	bool doMuon									 = true;
 	bool doElectron							 = false;
 	bool doPhoton								 = true;
-	bool doCluster								= false;
+	bool doCluster								= true;
 	bool doPhotonConversion			 = true;
 	bool doMET										= false;
 	bool doBardak								 = false;
@@ -468,7 +468,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("photons", &photons, &photons_br);
 		inputEventTree->SetBranchStatus("photons", 1);
 	}
-/*	
+	
 		TBranch* clusters_br = 0;
 		TClonesArray* clusters = new TClonesArray("TRootCluster", 0);
 	if(doCluster)
@@ -484,7 +484,7 @@ int main(int argc, char *argv[])
 		inputEventTree->SetBranchAddress("SuperClusters", &superClusters, &superClusters_br);
 		inputEventTree->SetBranchStatus("SuperClusters", 1);
 	}
-	
+/*	
 		TBranch* conversions_br = 0;
 		TClonesArray* conversionTracks = new TClonesArray("TRootTrack", 0);
 	if(doPhotonConversion)
@@ -1182,9 +1182,9 @@ int main(int argc, char *argv[])
 	}
 
 	// LOOP over events
-	for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
+//	for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
 //	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
-//	for(unsigned int ievt=0; ievt<100; ievt++)
+	for(unsigned int ievt=0; ievt<100; ievt++)
 	{
 		if(verbosity>4) cout << "analysing event ievt= " << ievt << endl;
 		nBeforeAllCuts++;
@@ -1285,7 +1285,7 @@ int main(int argc, char *argv[])
         {
 					TRootPhoton *myphotontocorrect;
 					myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
-          Photon_scale.push_back(photonManualCorrectionFactor(myphotontocorrect, correction));
+          Photon_scale.push_back(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons));
 /*
 					cout << "myphotontocorrect->isEBPho()= " << myphotontocorrect->isEBPho() << endl;
 					cout << "myphotontocorrect->r9()= " << myphotontocorrect->r9() << endl;
