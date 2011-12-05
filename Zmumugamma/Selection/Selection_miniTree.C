@@ -1182,9 +1182,9 @@ int main(int argc, char *argv[])
 	}
 
 	// LOOP over events
-//	for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
+	for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
 //	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
-	for(unsigned int ievt=0; ievt<100; ievt++)
+//	for(unsigned int ievt=0; ievt<100; ievt++)
 	{
 		if(verbosity>4) cout << "analysing event ievt= " << ievt << endl;
 		nBeforeAllCuts++;
