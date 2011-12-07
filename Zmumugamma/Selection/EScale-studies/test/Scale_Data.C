@@ -31,11 +31,19 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 // Style headers
 #include "CMSStyle.C"
 
-//gROOT->Reset();
+// MyOwnHeaders 
+#include "FindRange.h"
+
+// Jan's headers
+//#include "ModalInterval.cc"
+
+gROOT->Reset();
 
 /*
 double weight_DYToMuMu(int nGenVertices)
@@ -69,18 +77,25 @@ void Scale_Data(string lumi = "2011", int low = 40, int high = 80){
 //	TFile* file_MC = new TFile("../../miniTree_v13_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_v2.root");
 //	TFile* file_MC = new TFile("../../miniTree_v16_DYToMuMu.root");
 	TFile* file_MC = new TFile(Form("../../miniTree_v10_DYToMuMu_S6_%s_%i_%i_partALL.root", lumi.c_str(), low, high));
+//	TFile* file_MC = new TFile(Form("../../miniTree_v13_DYToMuMu_S6_%s_%i_%i_Anne-Fleur_partALL.root", lumi.c_str(), low, high));
+//	TFile* file_MC = new TFile(Form("../../miniTree_v13_DYToMuMu_S6_%s_%i_%i_Louis_partALL.root", lumi.c_str(), low, high));
 	TTree* Tree_Data = (TTree*) file_Data->Get("miniTree");
 	TTree* Tree_MC = (TTree*) file_MC->Get("miniTree");
+	TTree *reduced = new TTree();
+
+	cout << "file= " << file_MC->GetName() << endl;
+
 
 	RooRealVar Photon_isEB("Photon_isEB", "Photon_isEB", 0, 1);
 	RooRealVar Photon_isEE("Photon_isEE", "Photon_isEE", 0, 1);
  
-	RooRealVar Mmumu("Mmumu", "Mmumu", 40, 80, "GeV");
+//	RooRealVar Mmumu("Mmumu", "Mmumu", 40, 80, "GeV");
+	RooRealVar Mmumu("Mmumu", "Mmumu", low, high, "GeV");
 	RooRealVar Mmumugamma("Mmumugamma", "m_{#mu#mu#gamma}", 60, 120, "GeV");
 
 	RooRealVar mmg_k("mmg_k", "k", 0.0, 2.0, ""); 
 	RooRealVar mmg_ik("mmg_ik", "mmg_ik", -500, 500, "");
-	RooRealVar mmg_s("mmg_s", "s = E_{reco} / E_{kin.} - 1", -1.0, 1.0, "");
+	RooRealVar RRV_mmg_s("mmg_s", "s = E_{reco} / E_{kin.} - 1", -1.0, 1.0, "");
 //	RooRealVar mmg_s("mmg_s", "s = E_{reco} / E_{kin.} - 1", -0.5, 0.5, "");
 	RooRealVar mmg_logk("mmg_logk", "mmg_logk", -500, 500, ""); 
 	RooRealVar mmg_logik("mmg_logik", "mmg_logik", -500, 500, "");
@@ -102,7 +117,7 @@ void Scale_Data(string lumi = "2011", int low = 40, int high = 80){
 
 	
 
-	RooArgSet *ntplVars = new RooArgSet(Photon_isEB, Mmumu, Mmumugamma, mmg_k, mmg_ik, mmg_s, mmg_logk, mmg_logik, mmg_logs);
+	RooArgSet *ntplVars = new RooArgSet(Photon_isEB, Mmumu, Mmumugamma, mmg_k, mmg_ik, RRV_mmg_s, mmg_logk, mmg_logik, mmg_logs);
 ntplVars->add(Photon_r9);
 ntplVars->add(isVeryLooseMMG);
 ntplVars->add(isLooseMMG);
@@ -197,6 +212,7 @@ ntplVars->add(Photon_isEE);
 */
 
 	for( int iEB = 0 ; iEB < 2 ; iEB++ )
+//	for( int iEB = 1 ; iEB < 2 ; iEB++ )
 //	for( int iEB = 0 ; iEB < 1 ; iEB++ )
 	{
 		string sEB = "";
@@ -224,7 +240,8 @@ ntplVars->add(Photon_isEE);
 				cutR9 = "1";
 				displayR9 = " ";
 			}
-			for( int ipt = 0 ; ipt < 5 ; ipt++ )
+			for( int ipt = 0 ; ipt < 6 ; ipt++ )
+//			for( int ipt = 1 ; ipt < 2 ; ipt++ )
 //			for( int ipt = 6 ; ipt < 7 ; ipt++ )
 //			for( int ipt = 4 ; ipt < 5 ; ipt++ )
 			{
@@ -438,7 +455,8 @@ ntplVars->add(Photon_isEE);
 
 //return;
 
-for(int idata=0; idata < 2; idata++){
+//for(int idata=0; idata < 2; idata++){
+for(int idata=1; idata < 2; idata++){
 
 	RooDataSet *Data = new RooDataSet();
 	bool isData;
@@ -455,48 +473,94 @@ const int size = set_of_cuts.size();
 	RooDataSet* Data_subset[size];
 
 
+//for(int i=0; i<set_of_cuts.size() ; i++){
 for(int i=0; i<set_of_cuts.size() ; i++){
-
+	cout << "set_of_cuts= " << i << endl;
 	if( idata == 0 ) Data_subset[i] = (RooDataSet*)Data->reduce(set_of_cuts_DATA[i].c_str());
   else Data_subset[i] = (RooDataSet*)Data->reduce(set_of_cuts[i].c_str());
 
-
-
+float mmg_s;
+double min70 = -1.0;
+double min80 = -1.0;
+double min90 = -1.0;
+double min100 = -1.0;
+double max70 = 1.0;
+double max80 = 1.0;
+double max90 = 1.0;
+double max100 = 1.0;
+FindRange(.70, Tree_MC, set_of_cuts[i], &min70, &max70, "mmg_s");
+FindRange(.80, Tree_MC, set_of_cuts[i], &min80, &max80, "mmg_s");
+FindRange(.90, Tree_MC, set_of_cuts[i], &min90, &max90, "mmg_s");
+FindRange(1.0, Tree_MC, set_of_cuts[i], &min100, &max100, "mmg_s");
+cout << "min90= " << min90 << "\tmax90= " << max90 << endl;
+//return;
 
 // ***************************************************************
 // ***** s fit
 // ***************************************************************
   // CRYSTALBALL
-  RooRealVar mmg_s_CB_m0("mmg_s_CB_m0", "CB #Delta m_{0}", 1.0, -5.0, 5.0, "GeV");  
-  RooRealVar mmg_s_CB_sigma("mmg_s_CB_sigma", "CB #sigma", 0.45, 0.0, 0.5, "GeV");
-  RooRealVar mmg_s_CB_alpha("mmg_s_CB_alpha", "CB #alpha", 1.0, 0.0, 10.0);
-  RooRealVar mmg_s_CB_n("mmg_s_CB_n", "CB n", 2.0, 0.5, 20.0);
-  RooCBShape mmg_s_CrystalBall("mmg_s_CrystalBall","mmg_s_CrystalBall", mmg_s, mmg_s_CB_m0, mmg_s_CB_sigma, mmg_s_CB_alpha, mmg_s_CB_n);
-  RooCBShape model("mmg_s_CrystalBall","mmg_s_CrystalBall", mmg_s, mmg_s_CB_m0, mmg_s_CB_sigma, mmg_s_CB_alpha, mmg_s_CB_n);
+//  RooRealVar mmg_s_CB_m0("mmg_s_CB_m0", "CB #Delta m_{0}", 1.0, -5.0, 5.0, "GeV");  
+  RooRealVar mmg_s_CB_m0("mmg_s_CB_m0", "CB #Delta m_{0}", 0.0, -0.5, 0.5, "GeV");  
+  RooRealVar mmg_s_CB_sigma("mmg_s_CB_sigma", "CB #sigma", 0.2, 0.0001, 0.4, "GeV");
+  RooRealVar mmg_s_CB_alpha("mmg_s_CB_alpha", "CB #alpha", -1.0, -1.0, 0.0001, "GeV");
+  RooRealVar mmg_s_CB_n("mmg_s_CB_n", "CB n", 5.0, 1.0, 10.0);
+//  RooCBShape mmg_s_CrystalBall("mmg_s_CrystalBall","mmg_s_CrystalBall", RRV_mmg_s, mmg_s_CB_m0, mmg_s_CB_sigma, mmg_s_CB_alpha, mmg_s_CB_n);
+
 
 	// BREIT-WIGNER
 	RooRealVar mmg_s_BW_mean("mmg_s_BW_mean", "BW m_{0}", 0.0 , -2.0, 2.0 , "GeV");
 	RooRealVar mmg_s_BW_width("mmg_s_BW_width", "BW #Gamma", 1.0, 0.0, 5.0, "GeV");
-	RooBreitWigner mmg_s_BW("mmg_s_BW", "mmg_s_BW", mmg_s, mmg_s_BW_mean, mmg_s_BW_width);
+//	RooBreitWigner mmg_s_BW("mmg_s_BW", "mmg_s_BW", RRV_mmg_s, mmg_s_BW_mean, mmg_s_BW_width);
 
 	// GAUSSIAN
-	RooRealVar mmg_s_G_frac("mmg_s_G_frac", "G fraction", 0.2, 0.0, 0.5); 
-  RooRealVar mmg_s_G_mu("mmg_s_G_mu", "mmg_s_G_mu", 0.0, -2.0, 2.0);
-  RooRealVar mmg_s_G_sigmagauss("mmg_s_G_sigmagauss", "G #sigma", 0.8, 0.05, 2.0, "GeV");
-  //RooGaussian mmg_s_G_Gauss("mmg_s_G_Gauss", "mmg_s_G_Gauss", mmg_s, mmg_s_G_mu, mmg_s_G_sigmagauss);
-  RooGaussian mmg_s_G_Gauss("mmg_s_G_Gauss", "mmg_s_G_Gauss", mmg_s, mmg_s_CB_m0, mmg_s_G_sigmagauss);
+	RooRealVar mmg_s_G_frac("mmg_s_G_frac", "G fraction", 1.0, 0.85, 1.0); 
+//  RooRealVar mmg_s_G_mu("mmg_s_G_mu", "mmg_s_G_mu", 0.0, -2.0, 2.0);
+//  RooRealVar mmg_s_G_mu("mmg_s_G_mu", "G mu", (max80-min80)/(2.0)+min80, min80, max80, "GeV");
+  RooRealVar mmg_s_G_mu("mmg_s_G_mu", "G mu", (max70-min70)/(2.0)+min70, min70, max70, "GeV");
+  RooRealVar mmg_s_G2_mu("mmg_s_G2_mu", "mmg_s_G2_mu", (max100-min100)/(2.0)+min100, min100, max100);
+//  RooRealVar mmg_s_G_sigmagauss("mmg_s_G_sigmagauss", "G #sigma", 0.8, 0.01, 2.0, "GeV");
+  RooRealVar mmg_s_G_sigmagauss("mmg_s_G_sigmagauss", "G #sigma", (max80-min80)/(8.0), (max80-min80)/(64.0), (max80-min80)/(4.0), "GeV");
+  RooRealVar mmg_s_G_sigmagauss("mmg_s_G_sigmagauss", "G #sigma", (max80-min80)/(8.0), (max80-min80)/(64.0), (max80-min80)/(4.0), "GeV");
+  RooRealVar mmg_s_G2_sigmagauss("mmg_s_G2_sigmagauss", "G2 #sigma", (max100-min100)/(4.0), (max100-min100)/(16.0), (max100-min100)/(4.0), "GeV");
+  RooGaussian model_init("mmg_s_G_Gauss", "mmg_s_G_Gauss", RRV_mmg_s, mmg_s_G_mu, mmg_s_G_sigmagauss);
+  RooGaussian mmg_s_G_Gauss("mmg_s_G_Gauss", "mmg_s_G_Gauss", RRV_mmg_s, mmg_s_G_mu, mmg_s_G_sigmagauss);
+  RooGaussian mmg_s_G2_Gauss("mmg_s_G2_Gauss", "mmg_s_G2_Gauss", RRV_mmg_s, mmg_s_G2_mu, mmg_s_G2_sigmagauss);
+//  RooGaussian mmg_s_G_Gauss("mmg_s_G_Gauss", "mmg_s_G_Gauss", RRV_mmg_s, mmg_s_CB_m0, mmg_s_G_sigmagauss);
 
   // CONVOLUTION
-  //RooFFTConvPdf model("mmg_s_BWxCB", "mmg_s_BWxCB", mmg_s, mmg_s_BW, mmg_s_CrystalBall);
-  //RooFFTConvPdf model("mmg_s_BWxCB", "mmg_s_BWxCB", mmg_s, mmg_s_CrystalBall, mmg_s_G_Gauss);
+  //RooFFTConvPdf model("mmg_s_BWxCB", "mmg_s_BWxCB", RRV_mmg_s, mmg_s_BW, mmg_s_CrystalBall);
+  //RooFFTConvPdf model("mmg_s_BWxCB", "mmg_s_BWxCB", RRV_mmg_s, mmg_s_CrystalBall, mmg_s_G_Gauss);
 
 	// SUM
-	//RooAddPdf model("mmg_s_CB_plus_G", "mmg_s_CB_plus_G", RooArgList(mmg_s_G_Gauss, mmg_s_CrystalBall), mmg_s_G_frac);
+//	RooAddPdf model_init("mmg_s_G_plus_G", "mmg_s_G_plus_G", RooArgList(mmg_s_G_Gauss, mmg_s_G2_Gauss), mmg_s_G_frac);
+//	RooAddPdf model("mmg_s_G_plus_G", "mmg_s_G_plus_G", RooArgList(mmg_s_G_Gauss, mmg_s_G2_Gauss), mmg_s_G_frac);
 
 //	model.fitTo(*Data_subset[i], Range(-0.2, 0.2));
-	model.fitTo(*Data_subset[i]);
+	model_init.fitTo(*Data_subset[i], Range(min70, max70), SumW2Error(kTRUE), PrintLevel(-1));
+//	model.fitTo(*Data_subset[i], Range(min90, max90));
+//	model.fitTo(*Data_subset[i]);
+
+	RooArgSet* mmg_s_BWxCB_param_init = model_init.getVariables();
+  mmg_s_BWxCB_param_init->Print("v");
+
+	TCanvas *mmg_s_BWxCB_canvas = new TCanvas("mmg_s_BWxCB_canvas", "mmg_s_BWxCB_canvas");
+	RooPlot* mmg_s_frame = RRV_mmg_s.frame(Title("k"));
+	Data_subset[i]->plotOn(mmg_s_frame, Name("data"));
+//	model_init.plotOn(mmg_s_frame, Components("mmg_s_CrystalBall"), LineStyle(kDashed), LineColor(kRed));
+	model_init.plotOn(mmg_s_frame, Components("mmg_s_G_Gauss"), LineStyle(kDashed), LineColor(kGreen));
+	model_init.plotOn(mmg_s_frame, Components("mmg_s_G2_Gauss"), LineStyle(kDashed), LineColor(kRed));
+	model_init.plotOn(mmg_s_frame, Name("model_init"), LineColor(kViolet));	
+
+  RooCBShape model("mmg_s_CrystalBall","mmg_s_CrystalBall", RRV_mmg_s, mmg_s_G_mu, mmg_s_G_sigmagauss, mmg_s_CB_alpha, mmg_s_CB_n);
+//	RooAddPdf model("mmg_s_CB_plus_G", "mmg_s_CB_plus_G", RooArgList(mmg_s_G_Gauss, mmg_s_CrystalBall), mmg_s_G_frac);
+	model.fitTo(*Data_subset[i], Range(min90, max90), SumW2Error(kTRUE), PrintLevel(-1));
   RooArgSet* mmg_s_BWxCB_param = model.getVariables();
   mmg_s_BWxCB_param->Print("v");
+
+//	model.plotOn(mmg_s_frame, Name("model"), Range(min90, max90), LineColor(kBlue));
+//	model.plotOn(mmg_s_frame, Name("model"), LineColor(kBlue));
+	Data_subset[i]->plotOn(mmg_s_frame, Name("data"));
+	mmg_s_frame->Draw();
 
 	if(isData)
 	{
@@ -521,16 +585,10 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 
 
 
-	TCanvas *mmg_s_BWxCB_canvas = new TCanvas("mmg_s_BWxCB_canvas", "mmg_s_BWxCB_canvas");
-	RooPlot* mmg_s_frame = mmg_s.frame(Title("k"));
-	Data_subset[i]->plotOn(mmg_s_frame, Name("data"));
-//	model.plotOn(mmg_s_frame, Components("mmg_s_CrystalBall"), LineStyle(kDashed), LineColor(kRed));
-//	model.plotOn(mmg_s_frame, Components("mmg_s_G_Gauss"), LineStyle(kDashed), LineColor(kGreen));
-	model.plotOn(mmg_s_frame, Name("model"));
-	mmg_s_frame->Draw();
-
 //	Double_t mmg_s_BWxCB_chi2_ndf = mmg_s_frame->chiSquare("model", "data", 6);
-	Double_t mmg_s_BWxCB_chi2_ndf = mmg_s_frame->chiSquare("model", "data", 4);
+//	Double_t mmg_s_BWxCB_chi2_ndf = mmg_s_frame->chiSquare("model", "data", 4);
+//	Double_t mmg_s_BWxCB_chi2_ndf = mmg_s_frame->chiSquare("model", "data", 2);
+	Double_t mmg_s_BWxCB_chi2_ndf = mmg_s_frame->chiSquare("model", "data");
 	cout << "mmg_s_BWxCB_chi2_ndf= " << mmg_s_BWxCB_chi2_ndf << endl;	
 	TLatex latexLabel;
 	latexLabel.SetNDC();
@@ -559,7 +617,8 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 	gStyle->SetOptTitle(0);
 	position -= 0.04;
 //	latexLabel.DrawLatex(0.20, position, "Fit: BW #otimes CB");
-	latexLabel.DrawLatex(0.20, position, "Fit: Crystal-Ball + Gaussian");
+	latexLabel.DrawLatex(0.20, position, "Fit: Crystal-Ball");
+//	latexLabel.DrawLatex(0.20, position, "Fit: Gauss + Gauss");
 	while(( (RooRealVar*)obj = it->Next()) != 0)
 	{
 //		RooRealVar* obj = dynamic_cast<RooRealVar*>(tobj);
@@ -611,10 +670,19 @@ for(int i=0; i<set_of_cuts.size() ; i++){
 		mmg_s_BWxCB_canvas->Print(Form("C/mmg_s_CB_%s_%s.C", isData?"DATA":"MC", name[i].c_str()));
 		system(Form("convert eps/mmg_s_CB_%s_%s.eps pdf/mmg_s_CB_%s_%s.pdf", isData?"DATA":"MC", name[i].c_str(), isData?"DATA":"MC", name[i].c_str()));
 	}
+//return;
+
 } // end of loop over categories
 
 }// end of loop over data / mc
 
+return;
+
+
+
+
+
+// ################################################################
 // TWIKI TABLES
 cout << "|\t *DATA* \t|\t *s* \t|\t *sigma* \t|\t *alpha* \t|\t *n* \t|" << endl; 
 

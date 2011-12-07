@@ -44,7 +44,7 @@ do
 	do
 		low=${low[${idx}]}
 		high=${high[${idx}]}
-		NAME=`echo "S6_${lumi}_${low}_${high}"`
+		NAME=`echo "S6_${lumi}_${low}_${high}_Range90"`
 		echo "NAME= ${NAME}"
 		LOC_REP=`echo "${DATE}-Plots_${NAME}"`
 		if [[ -d "${LOC_REP}" ]]
@@ -62,6 +62,8 @@ do
 #		sed -e "s/NAME/${NAME}/g" -e "s/LUMI/${lumi}/g" batch_GE_plotter_template.sh > batch_GE_plotter_${NAME}.sh
 #		qsub batch_GE_plotter_${NAME}.sh ${lumi} ${LOC_REP} ${low} ${high}
 #		mv batch_GE_plotter_${NAME}.sh stored_batch/
+		source extractInfo.sh fits_${NAME}.eo reco_cb_${NAME}
+#		sed -i -e "/0 0 5 5/d" -e "/0 1 5 5/d" -e "/1 0 5 5/d" -e "/1 1 5 5/d" reco_cb_${NAME}_v2_s_MC.out
 	done
 done
 
