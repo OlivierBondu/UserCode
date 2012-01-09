@@ -105,6 +105,47 @@ void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* part
   return;
 }
 
+double applySidra( double _pt, double charge, double eta, double phi, TRandom3* generator)
+{
+	double pt = _pt;
+// Correct MC
+	double a = 0.0650687e-3;
+	double b = 0.212987e-3;
+	double c = 1.53414;
+	pt = (double)1.0/(double)pt;
+	pt -= a - b * charge * sin( phi + c );
+// Apply Corrections
+	double A = 0.143812;
+	double B = 0.0404834;
+	double Ap = 0.0995898;
+	double Bp = -0.0692569;
+	double Cp = 0.0952174;
+	double phi0 = -1.08881;
+	pt += ( A + B * eta * eta ) * (generator->Gaus(0,1)) /1000. + (Ap + Cp * charge * sin( phi + phi0 )+ Bp * charge * eta )/1000.;
+	pt = (double)1.0/(double)pt;
+	return pt;
+}
+
+double applyMuScleFit(double _pt, double charge, double eta, double phi)
+{
+	double b = -5.03313e-6;
+	double c = -4.41463e-5;
+	double d0 = -0.000148871;
+	double e0 = 1.59501;
+	double d1 = 7.95495e-5;
+	double e1 = -0.364823;
+	double d2 = 0.000152032;
+	double e2 = 0.410195;
+	double d = eta > .9 ? d1 : (eta < -.9 ? d2 : d0);
+	double e = eta > .9 ? e1 : (eta < -.9 ? e2 : e0);
+	double pt = _pt;
+	double sgn_eta = eta >= 0.0 ? 1.0 : -1.0;
+	pt = pt * (1 + b * pt  + c * charge * pt * sgn_eta * eta * eta + charge * d * pt * sin( phi + e ));
+	return pt;
+
+}
+
+TLorentzVector getCorrectedMuon();
 
 int main(int argc, char *argv[]);
 

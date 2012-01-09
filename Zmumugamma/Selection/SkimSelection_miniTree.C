@@ -14,30 +14,61 @@ int main(int argc, char *argv[])
 	
 	if( argc == 1 )
 	{
-		cerr << "arguments should be passed !! sample (outputname) (isZgammaMC) (extra scale) (extra resolution)" << endl;
+		cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC) (applyMuonScaleCorrection)" << endl;
 		return 1;
 	}
+
+	// ******************************************
 	// First argument is sample
+	// ******************************************
 	char* sample_char = argv[1];
 //	char* sample_char2 = argv[1];
 
+	// ******************************************
 	// Optional argument : output root file
+	// ******************************************
 	string sample = argv[1];
 	if( argc > 2 )
 	{
 		sample = argv[2];
 	}
 
+	// ******************************************
+	// Optional argument : ijob
+	// ******************************************
+	int ijob = -1;
+  if( argc > 3 )
+  {
+    std::stringstream ss ( argv[3] );
+    ss >> ijob;
+  }
 
-	// Optional argument : isZgammaMC
+  // ******************************************
+  // Optional argument : isZgammaMC (1: FSR -- 2: nonFSR -- 3: MC info)
+  // ******************************************
 	int isZgammaMC = 0;
-	int n = -1;
-	if( argc > 3 )
+//	int n = -1;
+	if( argc > 4 )
 	{
-		std::stringstream ss ( argv[3] );
-//		ss >> isZgammaMC;
-		ss >> n;
+		std::stringstream ss ( argv[4] );
+		ss >> isZgammaMC;
+//		ss >> n;
 	}
+
+	// ******************************************
+  // Optional argument : applyMuonScaleCorrection
+  // ******************************************
+  int applyMuonScaleCorrection = 0;
+  if( argc > 5 )
+  {
+    std::stringstream ss ( argv[5] );
+    ss >> applyMuonScaleCorrection;
+  }
+	TTimeStamp *time = new TTimeStamp();
+	TRandom3* generator = new TRandom3(time->GetNanoSec());
+
+
+
 
 //	int n = 18;
 //	TProof * p = TProof::Open("ccaplmaster.in2p3.fr");
@@ -79,9 +110,10 @@ int main(int argc, char *argv[])
 //	inputRunTree->Add(inputfile);
 
 
-//	TFile* OutputRootFile = new TFile(Form("../SkimmedSamples/%s/%s_part%i.root", sample.c_str(), sample.c_str(), n), "RECREATE");
+	TFile* OutputRootFile = new TFile(Form("../SkimmedTotoSamples/%s/%s_part%i.root", sample.c_str(), sample.c_str(), ijob), "RECREATE");
+//	TFile* OutputRootFile = new TFile(Form("../SkimmedTotoSamples/%s/%s_part%i.root", sample.c_str(), sample.c_str(), n), "RECREATE");
 //	TFile* OutputRootFile = new TFile(Form("%s.root", sample.c_str()), "RECREATE");
-	TFile* OutputRootFile = new TFile(Form("%s_part%i.root", sample.c_str(), n), "RECREATE");
+//	TFile* OutputRootFile = new TFile(Form("%s_part%i.root", sample.c_str(), n), "RECREATE");
 	TTree *outputEventTree = inputEventTree->CloneTree(0);	
 	TTree *outputRunTree = inputRunTree->CloneTree(0);	
 	
@@ -338,29 +370,20 @@ int main(int argc, char *argv[])
 	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
 
+  int NbEventsPerJob = NbEvents;
+  int NbEventsBegin = 0;
+  int NbEventsEnd = NbEvents;
+  if( ijob != -1 )
+  {
+    NbEventsPerJob = 250000;
+    NbEventsBegin = ijob * NbEventsPerJob;
+    NbEventsEnd = min( (ijob + 1)* NbEventsPerJob - 1 , (int)NbEvents);
+    NbEvents = NbEventsEnd - NbEventsBegin + 1;
+    cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
+  }
 
-
-
-
-
-
-
-
-
-	
-	int NbEventsPerJob = 250000;
-	int NbEventsBegin = n * NbEventsPerJob;
-	int NbEventsEnd = min( (n + 1)* NbEventsPerJob - 1 , (int)NbEvents);
-	if( n == -1 )
-	{
-		NbEventsPerJob = NbEvents;
-		NbEventsBegin = 0;
-		NbEventsEnd = NbEvents;
-	}
-	NbEvents = NbEventsEnd - NbEventsBegin;
-	// LOOP over events
-	cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
-	for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
+  // LOOP over events
+  for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
 //	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 //	for(unsigned int ievt=0; ievt<100; ievt++)
 	{
@@ -639,7 +662,25 @@ int main(int argc, char *argv[])
 			nbMuonsAfterID[9]++;
 			TOTALnbMuonsAfterID[9]++;
 
-      if(! (mymuon->Pt()>10.0) ){// transverse momentum
+		double corrected_Pt = mymuon->Pt();
+ 		if( applyMuonScaleCorrection > 0 )
+		{
+			// Sidra makes MC look like data
+			if( isZgammaMC > 0) corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
+			// MuScleFit correct data absolute scale
+			corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
+		}
+		double corrected_Pz = mymuon->Pz();
+		double corrected_Px = applyMuonScaleCorrection > 0 ? mymuon->Px() * corrected_Pt / mymuon->Pt() : mymuon->Px();
+		double corrected_Py = applyMuonScaleCorrection > 0 ? mymuon->Py() * corrected_Pt / mymuon->Pt() : mymuon->Py();
+		double m_mu = 105.658367e-3;
+		double corrected_E = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz * corrected_Pz + corrected_Pt * corrected_Pt) ) : mymuon->E();
+//		double corrected_E = mymuon->E();
+		TLorentzVector correctedMuon(corrected_Px, corrected_Py, corrected_Pz, corrected_E);
+
+
+     if(! (correctedMuon.Pt() > 10.0) ){// transverse momentum
+//     if(! (mymuon->Pt() > 10.0) ){// transverse momentum
         muonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because transverse momentum" << endl;
         continue;
@@ -754,8 +795,37 @@ int main(int argc, char *argv[])
     {
 			TRootMuon *Muon1 = (TRootMuon*) muons->At(IDofMuons[1][i_dimuons].first);
 			TRootMuon *Muon2 = (TRootMuon*) muons->At(IDofMuons[1][i_dimuons].second);
+
+		double corrected_Pt1 = Muon1->Pt();
+		double corrected_Pt2 = Muon2->Pt();
+ 		if( applyMuonScaleCorrection > 0 )
+		{
+			// Sidra makes MC look like data
+			if( isZgammaMC > 0) corrected_Pt1 = applySidra(Muon1->Pt(), Muon1->charge(), Muon1->Eta(), Muon1->Phi(), generator);
+			if( isZgammaMC > 0) corrected_Pt2 = applySidra(Muon2->Pt(), Muon2->charge(), Muon2->Eta(), Muon2->Phi(), generator);
+			// MuScleFit correct data absolute scale
+			corrected_Pt1 = applyMuScleFit(corrected_Pt1, Muon1->charge(), Muon1->Eta(), Muon1->Phi());
+			corrected_Pt2 = applyMuScleFit(corrected_Pt2, Muon2->charge(), Muon2->Eta(), Muon2->Phi());
+		}
+		double corrected_Pz1 = Muon1->Pz();
+		double corrected_Pz2 = Muon2->Pz();
+		double corrected_Px1 = applyMuonScaleCorrection > 0 ? Muon1->Px() * corrected_Pt1 / Muon1->Pt() : Muon1->Px();
+		double corrected_Px2 = applyMuonScaleCorrection > 0 ? Muon2->Px() * corrected_Pt2 / Muon2->Pt() : Muon2->Px();
+		double corrected_Py1 = applyMuonScaleCorrection > 0 ? Muon1->Py() * corrected_Pt1 / Muon1->Pt() : Muon1->Py();
+		double corrected_Py2 = applyMuonScaleCorrection > 0 ? Muon2->Py() * corrected_Pt2 / Muon2->Pt() : Muon2->Py();
+		double m_mu = 105.658367e-3;
+//		double corrected_E1 = Muon1->E();
+//		double corrected_E2 = Muon2->E();
+		double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1)) : Muon1->E();
+		double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2)) : Muon2->E();
+		TLorentzVector correctedMuon1(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+		TLorentzVector correctedMuon2(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
+
 			TLorentzVector mumu;
-			mumu = (*Muon1) + (*Muon2);
+//			mumu = (*Muon1) + (*Muon2);
+			mumu = (correctedMuon1) + (correctedMuon2);
 //			if( (40.0 < mumu.M()) && (mumu.M() < 80.0) )
 			if( (30.0 < mumu.M()) && (mumu.M() < 90.0) )
 			{
