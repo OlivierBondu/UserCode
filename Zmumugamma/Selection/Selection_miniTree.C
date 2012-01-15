@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
 	
 	if( argc == 1 )
 	{
-		cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (extra scale) (extra resolution)" << endl;
+		cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (extra photon scale) (applySidra) (extra resolution)" << endl;
 		return 1;
 	}
 
@@ -242,12 +242,22 @@ int main(int argc, char *argv[])
 	double EScale_inj = EScale;
 	
 	// ******************************************
-	// Optional argument is extra resolution
+	// Optional argument : applySidra
 	// ******************************************
-	double EResolution = 0.0;
+	int applySidra = 0;
 	if( argc > 10 )
 	{
 		std::stringstream ss ( argv[10] );
+		ss >> applySidra;
+	}
+
+	// ******************************************
+	// Optional argument is extra resolution
+	// ******************************************
+	double EResolution = 0.0;
+	if( argc > 11 )
+	{
+		std::stringstream ss ( argv[11] );
 		ss >> EResolution;
 	}
 	EResolution = (double)EResolution / (double)100.0;
