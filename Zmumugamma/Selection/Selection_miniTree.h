@@ -325,7 +325,11 @@ float ETHZ_getValue(TRootPhoton *myphoton, float f_eta)
 
   }
 
-  return newEnergy;
+// WITHOUT CRACK CORRECTIONS
+//  return newEnergy;
+// WITH CRACK CORRECTIONS
+  return newEnergy * myphoton->superCluster()->crackCorrectionEtaPhi();
+
 }
 
 double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet, TClonesArray* clusters, TClonesArray* superClusters, TClonesArray* photons)
