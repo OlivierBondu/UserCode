@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
 	
 	if( argc == 1 )
 	{
-		cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (extra photon scale) (applySidra) (extra resolution)" << endl;
+		cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (extra photon scale) (applyMuonScaleCorrection) (extra resolution)" << endl;
 		return 1;
 	}
 
@@ -242,13 +242,13 @@ int main(int argc, char *argv[])
 	double EScale_inj = EScale;
 	
 	// ******************************************
-	// Optional argument : applySidra
+	// Optional argument : applyMuonScaleCorrection
 	// ******************************************
-	int applySidra = 0;
+	int applyMuonScaleCorrection = 0;
 	if( argc > 10 )
 	{
 		std::stringstream ss ( argv[10] );
-		ss >> applySidra;
+		ss >> applyMuonScaleCorrection;
 	}
 
 	// ******************************************
@@ -1187,7 +1187,7 @@ int main(int argc, char *argv[])
 		NbEventsPerJob = 200000;
 		NbEventsBegin = ijob * NbEventsPerJob;
 		NbEventsEnd = min( (ijob + 1)* NbEventsPerJob - 1 , (int)NbEvents);
-	  NbEvents = NbEventsEnd - NbEventsBegin;
+	  NbEvents = NbEventsEnd - NbEventsBegin + 1;
 		cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
 	}
 
@@ -1557,6 +1557,8 @@ int main(int argc, char *argv[])
     muonIsNotCommissioned.clear();
     vector<int> muonIdentified;
     muonIdentified.clear();
+    vector<double> muonIdentified_corrected_Pt;
+    muonIdentified_corrected_Pt.clear();
 		int nbMuonsAfterID[12] = {0};
 		
     if(verbosity>0) cerr << "\t\tThere is " << NbMuons << " muons in the muon collection" << endl;
@@ -1640,7 +1642,25 @@ int main(int argc, char *argv[])
 			nbMuonsAfterID[9]++;
 			TOTALnbMuonsAfterID[9]++;
 
-      if(! (mymuon->Pt()>10.0) ){// transverse momentum
+    double corrected_Pt = mymuon->Pt();
+    if( applyMuonScaleCorrection > 0 )
+    {
+      // Sidra makes MC look like data
+      if( isZgammaMC > 0) corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
+      // MuScleFit correct data absolute scale
+      corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
+    }
+    double corrected_Pz = mymuon->Pz();
+    double corrected_Px = applyMuonScaleCorrection > 0 ? mymuon->Px() * corrected_Pt / mymuon->Pt() : mymuon->Px();
+    double corrected_Py = applyMuonScaleCorrection > 0 ? mymuon->Py() * corrected_Pt / mymuon->Pt() : mymuon->Py();
+    double m_mu = 105.658367e-3;
+    double corrected_E = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz * corrected_Pz + corrected_Pt * corrected_Pt) ) : mymuon->E();
+//    double corrected_E = mymuon->E();
+    TLorentzVector correctedMuon(corrected_Px, corrected_Py, corrected_Pz, corrected_E);
+
+
+     if(! (correctedMuon.Pt() > 10.0) ){// transverse momentum
+//     if(! (mymuon->Pt() > 10.0) ){// transverse momentum
         muonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because transverse momentum" << endl;
         continue;
@@ -1664,6 +1684,7 @@ int main(int argc, char *argv[])
 
       if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " accepted" << endl;
       muonIsNotCommissioned.push_back(0);
+      muonIdentified_corrected_Pt.push_back(correctedMuon.Pt());
       muonIdentified.push_back(imuon);
 ////			mymuon->Clear();
     }
@@ -1702,11 +1723,13 @@ int main(int argc, char *argv[])
 		TOTALnbEventsAfterDimuonID[0] += 1;
 
 		pair <int, int> IDofMuons[3][numberOfDimuons[0]];
+		pair <int, int> PtofMuons[3][numberOfDimuons[0]];
 
 		if(verbosity>2) cout << "initializing dimuon pair object" << endl;
 		// Initializing pair object
 		for(int i = 0; i < 3; i++){
 			for(int j = 0; j < numberOfDimuons[0]; j++) IDofMuons[i][j] = make_pair(0, 0);
+			for(int j = 0; j < numberOfDimuons[0]; j++) PtofMuons[i][j] = make_pair(0, 0);
 		}
 
 		if(verbosity>2) cout << "Filling pair object for dimuon pairs composed of ID'ed muons" << endl;
@@ -1718,6 +1741,7 @@ int main(int argc, char *argv[])
 				for(int muon_j = muon_i +1; muon_j < nbMuonsAfterID[11]; muon_j++)
 				{
 					IDofMuons[0][i_dimuons] = make_pair(muonIdentified[muon_i], muonIdentified[muon_j]);
+					PtofMuons[0][i_dimuons] = make_pair(muonIdentified_corrected_Pt[muon_i], muonIdentified_corrected_Pt[muon_j]);
 				}
 			}
 		}
@@ -1755,8 +1779,23 @@ int main(int argc, char *argv[])
     {
 			TRootMuon *Muon1 = (TRootMuon*) muons->At(IDofMuons[1][i_dimuons].first);
 			TRootMuon *Muon2 = (TRootMuon*) muons->At(IDofMuons[1][i_dimuons].second);
+			double corrected_Pt1 = PtofMuons[1][i_dimuons].first;
+			double corrected_Pt2 = PtofMuons[1][i_dimuons].second;
+			double corrected_Pz1 = Muon1->Pz();
+			double corrected_Pz2 = Muon2->Pz();
+	    double corrected_Px1 = applyMuonScaleCorrection > 0 ? Muon1->Px() * corrected_Pt1 / Muon1->Pt() : Muon1->Px();
+	    double corrected_Px2 = applyMuonScaleCorrection > 0 ? Muon2->Px() * corrected_Pt2 / Muon2->Pt() : Muon2->Px();
+	    double corrected_Py1 = applyMuonScaleCorrection > 0 ? Muon1->Py() * corrected_Pt1 / Muon1->Pt() : Muon1->Py();
+	    double corrected_Py2 = applyMuonScaleCorrection > 0 ? Muon2->Py() * corrected_Pt2 / Muon2->Pt() : Muon2->Py();
+	    double m_mu = 105.658367e-3;
+			double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : Muon1->E();
+			double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : Muon2->E();
+    	TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+    	TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
 			TLorentzVector mumu;
-			mumu = (*Muon1) + (*Muon2);
+//			mumu = (*Muon1) + (*Muon2);
+			mumu = (*correctedMuon1) + (*correctedMuon2);
 			if( (low_m_mumu < mumu.M()) && (mumu.M() < high_m_mumu) )
 			{
 				numberOfDimuons[2] += 1;
@@ -1901,6 +1940,7 @@ int main(int argc, char *argv[])
 		TOTALnbMuMuGammaAfterID[0] += nbMuMuGammaAfterID[0];
 		TOTALnbEventsAfterMuMuGammaID[0]++ ;
 		pair <int, pair<int, int> > MuMuGammaCandidates[8][nbMuMuGammaCandidates];
+		pair <int, int > MuMuGammaCandidates_corrected[8][nbMuMuGammaCandidates];
 
 		if(verbosity>2) cout << "initializing triplet objects" << endl;
 		// Initializing triplet objects
@@ -1909,6 +1949,7 @@ int main(int argc, char *argv[])
 			for(int j = 0; j < nbMuMuGammaCandidates; j++)
 			{
 				MuMuGammaCandidates[i][j] = make_pair(0, make_pair(0,0));
+				MuMuGammaCandidates_corrected[i][j] = make_pair(0,0);
 			}
 		}
 
@@ -1925,6 +1966,7 @@ int main(int argc, char *argv[])
 				if(verbosity>5) cerr << "IDofMuons[2][i_dimuons].second= " << IDofMuons[2][i_dimuons].second << endl;
 				if(verbosity>5) cerr << "muonIdentified[IDofMuons[2][i_dimuons].second]= " << muonIdentified[IDofMuons[2][i_dimuons].second] << endl;
 				MuMuGammaCandidates[0][i_cand] = make_pair(photonsNoSpike[i_photon], make_pair( IDofMuons[2][i_dimuons].first, IDofMuons[2][i_dimuons].second));
+				MuMuGammaCandidates_corrected[0][i_cand] = make_pair( PtofMuons[2][i_dimuons].first, PtofMuons[2][i_dimuons].second);
 				i_cand++;
 			}
 		}	
@@ -1950,6 +1992,24 @@ int main(int argc, char *argv[])
 			if(verbosity>5) cerr << "fetch muon2 muons->At( MuMuGammaCandidates[0][i_mmg].second.second )" << endl;
 			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[0][i_mmg].second.second );
 			if(verbosity>5) cerr << "getting phi, eta" << endl;
+
+      double corrected_Pt1 = MuMuGammaCandidates_corrected[0][i_mmg].first;
+      double corrected_Pt2 = MuMuGammaCandidates_corrected[0][i_mmg].second;
+      double corrected_Pz1 = mymuon1->Pz();
+      double corrected_Pz2 = mymuon2->Pz();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double m_mu = 105.658367e-3;
+      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
+
+
 			double phiPhoton = myphoton->Phi();
 			double etaPhoton = myphoton->Eta();
 			double phiMuon1 = mymuon1->Phi();
@@ -1967,7 +2027,8 @@ int main(int argc, char *argv[])
 			{
 				if(verbosity>3) cerr << "candidate thrown because close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			} else {
@@ -1976,6 +2037,7 @@ int main(int argc, char *argv[])
 		
 			if(verbosity>5) cerr << " filling new pair " << endl;
 			MuMuGammaCandidates[1][nbMuMuGammaAfterID[1]] = make_pair(MuMuGammaCandidates[0][i_mmg].first, make_pair(MuMuGammaCandidates[0][i_mmg].second.first, MuMuGammaCandidates[0][i_mmg].second.second) );
+			MuMuGammaCandidates_corrected[1][nbMuMuGammaAfterID[1]] = make_pair(MuMuGammaCandidates_corrected[0][i_mmg].first, MuMuGammaCandidates_corrected[0][i_mmg].second);
 			nbMuMuGammaAfterID[1]++;
 			TOTALnbMuMuGammaAfterID[1]++;
 		}
@@ -2002,6 +2064,23 @@ int main(int argc, char *argv[])
 			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[1][i_mmg].first);
 			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[1][i_mmg].second.first );
 			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[1][i_mmg].second.second );
+
+
+      double corrected_Pt1 = MuMuGammaCandidates_corrected[1][i_mmg].first;
+      double corrected_Pt2 = MuMuGammaCandidates_corrected[1][i_mmg].second;
+      double corrected_Pz1 = mymuon1->Pz();
+      double corrected_Pz2 = mymuon2->Pz();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double m_mu = 105.658367e-3;
+      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
 			double phiPhoton = myphoton->Phi();
 			double etaPhoton = myphoton->Eta();
 			double phiMuon1 = mymuon1->Phi();
@@ -2015,11 +2094,13 @@ int main(int argc, char *argv[])
 			{
 				if(verbosity>4) cerr << "candidate thrown because far_isoR03_emEt= " << far_isoR03_emEt << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
 			MuMuGammaCandidates[2][nbMuMuGammaAfterID[2]] = make_pair(MuMuGammaCandidates[1][i_mmg].first, make_pair(MuMuGammaCandidates[1][i_mmg].second.first, MuMuGammaCandidates[1][i_mmg].second.second) );
+			MuMuGammaCandidates_corrected[2][nbMuMuGammaAfterID[2]] = make_pair(MuMuGammaCandidates_corrected[1][i_mmg].first, MuMuGammaCandidates_corrected[1][i_mmg].second);
       nbMuMuGammaAfterID[2]++;
     }
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[2]= " << nbMuMuGammaAfterID[2] << endl;
@@ -2044,6 +2125,24 @@ int main(int argc, char *argv[])
 			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[2][i_mmg].first);
 			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[2][i_mmg].second.first );
 			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[2][i_mmg].second.second );
+
+      double corrected_Pt1 = MuMuGammaCandidates_corrected[2][i_mmg].first;
+      double corrected_Pt2 = MuMuGammaCandidates_corrected[2][i_mmg].second;
+      double corrected_Pz1 = mymuon1->Pz();
+      double corrected_Pz2 = mymuon2->Pz();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double m_mu = 105.658367e-3;
+      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
+
+
 			double phiPhoton = myphoton->Phi();
 			double etaPhoton = myphoton->Eta();
 			double phiMuon1 = mymuon1->Phi();
@@ -2056,11 +2155,13 @@ int main(int argc, char *argv[])
 			if( min_DeltaR >= 0.8 )
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
 			MuMuGammaCandidates[3][nbMuMuGammaAfterID[3]] = make_pair(MuMuGammaCandidates[2][i_mmg].first, make_pair(MuMuGammaCandidates[2][i_mmg].second.first, MuMuGammaCandidates[2][i_mmg].second.second) );
+			MuMuGammaCandidates_corrected[3][nbMuMuGammaAfterID[3]] = make_pair(MuMuGammaCandidates_corrected[2][i_mmg].first, MuMuGammaCandidates_corrected[2][i_mmg].second);
       nbMuMuGammaAfterID[3]++;
 
     }
@@ -2085,6 +2186,23 @@ int main(int argc, char *argv[])
 			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[3][i_mmg].first);
 			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[3][i_mmg].second.first );
 			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[3][i_mmg].second.second );
+
+      double corrected_Pt1 = MuMuGammaCandidates_corrected[3][i_mmg].first;
+      double corrected_Pt2 = MuMuGammaCandidates_corrected[3][i_mmg].second;
+      double corrected_Pz1 = mymuon1->Pz();
+      double corrected_Pz2 = mymuon2->Pz();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double m_mu = 105.658367e-3;
+      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
+
 			double phiPhoton = myphoton->Phi();
 			double etaPhoton = myphoton->Eta();
 			double phiMuon1 = mymuon1->Phi();
@@ -2097,11 +2215,13 @@ int main(int argc, char *argv[])
 			if( far_muonPt <= 30.0 )
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
 			MuMuGammaCandidates[4][nbMuMuGammaAfterID[4]] = make_pair(MuMuGammaCandidates[3][i_mmg].first, make_pair(MuMuGammaCandidates[3][i_mmg].second.first, MuMuGammaCandidates[3][i_mmg].second.second) );
+			MuMuGammaCandidates_corrected[4][nbMuMuGammaAfterID[4]] = make_pair(MuMuGammaCandidates_corrected[3][i_mmg].first, MuMuGammaCandidates_corrected[3][i_mmg].second);
       nbMuMuGammaAfterID[4]++;
 
     }
@@ -2126,6 +2246,22 @@ int main(int argc, char *argv[])
 			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[4][i_mmg].first);
 			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[4][i_mmg].second.first );
 			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[4][i_mmg].second.second );
+
+      double corrected_Pt1 = MuMuGammaCandidates_corrected[4][i_mmg].first;
+      double corrected_Pt2 = MuMuGammaCandidates_corrected[4][i_mmg].second;
+      double corrected_Pz1 = mymuon1->Pz();
+      double corrected_Pz2 = mymuon2->Pz();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double m_mu = 105.658367e-3;
+      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
 			double phiPhoton = myphoton->Phi();
 			double etaPhoton = myphoton->Eta();
 			double phiMuon1 = mymuon1->Phi();
@@ -2137,15 +2273,18 @@ int main(int argc, char *argv[])
 			TLorentzVector mumugamma;
 			EScale = Photon_scale[MuMuGammaCandidates[4][i_mmg].first];
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
-			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
+//			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
+			mumugamma = (*PhotonEScale) + (*correctedMuon1) + (*correctedMuon2);
 			if( (mumugamma.M() < 30.0) || (180.0 < mumugamma.M())  )
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
 			MuMuGammaCandidates[5][nbMuMuGammaAfterID[5]] = make_pair(MuMuGammaCandidates[4][i_mmg].first, make_pair(MuMuGammaCandidates[4][i_mmg].second.first, MuMuGammaCandidates[4][i_mmg].second.second) );
+			MuMuGammaCandidates_corrected[5][nbMuMuGammaAfterID[5]] = make_pair(MuMuGammaCandidates_corrected[4][i_mmg].first, MuMuGammaCandidates_corrected[4][i_mmg].second);
       nbMuMuGammaAfterID[5]++;
     }
     if(! (nbMuMuGammaAfterID[5] > 0) )
@@ -2180,6 +2319,22 @@ int main(int argc, char *argv[])
 			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[5][i_mmg].first);
 			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.first );
 			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.second );
+
+      double corrected_Pt1 = MuMuGammaCandidates_corrected[5][i_mmg].first;
+      double corrected_Pt2 = MuMuGammaCandidates_corrected[5][i_mmg].second;
+      double corrected_Pz1 = mymuon1->Pz();
+      double corrected_Pz2 = mymuon2->Pz();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double m_mu = 105.658367e-3;
+      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
 			double phiPhoton = myphoton->Phi();
 			double etaPhoton = myphoton->Eta();
 			double phiMuon1 = mymuon1->Phi();
@@ -2196,11 +2351,13 @@ int main(int argc, char *argv[])
 			{
 //				cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 				continue;
 			}
 			MuMuGammaCandidates[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates[5][i_mmg].first, make_pair(MuMuGammaCandidates[5][i_mmg].second.first, MuMuGammaCandidates[5][i_mmg].second.second) );
+			MuMuGammaCandidates_corrected[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates_corrected[5][i_mmg].first, MuMuGammaCandidates_corrected[5][i_mmg].second);
       nbMuMuGammaAfterID[6]++;
     }
     if(! (nbMuMuGammaAfterID[6] > 0) )
@@ -2238,6 +2395,23 @@ int main(int argc, char *argv[])
 			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[6][i_mmg].first);
 			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.first );
 			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.second );
+
+      double corrected_Pt1 = MuMuGammaCandidates_corrected[6][i_mmg].first;
+      double corrected_Pt2 = MuMuGammaCandidates_corrected[6][i_mmg].second;
+      double corrected_Pz1 = mymuon1->Pz();
+      double corrected_Pz2 = mymuon2->Pz();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double m_mu = 105.658367e-3;
+      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
+
 			double phiPhoton = myphoton->Phi();
 			double etaPhoton = myphoton->Eta();
 			double phiMuon1 = mymuon1->Phi();
@@ -2254,13 +2428,15 @@ int main(int argc, char *argv[])
 			{
 //				cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
-				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				miniTree->Fill();
 				continue;
 			}
 			MuMuGammaCandidates[7][nbMuMuGammaAfterID[7]] = make_pair(MuMuGammaCandidates[6][i_mmg].first, make_pair(MuMuGammaCandidates[6][i_mmg].second.first, MuMuGammaCandidates[6][i_mmg].second.second) );
+			MuMuGammaCandidates_corrected[7][nbMuMuGammaAfterID[7]] = make_pair(MuMuGammaCandidates_corrected[6][i_mmg].first, MuMuGammaCandidates_corrected[6][i_mmg].second);
       nbMuMuGammaAfterID[7]++;
     }
     if(! (nbMuMuGammaAfterID[7] > 0) )
@@ -2291,8 +2467,26 @@ int main(int argc, char *argv[])
 	      myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
 	      mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
 	      mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
+
+      double corrected_Pt1 = MuMuGammaCandidates_corrected[7][i_mmg].first;
+      double corrected_Pt2 = MuMuGammaCandidates_corrected[7][i_mmg].second;
+      double corrected_Pz1 = mymuon1->Pz();
+      double corrected_Pz2 = mymuon2->Pz();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double m_mu = 105.658367e-3;
+      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
+
 //	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+//	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+	      FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				miniTree->Fill();
 	    }
 			continue;
@@ -2306,8 +2500,25 @@ int main(int argc, char *argv[])
 		myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
     mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
     mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
+
+      double corrected_Pt1 = MuMuGammaCandidates_corrected[7][i_mmg].first;
+      double corrected_Pt2 = MuMuGammaCandidates_corrected[7][i_mmg].second;
+      double corrected_Pz1 = mymuon1->Pz();
+      double corrected_Pz2 = mymuon2->Pz();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double m_mu = 105.658367e-3;
+      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
 //    FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-    FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+//    FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+    FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 		isSelected = 1;
 		nSelected++;
 		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;

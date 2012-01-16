@@ -618,10 +618,51 @@ int main(int argc, char *argv[]);
 
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, TClonesArray* mcParticles);
 
+double applySidra( double _pt, double charge, double eta, double phi, TRandom3* generator)
+{
+	double pt = _pt;
+// Correct MC
+	double a = 0.0650687e-3;
+	double b = 0.212987e-3;
+	double c = 1.53414;
+	pt = (double)1.0/(double)pt;
+	pt -= a - b * charge * sin( phi + c );
+// Apply Corrections
+	double A = 0.143812;
+	double B = 0.0404834;
+	double Ap = 0.0995898;
+	double Bp = -0.0692569;
+	double Cp = 0.0952174;
+	double phi0 = -1.08881;
+	pt += ( A + B * eta * eta ) * (generator->Gaus(0,1)) /1000. + (Ap + Cp * charge * sin( phi + phi0 )+ Bp * charge * eta )/1000.;
+	pt = (double)1.0/(double)pt;
+	return pt;
+}
+
+double applyMuScleFit(double _pt, double charge, double eta, double phi)
+{
+	double b = -5.03313e-6;
+	double c = -4.41463e-5;
+	double d0 = -0.000148871;
+	double e0 = 1.59501;
+	double d1 = 7.95495e-5;
+	double e1 = -0.364823;
+	double d2 = 0.000152032;
+	double e2 = 0.410195;
+	double d = eta > .9 ? d1 : (eta < -.9 ? d2 : d0);
+	double e = eta > .9 ? e1 : (eta < -.9 ? e2 : e0);
+	double pt = _pt;
+	double sgn_eta = eta >= 0.0 ? 1.0 : -1.0;
+	pt = pt * (1 + b * pt  + c * charge * pt * sgn_eta * eta * eta + charge * d * pt * sin( phi + e ));
+	return pt;
+
+}
+
 
 
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TClonesArray* mcPhotons, TMVA::Reader* reader){
-int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
+//int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
+int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLorentzVector* correctedmymuon1, TLorentzVector* correctedmymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
 
       // Fill photon stuff
       Photon_Eta = myphoton->Eta();
@@ -753,14 +794,20 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
       // Fill muons stuff
       TRootMuon *leadingMuon;
       TRootMuon *subleadingMuon;
-      if( (mymuon1->Pt()) > (mymuon2->Pt()) )      {
+      TLorentzVector *correctedleadingMuon;
+      TLorentzVector *correctedsubleadingMuon;
+      if( (correctedmymuon1->Pt()) > (correctedmymuon2->Pt()) )      {
         leadingMuon = mymuon1;
+        correctedleadingMuon = correctedmymuon1;
         subleadingMuon = mymuon2;
+        correctedsubleadingMuon = correctedmymuon2;
       } else {
         leadingMuon = mymuon2;
+        correctedleadingMuon = correctedmymuon2;
         subleadingMuon = mymuon1;
+        correctedsubleadingMuon = correctedmymuon1;
       }
-      MuonL_Pt = leadingMuon->Pt();
+      MuonL_Pt = correctedleadingMuon->Pt();
       MuonL_Eta = leadingMuon->Eta();
       MuonL_Phi = leadingMuon->Phi();
       MuonL_Charge = leadingMuon->charge();
@@ -776,7 +823,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
       MuonL_isoR05_nJets = leadingMuon->isoR05_nJets();
       MuonL_isoR05_nTracks = leadingMuon->isoR05_nTracks();
       MuonL_isoR05_sumPt = leadingMuon->isoR05_sumPt();
-      MuonS_Pt = subleadingMuon->Pt();
+      MuonS_Pt = correctedsubleadingMuon->Pt();
       MuonS_Eta = subleadingMuon->Eta();
       MuonS_Phi = subleadingMuon->Phi();
       MuonS_Charge = subleadingMuon->charge();
@@ -794,7 +841,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
       MuonS_isoR05_sumPt = subleadingMuon->isoR05_sumPt();
 
       TLorentzVector mumu;
-      mumu = (*leadingMuon) + (*subleadingMuon);
+      mumu = (*correctedleadingMuon) + (*correctedsubleadingMuon);
       Ptmumu = mumu.Pt();
       double mumuInvMass = mumu.M();
 //      cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
@@ -897,10 +944,10 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 
 
 //    mumugamma = (*leadingMuon) + (*subleadingMuon) + (*myphoton);
-    mumugamma = (*leadingMuon) + (*subleadingMuon) + (*PhotonEScale);
-    mumuSC = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC);
-    mumu5x5 = (*leadingMuon) + (*subleadingMuon) + (*Photon5x5);
-    mumuSC_raw = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw);
+    mumugamma = (*correctedleadingMuon) + (*correctedsubleadingMuon) + (*PhotonEScale);
+    mumuSC = (*correctedleadingMuon) + (*correctedsubleadingMuon) + (*PhotonSC);
+    mumu5x5 = (*correctedleadingMuon) + (*correctedsubleadingMuon) + (*Photon5x5);
+    mumuSC_raw = (*correctedleadingMuon) + (*correctedsubleadingMuon) + (*PhotonSC_raw);
 /*
     mumuSC_raw_fEta = (*leadingMuon) + (*subleadingMuon) + (*PhotonSC_raw_fEta);
 
@@ -1012,26 +1059,38 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     TRootMuon *nearMuon;
     TRootMuon *minusMuon;
     TRootMuon *plusMuon;
+    TLorentzVector *correctedfarMuon;
+    TLorentzVector *correctednearMuon;
+    TLorentzVector *correctedminusMuon;
+    TLorentzVector *correctedplusMuon;
 
     if(deltaRPM < deltaRPAM){
       deltaRmin = deltaRPM;
       farMuon = (TRootMuon*) mymuon2;
       nearMuon = (TRootMuon*) mymuon1;
+      correctedfarMuon = (TLorentzVector*) correctedmymuon2;
+      correctednearMuon = (TLorentzVector*) correctedmymuon1;
     } else {
       deltaRmin = deltaRPAM;
       farMuon = (TRootMuon*) mymuon1;
       nearMuon = (TRootMuon*) mymuon2;
+      correctedfarMuon = (TLorentzVector*) correctedmymuon1;
+      correctednearMuon = (TLorentzVector*) correctedmymuon2;
     }
     if( mymuon1->charge()>0 ){
       plusMuon  = (TRootMuon*) mymuon1;
       minusMuon = (TRootMuon*) mymuon2;
+      correctedplusMuon  = (TLorentzVector*) correctedmymuon1;
+      correctedminusMuon = (TLorentzVector*) correctedmymuon2;
     } else {
       minusMuon = (TRootMuon*) mymuon1;
       plusMuon  = (TRootMuon*) mymuon2;
+      correctedminusMuon = (TLorentzVector*) correctedmymuon1;
+      correctedplusMuon  = (TLorentzVector*) correctedmymuon2;
     }
 
     // FILLING MINITREE INFORMATION
-    MuonM_Pt = minusMuon->Pt();
+    MuonM_Pt = correctedminusMuon->Pt();
     MuonM_Eta = minusMuon->Eta();
     MuonM_Phi = minusMuon->Phi();
     MuonM_isoR03_emEt = minusMuon->isoR03_emEt();
@@ -1046,7 +1105,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     MuonM_isoR05_nJets = minusMuon->isoR05_nJets();
     MuonM_isoR05_nTracks = minusMuon->isoR05_nTracks();
     MuonM_isoR05_sumPt = minusMuon->isoR05_sumPt();
-    MuonP_Pt = plusMuon->Pt();
+    MuonP_Pt = correctedplusMuon->Pt();
     MuonP_Eta = plusMuon->Eta();
     MuonP_Phi = plusMuon->Phi();
     MuonP_isoR03_emEt = plusMuon->isoR03_emEt();
@@ -1061,7 +1120,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     MuonP_isoR05_nJets = plusMuon->isoR05_nJets();
     MuonP_isoR05_nTracks = plusMuon->isoR05_nTracks();
     MuonP_isoR05_sumPt = plusMuon->isoR05_sumPt();
-    MuonF_Pt = farMuon->Pt();
+    MuonF_Pt = correctedfarMuon->Pt();
     MuonF_Eta = farMuon->Eta();
     MuonF_Phi = farMuon->Phi();
     MuonF_Charge = farMuon->charge();
@@ -1077,7 +1136,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
     MuonF_isoR05_nJets = farMuon->isoR05_nJets();
     MuonF_isoR05_nTracks = farMuon->isoR05_nTracks();
     MuonF_isoR05_sumPt = farMuon->isoR05_sumPt();
-    MuonN_Pt = nearMuon->Pt();
+    MuonN_Pt = correctednearMuon->Pt();
     MuonN_Eta = nearMuon->Eta();
     MuonN_Phi = nearMuon->Phi();
     MuonN_Charge = nearMuon->charge();
@@ -1106,12 +1165,12 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 	//cout<<endl<<"doMC dans le if = "<<doMC<<endl; 
 	// Compute Stuff, with MC truth information
       doGenInfo( (TRootParticle*) myphoton, mcParticles, &Photon_MC_E, &Photon_MC_Px, &Photon_MC_Py, &Photon_MC_Pz, &Photon_MC_Phi, &Photon_MC_Eta, 22 );
-      doGenInfo( (TRootParticle*) minusMuon, mcParticles, &MuonM_MC_E, &MuonM_MC_Px, &MuonM_MC_Py, &MuonM_MC_Pz, &MuonM_MC_Phi, &MuonM_MC_Eta, 13 );
-      doGenInfo( (TRootParticle*) plusMuon, mcParticles, &MuonP_MC_E, &MuonP_MC_Px, &MuonP_MC_Py, &MuonP_MC_Pz, &MuonP_MC_Phi, &MuonP_MC_Eta, -13 );
-      doGenInfo( (TRootParticle*) nearMuon, mcParticles, &MuonN_MC_E, &MuonN_MC_Px, &MuonN_MC_Py, &MuonN_MC_Pz, &MuonN_MC_Phi, &MuonN_MC_Eta, (-1)*(nearMuon->charge())*13 );
-      doGenInfo( (TRootParticle*) farMuon, mcParticles, &MuonF_MC_E, &MuonF_MC_Px, &MuonF_MC_Py, &MuonF_MC_Pz, &MuonF_MC_Phi, &MuonF_MC_Eta, (-1)*(farMuon->charge())*13 );
-      doGenInfo( (TRootParticle*) leadingMuon, mcParticles, &MuonL_MC_E, &MuonL_MC_Px, &MuonL_MC_Py, &MuonL_MC_Pz, &MuonL_MC_Phi, &MuonL_MC_Eta, (-1)*(leadingMuon->charge())*13 );
-      doGenInfo( (TRootParticle*) subleadingMuon, mcParticles, &MuonS_MC_E, &MuonS_MC_Px, &MuonS_MC_Py, &MuonS_MC_Pz, &MuonS_MC_Phi, &MuonS_MC_Eta, (-1)*(subleadingMuon->charge())*13 );
+      doGenInfo( (TRootParticle*) correctedminusMuon, mcParticles, &MuonM_MC_E, &MuonM_MC_Px, &MuonM_MC_Py, &MuonM_MC_Pz, &MuonM_MC_Phi, &MuonM_MC_Eta, 13 );
+      doGenInfo( (TRootParticle*) correctedplusMuon, mcParticles, &MuonP_MC_E, &MuonP_MC_Px, &MuonP_MC_Py, &MuonP_MC_Pz, &MuonP_MC_Phi, &MuonP_MC_Eta, -13 );
+      doGenInfo( (TRootParticle*) correctednearMuon, mcParticles, &MuonN_MC_E, &MuonN_MC_Px, &MuonN_MC_Py, &MuonN_MC_Pz, &MuonN_MC_Phi, &MuonN_MC_Eta, (-1)*(nearMuon->charge())*13 );
+      doGenInfo( (TRootParticle*) correctedfarMuon, mcParticles, &MuonF_MC_E, &MuonF_MC_Px, &MuonF_MC_Py, &MuonF_MC_Pz, &MuonF_MC_Phi, &MuonF_MC_Eta, (-1)*(farMuon->charge())*13 );
+      doGenInfo( (TRootParticle*) correctedleadingMuon, mcParticles, &MuonL_MC_E, &MuonL_MC_Px, &MuonL_MC_Py, &MuonL_MC_Pz, &MuonL_MC_Phi, &MuonL_MC_Eta, (-1)*(leadingMuon->charge())*13 );
+      doGenInfo( (TRootParticle*) correctedsubleadingMuon, mcParticles, &MuonS_MC_E, &MuonS_MC_Px, &MuonS_MC_Py, &MuonS_MC_Pz, &MuonS_MC_Phi, &MuonS_MC_Eta, (-1)*(subleadingMuon->charge())*13 );
 
 			if(Photon_MC_E != 0.0) Photon_SC_rawE_x_fEta_o_MC_E = (double)(Photon_SC_rawE_x_fEta) / (double)(Photon_MC_E);
 			if(Photon_MC_E != 0.0) Photon_E_o_MC_E = (double)(Photon_E) / (double)(Photon_MC_E);
@@ -1142,8 +1201,8 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
       TLorentzVector *Photon5x5 = new TLorentzVector( myphoton->Px(), myphoton->Py(), myphoton->Pz(), EScale*(myphoton->e5x5()));
       TLorentzVector *PhotonSC_raw = new TLorentzVector( myphoton->Px(), myphoton->Py(), myphoton->Pz(), EScale*(myphoton->superCluster()->rawEnergy()));
 
-      mumu_Photon_MC = (*leadingMuon) + (*subleadingMuon);
-      mumugamma_Photon_MC = (*leadingMuon) + (*subleadingMuon) + (*PhotonMC);
+      mumu_Photon_MC = (*correctedleadingMuon) + (*correctedsubleadingMuon);
+      mumugamma_Photon_MC = (*correctedleadingMuon) + (*correctedsubleadingMuon) + (*PhotonMC);
       mumu_Muons_MC = (*MuonLMC) + (*MuonSMC);
       mumugamma_Muons_MC = (*MuonLMC) + (*MuonSMC) + (*PhotonEScale);
       mumu_MMG_MC = (*MuonLMC) + (*MuonSMC);
@@ -1231,4 +1290,5 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, doubl
 
 return 0;
 }
+
 
