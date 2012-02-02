@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
 	double EScale_inj = EScale;
 	
 	// ******************************************
-	// Optional argument : applyMuonScaleCorrection
+	// Optional argument : applyMuonScaleCorrection : 0)nothing 1) MuScleFit 2)SIDRA 3)Rochester (21 & 31 also available)
 	// ******************************************
 	int applyMuonScaleCorrection = 0;
 	if( argc > 10 )
@@ -305,8 +305,12 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
-	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
+	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+//	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
+//	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
+
+
 //		inputEventTree->Add("miniTree_TEST.root");
 //		inputRunTree->Add("miniTree_TEST.root");
 //	inputEventTree->Add(inputfile);
@@ -316,42 +320,6 @@ int main(int argc, char *argv[])
 /*
 	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part0.root");
 	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part0.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part1.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part1.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part10.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part10.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part11.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part11.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part12.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part12.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part13.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part13.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part14.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part14.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part15.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part15.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part16.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part16.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part17.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part17.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part18.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part18.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part2.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part2.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part3.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part3.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part4.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part4.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part5.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part5.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part6.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part6.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part7.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part7.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part8.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part8.root");
-	inputEventTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part9.root");
-	inputRunTree->Add("root://ccxroot.in2p3.fr:1999//hpss/in2p3.fr/group/cms/users/obondu/Zgamma/Fall11/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6/Skimv02_DYToMuMu_M-20_CT10_TuneZ2_7TeV-powheg-pythia_PU_S6_part9.root");
 */
 
 // INSERTFILES
@@ -1185,9 +1153,10 @@ int main(int argc, char *argv[])
 	if( ijob != -1 )
 	{
 		NbEventsPerJob = 200000;
+//		NbEventsPerJob = 100;
 		NbEventsBegin = ijob * NbEventsPerJob;
-		NbEventsEnd = min( (ijob + 1)* NbEventsPerJob - 1 , (int)NbEvents);
-	  NbEvents = NbEventsEnd - NbEventsBegin + 1;
+		NbEventsEnd = min( (ijob + 1)* NbEventsPerJob , (int)NbEvents);
+	  NbEvents = NbEventsEnd - NbEventsBegin ;
 		cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
 	}
 
@@ -1634,21 +1603,41 @@ int main(int argc, char *argv[])
 			nbMuonsAfterID[8]++;
 			TOTALnbMuonsAfterID[8]++;
 
+
       if(! (mymuon->isoR03_sumPt()<3.0) ){// sum of pT of tracks with pT >1.5 within a cone of DR < 0.3 around the muon direction, vetoing a cone of 0.015 around that direction
         muonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because sum of pT of tracks with pT >1.5 within a cone of DR < 0.3 around the muon direction, vetoing a cone of 0.015 around that direction" << endl;
         continue;
       }
+
 			nbMuonsAfterID[9]++;
 			TOTALnbMuonsAfterID[9]++;
 
     double corrected_Pt = mymuon->Pt();
     if( applyMuonScaleCorrection > 0 )
     {
+     if( applyMuonScaleCorrection == 2 )
+      { // Apply SIDRA
+        corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
+      }
+      if( applyMuonScaleCorrection == 1 )
+      { // Apply MuScleFit
+        corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
+      }
+      if( applyMuonScaleCorrection == 21 )
+      { // Apply SIDRA then MuScleFit
+        corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
+        corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
+      }
+      if( applyMuonScaleCorrection == 12 )
+      { // Apply SIDRA then MuScleFit
+        corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
+        corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
+      }
       // Sidra makes MC look like data
-      if( isZgammaMC > 0) corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
+//      if( isZgammaMC > 0) corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
       // MuScleFit correct data absolute scale
-      corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
+//      corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
     }
     double corrected_Pz = mymuon->Pz();
     double corrected_Px = applyMuonScaleCorrection > 0 ? mymuon->Px() * corrected_Pt / mymuon->Pt() : mymuon->Px();
@@ -1742,6 +1731,9 @@ int main(int argc, char *argv[])
 				{
 					IDofMuons[0][i_dimuons] = make_pair(muonIdentified[muon_i], muonIdentified[muon_j]);
 					PtofMuons[0][i_dimuons] = make_pair(muonIdentified_corrected_Pt[muon_i], muonIdentified_corrected_Pt[muon_j]);
+					if(verbosity>5) cerr << "muonIdentified_corrected_Pt["<<muon_i<<"]= " << muonIdentified_corrected_Pt[muon_i] << endl;
+					if(verbosity>5) cerr << "muonIdentified_corrected_Pt["<<muon_j<<"]= " << muonIdentified_corrected_Pt[muon_j] << endl;
+					if(verbosity>5) cerr << "PtofMuons[0]["<<i_dimuons<<"]=  (" << PtofMuons[0][i_dimuons].first << " , " << PtofMuons[0][i_dimuons].second << ")" << endl;
 				}
 			}
 		}
@@ -1761,6 +1753,7 @@ int main(int argc, char *argv[])
 			{
 				numberOfDimuons[1] += 1;
 				IDofMuons[1][i_dimuons] = make_pair(IDofMuons[0][i_dimuons].first, IDofMuons[0][i_dimuons].second);
+				PtofMuons[1][i_dimuons] = make_pair(PtofMuons[0][i_dimuons].first, PtofMuons[0][i_dimuons].second);
 			}
 ////			Muon1->Clear();
 ////			Muon2->Clear();
@@ -1800,6 +1793,7 @@ int main(int argc, char *argv[])
 			{
 				numberOfDimuons[2] += 1;
 				IDofMuons[2][i_dimuons] = make_pair(IDofMuons[1][i_dimuons].first, IDofMuons[1][i_dimuons].second);
+				PtofMuons[2][i_dimuons] = make_pair(PtofMuons[1][i_dimuons].first, PtofMuons[1][i_dimuons].second);
 			}
 ////			Muon1->Clear();
 ////			Muon2->Clear();
@@ -1967,6 +1961,9 @@ int main(int argc, char *argv[])
 				if(verbosity>5) cerr << "muonIdentified[IDofMuons[2][i_dimuons].second]= " << muonIdentified[IDofMuons[2][i_dimuons].second] << endl;
 				MuMuGammaCandidates[0][i_cand] = make_pair(photonsNoSpike[i_photon], make_pair( IDofMuons[2][i_dimuons].first, IDofMuons[2][i_dimuons].second));
 				MuMuGammaCandidates_corrected[0][i_cand] = make_pair( PtofMuons[2][i_dimuons].first, PtofMuons[2][i_dimuons].second);
+				if(verbosity>5) cerr << "PtofMuons[2][i_dimuons].first= " << PtofMuons[2][i_dimuons].first << endl;
+				if(verbosity>5) cerr << "PtofMuons[2][i_dimuons].second= " << PtofMuons[2][i_dimuons].second << endl;
+				
 				i_cand++;
 			}
 		}	
@@ -2007,6 +2004,9 @@ int main(int argc, char *argv[])
       TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
       TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
 
+			if(verbosity>5) cerr << "check applyMuonScaleCorrection" << endl;
+			if(verbosity>5) cerr << "correctedMuon1->Pt()= " << correctedMuon1->Pt() << endl;
+			if(verbosity>5) cerr << "correctedMuon2->Pt()= " << correctedMuon2->Pt() << endl;
 
 
 
@@ -2080,6 +2080,10 @@ int main(int argc, char *argv[])
       TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
       TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
 
+			if(verbosity > 5) cerr << "corrected_Pt1= " << corrected_Pt1 << endl;
+			if(verbosity > 5) cerr << "corrected_Pt2= " << corrected_Pt2 << endl;
+			if(verbosity > 5) cerr << "correctedMuon1->Pt()= " << correctedMuon1->Pt() << endl;
+			if(verbosity > 5) cerr << "correctedMuon2->Pt()= " << correctedMuon2->Pt() << endl;
 
 			double phiPhoton = myphoton->Phi();
 			double etaPhoton = myphoton->Eta();

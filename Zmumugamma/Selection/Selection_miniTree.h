@@ -668,6 +668,9 @@ double applyMuScleFit(double _pt, double charge, double eta, double phi)
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
 int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLorentzVector* correctedmymuon1, TLorentzVector* correctedmymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
 
+//			cout << "correctedmymuon1->Pt()= " << correctedmymuon1->Pt() << endl;
+//			cout << "correctedmymuon2->Pt()= " << correctedmymuon2->Pt() << endl;
+
       // Fill photon stuff
       Photon_Eta = myphoton->Eta();
       Photon_Phi = myphoton->Phi();
