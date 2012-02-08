@@ -26,6 +26,9 @@
 #include <iostream>
 #include <fstream>
 #include <utility>
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
 
 // IpnTreeProducer headers
 #include "interface/TRootBardak.h"
@@ -55,7 +58,9 @@
 
 using namespace std;
 
-
+// *****************************************************************************************************
+// ******************* Compute pile-up weights
+// *****************************************************************************************************
 double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 {
 	if( lumi_set == "May10" )
@@ -200,6 +205,9 @@ double  weight_QCDMu(int nGenVertices)
   return weight[nGenVertices];
 }
 
+// *****************************************************************************************************
+// ******************* factorial for combinatorics
+// *****************************************************************************************************
 int factorial(int number) {
 	int temp;
 
@@ -210,6 +218,25 @@ int factorial(int number) {
 }
 
 
+// *****************************************************************************************************
+// ******************* Execute bash command line and get output
+// *****************************************************************************************************
+std::string exec(char* cmd) {
+    FILE* pipe = popen(cmd, "r");
+    if (!pipe) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while(!feof(pipe)) {
+        if(fgets(buffer, 128, pipe) != NULL)
+                result += buffer;
+    }
+    pclose(pipe);
+    return result;
+}
+
+// *****************************************************************************************************
+// ******************* Compute DeltaR between two four-momentum vectors
+// *****************************************************************************************************
 double DeltaR( double eta1, double phi1, double eta2, double phi2)
 {
 	double DeltaEta = fabs( eta1-eta2 );
@@ -220,6 +247,9 @@ double DeltaR( double eta1, double phi1, double eta2, double phi2)
 	return sqrt(DeltaEta*DeltaEta + DeltaPhi*DeltaPhi);
 }
 
+// *****************************************************************************************************
+// ******************* Process gen info : get out four momentum of gen particle
+// *****************************************************************************************************
 void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* particule_trueE, float* particule_truePx, float* particule_truePy, float* particule_truePz, float* particule_trueEta, float* particule_truePhi, int particle_pdgId = 0)
 {
   TRootMCParticle* mygenparticle;
@@ -253,6 +283,9 @@ void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* part
   return;
 }
 
+// *****************************************************************************************************
+// ******************* electromagnetic calorimeter cracks
+// *****************************************************************************************************
 int photonIsInCrack(double sc_abs_eta, double sc_abs_phi)
 {
 	double phiCrackSize = (double)(21.5) / (double) (1290.0);
@@ -279,6 +312,9 @@ int photonIsInCrack(double sc_abs_eta, double sc_abs_phi)
 	return 0;
 }
 
+// *****************************************************************************************************
+// ******************* ETHZ photon corrections
+// *****************************************************************************************************
 //float ETHZ_getValue(bool isEB, float SC_rawE, float SC_Eta, float ES_E, float phiWidth, float etaWidth, float f_eta)
 float ETHZ_getValue(TRootPhoton *myphoton, float f_eta)
 {
@@ -332,6 +368,9 @@ float ETHZ_getValue(TRootPhoton *myphoton, float f_eta)
 
 }
 
+// *****************************************************************************************************
+// ******************* by-hand photon corrections
+// *****************************************************************************************************
 double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet, TClonesArray* clusters, TClonesArray* superClusters, TClonesArray* photons)
 {
 	int verbositybis = 0;
@@ -409,6 +448,9 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet,
 
 
 
+// *****************************************************************************************************
+// ******************* Find conversion MC Truth
+// *****************************************************************************************************
 void findConversionMCtruth(TRootPhoton *myPhoton, TClonesArray *theMCphotons, int &Photon_MCisConverted, float &Photon_MCconvEoverP, float &Photon_MCconvMass, float &Photon_MCconvCotanTheta, float &Photon_MCconvVertexX, float &Photon_MCconvVertexY, float &Photon_MCconvVertexZ)
 {
 float dr = 0;
@@ -452,6 +494,9 @@ else {
 
 
 
+// *****************************************************************************************************
+// ******************* Tentative to remove the muon from photon tracker isolation cone
+// *****************************************************************************************************
 double PtMuonsConefunction(TRootMuon *mymuon, TRootPhoton *myphoton, double deltaR)
 {
         double PtMuonsCone = 0;
@@ -495,6 +540,9 @@ double PtMuonsConefunction(TRootMuon *mymuon, TRootPhoton *myphoton, double delt
 }
 
 
+// *****************************************************************************************************
+// ******************* Declaration of main function
+// *****************************************************************************************************
 int main(int argc, char *argv[]);
 
 
@@ -622,6 +670,9 @@ int main(int argc, char *argv[]);
 
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, TClonesArray* mcParticles);
 
+// *****************************************************************************************************
+// ******************* SIDRA muon corrections
+// *****************************************************************************************************
 double applySidra( double _pt, double charge, double eta, double phi, TRandom3* generator)
 {
 	double pt = _pt;
@@ -643,6 +694,9 @@ double applySidra( double _pt, double charge, double eta, double phi, TRandom3* 
 	return pt;
 }
 
+// *****************************************************************************************************
+// ******************* MuScleFit muon correction
+// *****************************************************************************************************
 double applyMuScleFit(double _pt, double charge, double eta, double phi)
 {
 	double b = -5.03313e-6;
@@ -664,6 +718,9 @@ double applyMuScleFit(double _pt, double charge, double eta, double phi)
 
 
 
+// *****************************************************************************************************
+// ******************* Fill minitree
+// *****************************************************************************************************
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TClonesArray* mcPhotons, TMVA::Reader* reader){
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
 int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLorentzVector* correctedmymuon1, TLorentzVector* correctedmymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){

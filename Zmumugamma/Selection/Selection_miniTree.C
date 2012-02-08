@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
 	
 	if( argc == 1 )
 	{
-		cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (extra photon scale) (applyMuonScaleCorrection) (extra resolution)" << endl;
+		cerr << "arguments should be passed !! sample (outputname) (ntotjob) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (extra photon scale) (applyMuonScaleCorrection) (extra resolution)" << endl;
 		return 1;
 	}
 
@@ -155,12 +155,22 @@ int main(int argc, char *argv[])
 
 
 	// ******************************************
-	// Optional argument : ijob
+	// Optional argument : ntotjob
 	// ******************************************
-	int ijob = -1;
+	int ntotjob = -1;
 	if( argc > 3 )
 	{
 		std::stringstream ss ( argv[3] );
+		ss >> ntotjob;
+	}
+
+	// ******************************************
+	// Optional argument : ijob
+	// ******************************************
+	int ijob = -1;
+	if( argc > 4 )
+	{
+		std::stringstream ss ( argv[4] );
 		ss >> ijob;
 	}
 
@@ -168,9 +178,9 @@ int main(int argc, char *argv[])
 	// Optional argument : isZgammaMC (1: FSR -- 2: nonFSR -- 3: MC info)
 	// ******************************************
 	int isZgammaMC = 0;
-	if( argc > 4 )
+	if( argc > 5 )
 	{
-		std::stringstream ss ( argv[4] );
+		std::stringstream ss ( argv[5] );
 		ss >> isZgammaMC;
 	}
 
@@ -179,9 +189,9 @@ int main(int argc, char *argv[])
   // ******************************************
 	string lumi_set = "";
 	double integratedLuminosity = 1.0;
-  if( argc > 5 )
+  if( argc > 6 )
   {
-		lumi_set = argv[5];
+		lumi_set = argv[6];
 		if( lumi_set == "May10" ) integratedLuminosity = 216.122;
 		if( lumi_set == "Promptv4" ) integratedLuminosity = 924.829;
 		if( lumi_set == "July05" ) integratedLuminosity = 1.131*1000.0;
@@ -196,18 +206,18 @@ int main(int argc, char *argv[])
   // Optional argument : pile-up scenario used
   // ******************************************
 	string pu_set = "";
-  if( argc > 6 )
+  if( argc > 7 )
   {
-		pu_set = argv[6];
+		pu_set = argv[7];
   }
 
 	// ******************************************
 	// Optional argument : low_m_mumu
 	// ******************************************
 	double low_m_mumu = 40.0;
-	if( argc > 7 )
+	if( argc > 8 )
 	{
-		std::stringstream ss ( argv[7] );
+		std::stringstream ss ( argv[8] );
 		ss >> low_m_mumu;
 	}
 
@@ -215,9 +225,9 @@ int main(int argc, char *argv[])
 	// Optional argument : high_m_mumu
 	// ******************************************
 	double high_m_mumu = 80.0;
-	if( argc > 8 )
+	if( argc > 9 )
 	{
-		std::stringstream ss ( argv[8] );
+		std::stringstream ss ( argv[9] );
 		ss >> high_m_mumu;
 	}
 	
@@ -227,15 +237,15 @@ int main(int argc, char *argv[])
 	double EScale = 1.0;
 	string correction = "";
 	bool isManualCorrectionsApplied = false;
-	if( argc > 9 )
+	if( argc > 10 )
 	{
-		correction = argv[9];
+		correction = argv[10];
 		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") || (correction == "ETHZ") || (correction == "Dynamic") )
 		{
 			cout << correction << " correction set will be applied upstream" << endl;
 			isManualCorrectionsApplied = true;
 		} else {
-			std::stringstream ss ( argv[9] );
+			std::stringstream ss ( argv[10] );
 			ss >> EScale;
 		}
 	}
@@ -245,9 +255,9 @@ int main(int argc, char *argv[])
 	// Optional argument : applyMuonScaleCorrection : 0)nothing 1) MuScleFit 2)SIDRA 3)Rochester (21 & 31 also available)
 	// ******************************************
 	int applyMuonScaleCorrection = 0;
-	if( argc > 10 )
+	if( argc > 11 )
 	{
-		std::stringstream ss ( argv[10] );
+		std::stringstream ss ( argv[11] );
 		ss >> applyMuonScaleCorrection;
 	}
 
@@ -255,9 +265,9 @@ int main(int argc, char *argv[])
 	// Optional argument is extra resolution
 	// ******************************************
 	double EResolution = 0.0;
-	if( argc > 11 )
+	if( argc > 12 )
 	{
-		std::stringstream ss ( argv[11] );
+		std::stringstream ss ( argv[12] );
 		ss >> EResolution;
 	}
 	EResolution = (double)EResolution / (double)100.0;
@@ -305,8 +315,66 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
+	string line;
+	string filename = Form("listFiles_%s", sample_char);
+	ifstream myfile(filename.c_str());
+	string nlines_ = exec(Form("wc -l %s | awk '{print $1}'", filename.c_str() ));
+	int nlines = atoi(nlines_.c_str());
+	string protocol = "dcap://ccdcapcms.in2p3.fr:22125";
+//	int nfilesPerJob = ceil( nlines / ntotjob ); 
+//	if( nlines % ntotjob != 0 ) nfilesPerJob++;
+//  int ilineBegin = nfilesPerJob * ijob + 1;
+//  int ilineEnd = min( nlines + 1  ,   nfilesPerJob * (ijob + 1) + 1);
+	int nJobsWithExtraFile = nlines % ntotjob;
+	int nfilesPerJob = ceil( nlines / ntotjob );
+  int ilineBegin = nfilesPerJob * ijob + 1;
+  int ilineEnd = min( nlines + 1  ,   nfilesPerJob * (ijob + 1) + 1);
+	if( nJobsWithExtraFile != 0 )
+	{
+		if( ijob < nJobsWithExtraFile )
+		{
+			ilineBegin = (nfilesPerJob + 1 ) * ijob + 1;
+			ilineEnd = min( nlines + 1  ,   (nfilesPerJob + 1) * (ijob + 1) + 1);
+		} else {
+			ilineBegin = nJobsWithExtraFile * (nfilesPerJob + 1) + nfilesPerJob * ( ijob - nJobsWithExtraFile ) + 1;
+			ilineEnd = min( nlines + 1  ,  nJobsWithExtraFile * (nfilesPerJob + 1) + nfilesPerJob * (ijob - nJobsWithExtraFile + 1) + 1);
+		}
+	}
+
+	cout << "ijob= " << ijob << endl;
+	cout << "ntotjob= " << ntotjob << endl;
+	cout << "nlines= " << nlines << endl;
+	cout << "nJobsWithExtraFile= " << nJobsWithExtraFile << endl;
+	cout << "ilineBegin= " << ilineBegin << endl;
+	cout << "ilineEnd= " << ilineEnd << endl;
+
+int iline = 0;
+if( ntotjob == 9999 )
+{
 	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
 	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+} else {
+	if (myfile.is_open())
+	{
+		while( myfile.good() )
+		{
+			iline++;
+			getline(myfile, line);
+			if( line == "") continue; // EOF !
+			if( iline >= ilineBegin && iline < ilineEnd )
+			{
+				cout << "Adding file #" << iline << " ( / " << nlines << ") : " << line << endl;
+				inputEventTree->Add(Form("%s%s", protocol.c_str(), line.c_str()));
+				inputRunTree->Add(Form("%s%s", protocol.c_str(), line.c_str()));
+			}
+		}
+		myfile.close();
+	} else {
+		cout << "Unable to open file" << endl;
+		return 987;
+	}
+}
+
 //	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
 //	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/SkimmedTotoSamples/%s/%s*root", sample_char, sample_char));
 
@@ -1150,17 +1218,26 @@ int main(int argc, char *argv[])
 	int NbEventsPerJob = NbEvents;
 	int NbEventsBegin = 0;
   int NbEventsEnd = NbEvents;
-	if( ijob != -1 )
+	if( ntotjob == 9999 && ijob != -1 )
 	{
 		NbEventsPerJob = 200000;
 //		NbEventsPerJob = 100;
 		NbEventsBegin = ijob * NbEventsPerJob;
 		NbEventsEnd = min( (ijob + 1)* NbEventsPerJob , (int)NbEvents);
 	  NbEvents = NbEventsEnd - NbEventsBegin ;
-		cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
 	}
+	cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
 
-	// LOOP over events
+
+
+//return 1;
+
+
+// ***************************************************************************************************
+// ***************************************************************************************************
+// ********************************** LOOP over events ***********************************************
+// ***************************************************************************************************
+// ***************************************************************************************************
 	for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
 //	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 //	for(unsigned int ievt=0; ievt<100; ievt++)
