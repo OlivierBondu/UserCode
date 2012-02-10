@@ -662,11 +662,10 @@ int main(int argc, char *argv[]);
   extern Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
   extern Float_t Mmumu_MMG_MC, Mmumugamma_MMG_MC, mmg_k_MMG_MC, mmg_ik_MMG_MC, mmg_s_MMG_MC, mmg_logk_MMG_MC, mmg_logik_MMG_MC, mmg_logs_MMG_MC;
 
-
   extern Float_t mmg_k_MZ, mmg_ik_MZ, mmg_s_MZ, mmg_logk_MZ, mmg_logik_MZ, mmg_logs_MZ;
   extern Float_t mmg_k_MZ_Photon_MC, mmg_ik_MZ_Photon_MC, mmg_s_MZ_Photon_MC, mmg_logk_MZ_Photon_MC, mmg_logik_MZ_Photon_MC, mmg_logs_MZ_Photon_MC;
   extern Float_t mmg_k_MZ_Muons_MC, mmg_ik_MZ_Muons_MC, mmg_s_MZ_Muons_MC, mmg_logk_MZ_Muons_MC, mmg_logik_MZ_Muons_MC, mmg_logs_MZ_Muons_MC;
-
+  extern Float_t mmg_k_MZ_Muons_RECO_MC, mmg_ik_MZ_Muons_RECO_MC, mmg_s_MZ_Muons_RECO_MC, mmg_logk_MZ_Muons_RECO_MC, mmg_logik_MZ_Muons_RECO_MC, mmg_logs_MZ_Muons_RECO_MC;
 
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, TClonesArray* mcParticles);
 
@@ -1323,6 +1322,12 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
       mmg_logik_MZ_Muons_MC = log(mmg_ik_MZ_Muons_MC);
       mmg_logs_MZ_Muons_MC = log(mmg_s_MZ_Muons_MC);
 
+      mmg_k_MZ_Muons_RECO_MC = (double)(pow(Mmumugamma_MMG_MC,2) - pow(Mmumu_Muons_MC,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
+      mmg_ik_MZ_Muons_RECO_MC = (double)(pow(Mmumugamma_Muons_MC,2) - pow(Mmumu_Muons_MC,2)) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2) );
+      mmg_s_MZ_Muons_RECO_MC = mmg_ik_MZ_Muons_RECO_MC -1.0;
+      mmg_logk_MZ_Muons_RECO_MC = log(mmg_k_MZ_Muons_RECO_MC);
+      mmg_logik_MZ_Muons_RECO_MC = log(mmg_ik_MZ_Muons_RECO_MC);
+      mmg_logs_MZ_Muons_RECO_MC = log(mmg_s_MZ_Muons_RECO_MC); 	
 
 
 //      Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;

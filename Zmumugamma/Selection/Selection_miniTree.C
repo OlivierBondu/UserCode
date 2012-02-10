@@ -121,6 +121,9 @@
 	Float_t mmg_k_MZ_Photon_MC, mmg_ik_MZ_Photon_MC, mmg_s_MZ_Photon_MC, mmg_logk_MZ_Photon_MC, mmg_logik_MZ_Photon_MC, mmg_logs_MZ_Photon_MC;
 	Float_t mmg_k_MZ_Muons_MC, mmg_ik_MZ_Muons_MC, mmg_s_MZ_Muons_MC, mmg_logk_MZ_Muons_MC, mmg_logik_MZ_Muons_MC, mmg_logs_MZ_Muons_MC;
 
+	Float_t mmg_k_MZ_Muons_RECO_MC, mmg_ik_MZ_Muons_RECO_MC, mmg_s_MZ_Muons_RECO_MC, mmg_logk_MZ_Muons_RECO_MC, mmg_logik_MZ_Muons_RECO_MC, mmg_logs_MZ_Muons_RECO_MC;
+	
+
 //int Selection_miniTree()
 int main(int argc, char *argv[])
 //int main()
@@ -1108,7 +1111,12 @@ if( ntotjob == 9999 )
         miniTree->Branch("mmg_logk_MZ_Muons_MC", &mmg_logk_MZ_Muons_MC, "mmg_logk_MZ_Muons_MC/F");
         miniTree->Branch("mmg_logik_MZ_Muons_MC", &mmg_logik_MZ_Muons_MC, "mmg_logik_MZ_Muons_MC/F");
         miniTree->Branch("mmg_logs_MZ_Muons_MC", &mmg_logs_MZ_Muons_MC, "mmg_logs_MZ_Muons_MC/F");
-
+	miniTree->Branch("mmg_k_MZ_Muons_RECO_MC", &mmg_k_MZ_Muons_RECO_MC, "mmg_k_MZ_Muons_RECO_MC/F");
+        miniTree->Branch("mmg_ik_MZ_Muons_RECO_MC", &mmg_ik_MZ_Muons_RECO_MC, "mmg_ik_MZ_Muons_RECO_MC/F");
+        miniTree->Branch("mmg_s_MZ_Muons_RECO_MC", &mmg_s_MZ_Muons_RECO_MC, "mmg_s_MZ_Muons_RECO_MC/F");
+        miniTree->Branch("mmg_logk_MZ_Muons_RECO_MC", &mmg_logk_MZ_Muons_RECO_MC, "mmg_logk_MZ_Muons_RECO_MC/F");
+        miniTree->Branch("mmg_logik_MZ_Muons_RECO_MC", &mmg_logik_MZ_Muons_RECO_MC, "mmg_logik_MZ_Muons_RECO_MC/F");
+        miniTree->Branch("mmg_logs_MZ_Muons_RECO_MC", &mmg_logs_MZ_Muons_RECO_MC, "mmg_logs_MZ_Muons_RECO_MC/F");
 
 
 
@@ -1430,11 +1438,11 @@ if( ntotjob == 9999 )
 		Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;
 		Mmumu_Muons_MC = Mmumugamma_Muons_MC = mmg_k_Muons_MC = mmg_ik_Muons_MC = mmg_s_Muons_MC = mmg_logk_Muons_MC = mmg_logik_Muons_MC = mmg_logs_Muons_MC = -99.0;
 		Mmumu_MMG_MC = Mmumugamma_MMG_MC = mmg_k_MMG_MC = mmg_ik_MMG_MC = mmg_s_MMG_MC = mmg_logk_MMG_MC = mmg_logik_MMG_MC = mmg_logs_MMG_MC = -99.0;
-
 	
 		mmg_k_MZ = mmg_ik_MZ = mmg_s_MZ = mmg_logk_MZ = mmg_logik_MZ = mmg_logs_MZ = -99.0;		       
 		mmg_k_MZ_Photon_MC = mmg_ik_MZ_Photon_MC = mmg_s_MZ_Photon_MC = mmg_logk_MZ_Photon_MC = mmg_logik_MZ_Photon_MC = mmg_logs_MZ_Photon_MC = -99.0;		
 		mmg_k_MZ_Muons_MC = mmg_ik_MZ_Muons_MC = mmg_s_MZ_Muons_MC = mmg_logk_MZ_Muons_MC = mmg_logik_MZ_Muons_MC = mmg_logs_MZ_Muons_MC = -99.0;
+		mmg_k_MZ_Muons_RECO_MC = mmg_ik_MZ_Muons_RECO_MC = mmg_s_MZ_Muons_RECO_MC = mmg_logk_MZ_Muons_RECO_MC = mmg_logik_MZ_Muons_RECO_MC = mmg_logs_MZ_Muons_RECO_MC = -99.0;	
 
 		// ____________________________________________
 		// END OF INITIALIZATION
