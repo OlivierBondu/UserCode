@@ -203,6 +203,8 @@ int main(int argc, char *argv[])
 		if( lumi_set == "2011A" ) integratedLuminosity = 216.122 + 924.829 + 368.037 + 658.886;
 		if( lumi_set == "2011B" ) integratedLuminosity = 1.842*1000.0;
 		if( lumi_set == "2011" ) integratedLuminosity = 216.122 + 924.829 + 368.037 + 658.886 + 1.842*1000.0;
+		if( lumi_set == "2011f" ) integratedLuminosity = 216.122 + 924.829 + 368.037 + 658.886 + 2.511*1000.0;
+		if( lumi_set == "2011ff" ) integratedLuminosity = 2.127*1000.0 + 2.511*1000.0;
   }
 
 	// ******************************************
@@ -1131,6 +1133,7 @@ if( ntotjob == 9999 )
   reader->AddVariable("pho_r19",&Photon_r19);
 //  reader->BookMVA("MLP method","/sps/cms/hbrun/DiPhotons41X/diPhotonMC/weights/TMVAClassification_MLP.weights.xml");
 	reader->BookMVA("MLP method","/sps/cms/hbrun/DiPhotons42X/diPhotonMC/weights/TMVAClassification_MLP.weights.xml");
+//	reader->BookMVA("MLP method","/sps/cms/hbrun/DiPhotons42X/diPhotonMC/weights/TMVAClassification_MLP.weights.xml");
 
 
 	

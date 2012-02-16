@@ -1,3 +1,4 @@
+// ROOT HEADERS
 #include "TF1.h"
 #include "TH1F.h"
 #include "TH2F.h"
@@ -12,12 +13,15 @@
 #include "TBits.h"
 #include "TMath.h"
 #include "TSystem.h"
+
+// C++ HEADERS
 #include <sstream>
 #include <iostream>
 #include <fstream>
 #include <utility>
 //#pragma optimize 0
 
+// TOTOANA HEADERS
 #include "interface/TRootBardak.h"
 #include "interface/TRootBeamSpot.h"
 #include "interface/TRootCluster.h"
@@ -40,6 +44,24 @@
 #include "interface/TRootVertex.h"
 
 
+// *****************************************************************************************************
+// ******************* Execute bash command line and get output
+// *****************************************************************************************************
+std::string exec(char* cmd) {
+    FILE* pipe = popen(cmd, "r");
+    if (!pipe) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while(!feof(pipe)) {
+        if(fgets(buffer, 128, pipe) != NULL)
+                result += buffer;
+    }
+    pclose(pipe);
+    return result;
+}
+
+
+
 Int_t nVertices;
 
 //int Selection_miniTree()
@@ -54,7 +76,7 @@ int main(int argc, char *argv[])
 	}
   if( argc == 1 )
   {
-    cerr << "arguments should be passed !! sample (outputname) (ijob) (isZgammaMC)" << endl;
+    cerr << "arguments should be passed !! sample (ntotjob) (outputname) (ijob) (isZgammaMC)" << endl;
     return 1;
   }
 
@@ -76,14 +98,25 @@ int main(int argc, char *argv[])
     sample = argv[2];
   }
 
+  // ******************************************
+  // Optional argument : ntotjob
+  // ******************************************
+  int ntotjob = -1;
+  if( argc > 3 )
+  {
+    std::stringstream ss ( argv[3] );
+    ss >> ntotjob;
+  }
+  
+
 
   // ******************************************
   // Optional argument : ijob
   // ******************************************
   int ijob = -1;
-  if( argc > 3 )
+  if( argc > 4 )
   {
-    std::stringstream ss ( argv[3] );
+    std::stringstream ss ( argv[4] );
     ss >> ijob;
   }
 
@@ -91,9 +124,9 @@ int main(int argc, char *argv[])
   // Optional argument : isZgammaMC
   // ******************************************
   int isZgammaMC = 0;
-  if( argc > 4 )
+  if( argc > 5 )
   {
-    std::stringstream ss ( argv[4] );
+    std::stringstream ss ( argv[5] );
     ss >> isZgammaMC;
   }
 
@@ -127,8 +160,69 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
-	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
-	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+  string line;
+  string filename = Form("listFiles_%s", sample_char);
+  ifstream myfile(filename.c_str());
+  string nlines_ = exec(Form("wc -l %s | awk '{print $1}'", filename.c_str() ));
+  int nlines = atoi(nlines_.c_str());
+  string protocol = "dcap://ccdcapcms.in2p3.fr:22125";
+//  int nfilesPerJob = ceil( nlines / ntotjob ); 
+//  if( nlines % ntotjob != 0 ) nfilesPerJob++;
+//  int ilineBegin = nfilesPerJob * ijob + 1;
+//  int ilineEnd = min( nlines + 1  ,   nfilesPerJob * (ijob + 1) + 1);
+  int nJobsWithExtraFile = nlines % ntotjob;
+  int nfilesPerJob = ceil( nlines / ntotjob );
+  int ilineBegin = nfilesPerJob * ijob + 1;
+  int ilineEnd = min( nlines + 1  ,   nfilesPerJob * (ijob + 1) + 1);
+  if( nJobsWithExtraFile != 0 )
+  {
+    if( ijob < nJobsWithExtraFile )
+    {
+      ilineBegin = (nfilesPerJob + 1 ) * ijob + 1;
+      ilineEnd = min( nlines + 1  ,   (nfilesPerJob + 1) * (ijob + 1) + 1);
+    } else {
+      ilineBegin = nJobsWithExtraFile * (nfilesPerJob + 1) + nfilesPerJob * ( ijob - nJobsWithExtraFile ) + 1;
+      ilineEnd = min( nlines + 1  ,  nJobsWithExtraFile * (nfilesPerJob + 1) + nfilesPerJob * (ijob - nJobsWithExtraFile + 1) + 1);
+    }
+  }
+
+  cout << "ijob= " << ijob << endl;
+  cout << "ntotjob= " << ntotjob << endl;
+  cout << "nlines= " << nlines << endl;
+  cout << "nJobsWithExtraFile= " << nJobsWithExtraFile << endl;
+  cout << "ilineBegin= " << ilineBegin << endl;
+  cout << "ilineEnd= " << ilineEnd << endl;
+
+int iline = 0;
+if( ntotjob == 9999 )
+{
+  inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+  inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+} else {
+  if (myfile.is_open())
+  {
+    while( myfile.good() )
+    {
+      iline++;
+      getline(myfile, line);
+      if( line == "") continue; // EOF !
+      if( iline >= ilineBegin && iline < ilineEnd )
+      {
+        cout << "Adding file #" << iline << " ( / " << nlines << ") : " << line << endl;
+        inputEventTree->Add(Form("%s%s", protocol.c_str(), line.c_str()));
+        inputRunTree->Add(Form("%s%s", protocol.c_str(), line.c_str()));
+      }
+    }
+    myfile.close();
+  } else {
+    cout << "Unable to open file" << endl;
+    return 987;
+  }
+}
+
+
+//	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+//	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
 
 // INSERTFILES
 
@@ -330,23 +424,29 @@ int main(int argc, char *argv[])
 	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
 //	TH1D* pileup = new TH1D("pileup", "pileup", 51, -0.5, 50.5);
-	TH1D* pileup = new TH1D("pileup", "pileup", 36, -0.5, 35.5);
+//	TH1D* pileup = new TH1D("pileup", "pileup", 36, -0.5, 35.5);
+	TH1D* pileup = new TH1D("pileup", "pileup", 1000, 0, 25);
 
 
   int NbEventsPerJob = NbEvents;
   int NbEventsBegin = 0;
   int NbEventsEnd = NbEvents;
-  if( ijob != -1 )
+  if( ntotjob == 9999 && ijob != -1 )
   {
-    NbEventsPerJob = 250000;
+    NbEventsPerJob = 200000;
+//    NbEventsPerJob = 100;
     NbEventsBegin = ijob * NbEventsPerJob;
-    NbEventsEnd = min( (ijob + 1)* NbEventsPerJob - 1 , (int)NbEvents);
-    NbEvents = NbEventsEnd - NbEventsBegin;
-    cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
+    NbEventsEnd = min( (ijob + 1)* NbEventsPerJob , (int)NbEvents);
+    NbEvents = NbEventsEnd - NbEventsBegin ;
   }
+  cout << "NbEventsBegin= " << NbEventsBegin << "\tNbEventsEnd= " << NbEventsEnd << "\tNbEventsPerJob= " << NbEventsPerJob << endl;
 
 
-	// LOOP over events
+// ***************************************************************************************************
+// ***************************************************************************************************
+// ********************************** LOOP over events ***********************************************
+// ***************************************************************************************************
+// ***************************************************************************************************
   for(unsigned int ievt=NbEventsBegin; ievt<NbEventsEnd; ievt++)
 //	for(unsigned int ievt=0; ievt<NbEvents; ievt++)
 //	for(unsigned int ievt=0; ievt<20000; ievt++)
@@ -367,7 +467,7 @@ int main(int argc, char *argv[])
 			nVertices = event->nInTimePUVertices();
 //    }
 		pileup->Fill(nVertices);
-//		miniTree->Fill();
+		miniTree->Fill();
 
 	} // fin boucle sur evts LOOP
 // Writing stuff out
