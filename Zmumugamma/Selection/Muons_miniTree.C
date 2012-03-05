@@ -885,7 +885,8 @@ if( ntotjob == 9999 )
 			nbMuonsAfterID[8]++;
 			TOTALnbMuonsAfterID[8]++;
 
-      if(! (mymuon->isoR03_sumPt()<3.0) ){// sum of pT of tracks with pT >1.5 within a cone of DR < 0.3 around the muon direction, vetoing a cone of 0.015 around that direction
+//      if(! (mymuon->isoR03_sumPt()<3.0) ){// sum of pT of tracks with pT >1.5 within a cone of DR < 0.3 around the muon direction, vetoing a cone of 0.015 around that direction
+      if(! ( (double)(mymuon->isoR03_sumPt() + mymuon->isoR03_emEt() + mymuon->isoR03_hadEt())/(double)(mymuon->Pt()) < 0.10 ) ){// combined isolation as described in https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMuonId
         muonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because sum of pT of tracks with pT >1.5 within a cone of DR < 0.3 around the muon direction, vetoing a cone of 0.015 around that direction" << endl;
         continue;
@@ -902,7 +903,7 @@ if( ntotjob == 9999 )
       }
       if( applyMuonScaleCorrection == 1 )
       { // Apply MuScleFit
-        corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
+        corrected_Pt = applyMuScleFit(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi());
       }
 			if( applyMuonScaleCorrection == 21 )
 			{ // Apply SIDRA then MuScleFit
@@ -911,8 +912,8 @@ if( ntotjob == 9999 )
 			}
 			if( applyMuonScaleCorrection == 12 )
 			{ // Apply SIDRA then MuScleFit
-				corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
-				corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
+				corrected_Pt = applyMuScleFit(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi());
+				corrected_Pt = applySidra(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
 			}
       // Sidra makes MC look like data
 //      if( isZgammaMC > 0) corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
@@ -920,8 +921,8 @@ if( ntotjob == 9999 )
 //      corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
     }
     double corrected_Pz = mymuon->Pz();
-    double corrected_Px = applyMuonScaleCorrection > 0 ? mymuon->Px() * corrected_Pt / mymuon->Pt() : mymuon->Px();
-    double corrected_Py = applyMuonScaleCorrection > 0 ? mymuon->Py() * corrected_Pt / mymuon->Pt() : mymuon->Py();
+    double corrected_Px = applyMuonScaleCorrection > 0 ? mymuon->Px() * (double)(corrected_Pt) / (double)(mymuon->Pt()) : mymuon->Px();
+    double corrected_Py = applyMuonScaleCorrection > 0 ? mymuon->Py() * (double)(corrected_Pt) / (double)(mymuon->Pt()) : mymuon->Py();
     double m_mu = 105.658367e-3;
     double corrected_E = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz * corrected_Pz + corrected_Pt * corrected_Pt) ) : mymuon->E();
 //    double corrected_E = mymuon->E();
@@ -1028,9 +1029,9 @@ if( ntotjob == 9999 )
 			double chargeproduct = ( Muon1->charge() ) * (Muon2->charge() );
 			if( chargeproduct < 0.0 )
 			{
+				IDofMuons[1][numberOfDimuons[1]] = make_pair(IDofMuons[0][i_dimuons].first, IDofMuons[0][i_dimuons].second);
+				PTofMuons[1][numberOfDimuons[1]] = make_pair(PTofMuons[0][i_dimuons].first, PTofMuons[0][i_dimuons].second);
 				numberOfDimuons[1] += 1;
-				IDofMuons[1][i_dimuons] = make_pair(IDofMuons[0][i_dimuons].first, IDofMuons[0][i_dimuons].second);
-				PTofMuons[1][i_dimuons] = make_pair(PTofMuons[0][i_dimuons].first, PTofMuons[0][i_dimuons].second);
 			}
 ////			Muon1->Clear();
 ////			Muon2->Clear();
@@ -1086,9 +1087,9 @@ if( ntotjob == 9999 )
 			mumu = (correctedMuon1) + (correctedMuon2);
 			if( (low_m_mumu < mumu.M()) && (mumu.M() < high_m_mumu) )
 			{
+				IDofMuons[2][numberOfDimuons[2]] = make_pair(IDofMuons[1][i_dimuons].first, IDofMuons[1][i_dimuons].second);
+				PTofMuons[2][numberOfDimuons[2]] = make_pair(PTofMuons[1][i_dimuons].first, PTofMuons[1][i_dimuons].second);
 				numberOfDimuons[2] += 1;
-				IDofMuons[2][i_dimuons] = make_pair(IDofMuons[1][i_dimuons].first, IDofMuons[1][i_dimuons].second);
-				PTofMuons[2][i_dimuons] = make_pair(PTofMuons[1][i_dimuons].first, PTofMuons[1][i_dimuons].second);
 			}
 ////			Muon1->Clear();
 ////			Muon2->Clear();
