@@ -692,7 +692,7 @@ double applySidra( double _pt, double charge, double eta, double phi, TRandom3* 
 	double Bp = -0.0692569;
 	double Cp = 0.0952174;
 	double phi0 = -1.08881;
-	pt += ( A + B * eta * eta ) * (generator->Gaus(0,1)) /1000. + (Ap + Cp * charge * sin( phi + phi0 )+ Bp * charge * eta )/1000.;
+	pt += (double)(( A + B * eta * eta ) * (generator->Gaus(0,1))) /(double)(1000.) + (double)(Ap + Cp * charge * sin( phi + phi0 )+ Bp * charge * eta )/(double)(1000.);
 	pt = (double)1.0/(double)pt;
 	return pt;
 }
@@ -714,7 +714,8 @@ double applyMuScleFit(double _pt, double charge, double eta, double phi)
 	double e = eta > .9 ? e1 : (eta < -.9 ? e2 : e0);
 	double pt = _pt;
 	double sgn_eta = eta >= 0.0 ? 1.0 : -1.0;
-	pt = pt * (1 + b * pt  + c * charge * pt * sgn_eta * eta * eta + charge * d * pt * sin( phi + e ));
+	double sgn_charge = charge >= 0.0 ? 1.0 : -1.0;
+	pt = _pt * (1.0 + b * _pt  + c * sgn_charge * _pt * sgn_eta * eta * eta + sgn_charge * d * _pt * sin( phi + e ));
 	return pt;
 
 }

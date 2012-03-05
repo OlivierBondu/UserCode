@@ -336,12 +336,13 @@ int main(int argc, char *argv[]);
 double applySidra( double _pt, double charge, double eta, double phi, TRandom3* generator)
 { 
   double pt = _pt;
+	double sgn_charge = charge >= 0.0 ? 1.0 : -1.0;
 // Correct MC
   double a = 0.0650687e-3;
   double b = 0.212987e-3;
   double c = 1.53414;
-  pt = (double)1.0/(double)pt;
-  pt -= a - b * charge * sin( phi + c );
+  pt = (double)(1.0)/(double)(pt);
+  pt -= a - b * sgn_charge * sin( phi + c );
 // Apply Corrections
   double A = 0.143812;
   double B = 0.0404834;
@@ -349,8 +350,8 @@ double applySidra( double _pt, double charge, double eta, double phi, TRandom3* 
   double Bp = -0.0692569;
   double Cp = 0.0952174;
   double phi0 = -1.08881;
-  pt += ( A + B * eta * eta ) * (generator->Gaus(0,1)) /1000. + (Ap + Cp * charge * sin( phi + phi0 )+ Bp * charge * eta )/1000.;
-  pt = (double)1.0/(double)pt;
+  pt += (double)(( A + B * eta * eta ) * (generator->Gaus(0,1))) / (double)(1000.) + (double)(Ap + Cp * sgn_charge * sin( phi + phi0 )+ Bp * sgn_charge * eta )/(double)(1000.);
+  pt = (double)(1.0)/(double)(pt);
   return pt;
 } 
 
@@ -371,7 +372,8 @@ double applyMuScleFit(double _pt, double charge, double eta, double phi)
   double e = eta > .9 ? e1 : (eta < -.9 ? e2 : e0);
   double pt = _pt;
   double sgn_eta = eta >= 0.0 ? 1.0 : -1.0;
-  pt = pt * (1 + b * pt  + c * charge * pt * sgn_eta * eta * eta + charge * d * pt * sin( phi + e ));
+	double sgn_charge = charge >= 0.0 ? 1.0 : -1.0;
+  pt = _pt * (1.0 + b * _pt  + c * sgn_charge * _pt * sgn_eta * eta * eta + sgn_charge * d * _pt * sin( phi + e ));
   return pt;
 
 }
@@ -402,10 +404,10 @@ int FillMM(TRootMuon* mymuon1, TRootMuon* mymuon2, bool doMC, bool applyMuonScal
     }
     double corrected_Pz1 = mymuon1->Pz();
     double corrected_Pz2 = mymuon2->Pz();
-    double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-    double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-    double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-    double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+    double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+    double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+    double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+    double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
     double m_mu = 105.658367e-3;
 //    double corrected_E1 = mymuon1->E();
 //    double corrected_E2 = mymuon2->E();
@@ -466,6 +468,11 @@ int FillMM(TRootMuon* mymuon1, TRootMuon* mymuon2, bool doMC, bool applyMuonScal
 
       TLorentzVector mumu;
       mumu = (*leadingMuon) + (*subleadingMuon);
+//			cout << "mumu.M()= " << mumu.M() << endl;
+//			TLorentzVector mumu2;
+//			mumu2 = (*correctedMuon1) + (*correctedMuon2);
+//			cout << "mumu2.M()= " << mumu2.M() << endl;
+
       Ptmumu = mumu.Pt();
       double mumuInvMass = mumu.M();
 //      cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;

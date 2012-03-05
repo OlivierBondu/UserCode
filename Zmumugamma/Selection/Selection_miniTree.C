@@ -1801,31 +1801,33 @@ if( ntotjob == 9999 )
 		TOTALnbEventsAfterDimuonID[0] += 1;
 
 		pair <int, int> IDofMuons[3][numberOfDimuons[0]];
-		pair <int, int> PtofMuons[3][numberOfDimuons[0]];
+		pair <double, double> PtofMuons[3][numberOfDimuons[0]];
 
 		if(verbosity>2) cout << "initializing dimuon pair object" << endl;
 		// Initializing pair object
 		for(int i = 0; i < 3; i++){
 			for(int j = 0; j < numberOfDimuons[0]; j++) IDofMuons[i][j] = make_pair(0, 0);
-			for(int j = 0; j < numberOfDimuons[0]; j++) PtofMuons[i][j] = make_pair(0, 0);
+			for(int j = 0; j < numberOfDimuons[0]; j++) PtofMuons[i][j] = make_pair(0.0, 0.0);
 		}
 
 		if(verbosity>2) cout << "Filling pair object for dimuon pairs composed of ID'ed muons" << endl;
 		// Filling pair object for dimuon pairs composed of ID'ed muons
-		for(int i_dimuons = 0; i_dimuons < numberOfDimuons[0]; i_dimuons++)
-    {
+//		for(int i_dimuons = 0; i_dimuons < numberOfDimuons[0]; i_dimuons++)
+//    {
+			int i_dimuons_ = 0;
 			for(int muon_i = 0; muon_i < nbMuonsAfterID[11] ; muon_i++)
 			{
 				for(int muon_j = muon_i +1; muon_j < nbMuonsAfterID[11]; muon_j++)
 				{
-					IDofMuons[0][i_dimuons] = make_pair(muonIdentified[muon_i], muonIdentified[muon_j]);
-					PtofMuons[0][i_dimuons] = make_pair(muonIdentified_corrected_Pt[muon_i], muonIdentified_corrected_Pt[muon_j]);
+					IDofMuons[0][i_dimuons_] = make_pair(muonIdentified[muon_i], muonIdentified[muon_j]);
+					PtofMuons[0][i_dimuons_] = make_pair(muonIdentified_corrected_Pt[muon_i], muonIdentified_corrected_Pt[muon_j]);
 					if(verbosity>5) cerr << "muonIdentified_corrected_Pt["<<muon_i<<"]= " << muonIdentified_corrected_Pt[muon_i] << endl;
 					if(verbosity>5) cerr << "muonIdentified_corrected_Pt["<<muon_j<<"]= " << muonIdentified_corrected_Pt[muon_j] << endl;
-					if(verbosity>5) cerr << "PtofMuons[0]["<<i_dimuons<<"]=  (" << PtofMuons[0][i_dimuons].first << " , " << PtofMuons[0][i_dimuons].second << ")" << endl;
+					if(verbosity>5) cerr << "PtofMuons[0]["<<i_dimuons_<<"]=  (" << PtofMuons[0][i_dimuons_].first << " , " << PtofMuons[0][i_dimuons_].second << ")" << endl;
+					i_dimuons_++;
 				}
 			}
-		}
+//		}
 
 // --------------------------------------------------------------------------------------------------------------------
 // ----- dimuon candidate of opposite charge -----
@@ -1865,10 +1867,10 @@ if( ntotjob == 9999 )
 			double corrected_Pt2 = PtofMuons[1][i_dimuons].second;
 			double corrected_Pz1 = Muon1->Pz();
 			double corrected_Pz2 = Muon2->Pz();
-	    double corrected_Px1 = applyMuonScaleCorrection > 0 ? Muon1->Px() * corrected_Pt1 / Muon1->Pt() : Muon1->Px();
-	    double corrected_Px2 = applyMuonScaleCorrection > 0 ? Muon2->Px() * corrected_Pt2 / Muon2->Pt() : Muon2->Px();
-	    double corrected_Py1 = applyMuonScaleCorrection > 0 ? Muon1->Py() * corrected_Pt1 / Muon1->Pt() : Muon1->Py();
-	    double corrected_Py2 = applyMuonScaleCorrection > 0 ? Muon2->Py() * corrected_Pt2 / Muon2->Pt() : Muon2->Py();
+	    double corrected_Px1 = applyMuonScaleCorrection > 0 ? Muon1->Px() * (double)(corrected_Pt1) / (double)(Muon1->Pt()) : Muon1->Px();
+	    double corrected_Px2 = applyMuonScaleCorrection > 0 ? Muon2->Px() * (double)(corrected_Pt2) / (double)(Muon2->Pt()) : Muon2->Px();
+	    double corrected_Py1 = applyMuonScaleCorrection > 0 ? Muon1->Py() * (double)(corrected_Pt1) / (double)(Muon1->Pt()) : Muon1->Py();
+	    double corrected_Py2 = applyMuonScaleCorrection > 0 ? Muon2->Py() * (double)(corrected_Pt2) / (double)(Muon2->Pt()) : Muon2->Py();
 	    double m_mu = 105.658367e-3;
 			double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : Muon1->E();
 			double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : Muon2->E();
@@ -2023,7 +2025,7 @@ if( ntotjob == 9999 )
 		TOTALnbMuMuGammaAfterID[0] += nbMuMuGammaAfterID[0];
 		TOTALnbEventsAfterMuMuGammaID[0]++ ;
 		pair <int, pair<int, int> > MuMuGammaCandidates[8][nbMuMuGammaCandidates];
-		pair <int, int > MuMuGammaCandidates_corrected[8][nbMuMuGammaCandidates];
+		pair <double, double > MuMuGammaCandidates_corrected[8][nbMuMuGammaCandidates];
 
 		if(verbosity>2) cout << "initializing triplet objects" << endl;
 		// Initializing triplet objects
@@ -2032,7 +2034,7 @@ if( ntotjob == 9999 )
 			for(int j = 0; j < nbMuMuGammaCandidates; j++)
 			{
 				MuMuGammaCandidates[i][j] = make_pair(0, make_pair(0,0));
-				MuMuGammaCandidates_corrected[i][j] = make_pair(0,0);
+				MuMuGammaCandidates_corrected[i][j] = make_pair(0.0 , 0.0);
 			}
 		}
 
@@ -2083,10 +2085,10 @@ if( ntotjob == 9999 )
       double corrected_Pt2 = MuMuGammaCandidates_corrected[0][i_mmg].second;
       double corrected_Pz1 = mymuon1->Pz();
       double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
       double m_mu = 105.658367e-3;
       double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
       double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
@@ -2159,10 +2161,10 @@ if( ntotjob == 9999 )
       double corrected_Pt2 = MuMuGammaCandidates_corrected[1][i_mmg].second;
       double corrected_Pz1 = mymuon1->Pz();
       double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
       double m_mu = 105.658367e-3;
       double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
       double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
@@ -2223,10 +2225,10 @@ if( ntotjob == 9999 )
       double corrected_Pt2 = MuMuGammaCandidates_corrected[2][i_mmg].second;
       double corrected_Pz1 = mymuon1->Pz();
       double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
       double m_mu = 105.658367e-3;
       double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
       double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
@@ -2284,10 +2286,10 @@ if( ntotjob == 9999 )
       double corrected_Pt2 = MuMuGammaCandidates_corrected[3][i_mmg].second;
       double corrected_Pz1 = mymuon1->Pz();
       double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
       double m_mu = 105.658367e-3;
       double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
       double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
@@ -2344,10 +2346,10 @@ if( ntotjob == 9999 )
       double corrected_Pt2 = MuMuGammaCandidates_corrected[4][i_mmg].second;
       double corrected_Pz1 = mymuon1->Pz();
       double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
       double m_mu = 105.658367e-3;
       double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
       double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
@@ -2417,10 +2419,10 @@ if( ntotjob == 9999 )
       double corrected_Pt2 = MuMuGammaCandidates_corrected[5][i_mmg].second;
       double corrected_Pz1 = mymuon1->Pz();
       double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
       double m_mu = 105.658367e-3;
       double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
       double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
@@ -2493,10 +2495,10 @@ if( ntotjob == 9999 )
       double corrected_Pt2 = MuMuGammaCandidates_corrected[6][i_mmg].second;
       double corrected_Pz1 = mymuon1->Pz();
       double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
       double m_mu = 105.658367e-3;
       double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
       double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
@@ -2565,10 +2567,10 @@ if( ntotjob == 9999 )
       double corrected_Pt2 = MuMuGammaCandidates_corrected[7][i_mmg].second;
       double corrected_Pz1 = mymuon1->Pz();
       double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
       double m_mu = 105.658367e-3;
       double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
       double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
@@ -2598,10 +2600,10 @@ if( ntotjob == 9999 )
       double corrected_Pt2 = MuMuGammaCandidates_corrected[7][i_mmg].second;
       double corrected_Pz1 = mymuon1->Pz();
       double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * corrected_Pt1 / mymuon1->Pt() : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * corrected_Pt2 / mymuon2->Pt() : mymuon2->Py();
+      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
       double m_mu = 105.658367e-3;
       double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
       double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();

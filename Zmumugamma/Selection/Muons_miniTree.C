@@ -915,19 +915,29 @@ if( ntotjob == 9999 )
 				corrected_Pt = applyMuScleFit(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi());
 				corrected_Pt = applySidra(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
 			}
+			if( applyMuonScaleCorrection == 99 )
+			{ // Dummy muon correction to check code: it's NOT supposed to do anything
+				corrected_Pt = mymuon->Pt();
+			}
       // Sidra makes MC look like data
 //      if( isZgammaMC > 0) corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
       // MuScleFit correct data absolute scale
 //      corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
     }
-    double corrected_Pz = mymuon->Pz();
     double corrected_Px = applyMuonScaleCorrection > 0 ? mymuon->Px() * (double)(corrected_Pt) / (double)(mymuon->Pt()) : mymuon->Px();
     double corrected_Py = applyMuonScaleCorrection > 0 ? mymuon->Py() * (double)(corrected_Pt) / (double)(mymuon->Pt()) : mymuon->Py();
+    double corrected_Pz = mymuon->Pz();
     double m_mu = 105.658367e-3;
     double corrected_E = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz * corrected_Pz + corrected_Pt * corrected_Pt) ) : mymuon->E();
+//		cout << "px: " << mymuon->Px() << "\t" << corrected_Px << endl;
+//		cout << "py: " << mymuon->Py() << "\t" << corrected_Py << endl;
+//		cout << "pz: " << mymuon->Pz() << "\t" << corrected_Pz << endl;
+//		cout << "E : " <<  mymuon->E() << "\t" << corrected_E << endl;
 //    double corrected_E = mymuon->E();
     TLorentzVector correctedMuon(corrected_Px, corrected_Py, corrected_Pz, corrected_E);
-
+//		cout << "###########" << endl;
+//		cout << "mymuon->M()= " << mymuon->M() << endl;
+//		cout << "correctedMuon.M()= " << correctedMuon.M() << endl;
 
       if(! (correctedMuon.Pt()>10.0) ){// transverse momentum
 //      if(! (mymuon->Pt()>10.0) ){// transverse momentum
@@ -993,28 +1003,30 @@ if( ntotjob == 9999 )
 		TOTALnbEventsAfterDimuonID[0] += 1;
 
 		pair <int, int> IDofMuons[3][numberOfDimuons[0]];
-		pair <int, int> PTofMuons[3][numberOfDimuons[0]];
+		pair <double, double> PTofMuons[3][numberOfDimuons[0]];
 
 		if(verbosity>2) cout << "initializing dimuon pair object" << endl;
 		// Initializing pair object
 		for(int i = 0; i < 3; i++){
-			for(int j = 0; j < numberOfDimuons[0]; j++) IDofMuons[i][j] = make_pair(0, 0);
-			for(int j = 0; j < numberOfDimuons[0]; j++) PTofMuons[i][j] = make_pair(0, 0);
+			for(int j = 0; j < numberOfDimuons[0]; j++) IDofMuons[i][j] = make_pair(0.0, 0.0);
+			for(int j = 0; j < numberOfDimuons[0]; j++) PTofMuons[i][j] = make_pair(0.0, 0.0);
 		}
 
 		if(verbosity>2) cout << "Filling pair object for dimuon pairs composed of ID'ed muons" << endl;
 		// Filling pair object for dimuon pairs composed of ID'ed muons
-		for(int i_dimuons = 0; i_dimuons < numberOfDimuons[0]; i_dimuons++)
-    {
+//		for(int i_dimuons = 0; i_dimuons < numberOfDimuons[0]; i_dimuons++)
+//    {
+			int i_dimuons_ = 0;
 			for(int muon_i = 0; muon_i < nbMuonsAfterID[11] ; muon_i++)
 			{
 				for(int muon_j = muon_i +1; muon_j < nbMuonsAfterID[11]; muon_j++)
 				{
-					IDofMuons[0][i_dimuons] = make_pair(muonIdentified[muon_i], muonIdentified[muon_j]);
-					PTofMuons[0][i_dimuons] = make_pair(muonCorrectedPt[muon_i], muonCorrectedPt[muon_j]);
+					IDofMuons[0][i_dimuons_] = make_pair(muonIdentified[muon_i], muonIdentified[muon_j]);
+					PTofMuons[0][i_dimuons_] = make_pair(muonCorrectedPt[muon_i], muonCorrectedPt[muon_j]);
+					i_dimuons_++;
 				}
 			}
-		}
+//		}
 
 // --------------------------------------------------------------------------------------------------------------------
 // ----- dimuon candidate of opposite charge -----
@@ -1066,15 +1078,26 @@ if( ntotjob == 9999 )
     }
     double corrected_Pz1 = Muon1->Pz();
     double corrected_Pz2 = Muon2->Pz();
-    double corrected_Px1 = applyMuonScaleCorrection > 0 ? Muon1->Px() * corrected_Pt1 / Muon1->Pt() : Muon1->Px();
-    double corrected_Px2 = applyMuonScaleCorrection > 0 ? Muon2->Px() * corrected_Pt2 / Muon2->Pt() : Muon2->Px();
-    double corrected_Py1 = applyMuonScaleCorrection > 0 ? Muon1->Py() * corrected_Pt1 / Muon1->Pt() : Muon1->Py();
-    double corrected_Py2 = applyMuonScaleCorrection > 0 ? Muon2->Py() * corrected_Pt2 / Muon2->Pt() : Muon2->Py();
+    double corrected_Px1 = applyMuonScaleCorrection > 0 ? Muon1->Px() * (double)(corrected_Pt1) / (double)(Muon1->Pt()) : Muon1->Px();
+    double corrected_Px2 = applyMuonScaleCorrection > 0 ? Muon2->Px() * (double)(corrected_Pt2) / (double)(Muon2->Pt()) : Muon2->Px();
+    double corrected_Py1 = applyMuonScaleCorrection > 0 ? Muon1->Py() * (double)(corrected_Pt1) / (double)(Muon1->Pt()) : Muon1->Py();
+    double corrected_Py2 = applyMuonScaleCorrection > 0 ? Muon2->Py() * (double)(corrected_Pt2) / (double)(Muon2->Pt()) : Muon2->Py();
     double m_mu = 105.658367e-3;
 //    double corrected_E1 = Muon1->E();
 //    double corrected_E2 = Muon2->E();
     double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1)) : Muon1->E();
     double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2)) : Muon2->E();
+/*
+cout << "######" << endl;
+		cout << "px1: " << Muon1->Px() << "\t" << corrected_Px1 << endl;
+		cout << "py1: " << Muon1->Py() << "\t" << corrected_Py1 << endl;
+		cout << "pz1: " << Muon1->Pz() << "\t" << corrected_Pz1 << endl;
+		cout << "E1 : " <<  Muon1->E() << "\t" << corrected_E1 << endl;
+		cout << "px2: " << Muon2->Px() << "\t" << corrected_Px2 << endl;
+		cout << "py2: " << Muon2->Py() << "\t" << corrected_Py2 << endl;
+		cout << "pz2: " << Muon2->Pz() << "\t" << corrected_Pz2 << endl;
+		cout << "E2 : " <<  Muon2->E() << "\t" << corrected_E2 << endl;
+*/
     TLorentzVector correctedMuon1(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
     TLorentzVector correctedMuon2(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
 
