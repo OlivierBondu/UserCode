@@ -1,19 +1,20 @@
 #! /usr/local/bin/bash -l
-#$ -l ct=2000
+#$ -l ct=5000
 #$ -P P_cmsf
-#$ -l vmem=2G
-#$ -l fsize=1G
+#$ -l vmem=3G
+#$ -l fsize=10G
 #$ -q medium
 #$ -l sps=1
+#$ -l dcache=1
 ###$ -l hpss=1
-#$ -N Selection_4
+#$ -N Selection
 ### Merge the stdout et stderr in a single file
 #$ -j y
 ### fichiers .e et .o copied to current working directory
 #$ -cwd
 ###$ -m be
 ### set array job indices 'min-max:interval'
-#$ -t 1-16
+#$ -t 1-100
 
 syntax="${0} {parameter}"
 #if [[ -z ${6} ]]
@@ -83,7 +84,8 @@ echo "USER=${USER}"
 
 # COPY EXECUTABLE TO WORKER
 echo "COPY EXECUTABLE TO WORKER"
-cp ${SPSDIR}/Zmumugamma/Selection/Apply_v05.exe ${TMPDIR}/
+cp ${SPSDIR}/Zmumugamma/Selection/Apply_v24.exe ${TMPDIR}/
+cp ${SPSDIR}/Zmumugamma/Selection/listFiles_${1} ${TMPDIR}/
 
 echo "pwd; ls -als"
 pwd; ls -als
@@ -94,8 +96,7 @@ echo "USER=${USER}"
 # EXECUTE JOB
 echo "EXECUTE JOB"
 cd ${TMPDIR}/
-#./Apply_v05.exe ${1} ${2} ${3} ${4} ${5} ${6} 2> ${2}.err | tee ${2}.out
-./Apply_v05.exe ${1} ${2} ${ijob} 3 Nov03 PU_S6 40 80 START42_V11 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
+./Apply_v24.exe ${1} ${2} 100 ${ijob} ${3} ${4} ${5} ${6} ${7} ${8} ${9} 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
 
 echo "pwd; ls -als"
 pwd; ls -als
@@ -106,7 +107,7 @@ echo "GET BACK OUTPUT FILES TO SPS AND REMOVE THEM FROM DISTANT DIR"
 mv ${TMPDIR}/miniTree_${2}_part${ijob}*root ${SPSDIR}/Zmumugamma/Selection/
 mv ${TMPDIR}/${2}_part${ijob}*out ${SPSDIR}/Zmumugamma/Selection/
 mv ${TMPDIR}/${2}_part${ijob}*err ${SPSDIR}/Zmumugamma/Selection/
-rm ${TMPDIR}/Apply_v05.exe
+rm ${TMPDIR}/Apply_v24.exe
 
 #"cd ${SPSDIR}/Zmumugamma/Selection/"
 #cd ${SPSDIR}/Zmumugamma/Selection/
