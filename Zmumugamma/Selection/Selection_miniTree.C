@@ -4,7 +4,7 @@
 	// ____________________________________________
 	// Event information
 	// ____________________________________________
-	Int_t iEvent, iEventID, iLumiID, iRunID;
+	ULong64_t iEvent, iEventID, iLumiID, iRunID;
 	Int_t isSignalApplied, isStewApplied, isZJetsApplied;
 
 	Int_t isBeforeAllCuts, isAfterCutPthatFilter, isAfterCutZJETVETO;
@@ -582,10 +582,10 @@ if( ntotjob == 9999 )
 	// Event information
 	// ____________________________________________
 	
-	miniTree->Branch("iEvent", &iEvent, "iEvent/I");
-	miniTree->Branch("iEventID", &iEventID, "iEventID/I");
-	miniTree->Branch("iLumiID", &iLumiID, "iLumiID/I");
-	miniTree->Branch("iRunID", &iRunID, "iRunID/I");
+	miniTree->Branch("iEvent", &iEvent, "iEvent/l");
+	miniTree->Branch("iEventID", &iEventID, "iEventID/l");
+	miniTree->Branch("iLumiID", &iLumiID, "iLumiID/l");
+	miniTree->Branch("iRunID", &iRunID, "iRunID/l");
 
 	miniTree->Branch("isSignalApplied", &isSignalApplied, "isSignalApplied/I");
 	miniTree->Branch("isStewApplied", &isStewApplied, "isStewApplied/I");
@@ -620,10 +620,10 @@ if( ntotjob == 9999 )
 	miniTree->Branch("weight_pileUp", &weight_pileUp, "weight_pileUp/F");
 	miniTree->Branch("weight_Xsection", &weight_Xsection, "weight_Xsection/F");
 
-	miniTree_allmuons->Branch("iEvent", &iEvent, "iEvent/I");
-	miniTree_allmuons->Branch("iEventID", &iEventID, "iEventID/I");
-	miniTree_allmuons->Branch("iLumiID", &iLumiID, "iLumiID/I");
-	miniTree_allmuons->Branch("iRunID", &iRunID, "iRunID/I");
+	miniTree_allmuons->Branch("iEvent", &iEvent, "iEvent/l");
+	miniTree_allmuons->Branch("iEventID", &iEventID, "iEventID/l");
+	miniTree_allmuons->Branch("iLumiID", &iLumiID, "iLumiID/l");
+	miniTree_allmuons->Branch("iRunID", &iRunID, "iRunID/l");
 
 	miniTree_allmuons->Branch("isSignalApplied", &isSignalApplied, "isSignalApplied/I");
 	miniTree_allmuons->Branch("isStewApplied", &isStewApplied, "isStewApplied/I");
@@ -654,10 +654,10 @@ if( ntotjob == 9999 )
 
 	miniTree_allmuons->Branch("isSelected", &isSelected, "isSelected/I");
 
-	miniTree_allphotons->Branch("iEvent", &iEvent, "iEvent/I");
-	miniTree_allphotons->Branch("iEventID", &iEventID, "iEventID/I");
-	miniTree_allphotons->Branch("iLumiID", &iLumiID, "iLumiID/I");
-	miniTree_allphotons->Branch("iRunID", &iRunID, "iRunID/I");
+	miniTree_allphotons->Branch("iEvent", &iEvent, "iEvent/l");
+	miniTree_allphotons->Branch("iEventID", &iEventID, "iEventID/l");
+	miniTree_allphotons->Branch("iLumiID", &iLumiID, "iLumiID/l");
+	miniTree_allphotons->Branch("iRunID", &iRunID, "iRunID/l");
 
 	miniTree_allphotons->Branch("isSignalApplied", &isSignalApplied, "isSignalApplied/I");
 	miniTree_allphotons->Branch("isStewApplied", &isStewApplied, "isStewApplied/I");

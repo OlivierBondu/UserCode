@@ -4,7 +4,7 @@
 	// ____________________________________________
 	// Event information
 	// ____________________________________________
-	Int_t iEvent, iEventID, iLumiID, iRunID;
+	ULong64_t iEvent, iEventID, iLumiID, iRunID;
 
 	Int_t isMM;
 
@@ -466,10 +466,10 @@ if( ntotjob == 9999 )
 	// Event information
 	// ____________________________________________
 	
-	miniTree->Branch("iEvent", &iEvent, "iEvent/I");
-	miniTree->Branch("iEventID", &iEventID, "iEventID/I");
-	miniTree->Branch("iLumiID", &iLumiID, "iLumiID/I");
-	miniTree->Branch("iRunID", &iRunID, "iRunID/I");
+	miniTree->Branch("iEvent", &iEvent, "iEvent/l");
+	miniTree->Branch("iEventID", &iEventID, "iEventID/l");
+	miniTree->Branch("iLumiID", &iLumiID, "iLumiID/l");
+	miniTree->Branch("iRunID", &iRunID, "iRunID/l");
 
 	miniTree->Branch("isMM", &isMM, "isMM/I");
 	miniTree->Branch("nVertices", &nVertices, "nVertices/I");

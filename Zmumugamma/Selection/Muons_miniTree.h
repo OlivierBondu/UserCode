@@ -285,7 +285,7 @@ int main(int argc, char *argv[]);
   // ____________________________________________
   // Event information
   // ____________________________________________
-  extern Int_t iEvent, iEventID, iLumiID, iRunID;
+  extern ULong64_t iEvent, iEventID, iLumiID, iRunID;
   extern Int_t isMM;
   extern Int_t nVertices;
   extern Int_t nGenVertices;
