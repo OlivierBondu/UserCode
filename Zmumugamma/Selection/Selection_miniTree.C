@@ -1,4 +1,5 @@
 #include "Selection_miniTree.h"
+#include "rochcor_v2.C"
 
 	// ____________________________________________
 	// Event information
@@ -284,6 +285,7 @@ int main(int argc, char *argv[])
 
 //	TProof * p = TProof::Open("ccaplmaster.in2p3.fr");
 	gSystem->Load("libToto.so");
+	gROOT->ProcessLine(".L rochcor_v2.h+");
 //	gSystem->Load("libFWCoreFWLite.so");
 //	gSystem->Load("libDataFormatsFWLite.so");
 //	AutoLibraryLoader::enable();
@@ -1703,6 +1705,7 @@ if( ntotjob == 9999 )
 			TOTALnbMuonsAfterID[9]++;
 
     double corrected_Pt = mymuon->Pt();
+		rochcor *rmcor = new rochcor();
     if( applyMuonScaleCorrection > 0 )
     {
      if( applyMuonScaleCorrection == 2 )
@@ -1722,6 +1725,54 @@ if( ntotjob == 9999 )
       { // Apply SIDRA then MuScleFit
         corrected_Pt = applyMuScleFit(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi());
         corrected_Pt = applySidra(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
+      }
+      if( applyMuonScaleCorrection == 3 )
+      { // Apply Rochester corrections
+        TLorentzVector muonRochester(mymuon->Px(), mymuon->Py(), mymuon->Pz(), mymuon->E());
+        TLorentzVector muonRochesterDummy(mymuon->Px(), mymuon->Py(), mymuon->Pz(), mymuon->E());
+        // moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
+        // sysdev = 0 : no systematics yet
+        if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, 0.0);
+        else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, 0.0);
+        corrected_Pt = muonRochester.Pt();
+      }
+      if( applyMuonScaleCorrection == 31 )
+      { // Apply Rochester corrections on top of MuscleFit
+        corrected_Pt = applyMuScleFit(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi());
+        double corrected_Px_ = mymuon->Px() * (double)(corrected_Pt) / (double)(mymuon->Pt());
+        double corrected_Py_ = mymuon->Py() * (double)(corrected_Pt) / (double)(mymuon->Pt());
+        double corrected_Pz_ = mymuon->Pz();
+        double m_mu = 105.658367e-3;
+        double corrected_E_ = sqrt( m_mu * m_mu + (corrected_Pz_ * corrected_Pz_ + corrected_Pt * corrected_Pt) );
+        TLorentzVector muonRochester(corrected_Px_, corrected_Py_, corrected_Pz_, corrected_E_);
+        TLorentzVector muonRochesterDummy(corrected_Px_, corrected_Py_, corrected_Pz_, corrected_E_);
+
+        // moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
+        // sysdev = 0 : no systematics yet
+        if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, 0.0);
+        else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, 0.0);
+        corrected_Pt = muonRochester.Pt();
+      }
+      if( applyMuonScaleCorrection == 32 )
+      { // Apply Rochester corrections on top of Sidra
+        corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
+        double corrected_Px_ = mymuon->Px() * (double)(corrected_Pt) / (double)(mymuon->Pt());
+        double corrected_Py_ = mymuon->Py() * (double)(corrected_Pt) / (double)(mymuon->Pt());
+        double corrected_Pz_ = mymuon->Pz();
+        double m_mu = 105.658367e-3;
+        double corrected_E_ = sqrt( m_mu * m_mu + (corrected_Pz_ * corrected_Pz_ + corrected_Pt * corrected_Pt) );
+        TLorentzVector muonRochester(corrected_Px_, corrected_Py_, corrected_Pz_, corrected_E_);
+        TLorentzVector muonRochesterDummy(corrected_Px_, corrected_Py_, corrected_Pz_, corrected_E_);
+
+        // moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
+        // sysdev = 0 : no systematics yet
+        if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, 0.0);
+        else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, 0.0);
+        corrected_Pt = muonRochester.Pt();
+      }
+      if( applyMuonScaleCorrection == 99 )
+      { // Dummy muon correction to check code: it's NOT supposed to do anything
+        corrected_Pt = mymuon->Pt();
       }
       // Sidra makes MC look like data
 //      if( isZgammaMC > 0) corrected_Pt = applySidra(mymuon->Pt(), mymuon->charge(), mymuon->Eta(), mymuon->Phi(), generator);
