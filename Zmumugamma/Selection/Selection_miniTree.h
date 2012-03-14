@@ -543,6 +543,30 @@ double PtMuonsConefunction(TRootMuon *mymuon, TRootPhoton *myphoton, double delt
         return PtMuonsCone;
 }
 
+string DoubleToString(double x)
+{
+
+        std::string s;
+        {
+                std::ostringstream oss;
+                oss << x;
+                s = oss.str();
+        }
+        std::cout << "x = " << x << " s = " << s << std::endl;
+
+        return s;
+}
+
+double StringToDouble(string ligne)
+{
+        std::istringstream stm;
+        stm.str(ligne.c_str());
+        double d;
+        stm >>d;
+
+        return d;
+}
+
 
 // *****************************************************************************************************
 // ******************* Declaration of main function
@@ -643,9 +667,15 @@ int main(int argc, char *argv[]);
   extern Float_t mmg_ik_SCraw_fEta_fBrem, mmg_ik_SCraw_fEta_fBrem_AF, mmg_ik_SCraw_fEta_fBrem_L, mmg_ik_SCraw_fEta_fBrem_fEtEta, mmg_ik_SCraw_fEta_fBrem_AF_fEtEta, mmg_ik_SCraw_fEta_fBrem_L_fEtEta;
 
   // ____________________________________________
-	// Neural Network variables
+  // Neural Network variables
   // ____________________________________________
 	extern Float_t Photon_NNshapeOutput;
+
+  // ____________________________________________
+  // Surface variables
+  // ____________________________________________
+        extern Float_t MZ_Surface;
+	extern Float_t mmg_k_MZ_Surface, mmg_ik_MZ_Surface, mmg_s_MZ_Surface, mmg_logk_MZ_Surface, mmg_logik_MZ_Surface, mmg_logs_MZ_Surface;	
 
   // ____________________________________________
   // MC Truth
@@ -1156,6 +1186,64 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
       correctedminusMuon = (TLorentzVector*) correctedmymuon1;
       correctedplusMuon  = (TLorentzVector*) correctedmymuon2;
     }
+
+    //-----Implementation of s with MZ_Surface -----//
+
+
+    //TLorentzVector * nearMuonPlusPhoton;
+    //nearMuonPlusPhoton = correctednearMuon + myphoton;
+	
+    double nearMuonPlusPhoton_Pt = sqrt(pow(correctednearMuon->Px() + myphoton->Px(),2) + pow(correctednearMuon->Py() + myphoton->Py(),2));
+ 
+    //double nearMuonPlusPhoton_Pt = nearMuonPlusPhoton->Pt();
+    double farMuon_Pt = correctedfarMuon->Pt();
+
+    double lead_Pt;
+    double trail_Pt;
+
+    if(nearMuonPlusPhoton_Pt > farMuon_Pt) 
+    {
+	lead_Pt = nearMuonPlusPhoton_Pt;
+	trail_Pt = farMuon_Pt;
+    }
+    if(nearMuonPlusPhoton_Pt < farMuon_Pt)
+    {
+        lead_Pt = farMuon_Pt;
+        trail_Pt = nearMuonPlusPhoton_Pt;
+    }
+
+    double bin1 = lead_Pt / 2.0 + 2.0; //modify if we change the binning of the surface 
+    double bin2 = trail_Pt / 2.0 + 2.0;
+
+    int bin1Int = (int) bin1;
+    int bin2Int = (int) bin2;
+  
+    int multi = (bin1Int-1) * 100 + bin2Int;
+    string ligne;
+    ifstream monFlux("Mmumu.txt");
+    for(int k = 0; k <multi; k++)
+    {
+	getline(monFlux, ligne);
+    }
+
+    MZ_Surface = StringToDouble(ligne);
+
+    monFlux.close();
+
+
+    mmg_k_MZ_Surface = (double)(pow(MZ_Surface,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
+    mmg_ik_MZ_Surface = (double)(pow(Mmumugamma,2) - pow(Mmumu,2)) / (double)(pow(MZ_Surface,2) - pow(Mmumu,2) );
+    mmg_s_MZ_Surface = mmg_ik - 1.0;
+    mmg_logk_MZ_Surface = log(mmg_k);
+    mmg_logik_MZ_Surface = log(mmg_ik);
+    mmg_logs_MZ_Surface = log(mmg_s);
+
+
+
+    //-----END of : Implementation of s with MZ_Surface -----//
+
+
+
 
     // FILLING MINITREE INFORMATION
     MuonM_Pt = correctedminusMuon->Pt();

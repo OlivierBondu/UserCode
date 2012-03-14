@@ -96,9 +96,17 @@
   // ____________________________________________
   // Neural Network variables
   // ____________________________________________
+
 	Float_t Photon_NNshapeOutput;
 
-	// ____________________________________________
+  // ____________________________________________
+  // Surface variables
+  // ____________________________________________
+
+        Float_t MZ_Surface;
+	Float_t mmg_k_MZ_Surface, mmg_ik_MZ_Surface, mmg_s_MZ_Surface, mmg_logk_MZ_Surface, mmg_logik_MZ_Surface, mmg_logs_MZ_Surface;
+
+  // ____________________________________________
   // MC Truth
   // ___________________________________________
 
@@ -356,7 +364,7 @@ int main(int argc, char *argv[])
 	cout << "ilineEnd= " << ilineEnd << endl;
 
 int iline = 0;
-if( ntotjob == 9999 )
+if( ntotjob == 9999)
 {
 	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
 	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
@@ -1003,12 +1011,25 @@ if( ntotjob == 9999 )
 	miniTree->Branch("mmg_ik_SCraw_fEta_fBrem_AF_fEtEta", &mmg_ik_SCraw_fEta_fBrem_AF_fEtEta, "mmg_ik_SCraw_fEta_fBrem_AF_fEtEta/F");
 	miniTree->Branch("mmg_ik_SCraw_fEta_fBrem_L_fEtEta", &mmg_ik_SCraw_fEta_fBrem_L_fEtEta, "mmg_ik_SCraw_fEta_fBrem_L_fEtEta/F");
  
-	// ____________________________________________
+  // ____________________________________________
   // Neural Network variables
   // ____________________________________________
 	miniTree->Branch("Photon_NNshapeOutput", &Photon_NNshapeOutput, "Photon_NNshapeOutput/F");
  
-	// ____________________________________________
+
+  // ____________________________________________
+  // Surface variables
+  // ____________________________________________
+        miniTree->Branch("MZ_Surface", &MZ_Surface, "MZ_Surface/F");
+	miniTree->Branch("mmg_k_MZ_Surface", &mmg_k_MZ_Surface, "mmg_k_MZ_Surface/F");
+        miniTree->Branch("mmg_ik_MZ_Surface", &mmg_ik_MZ_Surface, "mmg_ik_MZ_Surface/F");
+        miniTree->Branch("mmg_s_MZ_Surface", &mmg_s_MZ_Surface, "mmg_s_MZ_Surface/F");
+        miniTree->Branch("mmg_logk_MZ_Surface", &mmg_logk_MZ_Surface, "mmg_logk_MZ_Surface/F");
+        miniTree->Branch("mmg_logik_MZ_Surface", &mmg_logik_MZ_Surface, "mmg_logik_MZ_Surface/F");
+        miniTree->Branch("mmg_logs_MZ_Surface", &mmg_logs_MZ_Surface, "mmg_logs_MZ_Surface/F");
+
+
+  // ____________________________________________
   // MC Truth
   // ___________________________________________
 
@@ -1421,12 +1442,18 @@ if( ntotjob == 9999 )
 
 		mmg_ik_SCraw_fEta_fBrem = mmg_ik_SCraw_fEta_fBrem_AF = mmg_ik_SCraw_fEta_fBrem_L = mmg_ik_SCraw_fEta_fBrem_fEtEta = mmg_ik_SCraw_fEta_fBrem_AF_fEtEta = mmg_ik_SCraw_fEta_fBrem_L_fEtEta = -99.0;
 
-		// ____________________________________________
-	  // Neural Network variables
+	// ____________________________________________
+	// Neural Network variables
   	// ____________________________________________
 		Photon_NNshapeOutput = -99.0;
+	
+	// ____________________________________________
+        // Surface variables
+        // ____________________________________________
+                MZ_Surface = -99.0;
+		mmg_k_MZ_Surface = mmg_ik_MZ_Surface = mmg_s_MZ_Surface = mmg_logk_MZ_Surface = mmg_logik_MZ_Surface = mmg_logs_MZ_Surface = -99.0;
 
-		// ____________________________________________
+	  // ____________________________________________
 	  // MC Truth
 	  // ___________________________________________
 	  Photon_MC_E = Photon_MC_Px = Photon_MC_Py = Photon_MC_Pz = Photon_MC_Phi = Photon_MC_Eta = -99.0;
