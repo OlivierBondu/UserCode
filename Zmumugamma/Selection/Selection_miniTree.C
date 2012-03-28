@@ -330,6 +330,16 @@ int main(int argc, char *argv[])
 	TChain *inputEventTree = new TChain("eventTree");
 	TChain *inputRunTree = new TChain("runTree");
 
+	int MmumuLigneNumber = 0;  
+        string sMmumu;
+        ifstream FileMmumu("Mmumu.txt");
+        while(std::getline(FileMmumu, sMmumu))
+        {    
+                MmumuLigneNumber++;
+        }
+
+	int binNumber = sqrt(MmumuLigneNumber);
+
 	string line;
 	string filename = Form("listFiles_%s", sample_char);
 	ifstream myfile(filename.c_str());
@@ -2197,7 +2207,7 @@ if( ntotjob == 9999)
 				if(verbosity>3) cerr << "candidate thrown because close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
 				continue;
 			} else {
@@ -2268,7 +2278,7 @@ if( ntotjob == 9999)
 				if(verbosity>4) cerr << "candidate thrown because far_isoR03_emEt= " << far_isoR03_emEt << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
 				continue;
 			}
@@ -2329,7 +2339,7 @@ if( ntotjob == 9999)
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
 				continue;
 			}
@@ -2389,7 +2399,7 @@ if( ntotjob == 9999)
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
 				continue;
 			}
@@ -2452,7 +2462,7 @@ if( ntotjob == 9999)
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
 				continue;
 			}
@@ -2525,7 +2535,7 @@ if( ntotjob == 9999)
 //				cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
 				continue;
 			}
@@ -2602,7 +2612,7 @@ if( ntotjob == 9999)
 //				cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				miniTree->Fill();
@@ -2659,7 +2669,7 @@ if( ntotjob == 9999)
 
 //	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-	      FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+	      FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
 	    }
 			continue;
@@ -2691,7 +2701,7 @@ if( ntotjob == 9999)
 
 //    FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //    FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-    FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+    FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 		isSelected = 1;
 		nSelected++;
 		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;

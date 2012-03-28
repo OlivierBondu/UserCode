@@ -757,7 +757,7 @@ double applyMuScleFit(double _pt, double charge, double eta, double phi)
 // *****************************************************************************************************
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TClonesArray* mcPhotons, TMVA::Reader* reader){
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
-int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLorentzVector* correctedmymuon1, TLorentzVector* correctedmymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
+int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLorentzVector* correctedmymuon1, TLorentzVector* correctedmymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader, int binNumber){
 
 //			cout << "correctedmymuon1->Pt()= " << correctedmymuon1->Pt() << endl;
 //			cout << "correctedmymuon2->Pt()= " << correctedmymuon2->Pt() << endl;
@@ -1212,13 +1212,17 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
         trail_Pt = nearMuonPlusPhoton_Pt;
     }
 
-    double bin1 = lead_Pt / 2.0 + 2.0; //modify if we change the binning of the surface 
-    double bin2 = trail_Pt / 2.0 + 2.0;
+    //double bin1 = lead_Pt / 2.0 + 2.0; //modify if we change the binning of the surface 
+    //double bin2 = trail_Pt / 2.0 + 2.0;
+
+    double bin1 = lead_Pt / (200.0 / binNumber) + 1.0; //ok if we use a surface with Pt between 0 and 200 GeV >> bin de 200.0 / binNumber GeV
+    double bin2 = trail_Pt / (200.0 / binNumber) + 1.0;
+
 
     int bin1Int = (int) bin1;
     int bin2Int = (int) bin2;
   
-    int multi = (bin1Int-1) * 100 + bin2Int;
+    int multi = (bin1Int-1) * binNumber + bin2Int;
     string ligne;
     ifstream monFlux("Mmumu.txt");
     for(int k = 0; k <multi; k++)
@@ -1233,10 +1237,10 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 
     mmg_k_MZ_Surface = (double)(pow(MZ_Surface,2) - pow(Mmumu,2) ) / (double)(pow(Mmumugamma,2) - pow(Mmumu,2));
     mmg_ik_MZ_Surface = (double)(pow(Mmumugamma,2) - pow(Mmumu,2)) / (double)(pow(MZ_Surface,2) - pow(Mmumu,2) );
-    mmg_s_MZ_Surface = mmg_ik - 1.0;
-    mmg_logk_MZ_Surface = log(mmg_k);
-    mmg_logik_MZ_Surface = log(mmg_ik);
-    mmg_logs_MZ_Surface = log(mmg_s);
+    mmg_s_MZ_Surface = mmg_ik_MZ_Surface - 1.0;
+    mmg_logk_MZ_Surface = log(mmg_k_MZ_Surface);
+    mmg_logik_MZ_Surface = log(mmg_ik_MZ_Surface);
+    mmg_logs_MZ_Surface = log(mmg_s_MZ_Surface);
 
 
 
