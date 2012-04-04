@@ -917,6 +917,10 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
       MuonL_Pt = correctedleadingMuon->Pt();
       MuonL_Eta = leadingMuon->Eta();
       MuonL_Phi = leadingMuon->Phi();
+      MuonL_E = leadingMuon->Energy();
+      MuonL_Px = leadingMuon->Px();
+      MuonL_Py = leadingMuon->Py();
+      MuonL_Pz = leadingMuon->Pz();
       MuonL_Charge = leadingMuon->charge();
       MuonL_isoR03_emEt = leadingMuon->isoR03_emEt();
       MuonL_isoR03_hadEt = leadingMuon->isoR03_hadEt();
@@ -933,6 +937,10 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
       MuonS_Pt = correctedsubleadingMuon->Pt();
       MuonS_Eta = subleadingMuon->Eta();
       MuonS_Phi = subleadingMuon->Phi();
+      MuonS_E = subleadingMuon->Energy();
+      MuonS_Px = subleadingMuon->Px();
+      MuonS_Py = subleadingMuon->Py();
+      MuonS_Pz = subleadingMuon->Pz();
       MuonS_Charge = subleadingMuon->charge();
       MuonS_isoR03_emEt = subleadingMuon->isoR03_emEt();
       MuonS_isoR03_hadEt = subleadingMuon->isoR03_hadEt();
