@@ -631,6 +631,7 @@ int main(int argc, char *argv[]);
   extern Float_t Pt_allPhotons, Eta_allPhotons, Phi_allPhotons, Cross_allPhotons;
   extern Int_t isEBorEE_allPhotons, isEB_allPhotons, isEE_allPhotons, isEEP_allPhotons, isEEM_allPhotons;
   extern Float_t Photon_Eta, Photon_Phi;
+	extern Float_t Photon_Px, Photon_Py, Photon_Pz;
   extern Int_t Photon_isEBorEE, Photon_isEB, Photon_isEE, Photon_isEEP, Photon_isEEM;
 
   extern Int_t Photon_hasPixelSeed, Photon_isAlsoElectron, Photon_Nclusters, Photon_nBasicClusters, Photon_nXtals;
@@ -770,6 +771,9 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
       // Fill photon stuff
       Photon_Eta = myphoton->Eta();
       Photon_Phi = myphoton->Phi();
+      Photon_Px = myphoton->Px();
+      Photon_Py = myphoton->Py();
+      Photon_Pz = myphoton->Pz();
       if( myphoton->isEBPho() ){ Photon_isEB=1; } else { Photon_isEB=0; }
       if( myphoton->isEEPho() ){ Photon_isEE=1; } else { Photon_isEE=0; }
       if( myphoton->isEEPho() && myphoton->Eta()<0 ){ Photon_isEEM=1; } else { Photon_isEEM=0; }

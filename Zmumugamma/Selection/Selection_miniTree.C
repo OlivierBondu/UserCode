@@ -57,6 +57,7 @@
 	Float_t Pt_allPhotons, Eta_allPhotons, Phi_allPhotons, Cross_allPhotons;
 	Int_t isEBorEE_allPhotons, isEB_allPhotons, isEE_allPhotons, isEEP_allPhotons, isEEM_allPhotons;
 	Float_t Photon_Eta, Photon_Phi;
+	Float_t Photon_Px, Photon_Py, Photon_Pz;
 	Int_t Photon_isEBorEE, Photon_isEB, Photon_isEE, Photon_isEEP, Photon_isEEM;
 
 	Int_t Photon_hasPixelSeed, Photon_isAlsoElectron, Photon_Nclusters, Photon_nBasicClusters, Photon_nXtals;
@@ -899,6 +900,9 @@ if( ntotjob == 9999)
 
 	miniTree->Branch("Photon_Eta", &Photon_Eta, "Photon_Eta/F");
 	miniTree->Branch("Photon_Phi", &Photon_Phi, "Photon_Phi/F");
+	miniTree->Branch("Photon_Px", &Photon_Px, "Photon_Px/F");
+	miniTree->Branch("Photon_Py", &Photon_Py, "Photon_Py/F");
+	miniTree->Branch("Photon_Pz", &Photon_Pz, "Photon_Pz/F");
 
 	miniTree->Branch("Photon_isEBorEE", &Photon_isEBorEE, "Photon_isEBorEE/I");
 	miniTree->Branch("Photon_isEB", &Photon_isEB, "Photon_isEB/I");
@@ -1477,6 +1481,7 @@ if( ntotjob == 9999)
 		isEBorEE_allPhotons = 1;
 		isEB_allPhotons, isEE_allPhotons, isEEM_allPhotons, isEEP_allPhotons = -99;
 		Photon_Eta = Photon_Phi = -99;
+		Photon_Px = Photon_Py = Photon_Pz = -99;
 		Photon_isEBorEE = 1;
 		Photon_isEB = Photon_isEE = Photon_isEEP = Photon_isEEM = -99;
 		Photon_hasPixelSeed = Photon_isAlsoElectron = Photon_Nclusters = Photon_nBasicClusters = Photon_nXtals = -99;
