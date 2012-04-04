@@ -38,6 +38,11 @@
   Float_t MuonM_isoR05_nTracks, MuonP_isoR05_nTracks, MuonL_isoR05_nTracks, MuonS_isoR05_nTracks;
   Float_t MuonM_isoR05_sumPt, MuonP_isoR05_sumPt, MuonL_isoR05_sumPt, MuonS_isoR05_sumPt;
 
+  Float_t MuonM_E, MuonP_E, MuonL_E, MuonS_E;
+  Float_t MuonM_Px, MuonP_Px, MuonL_Px, MuonS_Px;
+  Float_t MuonM_Py, MuonP_Py, MuonL_Py, MuonS_Py;
+  Float_t MuonM_Pz, MuonP_Pz, MuonL_Pz, MuonS_Pz;
+
 	// ____________________________________________
 	// mumu information
 	// ____________________________________________
@@ -49,10 +54,10 @@
   // MC Truth
   // ___________________________________________
 
-  Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta;
-  Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta;
-  Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta;
-  Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta;
+  Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta, MuonM_MC_Pt;
+  Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta, MuonP_MC_Pt;
+  Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta, MuonL_MC_Pt;
+  Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta, MuonS_MC_Pt;
 	Float_t Mmumu_Muons_MC;
 
 //int Selection_miniTree()
@@ -585,6 +590,26 @@ if( ntotjob == 9999 )
   miniTree->Branch("MuonL_isoR05_sumPt", &MuonL_isoR05_sumPt, "MuonL_isoR05_sumPt/F");
   miniTree->Branch("MuonS_isoR05_sumPt", &MuonS_isoR05_sumPt, "MuonS_isoR05_sumPt/F");
 
+  miniTree->Branch("MuonM_E", &MuonM_E, "MuonM_E/F");
+  miniTree->Branch("MuonP_E", &MuonP_E, "MuonP_E/F");
+  miniTree->Branch("MuonL_E", &MuonL_E, "MuonL_E/F");
+  miniTree->Branch("MuonS_E", &MuonS_E, "MuonS_E/F");
+
+  miniTree->Branch("MuonM_Px", &MuonM_Px, "MuonM_Px/F");
+  miniTree->Branch("MuonP_Px", &MuonP_Px, "MuonP_Px/F");
+  miniTree->Branch("MuonL_Px", &MuonL_Px, "MuonL_Px/F");
+  miniTree->Branch("MuonS_Px", &MuonS_Px, "MuonS_Px/F");
+
+  miniTree->Branch("MuonM_Py", &MuonM_Py, "MuonM_Py/F");
+  miniTree->Branch("MuonP_Py", &MuonP_Py, "MuonP_Py/F");
+  miniTree->Branch("MuonL_Py", &MuonL_Py, "MuonL_Py/F");
+  miniTree->Branch("MuonS_Py", &MuonS_Py, "MuonS_Py/F");
+
+  miniTree->Branch("MuonM_Pz", &MuonM_Pz, "MuonM_Pz/F");
+  miniTree->Branch("MuonP_Pz", &MuonP_Pz, "MuonP_Pz/F");
+  miniTree->Branch("MuonL_Pz", &MuonL_Pz, "MuonL_Pz/F");
+  miniTree->Branch("MuonS_Pz", &MuonS_Pz, "MuonS_Pz/F");
+
 
 	
 	// ____________________________________________
@@ -606,24 +631,28 @@ if( ntotjob == 9999 )
 	miniTree->Branch("MuonM_MC_Pz", &MuonM_MC_Pz, "MuonM_MC_Pz/F");
 	miniTree->Branch("MuonM_MC_Phi", &MuonM_MC_Phi, "MuonM_MC_Phi/F");
 	miniTree->Branch("MuonM_MC_Eta", &MuonM_MC_Eta, "MuonM_MC_Eta/F");
+	miniTree->Branch("MuonM_MC_Pt", &MuonM_MC_Pt, "MuonM_MC_Pt/F");
 	miniTree->Branch("MuonP_MC_E", &MuonP_MC_E, "MuonP_MC_E/F");
 	miniTree->Branch("MuonP_MC_Px", &MuonP_MC_Px, "MuonP_MC_Px/F");
 	miniTree->Branch("MuonP_MC_Py", &MuonP_MC_Py, "MuonP_MC_Py/F");
 	miniTree->Branch("MuonP_MC_Pz", &MuonP_MC_Pz, "MuonP_MC_Pz/F");
 	miniTree->Branch("MuonP_MC_Phi", &MuonP_MC_Phi, "MuonP_MC_Phi/F");
 	miniTree->Branch("MuonP_MC_Eta", &MuonP_MC_Eta, "MuonP_MC_Eta/F");
+	miniTree->Branch("MuonP_MC_Pt", &MuonP_MC_Pt, "MuonP_MC_Pt/F");
 	miniTree->Branch("MuonL_MC_E", &MuonL_MC_E, "MuonL_MC_E/F");
 	miniTree->Branch("MuonL_MC_Px", &MuonL_MC_Px, "MuonL_MC_Px/F");
 	miniTree->Branch("MuonL_MC_Py", &MuonL_MC_Py, "MuonL_MC_Py/F");
 	miniTree->Branch("MuonL_MC_Pz", &MuonL_MC_Pz, "MuonL_MC_Pz/F");
 	miniTree->Branch("MuonL_MC_Phi", &MuonL_MC_Phi, "MuonL_MC_Phi/F");
 	miniTree->Branch("MuonL_MC_Eta", &MuonL_MC_Eta, "MuonL_MC_Eta/F");
+	miniTree->Branch("MuonL_MC_Pt", &MuonL_MC_Pt, "MuonL_MC_Pt/F");
 	miniTree->Branch("MuonS_MC_E", &MuonS_MC_E, "MuonS_MC_E/F");
 	miniTree->Branch("MuonS_MC_Px", &MuonS_MC_Px, "MuonS_MC_Px/F");
 	miniTree->Branch("MuonS_MC_Py", &MuonS_MC_Py, "MuonS_MC_Py/F");
 	miniTree->Branch("MuonS_MC_Pz", &MuonS_MC_Pz, "MuonS_MC_Pz/F");
 	miniTree->Branch("MuonS_MC_Phi", &MuonS_MC_Phi, "MuonS_MC_Phi/F");
 	miniTree->Branch("MuonS_MC_Eta", &MuonS_MC_Eta, "MuonS_MC_Eta/F");
+	miniTree->Branch("MuonS_MC_Pt", &MuonS_MC_Pt, "MuonS_MC_Pt/F");
 	miniTree->Branch("Mmumu_Muons_MC", &Mmumu_Muons_MC, "Mmumu_Muons_MC/F");
 	
 	// SETUP PARAMETERS	
@@ -766,6 +795,11 @@ if( ntotjob == 9999 )
     MuonM_isoR05_nTracks = MuonP_isoR05_nTracks = MuonL_isoR05_nTracks = MuonS_isoR05_nTracks = -99;
     MuonM_isoR05_sumPt = MuonP_isoR05_sumPt = MuonL_isoR05_sumPt = MuonS_isoR05_sumPt = -99;
 
+    MuonM_E = MuonP_E = MuonL_E = MuonS_E = -99;
+    MuonM_Px = MuonP_Px = MuonL_Px = MuonS_Px = -99;
+    MuonM_Py = MuonP_Py = MuonL_Py = MuonS_Py = -99;
+    MuonM_Pz = MuonP_Pz = MuonL_Pz = MuonS_Pz = -99;
+
 		// ____________________________________________
 		// mumu information
 		// ____________________________________________
@@ -774,10 +808,10 @@ if( ntotjob == 9999 )
 		// ____________________________________________
 	  // MC Truth
 	  // ___________________________________________
-	  MuonM_MC_E = MuonM_MC_Px = MuonM_MC_Py = MuonM_MC_Pz = MuonM_MC_Phi = MuonM_MC_Eta = -99.0;
-	  MuonP_MC_E = MuonP_MC_Px = MuonP_MC_Py = MuonP_MC_Pz = MuonP_MC_Phi = MuonP_MC_Eta = -99.0;
-	  MuonL_MC_E = MuonL_MC_Px = MuonL_MC_Py = MuonL_MC_Pz = MuonL_MC_Phi = MuonL_MC_Eta = -99.0;
-	  MuonS_MC_E = MuonS_MC_Px = MuonS_MC_Py = MuonS_MC_Pz = MuonS_MC_Phi = MuonS_MC_Eta = -99.0;
+	  MuonM_MC_E = MuonM_MC_Px = MuonM_MC_Py = MuonM_MC_Pz = MuonM_MC_Phi = MuonM_MC_Eta = MuonM_MC_Pt = -99.0;
+	  MuonP_MC_E = MuonP_MC_Px = MuonP_MC_Py = MuonP_MC_Pz = MuonP_MC_Phi = MuonP_MC_Eta = MuonP_MC_Pt = -99.0;
+	  MuonL_MC_E = MuonL_MC_Px = MuonL_MC_Py = MuonL_MC_Pz = MuonL_MC_Phi = MuonL_MC_Eta = MuonL_MC_Pt = -99.0;
+	  MuonS_MC_E = MuonS_MC_Px = MuonS_MC_Py = MuonS_MC_Pz = MuonS_MC_Phi = MuonS_MC_Eta = MuonS_MC_Pt = -99.0;
 		Mmumu_Muons_MC = -99.0;
 		// ____________________________________________
 		// END OF INITIALIZATION
