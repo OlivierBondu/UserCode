@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 	
 	if( argc == 1 )
 	{
-		cerr << "arguments should be passed !! sample (outputname) (ntotjob) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (applyMuonScaleCorrection)" << endl;
+		cerr << "arguments should be passed !! sample (outputname) (ntotjob) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (applyMuonScaleCorrection) (muon correction sys)" << endl;
 		return 1;
 	}
 
@@ -176,6 +176,20 @@ int main(int argc, char *argv[])
 		std::stringstream ss ( argv[10] );
 		ss >> applyMuonScaleCorrection;
 	}
+
+  // ******************************************
+  // Optional argument is extra muon correction smearing (Rochester only)
+  // ******************************************
+  double sysdev = 0.0;
+  if( argc > 11 )
+  {
+    std::stringstream ss ( argv[11] );
+    ss >> sysdev;
+  }
+
+
+
+
 	TTimeStamp *time = new TTimeStamp();
 	TRandom3* generator = new TRandom3(time->GetNanoSec());
 		// TODO
@@ -924,8 +938,14 @@ if( ntotjob == 9999 )
 				TLorentzVector muonRochesterDummy(mymuon->Px(), mymuon->Py(), mymuon->Pz(), mymuon->E());
 				// moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
 				// sysdev = 0 : no systematics yet
-				if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, 0.0);
-				else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, 0.0);
+				if( isZgammaMC > 0 ) // If sample is MC
+				{
+					if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
+					else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
+				} else {
+					if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
+          else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
+				}
 				corrected_Pt = muonRochester.Pt();
 			}
 			if( applyMuonScaleCorrection == 31 )
@@ -941,8 +961,14 @@ if( ntotjob == 9999 )
 
 				// moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
 				// sysdev = 0 : no systematics yet
-				if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, 0.0);
-				else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, 0.0);
+				if( isZgammaMC > 0 ) // If sample is MC
+				{
+					if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
+					else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
+				} else {
+					if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
+					else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
+				}
 				corrected_Pt = muonRochester.Pt();
 			}
 			if( applyMuonScaleCorrection == 32 )
@@ -958,8 +984,14 @@ if( ntotjob == 9999 )
 
 				// moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
 				// sysdev = 0 : no systematics yet
-				if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, 0.0);
-				else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, 0.0);
+				if( isZgammaMC > 0 ) // If sample is MC
+				{
+					if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
+					else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
+				} else {
+					if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
+					else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
+				}
 				corrected_Pt = muonRochester.Pt();
 			}
 			if( applyMuonScaleCorrection == 99 )

@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 	
 	if( argc == 1 )
 	{
-		cerr << "arguments should be passed !! sample (outputname) (ntotjob) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (extra photon scale) (applyMuonScaleCorrection) (extra resolution)" << endl;
+		cerr << "arguments should be passed !! sample (outputname) (ntotjob) (ijob) (isZgammaMC) (lumi_set) (pu_set) (low m_mumu cut) (high m_mumu cut) (photon energy correction scheme) (extra photon scale) (applyMuonScaleCorrection) (muon correction sys) (extra resolution)" << endl;
 		return 1;
 	}
 
@@ -246,7 +246,7 @@ int main(int argc, char *argv[])
 	}
 	
 	// ******************************************
-	// Optional argument extra scale
+	// Optional argument photon correction scheme
 	// ******************************************
 	double EScale = 1.0;
 	string correction = "";
@@ -266,22 +266,42 @@ int main(int argc, char *argv[])
 	double EScale_inj = EScale;
 	
 	// ******************************************
-	// Optional argument : applyMuonScaleCorrection : 0)nothing 1) MuScleFit 2)SIDRA 3)Rochester (21 & 31 also available)
+	// Optional argument is extra injected scale
 	// ******************************************
-	int applyMuonScaleCorrection = 0;
+	double EScale_true_injected = 1.0;
 	if( argc > 11 )
 	{
 		std::stringstream ss ( argv[11] );
+		ss >> EScale_true_injected;
+	}
+
+	// ******************************************
+	// Optional argument : applyMuonScaleCorrection : 0)nothing 1) MuScleFit 2)SIDRA 3)Rochester (21 & 31 also available)
+	// ******************************************
+	int applyMuonScaleCorrection = 0;
+	if( argc > 12 )
+	{
+		std::stringstream ss ( argv[12] );
 		ss >> applyMuonScaleCorrection;
+	}
+
+	// ******************************************
+	// Optional argument is extra muon correction smearing (Rochester only)
+	// ******************************************
+	double sysdev = 0.0;
+	if( argc > 13 )
+	{
+		std::stringstream ss ( argv[13] );
+		ss >> sysdev;
 	}
 
 	// ******************************************
 	// Optional argument is extra resolution
 	// ******************************************
 	double EResolution = 0.0;
-	if( argc > 12 )
+	if( argc > 14 )
 	{
-		std::stringstream ss ( argv[12] );
+		std::stringstream ss ( argv[14] );
 		ss >> EResolution;
 	}
 	EResolution = (double)EResolution / (double)100.0;
@@ -1376,7 +1396,7 @@ if( ntotjob == 9999)
 		{ // If there is an extra resolution to smear the photon energy
 			for(int iphoton = 0; iphoton < NbPhotons ; iphoton++)
 			{
-				Photon_scale.push_back(generator->Gaus(EScale_inj, EResolution));
+				Photon_scale.push_back(generator->Gaus(EScale_true_injected * EScale_inj, EResolution));
 			}
 //			cout << "Photon_scale = " << Photon_scale[Photon_scale.size() -1] << endl;
 		} else {
@@ -1386,7 +1406,7 @@ if( ntotjob == 9999)
         {
 					TRootPhoton *myphotontocorrect;
 					myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
-          Photon_scale.push_back(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons));
+          Photon_scale.push_back(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons) * EScale_true_injected);
 /*
 					cout << "myphotontocorrect->isEBPho()= " << myphotontocorrect->isEBPho() << endl;
 					cout << "myphotontocorrect->r9()= " << myphotontocorrect->r9() << endl;
@@ -1394,7 +1414,7 @@ if( ntotjob == 9999)
 					cout << "myphotontocorrect->superCluster()->rawEnergy()= " << myphotontocorrect->superCluster()->rawEnergy() << endl;
 					cout << "myphotontocorrect->preshowerEnergy()= " << myphotontocorrect->preshowerEnergy() << endl;
 */
-
+					if(verbosity>1) cout << "EScale_true_injected= " << EScale_true_injected  << endl;
 					if(verbosity>1) cout << "myphotontocorrect->Energy()= " << myphotontocorrect->Energy() << endl;
 					if(verbosity>1) cout << "photonManualCorrectionFactor= " << Photon_scale[Photon_scale.size() - 1] << endl;
 					if(verbosity>1) cout << "photonManualCorrectionFactor * myphotontocorrect->Energy()= " << Photon_scale[Photon_scale.size() - 1] * myphotontocorrect->Energy() << endl;
@@ -1405,7 +1425,7 @@ if( ntotjob == 9999)
 			} else {
 				for(int iphoton = 0; iphoton < NbPhotons ; iphoton++)
 	      {
-					Photon_scale.push_back(EScale_inj);
+					Photon_scale.push_back(EScale_true_injected * EScale_inj);
 				}
 			}
 		}
@@ -1769,8 +1789,14 @@ if( ntotjob == 9999)
         TLorentzVector muonRochesterDummy(mymuon->Px(), mymuon->Py(), mymuon->Pz(), mymuon->E());
         // moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
         // sysdev = 0 : no systematics yet
-        if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, 0.0);
-        else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, 0.0);
+				if( isZgammaMC > 0 ) // If sample is MC
+				{
+	        if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
+	        else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
+				} else {
+					if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
+          else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
+				}
         corrected_Pt = muonRochester.Pt();
       }
       if( applyMuonScaleCorrection == 31 )
@@ -1786,8 +1812,14 @@ if( ntotjob == 9999)
 
         // moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
         // sysdev = 0 : no systematics yet
-        if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, 0.0);
-        else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, 0.0);
+				if( isZgammaMC > 0 ) // If sample is MC
+				{
+	        if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
+	        else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
+				} else {
+					if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
+          else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
+				}
         corrected_Pt = muonRochester.Pt();
       }
       if( applyMuonScaleCorrection == 32 )
@@ -1803,8 +1835,14 @@ if( ntotjob == 9999)
 
         // moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
         // sysdev = 0 : no systematics yet
-        if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, 0.0);
-        else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, 0.0);
+				if( isZgammaMC > 0 ) // If sample is MC
+				{
+	        if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
+	        else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
+				} else {
+  	      if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
+	        else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
+				}
         corrected_Pt = muonRochester.Pt();
       }
       if( applyMuonScaleCorrection == 99 )
