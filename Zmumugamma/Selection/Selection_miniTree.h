@@ -254,7 +254,7 @@ double DeltaR( double eta1, double phi1, double eta2, double phi2)
 // *****************************************************************************************************
 // ******************* Process gen info : get out four momentum of gen particle
 // *****************************************************************************************************
-void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* particule_trueE, float* particule_truePx, float* particule_truePy, float* particule_truePz, float* particule_trueEta, float* particule_truePhi, int particle_pdgId = 0)
+void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* particule_trueE, float* particule_truePx, float* particule_truePy, float* particule_truePz, float* particule_truePhi, float* particule_trueEta, float* particule_truePt, int particle_pdgId = 0)
 {
   TRootMCParticle* mygenparticle;
   int NbMCpartInCone=0;
@@ -282,6 +282,7 @@ void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* part
     *particule_truePz = mygenparticle->Pz();
     *particule_truePhi = mygenparticle->Phi();
     *particule_trueEta = mygenparticle->Eta();
+    *particule_truePt = mygenparticle->Pt();
 
   }
   return;
@@ -603,6 +604,10 @@ int main(int argc, char *argv[]);
   extern Float_t MuonM_Pt, MuonP_Pt, MuonN_Pt, MuonF_Pt, MuonL_Pt, MuonS_Pt;
   extern Float_t MuonM_Eta, MuonP_Eta, MuonN_Eta, MuonF_Eta, MuonL_Eta, MuonS_Eta;
   extern Float_t MuonM_Phi, MuonP_Phi, MuonN_Phi, MuonF_Phi, MuonL_Phi, MuonS_Phi;
+  extern Float_t MuonM_E, MuonP_E, MuonN_E, MuonF_E, MuonL_E, MuonS_E;
+  extern Float_t MuonM_Px, MuonP_Px, MuonN_Px, MuonF_Px, MuonL_Px, MuonS_Px;
+  extern Float_t MuonM_Py, MuonP_Py, MuonN_Py, MuonF_Py, MuonL_Py, MuonS_Py;
+  extern Float_t MuonM_Pz, MuonP_Pz, MuonN_Pz, MuonF_Pz, MuonL_Pz, MuonS_Pz;
   extern Int_t MuonF_Charge, MuonN_Charge, MuonL_Charge, MuonS_Charge;
 
   extern Float_t MuonM_isoR03_emEt, MuonP_isoR03_emEt, MuonN_isoR03_emEt, MuonF_isoR03_emEt, MuonL_isoR03_emEt, MuonS_isoR03_emEt; 
@@ -681,15 +686,15 @@ int main(int argc, char *argv[]);
   // MC Truth
   // ___________________________________________
 
-  extern Float_t Photon_MC_E, Photon_MC_Px, Photon_MC_Py, Photon_MC_Pz, Photon_MC_Phi, Photon_MC_Eta;
+  extern Float_t Photon_MC_E, Photon_MC_Px, Photon_MC_Py, Photon_MC_Pz, Photon_MC_Phi, Photon_MC_Eta, Photon_MC_Pt;
   extern Int_t Photon_MCisConverted;
   extern Float_t Photon_MCconvEoverP, Photon_MCconvMass, Photon_MCconvCotanTheta, Photon_MCconvVertexX, Photon_MCconvVertexY, Photon_MCconvVertexZ;
-  extern Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta;
-  extern Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta;
-  extern Float_t MuonN_MC_E, MuonN_MC_Px, MuonN_MC_Py, MuonN_MC_Pz, MuonN_MC_Phi, MuonN_MC_Eta;
-  extern Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta;
-  extern Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta;
-  extern Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta;
+  extern Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta, MuonM_MC_Pt;
+  extern Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta, MuonP_MC_Pt;
+  extern Float_t MuonN_MC_E, MuonN_MC_Px, MuonN_MC_Py, MuonN_MC_Pz, MuonN_MC_Phi, MuonN_MC_Eta, MuonN_MC_Pt;
+  extern Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta, MuonF_MC_Pt;
+  extern Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta, MuonL_MC_Pt;
+  extern Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta, MuonS_MC_Pt;
   extern Float_t Photon_SC_rawE_x_fEta_o_MC_E, Photon_E_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E;
 
   extern Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
@@ -1253,6 +1258,10 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
     MuonM_Pt = correctedminusMuon->Pt();
     MuonM_Eta = minusMuon->Eta();
     MuonM_Phi = minusMuon->Phi();
+    MuonM_E = minusMuon->Energy();
+    MuonM_Px = minusMuon->Px();
+    MuonM_Py = minusMuon->Py();
+    MuonM_Pz = minusMuon->Pz();
     MuonM_isoR03_emEt = minusMuon->isoR03_emEt();
     MuonM_isoR03_hadEt = minusMuon->isoR03_hadEt();
     MuonM_isoR03_hoEt = minusMuon->isoR03_hoEt();
@@ -1268,6 +1277,10 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
     MuonP_Pt = correctedplusMuon->Pt();
     MuonP_Eta = plusMuon->Eta();
     MuonP_Phi = plusMuon->Phi();
+    MuonP_E = plusMuon->Energy();
+    MuonP_Px = plusMuon->Px();
+    MuonP_Py = plusMuon->Py();
+    MuonP_Pz = plusMuon->Pz();
     MuonP_isoR03_emEt = plusMuon->isoR03_emEt();
     MuonP_isoR03_hadEt = plusMuon->isoR03_hadEt();
     MuonP_isoR03_hoEt = plusMuon->isoR03_hoEt();
@@ -1283,6 +1296,10 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
     MuonF_Pt = correctedfarMuon->Pt();
     MuonF_Eta = farMuon->Eta();
     MuonF_Phi = farMuon->Phi();
+    MuonF_E = farMuon->Energy();
+    MuonF_Px = farMuon->Px();
+    MuonF_Py = farMuon->Py();
+    MuonF_Pz = farMuon->Pz();
     MuonF_Charge = farMuon->charge();
     MuonF_isoR03_emEt = farMuon->isoR03_emEt();
     MuonF_isoR03_hadEt = farMuon->isoR03_hadEt();
@@ -1299,6 +1316,10 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
     MuonN_Pt = correctednearMuon->Pt();
     MuonN_Eta = nearMuon->Eta();
     MuonN_Phi = nearMuon->Phi();
+    MuonN_E = nearMuon->Energy();
+    MuonN_Px = nearMuon->Px();
+    MuonN_Py = nearMuon->Py();
+    MuonN_Pz = nearMuon->Pz();
     MuonN_Charge = nearMuon->charge();
     MuonN_isoR03_emEt = nearMuon->isoR03_emEt();
     MuonN_isoR03_hadEt = nearMuon->isoR03_hadEt();
@@ -1324,13 +1345,13 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
     { 
 	//cout<<endl<<"doMC dans le if = "<<doMC<<endl; 
 	// Compute Stuff, with MC truth information
-      doGenInfo( (TRootParticle*) myphoton, mcParticles, &Photon_MC_E, &Photon_MC_Px, &Photon_MC_Py, &Photon_MC_Pz, &Photon_MC_Phi, &Photon_MC_Eta, 22 );
-      doGenInfo( (TRootParticle*) correctedminusMuon, mcParticles, &MuonM_MC_E, &MuonM_MC_Px, &MuonM_MC_Py, &MuonM_MC_Pz, &MuonM_MC_Phi, &MuonM_MC_Eta, 13 );
-      doGenInfo( (TRootParticle*) correctedplusMuon, mcParticles, &MuonP_MC_E, &MuonP_MC_Px, &MuonP_MC_Py, &MuonP_MC_Pz, &MuonP_MC_Phi, &MuonP_MC_Eta, -13 );
-      doGenInfo( (TRootParticle*) correctednearMuon, mcParticles, &MuonN_MC_E, &MuonN_MC_Px, &MuonN_MC_Py, &MuonN_MC_Pz, &MuonN_MC_Phi, &MuonN_MC_Eta, (-1)*(nearMuon->charge())*13 );
-      doGenInfo( (TRootParticle*) correctedfarMuon, mcParticles, &MuonF_MC_E, &MuonF_MC_Px, &MuonF_MC_Py, &MuonF_MC_Pz, &MuonF_MC_Phi, &MuonF_MC_Eta, (-1)*(farMuon->charge())*13 );
-      doGenInfo( (TRootParticle*) correctedleadingMuon, mcParticles, &MuonL_MC_E, &MuonL_MC_Px, &MuonL_MC_Py, &MuonL_MC_Pz, &MuonL_MC_Phi, &MuonL_MC_Eta, (-1)*(leadingMuon->charge())*13 );
-      doGenInfo( (TRootParticle*) correctedsubleadingMuon, mcParticles, &MuonS_MC_E, &MuonS_MC_Px, &MuonS_MC_Py, &MuonS_MC_Pz, &MuonS_MC_Phi, &MuonS_MC_Eta, (-1)*(subleadingMuon->charge())*13 );
+      doGenInfo( (TRootParticle*) myphoton, mcParticles, &Photon_MC_E, &Photon_MC_Px, &Photon_MC_Py, &Photon_MC_Pz, &Photon_MC_Phi, &Photon_MC_Eta, &Photon_MC_Pt, 22 );
+      doGenInfo( (TRootParticle*) correctedminusMuon, mcParticles, &MuonM_MC_E, &MuonM_MC_Px, &MuonM_MC_Py, &MuonM_MC_Pz, &MuonM_MC_Phi, &MuonM_MC_Eta, &MuonM_MC_Pt, 13 );
+      doGenInfo( (TRootParticle*) correctedplusMuon, mcParticles, &MuonP_MC_E, &MuonP_MC_Px, &MuonP_MC_Py, &MuonP_MC_Pz, &MuonP_MC_Phi, &MuonP_MC_Eta, &MuonP_MC_Pt, -13 );
+      doGenInfo( (TRootParticle*) correctednearMuon, mcParticles, &MuonN_MC_E, &MuonN_MC_Px, &MuonN_MC_Py, &MuonN_MC_Pz, &MuonN_MC_Phi, &MuonN_MC_Eta, &MuonN_MC_Pt, (-1)*(nearMuon->charge())*13 );
+      doGenInfo( (TRootParticle*) correctedfarMuon, mcParticles, &MuonF_MC_E, &MuonF_MC_Px, &MuonF_MC_Py, &MuonF_MC_Pz, &MuonF_MC_Phi, &MuonF_MC_Eta, &MuonF_MC_Pt, (-1)*(farMuon->charge())*13 );
+      doGenInfo( (TRootParticle*) correctedleadingMuon, mcParticles, &MuonL_MC_E, &MuonL_MC_Px, &MuonL_MC_Py, &MuonL_MC_Pz, &MuonL_MC_Phi, &MuonL_MC_Eta, &MuonL_MC_Pt, (-1)*(leadingMuon->charge())*13 );
+      doGenInfo( (TRootParticle*) correctedsubleadingMuon, mcParticles, &MuonS_MC_E, &MuonS_MC_Px, &MuonS_MC_Py, &MuonS_MC_Pz, &MuonS_MC_Phi, &MuonS_MC_Eta, &MuonS_MC_Pt, (-1)*(subleadingMuon->charge())*13 );
 
 			if(Photon_MC_E != 0.0) Photon_SC_rawE_x_fEta_o_MC_E = (double)(Photon_SC_rawE_x_fEta) / (double)(Photon_MC_E);
 			if(Photon_MC_E != 0.0) Photon_E_o_MC_E = (double)(Photon_E) / (double)(Photon_MC_E);

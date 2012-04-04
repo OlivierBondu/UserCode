@@ -30,6 +30,10 @@
 	Float_t MuonM_Pt, MuonP_Pt, MuonN_Pt, MuonF_Pt, MuonL_Pt, MuonS_Pt;
 	Float_t MuonM_Eta, MuonP_Eta, MuonN_Eta, MuonF_Eta, MuonL_Eta, MuonS_Eta;
 	Float_t MuonM_Phi, MuonP_Phi, MuonN_Phi, MuonF_Phi, MuonL_Phi, MuonS_Phi;
+	Float_t MuonM_E, MuonP_E, MuonN_E, MuonF_E, MuonL_E, MuonS_E;
+	Float_t MuonM_Px, MuonP_Px, MuonN_Px, MuonF_Px, MuonL_Px, MuonS_Px;
+	Float_t MuonM_Py, MuonP_Py, MuonN_Py, MuonF_Py, MuonL_Py, MuonS_Py;
+	Float_t MuonM_Pz, MuonP_Pz, MuonN_Pz, MuonF_Pz, MuonL_Pz, MuonS_Pz;
 	Int_t MuonF_Charge, MuonN_Charge, MuonL_Charge, MuonS_Charge;
 
 	Float_t MuonM_isoR03_emEt, MuonP_isoR03_emEt, MuonN_isoR03_emEt, MuonF_isoR03_emEt, MuonL_isoR03_emEt, MuonS_isoR03_emEt;
@@ -110,15 +114,15 @@
   // MC Truth
   // ___________________________________________
 
-  Float_t Photon_MC_E, Photon_MC_Px, Photon_MC_Py, Photon_MC_Pz, Photon_MC_Phi, Photon_MC_Eta;
+  Float_t Photon_MC_E, Photon_MC_Px, Photon_MC_Py, Photon_MC_Pz, Photon_MC_Phi, Photon_MC_Eta, Photon_MC_Pt;
   Int_t Photon_MCisConverted;
   Float_t Photon_MCconvEoverP, Photon_MCconvMass, Photon_MCconvCotanTheta, Photon_MCconvVertexX, Photon_MCconvVertexY, Photon_MCconvVertexZ;
-  Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta;
-  Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta;
-  Float_t MuonN_MC_E, MuonN_MC_Px, MuonN_MC_Py, MuonN_MC_Pz, MuonN_MC_Phi, MuonN_MC_Eta;
-  Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta;
-  Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta;
-  Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta;
+  Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta, MuonM_MC_Pt;
+  Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta, MuonP_MC_Pt;
+  Float_t MuonN_MC_E, MuonN_MC_Px, MuonN_MC_Py, MuonN_MC_Pz, MuonN_MC_Phi, MuonN_MC_Eta, MuonN_MC_Pt;
+  Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta, MuonF_MC_Pt;
+  Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta, MuonL_MC_Pt;
+  Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta, MuonS_MC_Pt;
   Float_t Photon_SC_rawE_x_fEta_o_MC_E, Photon_E_o_MC_E;
   Float_t Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E;	
 
@@ -759,6 +763,34 @@ if( ntotjob == 9999)
 	miniTree->Branch("MuonL_Phi", &MuonL_Phi, "MuonL_Phi/F");
 	miniTree->Branch("MuonS_Phi", &MuonS_Phi, "MuonS_Phi/F");
 
+	miniTree->Branch("MuonM_E", &MuonM_E, "MuonM_E/F");
+	miniTree->Branch("MuonP_E", &MuonP_E, "MuonP_E/F");
+	miniTree->Branch("MuonF_E", &MuonF_E, "MuonF_E/F");
+	miniTree->Branch("MuonN_E", &MuonN_E, "MuonN_E/F");
+	miniTree->Branch("MuonL_E", &MuonL_E, "MuonL_E/F");
+	miniTree->Branch("MuonS_E", &MuonS_E, "MuonS_E/F");
+
+	miniTree->Branch("MuonM_Px", &MuonM_Px, "MuonM_Px/F");
+	miniTree->Branch("MuonP_Px", &MuonP_Px, "MuonP_Px/F");
+	miniTree->Branch("MuonF_Px", &MuonF_Px, "MuonF_Px/F");
+	miniTree->Branch("MuonN_Px", &MuonN_Px, "MuonN_Px/F");
+	miniTree->Branch("MuonL_Px", &MuonL_Px, "MuonL_Px/F");
+	miniTree->Branch("MuonS_Px", &MuonS_Px, "MuonS_Px/F");
+
+	miniTree->Branch("MuonM_Py", &MuonM_Py, "MuonM_Py/F");
+	miniTree->Branch("MuonP_Py", &MuonP_Py, "MuonP_Py/F");
+	miniTree->Branch("MuonF_Py", &MuonF_Py, "MuonF_Py/F");
+	miniTree->Branch("MuonN_Py", &MuonN_Py, "MuonN_Py/F");
+	miniTree->Branch("MuonL_Py", &MuonL_Py, "MuonL_Py/F");
+	miniTree->Branch("MuonS_Py", &MuonS_Py, "MuonS_Py/F");
+
+	miniTree->Branch("MuonM_Pz", &MuonM_Pz, "MuonM_Pz/F");
+	miniTree->Branch("MuonP_Pz", &MuonP_Pz, "MuonP_Pz/F");
+	miniTree->Branch("MuonF_Pz", &MuonF_Pz, "MuonF_Pz/F");
+	miniTree->Branch("MuonN_Pz", &MuonN_Pz, "MuonN_Pz/F");
+	miniTree->Branch("MuonL_Pz", &MuonL_Pz, "MuonL_Pz/F");
+	miniTree->Branch("MuonS_Pz", &MuonS_Pz, "MuonS_Pz/F");
+
 	miniTree->Branch("MuonF_Charge", &MuonF_Charge, "MuonF_Charge/I");
 	miniTree->Branch("MuonN_Charge", &MuonN_Charge, "MuonN_Charge/I");
 	miniTree->Branch("MuonL_Charge", &MuonL_Charge, "MuonL_Charge/I");
@@ -1069,6 +1101,7 @@ if( ntotjob == 9999)
 	miniTree->Branch("Photon_MC_Pz", &Photon_MC_Pz, "Photon_MC_Pz/F");
 	miniTree->Branch("Photon_MC_Phi", &Photon_MC_Phi, "Photon_MC_Phi/F");
 	miniTree->Branch("Photon_MC_Eta", &Photon_MC_Eta, "Photon_MC_Eta/F");
+	miniTree->Branch("Photon_MC_Pt", &Photon_MC_Pt, "Photon_MC_Pt/F");
 	miniTree->Branch("Photon_MCisConverted", &Photon_MCisConverted, "Photon_MCisConverted/F");
 	miniTree->Branch("Photon_MCconvEoverP", &Photon_MCconvEoverP, "Photon_MCconvEoverP/F");
 	miniTree->Branch("Photon_MCconvMass", &Photon_MCconvMass, "Photon_MCconvMass/F");
@@ -1082,36 +1115,42 @@ if( ntotjob == 9999)
 	miniTree->Branch("MuonM_MC_Pz", &MuonM_MC_Pz, "MuonM_MC_Pz/F");
 	miniTree->Branch("MuonM_MC_Phi", &MuonM_MC_Phi, "MuonM_MC_Phi/F");
 	miniTree->Branch("MuonM_MC_Eta", &MuonM_MC_Eta, "MuonM_MC_Eta/F");
+	miniTree->Branch("MuonM_MC_Pt", &MuonM_MC_Pt, "MuonM_MC_Pt/F");
 	miniTree->Branch("MuonP_MC_E", &MuonP_MC_E, "MuonP_MC_E/F");
 	miniTree->Branch("MuonP_MC_Px", &MuonP_MC_Px, "MuonP_MC_Px/F");
 	miniTree->Branch("MuonP_MC_Py", &MuonP_MC_Py, "MuonP_MC_Py/F");
 	miniTree->Branch("MuonP_MC_Pz", &MuonP_MC_Pz, "MuonP_MC_Pz/F");
 	miniTree->Branch("MuonP_MC_Phi", &MuonP_MC_Phi, "MuonP_MC_Phi/F");
 	miniTree->Branch("MuonP_MC_Eta", &MuonP_MC_Eta, "MuonP_MC_Eta/F");
+	miniTree->Branch("MuonP_MC_Pt", &MuonP_MC_Pt, "MuonP_MC_Pt/F");
 	miniTree->Branch("MuonN_MC_E", &MuonN_MC_E, "MuonN_MC_E/F");
 	miniTree->Branch("MuonN_MC_Px", &MuonN_MC_Px, "MuonN_MC_Px/F");
 	miniTree->Branch("MuonN_MC_Py", &MuonN_MC_Py, "MuonN_MC_Py/F");
 	miniTree->Branch("MuonN_MC_Pz", &MuonN_MC_Pz, "MuonN_MC_Pz/F");
 	miniTree->Branch("MuonN_MC_Phi", &MuonN_MC_Phi, "MuonN_MC_Phi/F");
 	miniTree->Branch("MuonN_MC_Eta", &MuonN_MC_Eta, "MuonN_MC_Eta/F");
+	miniTree->Branch("MuonN_MC_Pt", &MuonN_MC_Pt, "MuonN_MC_Pt/F");
 	miniTree->Branch("MuonF_MC_E", &MuonF_MC_E, "MuonF_MC_E/F");
 	miniTree->Branch("MuonF_MC_Px", &MuonF_MC_Px, "MuonF_MC_Px/F");
 	miniTree->Branch("MuonF_MC_Py", &MuonF_MC_Py, "MuonF_MC_Py/F");
 	miniTree->Branch("MuonF_MC_Pz", &MuonF_MC_Pz, "MuonF_MC_Pz/F");
 	miniTree->Branch("MuonF_MC_Phi", &MuonF_MC_Phi, "MuonF_MC_Phi/F");
 	miniTree->Branch("MuonF_MC_Eta", &MuonF_MC_Eta, "MuonF_MC_Eta/F");
+	miniTree->Branch("MuonF_MC_Pt", &MuonF_MC_Pt, "MuonF_MC_Pt/F");
 	miniTree->Branch("MuonL_MC_E", &MuonL_MC_E, "MuonL_MC_E/F");
 	miniTree->Branch("MuonL_MC_Px", &MuonL_MC_Px, "MuonL_MC_Px/F");
 	miniTree->Branch("MuonL_MC_Py", &MuonL_MC_Py, "MuonL_MC_Py/F");
 	miniTree->Branch("MuonL_MC_Pz", &MuonL_MC_Pz, "MuonL_MC_Pz/F");
 	miniTree->Branch("MuonL_MC_Phi", &MuonL_MC_Phi, "MuonL_MC_Phi/F");
 	miniTree->Branch("MuonL_MC_Eta", &MuonL_MC_Eta, "MuonL_MC_Eta/F");
+	miniTree->Branch("MuonL_MC_Pt", &MuonL_MC_Pt, "MuonL_MC_Pt/F");
 	miniTree->Branch("MuonS_MC_E", &MuonS_MC_E, "MuonS_MC_E/F");
 	miniTree->Branch("MuonS_MC_Px", &MuonS_MC_Px, "MuonS_MC_Px/F");
 	miniTree->Branch("MuonS_MC_Py", &MuonS_MC_Py, "MuonS_MC_Py/F");
 	miniTree->Branch("MuonS_MC_Pz", &MuonS_MC_Pz, "MuonS_MC_Pz/F");
 	miniTree->Branch("MuonS_MC_Phi", &MuonS_MC_Phi, "MuonS_MC_Phi/F");
 	miniTree->Branch("MuonS_MC_Eta", &MuonS_MC_Eta, "MuonS_MC_Eta/F");
+	miniTree->Branch("MuonS_MC_Pt", &MuonS_MC_Pt, "MuonS_MC_Pt/F");
 	miniTree->Branch("Photon_SC_rawE_x_fEta_o_MC_E", &Photon_SC_rawE_x_fEta_o_MC_E, "Photon_SC_rawE_x_fEta_o_MC_E/F");
 	miniTree->Branch("Photon_E_o_MC_E", &Photon_E_o_MC_E, "Photon_E_o_MC_E/F");
 
@@ -1373,6 +1412,10 @@ if( ntotjob == 9999)
 		MuonM_Pt = MuonP_Pt = MuonN_Pt = MuonF_Pt = MuonL_Pt = MuonS_Pt = -99;
 		MuonM_Eta = MuonP_Eta = MuonN_Eta = MuonF_Eta = MuonL_Eta = MuonS_Eta = -99;
 		MuonM_Phi = MuonP_Phi = MuonN_Phi = MuonF_Phi = MuonL_Phi = MuonS_Phi = -99;
+		MuonM_E = MuonP_E = MuonN_E = MuonF_E = MuonL_E = MuonS_E = -99;
+		MuonM_Px = MuonP_Px = MuonN_Px = MuonF_Px = MuonL_Px = MuonS_Px = -99;
+		MuonM_Py = MuonP_Py = MuonN_Py = MuonF_Py = MuonL_Py = MuonS_Py = -99;
+		MuonM_Pz = MuonP_Pz = MuonN_Pz = MuonF_Pz = MuonL_Pz = MuonS_Pz = -99;
 		MuonF_Charge = MuonN_Charge = MuonL_Charge = MuonS_Charge = -99;
 		MuonM_isoR03_emEt = MuonP_isoR03_emEt = MuonN_isoR03_emEt = MuonF_isoR03_emEt = MuonL_isoR03_emEt = MuonS_isoR03_emEt = -99;
 		MuonM_isoR03_hadEt = MuonP_isoR03_hadEt = MuonN_isoR03_hadEt = MuonF_isoR03_hadEt = MuonL_isoR03_hadEt = MuonS_isoR03_hadEt = -99;
@@ -1486,15 +1529,15 @@ if( ntotjob == 9999)
 	  // ____________________________________________
 	  // MC Truth
 	  // ___________________________________________
-	  Photon_MC_E = Photon_MC_Px = Photon_MC_Py = Photon_MC_Pz = Photon_MC_Phi = Photon_MC_Eta = -99.0;
+	  Photon_MC_E = Photon_MC_Px = Photon_MC_Py = Photon_MC_Pz = Photon_MC_Phi = Photon_MC_Eta = Photon_MC_Pt = -99.0;
 	  Photon_MCisConverted = -99;
 	  Photon_MCconvEoverP = Photon_MCconvMass = Photon_MCconvCotanTheta = Photon_MCconvVertexX = Photon_MCconvVertexY = Photon_MCconvVertexZ = -99.0;
-	  MuonM_MC_E = MuonM_MC_Px = MuonM_MC_Py = MuonM_MC_Pz = MuonM_MC_Phi = MuonM_MC_Eta = -99.0;
-	  MuonP_MC_E = MuonP_MC_Px = MuonP_MC_Py = MuonP_MC_Pz = MuonP_MC_Phi = MuonP_MC_Eta = -99.0;
-	  MuonN_MC_E = MuonN_MC_Px = MuonN_MC_Py = MuonN_MC_Pz = MuonN_MC_Phi = MuonN_MC_Eta = -99.0;
-	  MuonF_MC_E = MuonF_MC_Px = MuonF_MC_Py = MuonF_MC_Pz = MuonF_MC_Phi = MuonF_MC_Eta = -99.0;
-	  MuonL_MC_E = MuonL_MC_Px = MuonL_MC_Py = MuonL_MC_Pz = MuonL_MC_Phi = MuonL_MC_Eta = -99.0;
-	  MuonS_MC_E = MuonS_MC_Px = MuonS_MC_Py = MuonS_MC_Pz = MuonS_MC_Phi = MuonS_MC_Eta = -99.0;
+	  MuonM_MC_E = MuonM_MC_Px = MuonM_MC_Py = MuonM_MC_Pz = MuonM_MC_Phi = MuonM_MC_Eta = MuonM_MC_Pt = -99.0;
+	  MuonP_MC_E = MuonP_MC_Px = MuonP_MC_Py = MuonP_MC_Pz = MuonP_MC_Phi = MuonP_MC_Eta = MuonP_MC_Pt = -99.0;
+	  MuonN_MC_E = MuonN_MC_Px = MuonN_MC_Py = MuonN_MC_Pz = MuonN_MC_Phi = MuonN_MC_Eta = MuonN_MC_Pt = -99.0;
+	  MuonF_MC_E = MuonF_MC_Px = MuonF_MC_Py = MuonF_MC_Pz = MuonF_MC_Phi = MuonF_MC_Eta = MuonF_MC_Pt = -99.0;
+	  MuonL_MC_E = MuonL_MC_Px = MuonL_MC_Py = MuonL_MC_Pz = MuonL_MC_Phi = MuonL_MC_Eta = MuonL_MC_Pt = -99.0;
+	  MuonS_MC_E = MuonS_MC_Px = MuonS_MC_Py = MuonS_MC_Pz = MuonS_MC_Phi = MuonS_MC_Eta = MuonS_MC_Pt = -99.0;
 		Photon_SC_rawE_x_fEta_o_MC_E = Photon_E_o_MC_E = -99.0;
 		Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E = Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E  = Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E  = Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E  = Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E  = Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E  = -99.0;
 
