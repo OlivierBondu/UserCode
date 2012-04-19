@@ -273,12 +273,23 @@ rochcor::~rochcor(){
 
 rochcor::rochcor(){
   
-  eran1.SetSeed(123456);
-  eran2.SetSeed(234567);
+//  eran1.SetSeed(123456);
+//  eran2.SetSeed(234567);
+  eran1.SetSeed();
+  eran2.SetSeed(eran1.GetSeed()+1111);
   
-  sran1.SetSeed(1234);
-  sran2.SetSeed(2345);
-  
+//  sran1.SetSeed(1234);
+//  sran2.SetSeed(2345);
+  sran1.SetSeed(eran1.GetSeed()+2222);
+  sran2.SetSeed(eran1.GetSeed()+3333);
+ /*
+std::cout << 
+"\teran1.GetSeed()= " << eran1.GetSeed() <<
+"\teran2.GetSeed()= " << eran2.GetSeed() <<
+"\tsran1.GetSeed()= " << sran1.GetSeed() <<
+"\tsran2.GetSeed()= " << sran2.GetSeed() <<
+std::endl;
+*/ 
   /*
   for(int i=0; i<8; i++){
     for(int j=0; j<8; j++){
