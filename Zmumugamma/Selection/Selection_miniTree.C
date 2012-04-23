@@ -312,6 +312,9 @@ int main(int argc, char *argv[])
 	EResolution = (double)EResolution / (double)100.0;
 	TTimeStamp *time = new TTimeStamp();
 	TRandom3* generator = new TRandom3(time->GetNanoSec());
+	delete time;
+	time = 0;
+
 		// TODO
 
 //	char* inputfile = argv[6];
@@ -540,7 +543,8 @@ if( ntotjob == 9999)
 		inputEventTree->SetBranchAddress("ak5CaloJets", &jets, &jets_br);
 		inputEventTree->SetBranchStatus("ak5CaloJets", 1);
 	}
-*/	
+*/
+	
 		TBranch* muons_br = 0;
 		TClonesArray* muons = new TClonesArray("TRootMuon", 0);
 	if(doMuon)
@@ -580,6 +584,7 @@ if( ntotjob == 9999)
 		inputEventTree->SetBranchAddress("SuperClusters", &superClusters, &superClusters_br);
 		inputEventTree->SetBranchStatus("SuperClusters", 1);
 	}
+
 /*	
 		TBranch* conversions_br = 0;
 		TClonesArray* conversionTracks = new TClonesArray("TRootTrack", 0);
@@ -611,7 +616,6 @@ if( ntotjob == 9999)
   string ListWantedHLTnames[1];
 	ListWantedHLTnames[0] = "HLT_Mu11";
 	
-
 	// ____________________________________________
 	// preparing the tree
 	// ____________________________________________
@@ -1215,8 +1219,6 @@ if( ntotjob == 9999)
         miniTree->Branch("mmg_logk_MZ_Muons_RECO_MC", &mmg_logk_MZ_Muons_RECO_MC, "mmg_logk_MZ_Muons_RECO_MC/F");
         miniTree->Branch("mmg_logik_MZ_Muons_RECO_MC", &mmg_logik_MZ_Muons_RECO_MC, "mmg_logik_MZ_Muons_RECO_MC/F");
         miniTree->Branch("mmg_logs_MZ_Muons_RECO_MC", &mmg_logs_MZ_Muons_RECO_MC, "mmg_logs_MZ_Muons_RECO_MC/F");
-
-
 
   TMVA::Reader* reader = new TMVA::Reader( "!Color:!Silent" );
   reader->AddVariable("pho_cEP",&Photon_covEtaPhi);
@@ -1939,6 +1941,9 @@ if( ntotjob == 9999)
       muonIdentified_corrected_Pt.push_back(correctedMuon.Pt());
       muonIdentified.push_back(imuon);
 ////			mymuon->Clear();
+    
+	delete rmcor;
+	rmcor = 0;
     }
     unsigned int NbMuonsIdentified = muonIdentified.size();
 		
@@ -2034,7 +2039,7 @@ if( ntotjob == 9999)
 		if(verbosity>2) cout << "loop over possible muon pairs, fill dimuons candidates with valid invariant mass" << endl;
 		// loop over possible muon pairs, fill dimuons candidates with valid invariant mass
 		for(int i_dimuons = 0; i_dimuons < numberOfDimuons[1]; i_dimuons++)
-    {
+    		{
 			TRootMuon *Muon1 = (TRootMuon*) muons->At(IDofMuons[1][i_dimuons].first);
 			TRootMuon *Muon2 = (TRootMuon*) muons->At(IDofMuons[1][i_dimuons].second);
 			double corrected_Pt1 = PtofMuons[1][i_dimuons].first;
@@ -2062,6 +2067,10 @@ if( ntotjob == 9999)
 			}
 ////			Muon1->Clear();
 ////			Muon2->Clear();
+			delete correctedMuon1;
+			correctedMuon1 = 0;
+			delete correctedMuon2;
+                        correctedMuon2 = 0;	
 		}
 
 		if(! (numberOfDimuons[2] >= 1) )// Not enough dimuon candidates, skip the event
@@ -2305,6 +2314,12 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates_corrected[1][nbMuMuGammaAfterID[1]] = make_pair(MuMuGammaCandidates_corrected[0][i_mmg].first, MuMuGammaCandidates_corrected[0][i_mmg].second);
 			nbMuMuGammaAfterID[1]++;
 			TOTALnbMuMuGammaAfterID[1]++;
+		
+			delete correctedMuon1;
+			correctedMuon1 = 0;
+			delete correctedMuon2;
+                        correctedMuon2 = 0;
+
 		}
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[1]= " << nbMuMuGammaAfterID[1] << endl;
 		if(! (nbMuMuGammaAfterID[1] > 0) )
@@ -2371,7 +2386,15 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates[2][nbMuMuGammaAfterID[2]] = make_pair(MuMuGammaCandidates[1][i_mmg].first, make_pair(MuMuGammaCandidates[1][i_mmg].second.first, MuMuGammaCandidates[1][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[2][nbMuMuGammaAfterID[2]] = make_pair(MuMuGammaCandidates_corrected[1][i_mmg].first, MuMuGammaCandidates_corrected[1][i_mmg].second);
       nbMuMuGammaAfterID[2]++;
-    }
+    	
+
+	delete correctedMuon1;
+        correctedMuon1 = 0;
+        delete correctedMuon2;
+        correctedMuon2 = 0;
+
+
+     }
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[2]= " << nbMuMuGammaAfterID[2] << endl;
     if(! (nbMuMuGammaAfterID[2] > 0) )
     {
@@ -2433,6 +2456,12 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates_corrected[3][nbMuMuGammaAfterID[3]] = make_pair(MuMuGammaCandidates_corrected[2][i_mmg].first, MuMuGammaCandidates_corrected[2][i_mmg].second);
       nbMuMuGammaAfterID[3]++;
 
+	delete correctedMuon1;
+        correctedMuon1 = 0;
+        delete correctedMuon2;
+        correctedMuon2 = 0;
+
+
     }
     if(! (nbMuMuGammaAfterID[3] > 0) )
     {
@@ -2492,6 +2521,11 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates[4][nbMuMuGammaAfterID[4]] = make_pair(MuMuGammaCandidates[3][i_mmg].first, make_pair(MuMuGammaCandidates[3][i_mmg].second.first, MuMuGammaCandidates[3][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[4][nbMuMuGammaAfterID[4]] = make_pair(MuMuGammaCandidates_corrected[3][i_mmg].first, MuMuGammaCandidates_corrected[3][i_mmg].second);
       nbMuMuGammaAfterID[4]++;
+
+	delete correctedMuon1;
+        correctedMuon1 = 0;
+        delete correctedMuon2;
+        correctedMuon2 = 0;
 
     }
     if(! (nbMuMuGammaAfterID[4] > 0) )
@@ -2555,6 +2589,13 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates[5][nbMuMuGammaAfterID[5]] = make_pair(MuMuGammaCandidates[4][i_mmg].first, make_pair(MuMuGammaCandidates[4][i_mmg].second.first, MuMuGammaCandidates[4][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[5][nbMuMuGammaAfterID[5]] = make_pair(MuMuGammaCandidates_corrected[4][i_mmg].first, MuMuGammaCandidates_corrected[4][i_mmg].second);
       nbMuMuGammaAfterID[5]++;
+    
+	delete correctedMuon1;
+        correctedMuon1 = 0;
+        delete correctedMuon2;
+        correctedMuon2 = 0;
+	delete PhotonEScale;
+	PhotonEScale = 0;
     }
     if(! (nbMuMuGammaAfterID[5] > 0) )
     {
@@ -2628,6 +2669,15 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates[5][i_mmg].first, make_pair(MuMuGammaCandidates[5][i_mmg].second.first, MuMuGammaCandidates[5][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates_corrected[5][i_mmg].first, MuMuGammaCandidates_corrected[5][i_mmg].second);
       nbMuMuGammaAfterID[6]++;
+    
+	delete correctedMuon1;
+        correctedMuon1 = 0;
+        delete correctedMuon2;
+        correctedMuon2 = 0;
+        delete PhotonEScale;
+        PhotonEScale = 0;
+
+
     }
     if(! (nbMuMuGammaAfterID[6] > 0) )
     {
@@ -2707,6 +2757,15 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates[7][nbMuMuGammaAfterID[7]] = make_pair(MuMuGammaCandidates[6][i_mmg].first, make_pair(MuMuGammaCandidates[6][i_mmg].second.first, MuMuGammaCandidates[6][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[7][nbMuMuGammaAfterID[7]] = make_pair(MuMuGammaCandidates_corrected[6][i_mmg].first, MuMuGammaCandidates_corrected[6][i_mmg].second);
       nbMuMuGammaAfterID[7]++;
+    
+	delete correctedMuon1;
+        correctedMuon1 = 0;
+        delete correctedMuon2;
+        correctedMuon2 = 0;
+        delete PhotonEScale;
+        PhotonEScale = 0;
+
+
     }
     if(! (nbMuMuGammaAfterID[7] > 0) )
     {
@@ -2757,6 +2816,12 @@ if( ntotjob == 9999)
 //	      FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 	      FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
+	
+		delete correctedMuon1;
+        	correctedMuon1 = 0;
+        	delete correctedMuon2;
+        	correctedMuon2 = 0;
+
 	    }
 			continue;
 		}
@@ -2814,7 +2879,14 @@ if( ntotjob == 9999)
 		nAfterCut9++;
 		isAfterCut10 = 1;
 		nAfterCut10++;
+		
+		delete correctedMuon1;
+        	correctedMuon1 = 0;
+        	delete correctedMuon2;
+        	correctedMuon2 = 0;
+
 	} // fin boucle sur evts LOOP
+
 
 	 	cout << "Nb_events_outside_powheg_cuts= " << Nb_events_outside_powheg_cuts << endl << endl;
 		for(int i = 0; i < 12 ; i++)
@@ -2842,11 +2914,38 @@ if( ntotjob == 9999)
 	OutputRootFile->Write();
 	OutputRootFile->Close();
 
+	
+	delete generator;
+	generator = 0;
 	delete OutputRootFile;
+	OutputRootFile = 0;
 	delete inputEventTree;
+	inputEventTree = 0;
 	delete inputRunTree;
-
-
+	inputRunTree = 0;
+	delete mcParticles;
+	mcParticles = 0;
+	delete mcPhotons;
+        mcPhotons = 0;
+	delete vertices;
+	vertices = 0;
+	delete muons;
+	muons = 0;
+	delete photons;
+	photons = 0;
+	delete clusters;
+	clusters = 0;
+	delete superClusters;
+	superClusters = 0;
+	delete miniTree;
+	miniTree = 0;
+	delete miniTree_allmuons;
+	miniTree_allmuons = 0;
+	delete miniTree_allphotons;
+	miniTree_allphotons = 0;
+	delete reader;
+	reader = 0;	
+	
 
 	return 0;
 

@@ -1039,6 +1039,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
     TLorentzVector *PhotonSC = new TLorentzVector( EScale*Px_SC, EScale*Py_SC, EScale*Pz_SC, EScale*(myphoton->superCluster()->Mag()) );
     TLorentzVector *Photon5x5 = new TLorentzVector(EScale*Px_5x5 , EScale*Py_5x5, EScale*Pz_5x5, EScale*(myphoton->e5x5()));
     TLorentzVector *PhotonSC_raw = new TLorentzVector(EScale*Px_SCraw , EScale*Py_SCraw, EScale*Pz_SCraw, EScale*(myphoton->superCluster()->rawEnergy()));
+
 /*
     TLorentzVector *PhotonSC_raw_fEta = new TLorentzVector(EScale*Px_SCraw_fEta , EScale*Py_SCraw_fEta, EScale*Pz_SCraw_fEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta)));
 
@@ -1470,6 +1471,25 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
     PhotonSC->Clear();
     Photon5x5->Clear();
     PhotonSC_raw->Clear();
+    
+	delete PhotonMC;
+        PhotonMC = 0;
+        delete MuonLMC;
+        MuonLMC = 0;
+        delete MuonSMC;
+        MuonSMC = 0;
+        delete PhotonEScale;
+        PhotonEScale = 0;
+        delete PhotonSC;
+        PhotonSC = 0;  
+        delete Photon5x5;
+        Photon5x5 = 0;
+        delete PhotonSC_raw;
+        PhotonSC_raw = 0;
+
+
+
+
     }// end doMC
 
 
@@ -1485,6 +1505,17 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 ////    PhotonSC_raw->Clear();
 ////    leadingMuon->Clear();
 ////    subleadingMuon->Clear();
+
+
+	delete PhotonEScale;
+        PhotonEScale = 0;
+        delete PhotonSC;
+        PhotonSC = 0;
+        delete Photon5x5;
+        Photon5x5 = 0;
+        delete PhotonSC_raw;
+        PhotonSC_raw = 0;
+
 
 
 return 0;
