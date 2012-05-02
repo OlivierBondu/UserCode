@@ -132,15 +132,17 @@ int main(int argc, char *argv[])
   if( argc > 6 )
   {
 		lumi_set = argv[6];
-		if( lumi_set == "May10" ) integratedLuminosity = 216.122;
-		if( lumi_set == "Promptv4" ) integratedLuminosity = 924.829;
-		if( lumi_set == "July05" ) integratedLuminosity = 1.131*1000.0;
-		if( lumi_set == "Aug05" ) integratedLuminosity = 368.037;
-		if( lumi_set == "Oct03" ) integratedLuminosity = 658.886;
-		if( lumi_set == "2011A" ) integratedLuminosity = 216.122 + 924.829 + 368.037 + 658.886;
-		if( lumi_set == "2011B" ) integratedLuminosity = 1.842*1000.0;
-		if( lumi_set == "2011" ) integratedLuminosity = 216.122 + 924.829 + 368.037 + 658.886 + 1.842*1000.0;
-		if( lumi_set == "2011ff" ) integratedLuminosity = 2.127*1000.0 + 2.511*1000.0;
+// LAST UPDATE: May 02nd 2012 with pixel lumi from https://twiki.cern.ch/twiki/bin/view/CMS/LumiCalc: cvs co  -r V03-05-05 RecoLuminosity/LumiDB
+		if( lumi_set == "May10" ) integratedLuminosity = 215.552;
+		if( lumi_set == "Promptv4" ) integratedLuminosity = 951.716;
+		if( lumi_set == "July05" ) integratedLuminosity = 1.157*1000.0;
+		if( lumi_set == "Aug05" ) integratedLuminosity = 389.876;
+		if( lumi_set == "Oct03" ) integratedLuminosity = 706.719;
+		if( lumi_set == "2011A" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719;
+		if( lumi_set == "2011A_rereco" ) integratedLuminosity = 2.221*1000.0;
+		if( lumi_set == "2011B" ) integratedLuminosity = 2.714*1000.0;
+		if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
+		if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +  2.714*1000.0;
   }
 
 	// ******************************************
