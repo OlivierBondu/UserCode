@@ -133,7 +133,7 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			};
 			return weight[nGenVertices];
 		}
-	} else if( lumi_set == "2011A" )
+	} else if( lumi_set == "2011A" || lumi_set == "2011A_rereco")
 	{
 		if( pu_set == "PU_S6" )
 		{
@@ -161,7 +161,7 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			};
 			return weight[nGenVertices];
 		}
-	} else if( lumi_set == "2011" || lumi_set == "2011ff" || lumi_set == "2011f" )
+	} else if( lumi_set == "2011" || lumi_set == "2011ff" || lumi_set == "2011f"  || lumi_set == "2011_rereco" )
 	{
 		if( pu_set == "PU_S6" )
 		{
