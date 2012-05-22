@@ -2071,7 +2071,9 @@ if( ntotjob == 9999)
 			delete correctedMuon1;
 			correctedMuon1 = 0;
 			delete correctedMuon2;
-                        correctedMuon2 = 0;	
+			correctedMuon2 = 0;	
+//			correctedMuon1->Delete();
+//			correctedMuon2->Delete();
 		}
 
 		if(! (numberOfDimuons[2] >= 1) )// Not enough dimuon candidates, skip the event
@@ -2319,7 +2321,9 @@ if( ntotjob == 9999)
 			delete correctedMuon1;
 			correctedMuon1 = 0;
 			delete correctedMuon2;
-                        correctedMuon2 = 0;
+			correctedMuon2 = 0;
+//			correctedMuon1->Delete();
+//			correctedMuon2->Delete();
 
 		}
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[1]= " << nbMuMuGammaAfterID[1] << endl;
@@ -2389,10 +2393,12 @@ if( ntotjob == 9999)
       nbMuMuGammaAfterID[2]++;
     	
 
-	delete correctedMuon1;
-        correctedMuon1 = 0;
-        delete correctedMuon2;
-        correctedMuon2 = 0;
+			delete correctedMuon1;
+      correctedMuon1 = 0;
+      delete correctedMuon2;
+      correctedMuon2 = 0;
+//			correctedMuon1->Delete();
+//			correctedMuon2->Delete();
 
 
      }
@@ -2457,10 +2463,12 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates_corrected[3][nbMuMuGammaAfterID[3]] = make_pair(MuMuGammaCandidates_corrected[2][i_mmg].first, MuMuGammaCandidates_corrected[2][i_mmg].second);
       nbMuMuGammaAfterID[3]++;
 
-	delete correctedMuon1;
-        correctedMuon1 = 0;
-        delete correctedMuon2;
-        correctedMuon2 = 0;
+			delete correctedMuon1;
+      correctedMuon1 = 0;
+      delete correctedMuon2;
+      correctedMuon2 = 0;
+//			correctedMuon1->Delete();
+//			correctedMuon2->Delete();
 
 
     }
@@ -2523,10 +2531,12 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates_corrected[4][nbMuMuGammaAfterID[4]] = make_pair(MuMuGammaCandidates_corrected[3][i_mmg].first, MuMuGammaCandidates_corrected[3][i_mmg].second);
       nbMuMuGammaAfterID[4]++;
 
-	delete correctedMuon1;
-        correctedMuon1 = 0;
-        delete correctedMuon2;
-        correctedMuon2 = 0;
+			delete correctedMuon1;
+      correctedMuon1 = 0;
+      delete correctedMuon2;
+			correctedMuon2 = 0;
+//			correctedMuon1->Delete();
+//			correctedMuon2->Delete();
 
     }
     if(! (nbMuMuGammaAfterID[4] > 0) )
@@ -2591,12 +2601,16 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates_corrected[5][nbMuMuGammaAfterID[5]] = make_pair(MuMuGammaCandidates_corrected[4][i_mmg].first, MuMuGammaCandidates_corrected[4][i_mmg].second);
       nbMuMuGammaAfterID[5]++;
     
-	delete correctedMuon1;
-        correctedMuon1 = 0;
-        delete correctedMuon2;
-        correctedMuon2 = 0;
-	delete PhotonEScale;
-	PhotonEScale = 0;
+			delete correctedMuon1;
+      correctedMuon1 = 0;
+      delete correctedMuon2;
+      correctedMuon2 = 0;
+			delete PhotonEScale;
+			PhotonEScale = 0;
+//			correctedMuon1->Delete();
+//			correctedMuon2->Delete();
+//			PhotonEScale->Delete();
+			
     }
     if(! (nbMuMuGammaAfterID[5] > 0) )
     {
@@ -2670,13 +2684,18 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates[5][i_mmg].first, make_pair(MuMuGammaCandidates[5][i_mmg].second.first, MuMuGammaCandidates[5][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates_corrected[5][i_mmg].first, MuMuGammaCandidates_corrected[5][i_mmg].second);
       nbMuMuGammaAfterID[6]++;
-    
-	delete correctedMuon1;
-        correctedMuon1 = 0;
-        delete correctedMuon2;
-        correctedMuon2 = 0;
-        delete PhotonEScale;
-        PhotonEScale = 0;
+ 
+   
+			delete correctedMuon1;
+      correctedMuon1 = 0;
+      delete correctedMuon2;
+      correctedMuon2 = 0;
+      delete PhotonEScale;
+      PhotonEScale = 0;
+//			correctedMuon1->Delete();
+//			correctedMuon2->Delete();
+//			PhotonEScale->Delete();
+
 
 
     }
@@ -2758,13 +2777,19 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates[7][nbMuMuGammaAfterID[7]] = make_pair(MuMuGammaCandidates[6][i_mmg].first, make_pair(MuMuGammaCandidates[6][i_mmg].second.first, MuMuGammaCandidates[6][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[7][nbMuMuGammaAfterID[7]] = make_pair(MuMuGammaCandidates_corrected[6][i_mmg].first, MuMuGammaCandidates_corrected[6][i_mmg].second);
       nbMuMuGammaAfterID[7]++;
-    
-	delete correctedMuon1;
-        correctedMuon1 = 0;
-        delete correctedMuon2;
-        correctedMuon2 = 0;
-        delete PhotonEScale;
-        PhotonEScale = 0;
+ 
+   
+			delete correctedMuon1;
+      correctedMuon1 = 0;
+      delete correctedMuon2;
+      correctedMuon2 = 0;
+      delete PhotonEScale;
+      PhotonEScale = 0;
+/*
+			correctedMuon1->Delete();
+			correctedMuon2->Delete();
+			PhotonEScale->Delete();
+*/
 
 
     }
@@ -2818,10 +2843,14 @@ if( ntotjob == 9999)
 	      FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
 	
-		delete correctedMuon1;
-        	correctedMuon1 = 0;
-        	delete correctedMuon2;
-        	correctedMuon2 = 0;
+			delete correctedMuon1;
+  	 	correctedMuon1 = 0;
+     	delete correctedMuon2;
+     	correctedMuon2 = 0;
+/*
+			correctedMuon1->Delete();
+			correctedMuon2->Delete();
+*/
 
 	    }
 			continue;
@@ -2859,8 +2888,6 @@ if( ntotjob == 9999)
 		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"  << endl;
 		miniTree->Fill();
 
-
-
 		nAfterCut3++;
 
 		nAfterCut4++;
@@ -2880,11 +2907,16 @@ if( ntotjob == 9999)
 		nAfterCut9++;
 		isAfterCut10 = 1;
 		nAfterCut10++;
-		
+	
+	
 		delete correctedMuon1;
-        	correctedMuon1 = 0;
-        	delete correctedMuon2;
-        	correctedMuon2 = 0;
+   	correctedMuon1 = 0;
+   	delete correctedMuon2;
+   	correctedMuon2 = 0;
+/*
+			correctedMuon1->Delete();
+			correctedMuon2->Delete();
+*/
 
 	} // fin boucle sur evts LOOP
 
@@ -2911,44 +2943,70 @@ if( ntotjob == 9999)
 			if(i == 6) cout << endl;
 		}
 
-// Writing stuff out
-	OutputRootFile->Write();
-	OutputRootFile->Close();
 
-	
+	cout << "Writing stuff out" << endl;
+	// Writing stuff out
+	OutputRootFile->Write();
+
+	cout << "Cleaning" << endl;
+
+	// Destruct the TRandom3	
 	delete generator;
 	generator = 0;
-	delete OutputRootFile;
-	OutputRootFile = 0;
-	delete inputEventTree;
-	inputEventTree = 0;
-	delete inputRunTree;
-	inputRunTree = 0;
+
+	// Destruct the branches / related TClonesArray of the input TChains
+	delete event;
+	event = 0;
+	delete runInfos;
+	runInfos = 0;
 	delete mcParticles;
 	mcParticles = 0;
+	delete mcMuMuGammaEvent;
+	mcMuMuGammaEvent = 0;
 	delete mcPhotons;
-        mcPhotons = 0;
+	mcPhotons = 0;
 	delete vertices;
 	vertices = 0;
 	delete muons;
 	muons = 0;
 	delete photons;
 	photons = 0;
-	delete clusters;
-	clusters = 0;
 	delete superClusters;
 	superClusters = 0;
+	delete clusters;
+	clusters = 0;
+
+	// Deleting TMVA Reader
+	delete reader;
+	reader = 0;
+
+	// Deleting input trees	
+	delete inputEventTree;
+	inputEventTree = 0;
+	delete inputRunTree;
+	inputRunTree = 0;
+
+	// Destructing the tree!
+	// So its a bit of a mess: what needs to be done is: 
+	// - SetDirectory(0) to tell the TTree to forget about the TFile that owns it
+	miniTree->SetDirectory(0);
+	miniTree_allmuons->SetDirectory(0);
+	miniTree_allphotons->SetDirectory(0);
+	// - delete the TTree
 	delete miniTree;
 	miniTree = 0;
 	delete miniTree_allmuons;
 	miniTree_allmuons = 0;
 	delete miniTree_allphotons;
 	miniTree_allphotons = 0;
-	delete reader;
-	reader = 0;	
-	
+	// - close the TFile
+	OutputRootFile->Close();
+	// - delete the TFile
+	delete OutputRootFile;
+	OutputRootFile = 0;
 
+
+	// Exit!
 	return 0;
-
 }
 

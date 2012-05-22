@@ -1472,49 +1472,32 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
     Photon5x5->Clear();
     PhotonSC_raw->Clear();
     
-	delete PhotonMC;
-        PhotonMC = 0;
-        delete MuonLMC;
-        MuonLMC = 0;
-        delete MuonSMC;
-        MuonSMC = 0;
-        delete PhotonEScale;
-        PhotonEScale = 0;
-        delete PhotonSC;
-        PhotonSC = 0;  
-        delete Photon5x5;
-        Photon5x5 = 0;
-        delete PhotonSC_raw;
-        PhotonSC_raw = 0;
+			delete PhotonMC;
+			PhotonMC = 0;
+			delete MuonLMC;
+			MuonLMC = 0;
+			delete MuonSMC;
+			MuonSMC = 0;
 
-
-
+			delete PhotonEScale;
+			PhotonEScale = 0;
+			delete PhotonSC;
+			PhotonSC = 0;  
+			delete Photon5x5;
+			Photon5x5 = 0;
+			delete PhotonSC_raw;
+			PhotonSC_raw = 0;
 
     }// end doMC
 
-
-//    myphoton->Clear();
-////    mymuon1->Clear();
-////    mymuon2->Clear();
-////    farMuon->Clear();
-////    nearMuon->Clear();
-////    minusMuon->Clear();
-////    plusMuon->Clear();
-////    PhotonSC->Clear();
-////    Photon5x5->Clear();
-////    PhotonSC_raw->Clear();
-////    leadingMuon->Clear();
-////    subleadingMuon->Clear();
-
-
-	delete PhotonEScale;
-        PhotonEScale = 0;
-        delete PhotonSC;
-        PhotonSC = 0;
-        delete Photon5x5;
-        Photon5x5 = 0;
-        delete PhotonSC_raw;
-        PhotonSC_raw = 0;
+		delete PhotonEScale;
+		PhotonEScale = 0;
+		delete PhotonSC;
+		PhotonSC = 0;
+		delete Photon5x5;
+		Photon5x5 = 0;
+		delete PhotonSC_raw;
+		PhotonSC_raw = 0;
 
 
 
