@@ -1308,14 +1308,17 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 		MuonBeforeBremS_Charge = subleadingMuon->charge();
 		
 	
-    double nearMuonPlusPhoton_Pt = sqrt(pow(correctednearMuon->Px() + myphoton->Px(),2) + pow(correctednearMuon->Py() + myphoton->Py(),2));
+//    double nearMuonPlusPhoton_Pt = sqrt(pow(correctednearMuon->Px() + myphoton->Px(),2) + pow(correctednearMuon->Py() + myphoton->Py(),2));
+    double nearMuonPlusPhoton_Pt = MuonBeforeBremN_Pt;
  
     //double nearMuonPlusPhoton_Pt = nearMuonPlusPhoton->Pt();
-    double farMuon_Pt = correctedfarMuon->Pt();
+//    double farMuon_Pt = correctedfarMuon->Pt();
+    double farMuon_Pt = MuonBeforeBremF_Pt;
 
-    double lead_Pt;
-    double trail_Pt;
+    double lead_Pt = MuonBeforeBremL_Pt;
+    double trail_Pt = MuonBeforeBremS_Pt;
 
+/*
     if(nearMuonPlusPhoton_Pt > farMuon_Pt) 
     {
 	lead_Pt = nearMuonPlusPhoton_Pt;
@@ -1326,7 +1329,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
         lead_Pt = farMuon_Pt;
         trail_Pt = nearMuonPlusPhoton_Pt;
     }
-
+*/
     //double bin1 = lead_Pt / 2.0 + 2.0; //modify if we change the binning of the surface 
     //double bin2 = trail_Pt / 2.0 + 2.0;
 
