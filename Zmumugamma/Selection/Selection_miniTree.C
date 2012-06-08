@@ -20,6 +20,14 @@
 	Int_t nGenVertices;
 	Float_t weight_pileUp, weight_Xsection;
 
+	Float_t rho;
+	Float_t pu_TrueNumInteractions;
+	Int_t pu_NumInteractions, inTimePU_NumInteractions, latePU_NumInteractions, earlyPU_NumInteractions, outOfTimePU_NumInteractions;
+	Int_t pu_NumInteractions_inAcceptance, inTimePU_NumInteractions_inAcceptance, latePU_NumInteractions_inAcceptance, earlyPU_NumInteractions_inAcceptance, outOfTimePU_NumInteractions_inAcceptance;
+
+	ULong64_t storeNumber, bunchCrossing, orbitNumber, collisionTimeStamp, microsecondCollisionTime;
+	Float_t collisionTime;
+
 	// ____________________________________________
 	// Muon variables
 	// ____________________________________________
@@ -65,6 +73,7 @@
 	Int_t Photon_convNTracks, Photon_isConverted;
 	Float_t Photon_convEoverP, Photon_convMass, Photon_convCotanTheta, Photon_convLikely, Photon_convVertexX, Photon_convVertexY, Photon_convVertexZ;
 	Float_t Photon_E, Photon_Et, Photon_E2x2, Photon_E3x3, Photon_E5x5, Photon_Emax, Photon_E2nd;
+	Float_t Photon_E_regression, Photon_E_regressionError, Photon_Et_regression;
 	Float_t Photon_Ecorr_o_Ereco;
 	Float_t Photon_r19, Photon_r9, Photon_cross;
 	Float_t Photon_caloConeSize, Photon_PreshEnergy, Photon_HoE;
@@ -87,7 +96,10 @@
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
 	// ____________________________________________
-	
+	Int_t iCandidate[8];
+	Int_t iCandidate_temp[8][50];
+	Int_t nCandidate[8];
+
 	Float_t Mmumu, Mmumugamma, Mmumugamma_5x5, Mmumugamma_SC, Mmumugamma_SCraw, Mmumugamma_SCraw_fEta;
 	Float_t Ptmumu;
 	Float_t deltaRNear, deltaRFar, deltaRMinus, deltaRPlus, deltaRLeading, deltaRSubleading;
@@ -98,6 +110,20 @@
 	Float_t mmg_k_SCraw_fEta, mmg_ik_SCraw_fEta, mmg_s_SCraw_fEta, mmg_logk_SCraw_fEta, mmg_logik_SCraw_fEta, mmg_logs_SCraw_fEta;
 	Float_t Mmumugamma_SCraw_fEta_fBrem, Mmumugamma_SCraw_fEta_fBrem_AF, Mmumugamma_SCraw_fEta_fBrem_L, Mmumugamma_SCraw_fEta_fBrem_fEtEta, Mmumugamma_SCraw_fEta_fBrem_AF_fEtEta, Mmumugamma_SCraw_fEta_fBrem_L_fEtEta;
 	Float_t mmg_ik_SCraw_fEta_fBrem, mmg_ik_SCraw_fEta_fBrem_AF, mmg_ik_SCraw_fEta_fBrem_L, mmg_ik_SCraw_fEta_fBrem_fEtEta, mmg_ik_SCraw_fEta_fBrem_AF_fEtEta, mmg_ik_SCraw_fEta_fBrem_L_fEtEta; 
+
+// MuonBeforeBrem = (MuonN+Photon) || MuonF
+// (M minus charge, P plus charge), (F far, N near), (L leading, S subleading)
+	Float_t MuonBeforeBremM_Pt, MuonBeforeBremP_Pt, MuonBeforeBremN_Pt, MuonBeforeBremF_Pt, MuonBeforeBremL_Pt, MuonBeforeBremS_Pt;
+	Float_t MuonBeforeBremM_Eta, MuonBeforeBremP_Eta, MuonBeforeBremN_Eta, MuonBeforeBremF_Eta, MuonBeforeBremL_Eta, MuonBeforeBremS_Eta;
+	Float_t MuonBeforeBremM_Phi, MuonBeforeBremP_Phi, MuonBeforeBremN_Phi, MuonBeforeBremF_Phi, MuonBeforeBremL_Phi, MuonBeforeBremS_Phi;
+	Float_t MuonBeforeBremM_E, MuonBeforeBremP_E, MuonBeforeBremN_E, MuonBeforeBremF_E, MuonBeforeBremL_E, MuonBeforeBremS_E;
+	Float_t MuonBeforeBremM_Px, MuonBeforeBremP_Px, MuonBeforeBremN_Px, MuonBeforeBremF_Px, MuonBeforeBremL_Px, MuonBeforeBremS_Px;
+	Float_t MuonBeforeBremM_Py, MuonBeforeBremP_Py, MuonBeforeBremN_Py, MuonBeforeBremF_Py, MuonBeforeBremL_Py, MuonBeforeBremS_Py;
+	Float_t MuonBeforeBremM_Pz, MuonBeforeBremP_Pz, MuonBeforeBremN_Pz, MuonBeforeBremF_Pz, MuonBeforeBremL_Pz, MuonBeforeBremS_Pz;
+	Int_t MuonBeforeBremF_Charge, MuonBeforeBremN_Charge, MuonBeforeBremL_Charge, MuonBeforeBremS_Charge;
+
+
+
   // ____________________________________________
   // Neural Network variables
   // ____________________________________________
@@ -447,6 +473,9 @@ if( ntotjob == 9999)
 // INSERTFILES
 
 	TFile* OutputRootFile = new TFile(Form("miniTree_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
+	TFile* OutputFriendFile = new TFile(Form("miniFriend_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
+
+	OutputRootFile->cd();
 	
 	TBranch* event_br = 0;
 	TRootEvent* event = 0;
@@ -624,6 +653,9 @@ if( ntotjob == 9999)
 	TTree* miniTree = new TTree("miniTree","Mu Mu Gamma informations");
 	TTree* miniTree_allmuons = new TTree("miniTree_allmuons","all muons informations");
 	TTree* miniTree_allphotons = new TTree("miniTree_allphotons","all photons informations");
+	OutputFriendFile->cd();
+	TTree* miniFriend = new TTree("miniFriend","Mu Mu Gamma *bonus* informations");
+	OutputRootFile->cd();
 //	TTree *outputEventTree = inputEventTree->CloneTree(0);
 
 	// ____________________________________________
@@ -667,6 +699,25 @@ if( ntotjob == 9999)
 	miniTree->Branch("nGenVertices", &nGenVertices, "nGenVertices/I");
 	miniTree->Branch("weight_pileUp", &weight_pileUp, "weight_pileUp/F");
 	miniTree->Branch("weight_Xsection", &weight_Xsection, "weight_Xsection/F");
+
+	miniTree->Branch("rho", &rho, "rho/F");
+	miniTree->Branch("pu_TrueNumInteractions", &pu_TrueNumInteractions, "pu_TrueNumInteractions/F");
+	miniTree->Branch("pu_NumInteractions", &pu_NumInteractions, "pu_NumInteractions/I");
+	miniTree->Branch("inTimePU_NumInteractions", &inTimePU_NumInteractions, "inTimePU_NumInteractions/I");
+	miniTree->Branch("latePU_NumInteractions", &latePU_NumInteractions, "latePU_NumInteractions/I");
+	miniTree->Branch("earlyPU_NumInteractions", &earlyPU_NumInteractions, "earlyPU_NumInteractions/I");
+	miniTree->Branch("outOfTimePU_NumInteractions", &outOfTimePU_NumInteractions, "outOfTimePU_NumInteractions/I");
+	miniTree->Branch("pu_NumInteractions_inAcceptance", &pu_NumInteractions_inAcceptance, "pu_NumInteractions_inAcceptance/I");
+	miniTree->Branch("inTimePU_NumInteractions_inAcceptance", &inTimePU_NumInteractions_inAcceptance, "inTimePU_NumInteractions_inAcceptance/I");
+	miniTree->Branch("latePU_NumInteractions_inAcceptance", &latePU_NumInteractions_inAcceptance, "latePU_NumInteractions_inAcceptance/I");
+	miniTree->Branch("earlyPU_NumInteractions_inAcceptance", &earlyPU_NumInteractions_inAcceptance, "earlyPU_NumInteractions_inAcceptance/I");
+	miniTree->Branch("outOfTimePU_NumInteractions_inAcceptance", &outOfTimePU_NumInteractions_inAcceptance, "outOfTimePU_NumInteractions_inAcceptance/I");
+	miniTree->Branch("storeNumber", &storeNumber, "storeNumber/l");
+	miniTree->Branch("bunchCrossing", &bunchCrossing, "bunchCrossing/l");
+	miniTree->Branch("orbitNumber", &orbitNumber, "orbitNumber/l");
+	miniTree->Branch("collisionTimeStamp", &collisionTimeStamp, "collisionTimeStamp/l");
+	miniTree->Branch("microsecondCollisionTime", &microsecondCollisionTime, "microsecondCollisionTime/l");
+	miniTree->Branch("collisionTime", &collisionTime, "collisionTime/F");
 
 	miniTree_allmuons->Branch("iEvent", &iEvent, "iEvent/l");
 	miniTree_allmuons->Branch("iEventID", &iEventID, "iEventID/l");
@@ -933,6 +984,10 @@ if( ntotjob == 9999)
 	miniTree->Branch("Photon_E2nd", &Photon_E2nd, "Photon_E2nd/F");
 	miniTree->Branch("Photon_Ecorr_o_Ereco", &Photon_Ecorr_o_Ereco, "Photon_Ecorr_o_Ereco/F");
 
+	miniTree->Branch("Photon_E_regression", &Photon_E_regression, "Photon_E_regression/F");
+	miniTree->Branch("Photon_E_regressionError", &Photon_E_regressionError, "Photon_E_regressionError/F");
+	miniTree->Branch("Photon_Et_regression", &Photon_Et_regression, "Photon_Et_regression/F");
+
 	miniTree->Branch("Photon_r19", &Photon_r19, "Photon_r19/F");
 	miniTree->Branch("Photon_r9", &Photon_r9, "Photon_r9/F");
 	miniTree->Branch("Photon_cross", &Photon_cross, "Photon_cross/F");
@@ -1075,12 +1130,63 @@ if( ntotjob == 9999)
   miniTree->Branch("mmg_logs_SCraw_fEta", &mmg_logs_SCraw_fEta, "mmg_logs_SCraw_fEta/F");
 
 
-  	miniTree->Branch("mmg_ik_SCraw_fEta_fBrem", &mmg_ik_SCraw_fEta_fBrem, "mmg_ik_SCraw_fEta_fBrem/F");
+	miniTree->Branch("mmg_ik_SCraw_fEta_fBrem", &mmg_ik_SCraw_fEta_fBrem, "mmg_ik_SCraw_fEta_fBrem/F");
 	miniTree->Branch("mmg_ik_SCraw_fEta_fBrem_AF", &mmg_ik_SCraw_fEta_fBrem_AF, "mmg_ik_SCraw_fEta_fBrem_AF/F");
 	miniTree->Branch("mmg_ik_SCraw_fEta_fBrem_L", &mmg_ik_SCraw_fEta_fBrem_L, "mmg_ik_SCraw_fEta_fBrem_L/F");
 	miniTree->Branch("mmg_ik_SCraw_fEta_fBrem_fEtEta", &mmg_ik_SCraw_fEta_fBrem_fEtEta, "mmg_ik_SCraw_fEta_fBrem_fEtEta/F");
 	miniTree->Branch("mmg_ik_SCraw_fEta_fBrem_AF_fEtEta", &mmg_ik_SCraw_fEta_fBrem_AF_fEtEta, "mmg_ik_SCraw_fEta_fBrem_AF_fEtEta/F");
 	miniTree->Branch("mmg_ik_SCraw_fEta_fBrem_L_fEtEta", &mmg_ik_SCraw_fEta_fBrem_L_fEtEta, "mmg_ik_SCraw_fEta_fBrem_L_fEtEta/F");
+
+	miniFriend->Branch("iCandidate", iCandidate, "iCandidate[8]/I");
+	miniFriend->Branch("nCandidate", nCandidate, "nCandidate[8]/I");
+	miniTree->Branch("MuonBeforeBremM_Pt", &MuonBeforeBremM_Pt, "MuonBeforeBremM_Pt/F");
+	miniTree->Branch("MuonBeforeBremP_Pt", &MuonBeforeBremP_Pt, "MuonBeforeBremP_Pt/F");
+	miniTree->Branch("MuonBeforeBremN_Pt", &MuonBeforeBremN_Pt, "MuonBeforeBremN_Pt/F");
+	miniTree->Branch("MuonBeforeBremF_Pt", &MuonBeforeBremF_Pt, "MuonBeforeBremF_Pt/F");
+	miniTree->Branch("MuonBeforeBremL_Pt", &MuonBeforeBremL_Pt, "MuonBeforeBremL_Pt/F");
+	miniTree->Branch("MuonBeforeBremS_Pt", &MuonBeforeBremS_Pt, "MuonBeforeBremS_Pt/F");
+	miniTree->Branch("MuonBeforeBremM_Eta", &MuonBeforeBremM_Eta, "MuonBeforeBremM_Eta/F");
+	miniTree->Branch("MuonBeforeBremP_Eta", &MuonBeforeBremP_Eta, "MuonBeforeBremP_Eta/F");
+	miniTree->Branch("MuonBeforeBremN_Eta", &MuonBeforeBremN_Eta, "MuonBeforeBremN_Eta/F");
+	miniTree->Branch("MuonBeforeBremF_Eta", &MuonBeforeBremF_Eta, "MuonBeforeBremF_Eta/F");
+	miniTree->Branch("MuonBeforeBremL_Eta", &MuonBeforeBremL_Eta, "MuonBeforeBremL_Eta/F");
+	miniTree->Branch("MuonBeforeBremS_Eta", &MuonBeforeBremS_Eta, "MuonBeforeBremS_Eta/F");
+	miniTree->Branch("MuonBeforeBremM_Phi", &MuonBeforeBremM_Phi, "MuonBeforeBremM_Phi/F");
+	miniTree->Branch("MuonBeforeBremP_Phi", &MuonBeforeBremP_Phi, "MuonBeforeBremP_Phi/F");
+	miniTree->Branch("MuonBeforeBremN_Phi", &MuonBeforeBremN_Phi, "MuonBeforeBremN_Phi/F");
+	miniTree->Branch("MuonBeforeBremF_Phi", &MuonBeforeBremF_Phi, "MuonBeforeBremF_Phi/F");
+	miniTree->Branch("MuonBeforeBremL_Phi", &MuonBeforeBremL_Phi, "MuonBeforeBremL_Phi/F");
+	miniTree->Branch("MuonBeforeBremS_Phi", &MuonBeforeBremS_Phi, "MuonBeforeBremS_Phi/F");
+	miniTree->Branch("MuonBeforeBremM_E", &MuonBeforeBremM_E, "MuonBeforeBremM_E/F");
+	miniTree->Branch("MuonBeforeBremP_E", &MuonBeforeBremP_E, "MuonBeforeBremP_E/F");
+	miniTree->Branch("MuonBeforeBremN_E", &MuonBeforeBremN_E, "MuonBeforeBremN_E/F");
+	miniTree->Branch("MuonBeforeBremF_E", &MuonBeforeBremF_E, "MuonBeforeBremF_E/F");
+	miniTree->Branch("MuonBeforeBremL_E", &MuonBeforeBremL_E, "MuonBeforeBremL_E/F");
+	miniTree->Branch("MuonBeforeBremS_E", &MuonBeforeBremS_E, "MuonBeforeBremS_E/F");
+	miniTree->Branch("MuonBeforeBremM_Px", &MuonBeforeBremM_Px, "MuonBeforeBremM_Px/F");
+	miniTree->Branch("MuonBeforeBremP_Px", &MuonBeforeBremP_Px, "MuonBeforeBremP_Px/F");
+	miniTree->Branch("MuonBeforeBremN_Px", &MuonBeforeBremN_Px, "MuonBeforeBremN_Px/F");
+	miniTree->Branch("MuonBeforeBremF_Px", &MuonBeforeBremF_Px, "MuonBeforeBremF_Px/F");
+	miniTree->Branch("MuonBeforeBremL_Px", &MuonBeforeBremL_Px, "MuonBeforeBremL_Px/F");
+	miniTree->Branch("MuonBeforeBremS_Px", &MuonBeforeBremS_Px, "MuonBeforeBremS_Px/F");
+	miniTree->Branch("MuonBeforeBremM_Py", &MuonBeforeBremM_Py, "MuonBeforeBremM_Py/F");
+	miniTree->Branch("MuonBeforeBremP_Py", &MuonBeforeBremP_Py, "MuonBeforeBremP_Py/F");
+	miniTree->Branch("MuonBeforeBremN_Py", &MuonBeforeBremN_Py, "MuonBeforeBremN_Py/F");
+	miniTree->Branch("MuonBeforeBremF_Py", &MuonBeforeBremF_Py, "MuonBeforeBremF_Py/F");
+	miniTree->Branch("MuonBeforeBremL_Py", &MuonBeforeBremL_Py, "MuonBeforeBremL_Py/F");
+	miniTree->Branch("MuonBeforeBremS_Py", &MuonBeforeBremS_Py, "MuonBeforeBremS_Py/F");
+	miniTree->Branch("MuonBeforeBremM_Pz", &MuonBeforeBremM_Pz, "MuonBeforeBremM_Pz/F");
+	miniTree->Branch("MuonBeforeBremP_Pz", &MuonBeforeBremP_Pz, "MuonBeforeBremP_Pz/F");
+	miniTree->Branch("MuonBeforeBremN_Pz", &MuonBeforeBremN_Pz, "MuonBeforeBremN_Pz/F");
+	miniTree->Branch("MuonBeforeBremF_Pz", &MuonBeforeBremF_Pz, "MuonBeforeBremF_Pz/F");
+	miniTree->Branch("MuonBeforeBremL_Pz", &MuonBeforeBremL_Pz, "MuonBeforeBremL_Pz/F");
+	miniTree->Branch("MuonBeforeBremS_Pz", &MuonBeforeBremS_Pz, "MuonBeforeBremS_Pz/F");
+	miniTree->Branch("MuonBeforeBremF_Charge", &MuonBeforeBremF_Charge, "MuonBeforeBremF_Charge/I");
+	miniTree->Branch("MuonBeforeBremN_Charge", &MuonBeforeBremN_Charge, "MuonBeforeBremN_Charge/I");
+	miniTree->Branch("MuonBeforeBremL_Charge", &MuonBeforeBremL_Charge, "MuonBeforeBremL_Charge/I");
+	miniTree->Branch("MuonBeforeBremS_Charge", &MuonBeforeBremS_Charge, "MuonBeforeBremS_Charge/I");
+
+
  
   // ____________________________________________
   // Neural Network variables
@@ -1196,30 +1302,30 @@ if( ntotjob == 9999)
 	miniTree->Branch("mmg_logik_MMG_MC", &mmg_logik_MMG_MC, "mmg_logik_MMG_MC/F");
 	miniTree->Branch("mmg_logs_MMG_MC", &mmg_logs_MMG_MC, "mmg_logs_MMG_MC/F");
 
-	miniTree->Branch("mmg_k_MZ", &mmg_k_MZ, "mmg_k_MZ/F");
-        miniTree->Branch("mmg_ik_MZ", &mmg_ik_MZ, "mmg_ik_MZ/F");
-        miniTree->Branch("mmg_s_MZ", &mmg_s_MZ, "mmg_s_MZ/F");
-        miniTree->Branch("mmg_logk_MZ", &mmg_logk_MZ, "mmg_logk_MZ/F");
-        miniTree->Branch("mmg_logik_MZ", &mmg_logik_MZ, "mmg_logik_MZ/F");
-        miniTree->Branch("mmg_logs_MZ", &mmg_logs_MZ, "mmg_logs_MZ/F");
-	miniTree->Branch("mmg_k_MZ_Photon_MC", &mmg_k_MZ_Photon_MC, "mmg_k_MZ_Photon_MC/F");
-        miniTree->Branch("mmg_ik_MZ_Photon_MC", &mmg_ik_MZ_Photon_MC, "mmg_ik_MZ_Photon_MC/F");
-        miniTree->Branch("mmg_s_MZ_Photon_MC", &mmg_s_MZ_Photon_MC, "mmg_s_MZ_Photon_MC/F");
-        miniTree->Branch("mmg_logk_MZ_Photon_MC", &mmg_logk_MZ_Photon_MC, "mmg_logk_MZ_Photon_MC/F");
-        miniTree->Branch("mmg_logik_MZ_Photon_MC", &mmg_logik_MZ_Photon_MC, "mmg_logik_MZ_Photon_MC/F");
-        miniTree->Branch("mmg_logs_MZ_Photon_MC", &mmg_logs_MZ_Photon_MC, "mmg_logs_MZ_Photon_MC/F");
-	miniTree->Branch("mmg_k_MZ_Muons_MC", &mmg_k_MZ_Muons_MC, "mmg_k_MZ_Muons_MC/F");
-        miniTree->Branch("mmg_ik_MZ_Muons_MC", &mmg_ik_MZ_Muons_MC, "mmg_ik_MZ_Muons_MC/F");
-        miniTree->Branch("mmg_s_MZ_Muons_MC", &mmg_s_MZ_Muons_MC, "mmg_s_MZ_Muons_MC/F");
-        miniTree->Branch("mmg_logk_MZ_Muons_MC", &mmg_logk_MZ_Muons_MC, "mmg_logk_MZ_Muons_MC/F");
-        miniTree->Branch("mmg_logik_MZ_Muons_MC", &mmg_logik_MZ_Muons_MC, "mmg_logik_MZ_Muons_MC/F");
-        miniTree->Branch("mmg_logs_MZ_Muons_MC", &mmg_logs_MZ_Muons_MC, "mmg_logs_MZ_Muons_MC/F");
-	miniTree->Branch("mmg_k_MZ_Muons_RECO_MC", &mmg_k_MZ_Muons_RECO_MC, "mmg_k_MZ_Muons_RECO_MC/F");
-        miniTree->Branch("mmg_ik_MZ_Muons_RECO_MC", &mmg_ik_MZ_Muons_RECO_MC, "mmg_ik_MZ_Muons_RECO_MC/F");
-        miniTree->Branch("mmg_s_MZ_Muons_RECO_MC", &mmg_s_MZ_Muons_RECO_MC, "mmg_s_MZ_Muons_RECO_MC/F");
-        miniTree->Branch("mmg_logk_MZ_Muons_RECO_MC", &mmg_logk_MZ_Muons_RECO_MC, "mmg_logk_MZ_Muons_RECO_MC/F");
-        miniTree->Branch("mmg_logik_MZ_Muons_RECO_MC", &mmg_logik_MZ_Muons_RECO_MC, "mmg_logik_MZ_Muons_RECO_MC/F");
-        miniTree->Branch("mmg_logs_MZ_Muons_RECO_MC", &mmg_logs_MZ_Muons_RECO_MC, "mmg_logs_MZ_Muons_RECO_MC/F");
+	miniTree->Branch("mmg_k_MZ",&mmg_k_MZ,"mmg_k_MZ/F");
+	miniTree->Branch("mmg_ik_MZ",&mmg_ik_MZ,"mmg_ik_MZ/F");
+	miniTree->Branch("mmg_s_MZ",&mmg_s_MZ,"mmg_s_MZ/F");
+	miniTree->Branch("mmg_logk_MZ",&mmg_logk_MZ,"mmg_logk_MZ/F");
+	miniTree->Branch("mmg_logik_MZ",&mmg_logik_MZ,"mmg_logik_MZ/F");
+	miniTree->Branch("mmg_logs_MZ",&mmg_logs_MZ,"mmg_logs_MZ/F");
+	miniTree->Branch("mmg_k_MZ_Photon_MC",&mmg_k_MZ_Photon_MC,"mmg_k_MZ_Photon_MC/F");
+	miniTree->Branch("mmg_ik_MZ_Photon_MC",&mmg_ik_MZ_Photon_MC,"mmg_ik_MZ_Photon_MC/F");
+	miniTree->Branch("mmg_s_MZ_Photon_MC",&mmg_s_MZ_Photon_MC,"mmg_s_MZ_Photon_MC/F");
+	miniTree->Branch("mmg_logk_MZ_Photon_MC",&mmg_logk_MZ_Photon_MC,"mmg_logk_MZ_Photon_MC/F");
+	miniTree->Branch("mmg_logik_MZ_Photon_MC",&mmg_logik_MZ_Photon_MC,"mmg_logik_MZ_Photon_MC/F");
+	miniTree->Branch("mmg_logs_MZ_Photon_MC",&mmg_logs_MZ_Photon_MC,"mmg_logs_MZ_Photon_MC/F");
+	miniTree->Branch("mmg_k_MZ_Muons_MC",&mmg_k_MZ_Muons_MC,"mmg_k_MZ_Muons_MC/F");
+	miniTree->Branch("mmg_ik_MZ_Muons_MC",&mmg_ik_MZ_Muons_MC,"mmg_ik_MZ_Muons_MC/F");
+	miniTree->Branch("mmg_s_MZ_Muons_MC",&mmg_s_MZ_Muons_MC,"mmg_s_MZ_Muons_MC/F");
+	miniTree->Branch("mmg_logk_MZ_Muons_MC",&mmg_logk_MZ_Muons_MC,"mmg_logk_MZ_Muons_MC/F");
+	miniTree->Branch("mmg_logik_MZ_Muons_MC",&mmg_logik_MZ_Muons_MC,"mmg_logik_MZ_Muons_MC/F");
+	miniTree->Branch("mmg_logs_MZ_Muons_MC",&mmg_logs_MZ_Muons_MC,"mmg_logs_MZ_Muons_MC/F");
+	miniTree->Branch("mmg_k_MZ_Muons_RECO_MC",&mmg_k_MZ_Muons_RECO_MC,"mmg_k_MZ_Muons_RECO_MC/F");
+	miniTree->Branch("mmg_ik_MZ_Muons_RECO_MC",&mmg_ik_MZ_Muons_RECO_MC,"mmg_ik_MZ_Muons_RECO_MC/F");
+	miniTree->Branch("mmg_s_MZ_Muons_RECO_MC",&mmg_s_MZ_Muons_RECO_MC,"mmg_s_MZ_Muons_RECO_MC/F");
+	miniTree->Branch("mmg_logk_MZ_Muons_RECO_MC",&mmg_logk_MZ_Muons_RECO_MC,"mmg_logk_MZ_Muons_RECO_MC/F");
+	miniTree->Branch("mmg_logik_MZ_Muons_RECO_MC",&mmg_logik_MZ_Muons_RECO_MC,"mmg_logik_MZ_Muons_RECO_MC/F");
+	miniTree->Branch("mmg_logs_MZ_Muons_RECO_MC",&mmg_logs_MZ_Muons_RECO_MC,"mmg_logs_MZ_Muons_RECO_MC/F");
 
   TMVA::Reader* reader = new TMVA::Reader( "!Color:!Silent" );
   reader->AddVariable("pho_cEP",&Photon_covEtaPhi);
@@ -1388,6 +1494,34 @@ if( ntotjob == 9999)
 		isAfterFSRCut4 = isMultipleCandidate = isAfterCut5 = isAfterCut6 = isAfterCut7 = isAfterCut8 = isAfterCut9 = isAfterCut10 = 0;
 		isSelected = 0;
 
+		rho = event->rho();
+/*
+		// Can be uncommented for IpnTreeProducer versions > RECO_4_2_8_v3
+		pu_TrueNumInteractions = event->pu_TrueNumInteractions();
+		pu_NumInteractions = event->pu_NumInteractions();
+		inTimePU_NumInteractions = event->inTimePU_NumInteractions();
+		latePU_NumInteractions = event->latePU_NumInteractions();
+		earlyPU_NumInteractions = event->earlyPU_NumInteractions();
+		outOfTimePU_NumInteractions = event->outOfTimePU_NumInteractions();
+		pu_NumInteractions_inAcceptance = event->pu_NumInteractions_inAcceptance();
+		inTimePU_NumInteractions_inAcceptance = event->inTimePU_NumInteractions_inAcceptance();
+		latePU_NumInteractions_inAcceptance = event->latePU_NumInteractions_inAcceptance();
+		earlyPU_NumInteractions_inAcceptance = event->earlyPU_NumInteractions_inAcceptance();
+		outOfTimePU_NumInteractions_inAcceptance = event->outOfTimePU_NumInteractions_inAcceptance();
+*/
+		storeNumber = event->storeNumber();
+		bunchCrossing = event->bunchCrossing();
+		orbitNumber = event->orbitNumber();
+		collisionTimeStamp = event->collisionTimeStamp();
+		microsecondCollisionTime = event->microsecondCollisionTime();
+		collisionTime = event->collisionTime();
+
+
+
+
+
+
+
 		weight_Xsection = weight_pileUp = 1.0;
 
 		string sample_in(sample_char);
@@ -1507,6 +1641,7 @@ if( ntotjob == 9999)
 		Photon_SC_rawE_x_fEta_x_fBrem = Photon_SC_rawE_x_fEta_x_fBrem_AF = Photon_SC_rawE_x_fEta_x_fBrem_L = Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta = Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta = Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta = -99.0;
 		Photon_secondMomentMaj = Photon_secondMomentMin = Photon_secondMomentAlpha = -99.0;
 		Photon_etaLAT = Photon_phiLAT = Photon_LAT = Photon_Zernike20 = Photon_Zernike42 = Photon_ESratio = -99.0;
+		Photon_E_regression = Photon_E_regressionError = Photon_Et_regression = -99.0;
 
 		// ____________________________________________
 		// mugamma / mumu / mumugamma information
@@ -1520,8 +1655,19 @@ if( ntotjob == 9999)
 		mmg_k_SC = mmg_ik_SC = mmg_s_SC = mmg_logk_SC = mmg_logik_SC = mmg_logs_SC = -99.0;
 		mmg_k_SCraw = mmg_ik_SCraw = mmg_s_SCraw = mmg_logk_SCraw = mmg_logik_SCraw = mmg_logs_SCraw = -99.0;
 		mmg_k_SCraw_fEta = mmg_ik_SCraw_fEta = mmg_s_SCraw_fEta = mmg_logk_SCraw_fEta = mmg_logik_SCraw_fEta = mmg_logs_SCraw_fEta = -99.0;
-
 		mmg_ik_SCraw_fEta_fBrem = mmg_ik_SCraw_fEta_fBrem_AF = mmg_ik_SCraw_fEta_fBrem_L = mmg_ik_SCraw_fEta_fBrem_fEtEta = mmg_ik_SCraw_fEta_fBrem_AF_fEtEta = mmg_ik_SCraw_fEta_fBrem_L_fEtEta = -99.0;
+
+  	MuonBeforeBremM_Pt = MuonBeforeBremP_Pt = MuonBeforeBremN_Pt = MuonBeforeBremF_Pt = MuonBeforeBremL_Pt = MuonBeforeBremS_Pt = -99.0;
+  	MuonBeforeBremM_Eta = MuonBeforeBremP_Eta = MuonBeforeBremN_Eta = MuonBeforeBremF_Eta = MuonBeforeBremL_Eta = MuonBeforeBremS_Eta = -99.0;
+  	MuonBeforeBremM_Phi = MuonBeforeBremP_Phi = MuonBeforeBremN_Phi = MuonBeforeBremF_Phi = MuonBeforeBremL_Phi = MuonBeforeBremS_Phi = -99.0;
+  	MuonBeforeBremM_E = MuonBeforeBremP_E = MuonBeforeBremN_E = MuonBeforeBremF_E = MuonBeforeBremL_E = MuonBeforeBremS_E = -99.0;
+  	MuonBeforeBremM_Px = MuonBeforeBremP_Px = MuonBeforeBremN_Px = MuonBeforeBremF_Px = MuonBeforeBremL_Px = MuonBeforeBremS_Px = -99.0;
+  	MuonBeforeBremM_Py = MuonBeforeBremP_Py = MuonBeforeBremN_Py = MuonBeforeBremF_Py = MuonBeforeBremL_Py = MuonBeforeBremS_Py = -99.0;
+  	MuonBeforeBremM_Pz = MuonBeforeBremP_Pz = MuonBeforeBremN_Pz = MuonBeforeBremF_Pz = MuonBeforeBremL_Pz = MuonBeforeBremS_Pz = -99.0;
+  	for(int ia= 0; ia < 8; ia ++) iCandidate[ia] = -99;
+  	for(int ia= 0; ia < 8; ia ++) nCandidate[ia] = -99;
+  	for(int ia= 0; ia < 8; ia ++) { for(int ib=0; ib < 50; ib++) iCandidate_temp[ia][ib] = -99; }
+  	MuonBeforeBremF_Charge = MuonBeforeBremN_Charge = MuonBeforeBremL_Charge = MuonBeforeBremS_Charge = -99;
 
 	// ____________________________________________
 	// Neural Network variables
@@ -2248,13 +2394,16 @@ if( ntotjob == 9999)
 		if(verbosity>3) cout << "start looping over triplet candidates" << endl;	
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[0]= " << nbMuMuGammaAfterID[0] << endl;
 
+		nCandidate[0] = nbMuMuGammaAfterID[0];
+		if(verbosity>4) cout << "nCandidate[0]= " << nCandidate[0] << endl;
+//		for(int icand = 0 ; icand < nCandidate[0] ; icand++){iCandidate[0] = icand; miniFriend->Fill();}
 // --------------------------------------------------------------------------------------------------------------------
 // ----- cut on close_isoR03_hadEt -----
 // --------------------------------------------------------------------------------------------------------------------
 		isMMGCandidate = 1;
-
 		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[0] ; i_mmg++)
 		{
+			iCandidate_temp[0][i_mmg] = i_mmg;
 			if(verbosity>5) cerr << "examining i_mmg= " << i_mmg << " over nbMuMuGammaAfterID[0]= " << nbMuMuGammaAfterID[0] << endl;
 			TRootPhoton* myphoton;
 			TRootMuon* mymuon1;
@@ -2306,10 +2455,12 @@ if( ntotjob == 9999)
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				iCandidate_temp[1][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
 			} else {
 				if(verbosity>5) cerr << "candidate accepted: close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
+				iCandidate_temp[1][i_mmg] = nbMuMuGammaAfterID[1];
 			}
 		
 			if(verbosity>5) cerr << " filling new pair " << endl;
@@ -2327,6 +2478,22 @@ if( ntotjob == 9999)
 
 		}
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[1]= " << nbMuMuGammaAfterID[1] << endl;
+		nCandidate[1] = nbMuMuGammaAfterID[1];
+		if(verbosity>4) cout << "nCandidate[1]= " << nCandidate[1] << endl;
+		for(int icand = 0 ; icand < nCandidate[0] ; icand++ )
+		{
+			if(  iCandidate_temp[1][icand] == -99 )
+			{
+				iCandidate[0] = icand;
+				if(verbosity>4) cout << "\t## event cut: " << "\tiCandidate[0]= " << iCandidate[0] << endl;
+				miniFriend->Fill();
+			} else {
+				iCandidate_temp[1][iCandidate_temp[1][icand]] = iCandidate_temp[1][icand];
+				iCandidate_temp[0][iCandidate_temp[1][icand]] = iCandidate_temp[0][icand];
+			}
+		}
+		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
+//		for(int icand = 0 ; icand < nCandidate[0] - nCandidate[1] ; icand++){iCandidate[1] = icand; miniFriend->Fill();}
 		if(! (nbMuMuGammaAfterID[1] > 0) )
     {
 					if(verbosity>2) cerr << "not enough triplet candidate passing close_isoR03_hadEt cut " << endl;
@@ -2385,9 +2552,11 @@ if( ntotjob == 9999)
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				iCandidate_temp[2][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
 			}
+			iCandidate_temp[2][i_mmg] = nbMuMuGammaAfterID[2];
 			MuMuGammaCandidates[2][nbMuMuGammaAfterID[2]] = make_pair(MuMuGammaCandidates[1][i_mmg].first, make_pair(MuMuGammaCandidates[1][i_mmg].second.first, MuMuGammaCandidates[1][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[2][nbMuMuGammaAfterID[2]] = make_pair(MuMuGammaCandidates_corrected[1][i_mmg].first, MuMuGammaCandidates_corrected[1][i_mmg].second);
       nbMuMuGammaAfterID[2]++;
@@ -2403,6 +2572,27 @@ if( ntotjob == 9999)
 
      }
 		if(verbosity>4) cout << "nbMuMuGammaAfterID[2]= " << nbMuMuGammaAfterID[2] << endl;
+		nCandidate[2] = nbMuMuGammaAfterID[2];
+		if(verbosity>4) cout << "nCandidate[2]= " << nCandidate[2] << endl;
+		for(int icand = 0 ; icand < nCandidate[1] ; icand++ )
+		{
+			if(  iCandidate_temp[2][icand] == -99 )
+			{
+				iCandidate[1] = icand;
+				iCandidate[0] = iCandidate_temp[0][icand];
+				if(verbosity>4) cout << "\t## event cut: ";
+				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
+				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
+				if(verbosity>4) cout << endl;
+				miniFriend->Fill();
+			} else {
+				iCandidate_temp[2][iCandidate_temp[2][icand]] = iCandidate_temp[2][icand];
+				iCandidate_temp[1][iCandidate_temp[2][icand]] = iCandidate_temp[1][icand];
+				iCandidate_temp[0][iCandidate_temp[2][icand]] = iCandidate_temp[0][icand];
+			}
+		}
+		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
+//		for(int icand = 0 ; icand < nCandidate[1] - nCandidate[2] ; icand++){iCandidate[2] = icand; miniFriend->Fill();}
     if(! (nbMuMuGammaAfterID[2] > 0) )
     {
       continue;
@@ -2456,9 +2646,11 @@ if( ntotjob == 9999)
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				iCandidate_temp[3][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
 			}
+			iCandidate_temp[3][i_mmg] = nbMuMuGammaAfterID[3];
 			MuMuGammaCandidates[3][nbMuMuGammaAfterID[3]] = make_pair(MuMuGammaCandidates[2][i_mmg].first, make_pair(MuMuGammaCandidates[2][i_mmg].second.first, MuMuGammaCandidates[2][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[3][nbMuMuGammaAfterID[3]] = make_pair(MuMuGammaCandidates_corrected[2][i_mmg].first, MuMuGammaCandidates_corrected[2][i_mmg].second);
       nbMuMuGammaAfterID[3]++;
@@ -2472,6 +2664,30 @@ if( ntotjob == 9999)
 
 
     }
+		nCandidate[3] = nbMuMuGammaAfterID[3];
+		if(verbosity>4) cout << "nCandidate[3]= " << nCandidate[3] << endl;
+		for(int icand = 0 ; icand < nCandidate[2] ; icand++ )
+		{
+			if(  iCandidate_temp[3][icand] == -99 )
+			{
+				iCandidate[2] = icand;
+				iCandidate[1] = iCandidate_temp[1][icand];
+				iCandidate[0] = iCandidate_temp[0][icand];
+				if(verbosity>4) cout << "\t## event cut: ";
+				if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
+				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
+				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
+				if(verbosity>4) cout << endl;
+				miniFriend->Fill();
+			} else {
+				iCandidate_temp[3][iCandidate_temp[3][icand]] = iCandidate_temp[3][icand];
+				iCandidate_temp[2][iCandidate_temp[3][icand]] = iCandidate_temp[2][icand];
+				iCandidate_temp[1][iCandidate_temp[3][icand]] = iCandidate_temp[1][icand];
+				iCandidate_temp[0][iCandidate_temp[3][icand]] = iCandidate_temp[0][icand];
+			}
+		}
+		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
+//		for(int icand = 0 ; icand < nCandidate[2] - nCandidate[3] ; icand++){iCandidate[3] = icand; miniFriend->Fill();}
     if(! (nbMuMuGammaAfterID[3] > 0) )
     {
          continue;
@@ -2524,9 +2740,11 @@ if( ntotjob == 9999)
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
 				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				iCandidate_temp[4][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
 			}
+			iCandidate_temp[4][i_mmg] = nbMuMuGammaAfterID[4];
 			MuMuGammaCandidates[4][nbMuMuGammaAfterID[4]] = make_pair(MuMuGammaCandidates[3][i_mmg].first, make_pair(MuMuGammaCandidates[3][i_mmg].second.first, MuMuGammaCandidates[3][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[4][nbMuMuGammaAfterID[4]] = make_pair(MuMuGammaCandidates_corrected[3][i_mmg].first, MuMuGammaCandidates_corrected[3][i_mmg].second);
       nbMuMuGammaAfterID[4]++;
@@ -2539,6 +2757,33 @@ if( ntotjob == 9999)
 //			correctedMuon2->Delete();
 
     }
+		nCandidate[4] = nbMuMuGammaAfterID[4];
+		if(verbosity>4) cout << "nCandidate[4]= " << nCandidate[4] << endl;
+		for(int icand = 0 ; icand < nCandidate[3] ; icand++ )
+		{
+			if(  iCandidate_temp[4][icand] == -99 )
+			{
+				iCandidate[3] = icand;
+				iCandidate[2] = iCandidate_temp[2][icand];
+				iCandidate[1] = iCandidate_temp[1][icand];
+				iCandidate[0] = iCandidate_temp[0][icand];
+				if(verbosity>4) cout << "\t## event cut: ";
+				if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
+				if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
+				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
+				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
+				if(verbosity>4) cout << endl;
+				miniFriend->Fill();
+			} else {
+				iCandidate_temp[4][iCandidate_temp[4][icand]] = iCandidate_temp[4][icand];
+				iCandidate_temp[3][iCandidate_temp[4][icand]] = iCandidate_temp[3][icand];
+				iCandidate_temp[2][iCandidate_temp[4][icand]] = iCandidate_temp[2][icand];
+				iCandidate_temp[1][iCandidate_temp[4][icand]] = iCandidate_temp[1][icand];
+				iCandidate_temp[0][iCandidate_temp[4][icand]] = iCandidate_temp[0][icand];
+			}
+		}
+		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
+//		for(int icand = 0 ; icand < nCandidate[3] - nCandidate[4] ; icand++){iCandidate[4] = icand; miniFriend->Fill();}
     if(! (nbMuMuGammaAfterID[4] > 0) )
     {
       continue;
@@ -2594,9 +2839,11 @@ if( ntotjob == 9999)
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
 				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				iCandidate_temp[5][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
 			}
+			iCandidate_temp[5][i_mmg] = nbMuMuGammaAfterID[5];
 			MuMuGammaCandidates[5][nbMuMuGammaAfterID[5]] = make_pair(MuMuGammaCandidates[4][i_mmg].first, make_pair(MuMuGammaCandidates[4][i_mmg].second.first, MuMuGammaCandidates[4][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[5][nbMuMuGammaAfterID[5]] = make_pair(MuMuGammaCandidates_corrected[4][i_mmg].first, MuMuGammaCandidates_corrected[4][i_mmg].second);
       nbMuMuGammaAfterID[5]++;
@@ -2612,6 +2859,36 @@ if( ntotjob == 9999)
 //			PhotonEScale->Delete();
 			
     }
+		nCandidate[5] = nbMuMuGammaAfterID[5];
+		if(verbosity>4) cout << "nCandidate[5]= " << nCandidate[5] << endl;
+		for(int icand = 0 ; icand < nCandidate[4] ; icand++ )
+		{
+			if(  iCandidate_temp[5][icand] == -99 )
+			{
+				iCandidate[4] = icand;
+				iCandidate[3] = iCandidate_temp[3][icand];
+				iCandidate[2] = iCandidate_temp[2][icand];
+				iCandidate[1] = iCandidate_temp[1][icand];
+				iCandidate[0] = iCandidate_temp[0][icand];
+				if(verbosity>4) cout << "\t## event cut: ";
+				if(verbosity>4) cout << "\tiCandidate[4]= " << iCandidate[4];
+				if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
+				if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
+				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
+				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
+				if(verbosity>4) cout << endl;
+				miniFriend->Fill();
+			} else {
+				iCandidate_temp[5][iCandidate_temp[5][icand]] = iCandidate_temp[5][icand];
+				iCandidate_temp[4][iCandidate_temp[5][icand]] = iCandidate_temp[4][icand];
+				iCandidate_temp[3][iCandidate_temp[5][icand]] = iCandidate_temp[3][icand];
+				iCandidate_temp[2][iCandidate_temp[5][icand]] = iCandidate_temp[2][icand];
+				iCandidate_temp[1][iCandidate_temp[5][icand]] = iCandidate_temp[1][icand];
+				iCandidate_temp[0][iCandidate_temp[5][icand]] = iCandidate_temp[0][icand];
+			}
+		}
+		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
+//		for(int icand = 0 ; icand < nCandidate[4] - nCandidate[5] ; icand++){iCandidate[5] = icand; miniFriend->Fill();}
     if(! (nbMuMuGammaAfterID[5] > 0) )
     {
 //			miniTree->Fill();
@@ -2678,9 +2955,11 @@ if( ntotjob == 9999)
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
 				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				iCandidate_temp[6][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
 			}
+			iCandidate_temp[6][i_mmg] = nbMuMuGammaAfterID[6];
 			MuMuGammaCandidates[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates[5][i_mmg].first, make_pair(MuMuGammaCandidates[5][i_mmg].second.first, MuMuGammaCandidates[5][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates_corrected[5][i_mmg].first, MuMuGammaCandidates_corrected[5][i_mmg].second);
       nbMuMuGammaAfterID[6]++;
@@ -2699,6 +2978,39 @@ if( ntotjob == 9999)
 
 
     }
+		nCandidate[6] = nbMuMuGammaAfterID[6];
+		if(verbosity>4) cout << "nCandidate[6]= " << nCandidate[6] << endl;
+		for(int icand = 0 ; icand < nCandidate[5] ; icand++ )
+		{
+			if(  iCandidate_temp[6][icand] == -99 )
+			{
+				iCandidate[5] = icand;
+				iCandidate[4] = iCandidate_temp[4][icand];
+				iCandidate[3] = iCandidate_temp[3][icand];
+				iCandidate[2] = iCandidate_temp[2][icand];
+				iCandidate[1] = iCandidate_temp[1][icand];
+				iCandidate[0] = iCandidate_temp[0][icand];
+				if(verbosity>4) cout << "\t## event cut: ";
+				if(verbosity>4) cout << "\tiCandidate[5]= " << iCandidate[5];
+				if(verbosity>4) cout << "\tiCandidate[4]= " << iCandidate[4];
+				if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
+				if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
+				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
+				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
+				if(verbosity>4) cout << endl;
+				miniFriend->Fill();
+			} else {
+				iCandidate_temp[6][iCandidate_temp[6][icand]] = iCandidate_temp[6][icand];
+				iCandidate_temp[5][iCandidate_temp[6][icand]] = iCandidate_temp[5][icand];
+				iCandidate_temp[4][iCandidate_temp[6][icand]] = iCandidate_temp[4][icand];
+				iCandidate_temp[3][iCandidate_temp[6][icand]] = iCandidate_temp[3][icand];
+				iCandidate_temp[2][iCandidate_temp[6][icand]] = iCandidate_temp[2][icand];
+				iCandidate_temp[1][iCandidate_temp[6][icand]] = iCandidate_temp[1][icand];
+				iCandidate_temp[0][iCandidate_temp[6][icand]] = iCandidate_temp[0][icand];
+			}
+		}
+		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
+//		for(int icand = 0 ; icand <  nCandidate[5] - nCandidate[6] ; icand++){iCandidate[6] = icand; miniFriend->Fill();}
     if(! (nbMuMuGammaAfterID[6] > 0) )
     {
 //			miniTree->Fill();
@@ -2771,14 +3083,16 @@ if( ntotjob == 9999)
 				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
+				iCandidate_temp[7][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
 			}
+			iCandidate_temp[7][i_mmg] = nbMuMuGammaAfterID[7];
 			MuMuGammaCandidates[7][nbMuMuGammaAfterID[7]] = make_pair(MuMuGammaCandidates[6][i_mmg].first, make_pair(MuMuGammaCandidates[6][i_mmg].second.first, MuMuGammaCandidates[6][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[7][nbMuMuGammaAfterID[7]] = make_pair(MuMuGammaCandidates_corrected[6][i_mmg].first, MuMuGammaCandidates_corrected[6][i_mmg].second);
       nbMuMuGammaAfterID[7]++;
  
-   
+  
 			delete correctedMuon1;
       correctedMuon1 = 0;
       delete correctedMuon2;
@@ -2793,13 +3107,73 @@ if( ntotjob == 9999)
 
 
     }
-    if(! (nbMuMuGammaAfterID[7] > 0) )
+		nCandidate[7] = nbMuMuGammaAfterID[7];
+		if(verbosity>4) cout << "nCandidate[7]= " << nCandidate[7] << endl;
+		for(int icand = 0 ; icand < nCandidate[6] ; icand++ )
+		{
+			if(  iCandidate_temp[7][icand] == -99 )
+			{
+				iCandidate[6] = icand;
+				iCandidate[5] = iCandidate_temp[5][icand];
+				iCandidate[4] = iCandidate_temp[4][icand];
+				iCandidate[3] = iCandidate_temp[3][icand];
+				iCandidate[2] = iCandidate_temp[2][icand];
+				iCandidate[1] = iCandidate_temp[1][icand];
+				iCandidate[0] = iCandidate_temp[0][icand];
+				if(verbosity>4) cout << "\t## event cut: ";
+				if(verbosity>4) cout << "\tiCandidate[6]= " << iCandidate[6];
+				if(verbosity>4) cout << "\tiCandidate[5]= " << iCandidate[5];
+				if(verbosity>4) cout << "\tiCandidate[4]= " << iCandidate[4];
+				if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
+				if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
+				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
+				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
+				if(verbosity>4) cout << endl;
+				miniFriend->Fill();
+			} else {
+/*
+				iCandidate_temp[7][iCandidate_temp[7][icand]] = iCandidate_temp[7][icand];
+				iCandidate_temp[6][iCandidate_temp[7][icand]] = iCandidate_temp[6][icand];
+				iCandidate_temp[5][iCandidate_temp[7][icand]] = iCandidate_temp[5][icand];
+				iCandidate_temp[4][iCandidate_temp[7][icand]] = iCandidate_temp[4][icand];
+				iCandidate_temp[3][iCandidate_temp[7][icand]] = iCandidate_temp[3][icand];
+				iCandidate_temp[2][iCandidate_temp[7][icand]] = iCandidate_temp[2][icand];
+				iCandidate_temp[1][iCandidate_temp[7][icand]] = iCandidate_temp[1][icand];
+				iCandidate_temp[0][iCandidate_temp[7][icand]] = iCandidate_temp[0][icand];
+*/
+				iCandidate[7] = iCandidate_temp[7][icand];
+				iCandidate[6] = iCandidate_temp[6][icand];
+				iCandidate[5] = iCandidate_temp[5][icand];
+				iCandidate[4] = iCandidate_temp[4][icand];
+				iCandidate[3] = iCandidate_temp[3][icand];
+				iCandidate[2] = iCandidate_temp[2][icand];
+				iCandidate[1] = iCandidate_temp[1][icand];
+				iCandidate[0] = iCandidate_temp[0][icand];
+				if(verbosity>4) cout << "\t## event PASS: ";
+        if(verbosity>4) cout << "\tiCandidate[7]= " << iCandidate[7];
+        if(verbosity>4) cout << "\tiCandidate[6]= " << iCandidate[6];
+        if(verbosity>4) cout << "\tiCandidate[5]= " << iCandidate[5];
+        if(verbosity>4) cout << "\tiCandidate[4]= " << iCandidate[4];
+        if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
+        if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
+        if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
+        if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
+        if(verbosity>4) cout << endl;
+        miniFriend->Fill();
+			}
+		}
+		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
+//		for(int icand = 0 ; icand <  nCandidate[6] - nCandidate[7] ; icand++){iCandidate[7] = icand; miniFriend->Fill();}
+     if(! (nbMuMuGammaAfterID[7] > 0) )
     {
       continue;
     }
 
 		TOTALnbMuMuGammaAfterID[7] += nbMuMuGammaAfterID[7];
 		TOTALnbEventsAfterMuMuGammaID[7]++ ;
+//		nCandidate[7] = nbMuMuGammaAfterID[7];
+//		cout << "nCandidate[7]= " << nCandidate[7] << endl;
+//		for(int icand = 0 ; icand < nCandidate[7] ; icand++){iCandidate[7] = icand; miniFriend->Fill();}
 
 		isTightMMG = 1;
 		nAfterTightMMG++;
@@ -2947,6 +3321,7 @@ if( ntotjob == 9999)
 	cout << "Writing stuff out" << endl;
 	// Writing stuff out
 	OutputRootFile->Write();
+	OutputFriendFile->Write();
 
 	cout << "Cleaning" << endl;
 
@@ -2993,6 +3368,8 @@ if( ntotjob == 9999)
 	miniTree_allmuons->SetDirectory(0);
 	miniTree_allphotons->SetDirectory(0);
 	// - delete the TTree
+	delete miniFriend;
+	miniFriend = 0;
 	delete miniTree;
 	miniTree = 0;
 	delete miniTree_allmuons;
@@ -3001,7 +3378,10 @@ if( ntotjob == 9999)
 	miniTree_allphotons = 0;
 	// - close the TFile
 	OutputRootFile->Close();
+	OutputFriendFile->Close();
 	// - delete the TFile
+	delete OutputFriendFile;
+	OutputFriendFile = 0;
 	delete OutputRootFile;
 	OutputRootFile = 0;
 

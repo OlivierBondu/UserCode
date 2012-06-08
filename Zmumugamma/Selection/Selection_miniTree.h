@@ -594,6 +594,14 @@ int main(int argc, char *argv[]);
   extern Int_t nGenVertices;
   extern Float_t weight_pileUp, weight_Xsection;
 
+  extern Float_t rho;
+  extern Float_t pu_TrueNumInteractions;
+  extern Int_t pu_NumInteractions, inTimePU_NumInteractions, latePU_NumInteractions, earlyPU_NumInteractions, outOfTimePU_NumInteractions;
+  extern Int_t pu_NumInteractions_inAcceptance, inTimePU_NumInteractions_inAcceptance, latePU_NumInteractions_inAcceptance, earlyPU_NumInteractions_inAcceptance, outOfTimePU_NumInteractions_inAcceptance;
+  extern ULong64_t storeNumber, bunchCrossing, orbitNumber, collisionTimeStamp, microsecondCollisionTime;
+  extern Float_t collisionTime;
+
+
   // ____________________________________________
   // Muon variables 
   // ____________________________________________
@@ -657,6 +665,7 @@ int main(int argc, char *argv[]);
 	extern Float_t Photon_secondMomentMaj, Photon_secondMomentMin, Photon_secondMomentAlpha;
 	extern Float_t Photon_etaLAT, Photon_phiLAT, Photon_LAT, Photon_Zernike20, Photon_Zernike42, Photon_ESratio;
 
+	extern Float_t Photon_E_regression, Photon_E_regressionError, Photon_Et_regression;
 
   // ____________________________________________
   // mugamma / mumu / mumugamma information
@@ -671,6 +680,15 @@ int main(int argc, char *argv[]);
   extern Float_t mmg_k_SCraw, mmg_ik_SCraw, mmg_s_SCraw, mmg_logk_SCraw, mmg_logik_SCraw, mmg_logs_SCraw;
   extern Float_t mmg_k_SCraw_fEta, mmg_ik_SCraw_fEta, mmg_s_SCraw_fEta, mmg_logk_SCraw_fEta, mmg_logik_SCraw_fEta, mmg_logs_SCraw_fEta;
   extern Float_t mmg_ik_SCraw_fEta_fBrem, mmg_ik_SCraw_fEta_fBrem_AF, mmg_ik_SCraw_fEta_fBrem_L, mmg_ik_SCraw_fEta_fBrem_fEtEta, mmg_ik_SCraw_fEta_fBrem_AF_fEtEta, mmg_ik_SCraw_fEta_fBrem_L_fEtEta;
+
+	extern Float_t MuonBeforeBremM_Pt, MuonBeforeBremP_Pt, MuonBeforeBremN_Pt, MuonBeforeBremF_Pt, MuonBeforeBremL_Pt, MuonBeforeBremS_Pt;
+	extern Float_t MuonBeforeBremM_Eta, MuonBeforeBremP_Eta, MuonBeforeBremN_Eta, MuonBeforeBremF_Eta, MuonBeforeBremL_Eta, MuonBeforeBremS_Eta;
+	extern Float_t MuonBeforeBremM_Phi, MuonBeforeBremP_Phi, MuonBeforeBremN_Phi, MuonBeforeBremF_Phi, MuonBeforeBremL_Phi, MuonBeforeBremS_Phi;
+	extern Float_t MuonBeforeBremM_E, MuonBeforeBremP_E, MuonBeforeBremN_E, MuonBeforeBremF_E, MuonBeforeBremL_E, MuonBeforeBremS_E;
+	extern Float_t MuonBeforeBremM_Px, MuonBeforeBremP_Px, MuonBeforeBremN_Px, MuonBeforeBremF_Px, MuonBeforeBremL_Px, MuonBeforeBremS_Px;
+	extern Float_t MuonBeforeBremM_Py, MuonBeforeBremP_Py, MuonBeforeBremN_Py, MuonBeforeBremF_Py, MuonBeforeBremL_Py, MuonBeforeBremS_Py;
+	extern Float_t MuonBeforeBremM_Pz, MuonBeforeBremP_Pz, MuonBeforeBremN_Pz, MuonBeforeBremF_Pz, MuonBeforeBremL_Pz, MuonBeforeBremS_Pz;
+	extern Int_t MuonBeforeBremF_Charge, MuonBeforeBremN_Charge, MuonBeforeBremL_Charge, MuonBeforeBremS_Charge;
 
   // ____________________________________________
   // Neural Network variables
@@ -1210,6 +1228,85 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 
     //TLorentzVector * nearMuonPlusPhoton;
     //nearMuonPlusPhoton = correctednearMuon + myphoton;
+
+		TLorentzVector MuonBeforeBremN;
+		TLorentzVector MuonBeforeBremF;
+		TLorentzVector MuonBeforeBremP;
+		TLorentzVector MuonBeforeBremM;
+		TLorentzVector MuonBeforeBremL;
+		TLorentzVector MuonBeforeBremS;
+		MuonBeforeBremN = (*correctednearMuon) + (*PhotonEScale);
+		MuonBeforeBremF = (*correctedfarMuon);
+		if( MuonBeforeBremF.Pt() > MuonBeforeBremN.Pt() )
+		{
+			MuonBeforeBremL = MuonBeforeBremF;
+			MuonBeforeBremS = MuonBeforeBremN;
+		} else {
+			MuonBeforeBremL = MuonBeforeBremN;
+			MuonBeforeBremS = MuonBeforeBremF;
+		}
+		if( nearMuon->charge() > 0 )
+		{
+			MuonBeforeBremM = MuonBeforeBremF;
+			MuonBeforeBremP = MuonBeforeBremN;
+		} else {
+			MuonBeforeBremM = MuonBeforeBremN;
+			MuonBeforeBremP = MuonBeforeBremF;
+		}
+
+		MuonBeforeBremM_Pt = MuonBeforeBremM.Pt();
+		MuonBeforeBremP_Pt = MuonBeforeBremP.Pt();
+		MuonBeforeBremN_Pt = MuonBeforeBremN.Pt();
+		MuonBeforeBremF_Pt = MuonBeforeBremF.Pt();
+		MuonBeforeBremL_Pt = MuonBeforeBremL.Pt();
+		MuonBeforeBremS_Pt = MuonBeforeBremS.Pt();
+		MuonBeforeBremM_Eta = MuonBeforeBremM.Eta();
+		MuonBeforeBremP_Eta = MuonBeforeBremP.Eta();
+		MuonBeforeBremN_Eta = MuonBeforeBremN.Eta();
+		MuonBeforeBremF_Eta = MuonBeforeBremF.Eta();
+		MuonBeforeBremL_Eta = MuonBeforeBremL.Eta();
+		MuonBeforeBremS_Eta = MuonBeforeBremS.Eta();
+
+		MuonBeforeBremM_Phi = MuonBeforeBremM.Phi();
+		MuonBeforeBremP_Phi = MuonBeforeBremP.Phi();
+		MuonBeforeBremN_Phi = MuonBeforeBremN.Phi();
+		MuonBeforeBremF_Phi = MuonBeforeBremF.Phi();
+		MuonBeforeBremL_Phi = MuonBeforeBremL.Phi();
+		MuonBeforeBremS_Phi = MuonBeforeBremS.Phi();
+
+		MuonBeforeBremM_E = MuonBeforeBremM.Energy();
+		MuonBeforeBremP_E = MuonBeforeBremP.Energy();
+		MuonBeforeBremN_E = MuonBeforeBremN.Energy();
+		MuonBeforeBremF_E = MuonBeforeBremF.Energy();
+		MuonBeforeBremL_E = MuonBeforeBremL.Energy();
+		MuonBeforeBremS_E = MuonBeforeBremS.Energy();
+
+		MuonBeforeBremM_Px = MuonBeforeBremM.Px();
+		MuonBeforeBremP_Px = MuonBeforeBremP.Px();
+		MuonBeforeBremN_Px = MuonBeforeBremN.Px();
+		MuonBeforeBremF_Px = MuonBeforeBremF.Px();
+		MuonBeforeBremL_Px = MuonBeforeBremL.Px();
+		MuonBeforeBremS_Px = MuonBeforeBremS.Px();
+
+		MuonBeforeBremM_Py = MuonBeforeBremM.Py();
+		MuonBeforeBremP_Py = MuonBeforeBremP.Py();
+		MuonBeforeBremN_Py = MuonBeforeBremN.Py();
+		MuonBeforeBremF_Py = MuonBeforeBremF.Py();
+		MuonBeforeBremL_Py = MuonBeforeBremL.Py();
+		MuonBeforeBremS_Py = MuonBeforeBremS.Py();
+
+		MuonBeforeBremM_Pz = MuonBeforeBremM.Pz();
+		MuonBeforeBremP_Pz = MuonBeforeBremP.Pz();
+		MuonBeforeBremN_Pz = MuonBeforeBremN.Pz();
+		MuonBeforeBremF_Pz = MuonBeforeBremF.Pz();
+		MuonBeforeBremL_Pz = MuonBeforeBremL.Pz();
+		MuonBeforeBremS_Pz = MuonBeforeBremS.Pz();
+
+		MuonBeforeBremF_Charge = farMuon->charge();
+		MuonBeforeBremN_Charge = nearMuon->charge();
+		MuonBeforeBremL_Charge = leadingMuon->charge();
+		MuonBeforeBremS_Charge = subleadingMuon->charge();
+		
 	
     double nearMuonPlusPhoton_Pt = sqrt(pow(correctednearMuon->Px() + myphoton->Px(),2) + pow(correctednearMuon->Py() + myphoton->Py(),2));
  
