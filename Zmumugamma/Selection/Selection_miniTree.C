@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
 	if( argc > 10 )
 	{
 		correction = argv[10];
-		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") || (correction == "ETHZ") || (correction == "Dynamic") )
+		if( (correction == "Louis") || (correction == "Anne-Fleur") || (correction == "START42_V11") || (correction == "ETHZ") || (correction == "Dynamic") || (correction == "MITregression"))
 		{
 			cout << correction << " correction set will be applied upstream" << endl;
 			isManualCorrectionsApplied = true;
@@ -431,8 +431,10 @@ int main(int argc, char *argv[])
 int iline = 0;
 if( ntotjob == 9999)
 {
-	inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
-	inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+	//inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+	//inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+	inputEventTree->Add(Form("/sps/cms/sgandurr/CMSSW_4_2_8_patch7/src/UserCode/IpnTreeProducer/test/%s/*root", sample_char));
+        inputRunTree->Add(Form("/sps/cms/sgandurr/CMSSW_4_2_8_patch7/src/UserCode/IpnTreeProducer/test/%s/*root", sample_char));
 } else {
 	if (myfile.is_open())
 	{
@@ -1483,7 +1485,9 @@ if( ntotjob == 9999)
 		nGenVertices = vertices->GetEntries();
 		if( (isZgammaMC == 1) || (isZgammaMC == 2) )
 		{
-			nGenVertices = event->nInTimePUVertices();
+			//nGenVertices = event->nInTimePUVertices();
+			//nGenVertices = event->pu_NumInteractions();
+			nGenVertices = event->inTimePU_NumInteractions();
 		}
 		isSignalApplied = signal;
 		isStewApplied = stew;
@@ -1521,11 +1525,10 @@ if( ntotjob == 9999)
 
 
 
-
 		weight_Xsection = weight_pileUp = 1.0;
 
 		string sample_in(sample_char);
-
+		
 		if( sample_in.find("DYToMuMu") != string::npos )
 		{
 			weight_Xsection = (double)(  (double)((double)(XSectionDYToMuMu) / (double)(InitialNumberDYToMuMu)) * (double)integratedLuminosity);
@@ -1707,6 +1710,7 @@ if( ntotjob == 9999)
 		// ____________________________________________
 		// END OF INITIALIZATION
 		// ____________________________________________
+
 
 // ********************************************************************************************************************
 // ***** MC-TRUTH SIGNAL MATCHING *****

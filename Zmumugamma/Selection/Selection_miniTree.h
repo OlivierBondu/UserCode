@@ -401,7 +401,14 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet,
 		cout << "photons->GetEntries()= " << photons->GetEntries() << endl;
 		cout << "superClusters->GetEntries()= " << superClusters->GetEntries() << endl;
 		cout << "clusters->GetEntries()= " << clusters->GetEntries() << endl;
-	} else {
+	}
+	else if( correctionSet == "MITregression" )
+	{
+		if( verbositybis > 1) cout << "myphoton->energyRegression() = " << myphoton->energyRegression() << endl;
+		return myphoton->energyRegression() / (double)(myphoton->Energy());
+
+	}
+	 else {
 		vector<double> param_fbrem;
 		vector<double> param_feteta;
 		parameters_fbrem(param_fbrem, correctionSet, myphoton->isEBPho());
