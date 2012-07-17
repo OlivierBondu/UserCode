@@ -1,7 +1,7 @@
 #! /usr/local/bin/bash -l
 #$ -l ct=2000
 #$ -P P_cmsf
-#$ -l vmem=2G
+#$ -l vmem=3G
 #$ -l fsize=1G
 #$ -q medium
 #$ -l sps=1
@@ -14,7 +14,7 @@
 #$ -cwd
 ###$ -m be
 ### set array job indices 'min-max:interval'
-#$ -t 1-50
+#$ -t 1-30
 
 syntax="${0} {parameter}"
 #if [[ -z ${6} ]]
@@ -84,7 +84,8 @@ echo "USER=${USER}"
 
 # COPY EXECUTABLE TO WORKER
 echo "COPY EXECUTABLE TO WORKER"
-cp ${SPSDIR}/Zmumugamma/Selection/Muons_v09.exe ${TMPDIR}/
+cp ${SPSDIR}/Zmumugamma/Selection/rochcor_v2.h ${TMPDIR}/
+cp ${SPSDIR}/Zmumugamma/Selection/Muons_v10.exe ${TMPDIR}/
 cp ${SPSDIR}/Zmumugamma/Selection/listFiles_${1} ${TMPDIR}/
 
 echo "pwd; ls -als"
@@ -96,8 +97,8 @@ echo "USER=${USER}"
 # EXECUTE JOB
 echo "EXECUTE JOB"
 cd ${TMPDIR}/
-./Muons_v09.exe ${1} ${2} 50 ${ijob} ${3} ${4} ${5} ${6} ${7} ${8} 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
-#./Muons_v09.exe ${1} ${2} ${ijob} 3 Nov03 PU_S6 40 80 START42_V11 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
+./Muons_v10.exe ${1} ${2} 30 ${ijob} ${3} ${4} ${5} ${6} ${7} ${8} 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
+#./Muons_v10.exe ${1} ${2} ${ijob} 3 Nov03 PU_S6 40 80 START42_V11 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
 
 echo "pwd; ls -als"
 pwd; ls -als
@@ -108,7 +109,7 @@ echo "GET BACK OUTPUT FILES TO SPS AND REMOVE THEM FROM DISTANT DIR"
 mv ${TMPDIR}/miniTreeMuons_${2}_part${ijob}*root ${SPSDIR}/Zmumugamma/Selection/
 mv ${TMPDIR}/${2}_part${ijob}*out ${SPSDIR}/Zmumugamma/Selection/
 mv ${TMPDIR}/${2}_part${ijob}*err ${SPSDIR}/Zmumugamma/Selection/
-rm ${TMPDIR}/Muons_v09.exe
+rm ${TMPDIR}/Muons_v10.exe
 
 #"cd ${SPSDIR}/Zmumugamma/Selection/"
 #cd ${SPSDIR}/Zmumugamma/Selection/
