@@ -1,7 +1,7 @@
 //##########################################################################
 // Initialization code executed at the start of a ROOT session.
 //
-// File: $Id: CMSStyle.C,v 1.1 2005/11/10 15:46:14 ganzhur Exp $
+// File: $Id: CMSStyle.C,v 1.1 2010/12/20 15:04:05 obondu Exp $
 //##########################################################################
 
 //#include <iostream>
@@ -21,7 +21,7 @@ void CMSstyle(){
   //  gStyle->SetTitleOffset(0.65,"y");  // bring y axis label closer to narrow values
   
   TStyle *cmsStyle= new TStyle("CMS","CMS approved plots style");
-  
+	 
   // use plain black on white colors
   cmsStyle->SetFrameBorderMode(0);
   cmsStyle->SetCanvasBorderMode(0);
@@ -36,7 +36,7 @@ void CMSstyle(){
   // set the paper & margin sizes
   cmsStyle->SetPaperSize(20,26);
   cmsStyle->SetPadTopMargin(0.05);
-  cmsStyle->SetPadRightMargin(0.05);
+  cmsStyle->SetPadRightMargin(0.10);
   cmsStyle->SetPadBottomMargin(0.17);
   cmsStyle->SetPadLeftMargin(0.17);
 
