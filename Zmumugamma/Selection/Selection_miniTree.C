@@ -69,14 +69,15 @@
 	Int_t Photon_isEBorEE, Photon_isEB, Photon_isEE, Photon_isEEP, Photon_isEEM;
 
 	Int_t Photon_hasPixelSeed, Photon_isAlsoElectron, Photon_Nclusters, Photon_nBasicClusters, Photon_nXtals;
-	Int_t Photon_isTightPhoton, Photon_isLoosePhoton;
+	//Int_t Photon_isTightPhoton, Photon_isLoosePhoton;
 	Int_t Photon_convNTracks, Photon_isConverted;
 	Float_t Photon_convEoverP, Photon_convMass, Photon_convCotanTheta, Photon_convLikely, Photon_convVertexX, Photon_convVertexY, Photon_convVertexZ;
 	Float_t Photon_E, Photon_Et, Photon_E2x2, Photon_E3x3, Photon_E5x5, Photon_Emax, Photon_E2nd;
 	Float_t Photon_E_regression, Photon_E_regressionError, Photon_Et_regression;
 	Float_t Photon_Ecorr_o_Ereco;
 	Float_t Photon_r19, Photon_r9, Photon_cross;
-	Float_t Photon_caloConeSize, Photon_PreshEnergy, Photon_HoE;
+	//Float_t Photon_caloConeSize, 
+	Float_t Photon_PreshEnergy, Photon_HoE;
 	Float_t Photon_sigmaEtaEta, Photon_sigmaIetaIeta;
 	Float_t Photon_covEtaEta, Photon_covPhiPhi, Photon_covEtaPhi;
 	Float_t Photon_etaWidth, Photon_phiWidth;
@@ -974,8 +975,8 @@ if( ntotjob == 9999)
 	miniTree->Branch("Photon_nBasicClusters", &Photon_nBasicClusters, "Photon_nBasicClusters/I");
 	miniTree->Branch("Photon_nXtals", &Photon_nXtals, "Photon_nXtals/I"); // Variable not filled in current version
 
-	miniTree->Branch("Photon_isTightPhoton", &Photon_isTightPhoton, "Photon_isTightPhoton/I");
-	miniTree->Branch("Photon_isLoosePhoton", &Photon_isLoosePhoton, "Photon_isLoosePhoton/I");
+	//miniTree->Branch("Photon_isTightPhoton", &Photon_isTightPhoton, "Photon_isTightPhoton/I");
+	//miniTree->Branch("Photon_isLoosePhoton", &Photon_isLoosePhoton, "Photon_isLoosePhoton/I");
 
 	miniTree->Branch("Photon_E", &Photon_E, "Photon_E/F");
 	miniTree->Branch("Photon_Et", &Photon_Et, "Photon_Et/F");
@@ -994,7 +995,7 @@ if( ntotjob == 9999)
 	miniTree->Branch("Photon_r9", &Photon_r9, "Photon_r9/F");
 	miniTree->Branch("Photon_cross", &Photon_cross, "Photon_cross/F");
 
-	miniTree->Branch("Photon_caloConeSize", &Photon_caloConeSize, "Photon_caloConeSize/F");
+	//miniTree->Branch("Photon_caloConeSize", &Photon_caloConeSize, "Photon_caloConeSize/F");
 	miniTree->Branch("Photon_PreshEnergy", &Photon_PreshEnergy, "Photon_PreshEnergy/F");
 	miniTree->Branch("Photon_HoE", &Photon_HoE, "Photon_HoE/F");
 	miniTree->Branch("Photon_sigmaEtaEta", &Photon_sigmaEtaEta, "Photon_sigmaEtaEta/F");
@@ -1595,7 +1596,7 @@ if( ntotjob == 9999)
 					myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
           Photon_scale.push_back(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons) * EScale_true_injected);
 /*
-					cout << "myphotontocorrect->isEBPho()= " << myphotontocorrect->isEBPho() << endl;
+					cout << "myphotontocorrect->isEB()= " << myphotontocorrect->isEB() << endl;
 					cout << "myphotontocorrect->r9()= " << myphotontocorrect->r9() << endl;
 					cout << "brem= " << (double)(myphotontocorrect->superCluster()->phiWidth()) / (double)(myphotontocorrect->superCluster()->etaWidth()) << endl;
 					cout << "myphotontocorrect->superCluster()->rawEnergy()= " << myphotontocorrect->superCluster()->rawEnergy() << endl;
@@ -1625,13 +1626,14 @@ if( ntotjob == 9999)
 		Photon_isEBorEE = 1;
 		Photon_isEB = Photon_isEE = Photon_isEEP = Photon_isEEM = -99;
 		Photon_hasPixelSeed = Photon_isAlsoElectron = Photon_Nclusters = Photon_nBasicClusters = Photon_nXtals = -99;
-		Photon_isTightPhoton = Photon_isLoosePhoton = -99;
+		//Photon_isTightPhoton = Photon_isLoosePhoton = -99;
 		Photon_convNTracks = Photon_isConverted = -99;
 		Photon_convEoverP = Photon_convMass = Photon_convCotanTheta = Photon_convLikely = Photon_convVertexX = Photon_convVertexY = Photon_convVertexZ = -99.0;	
 		Photon_E = Photon_Et = Photon_E2x2 = Photon_E3x3 = Photon_E5x5 = Photon_Emax = Photon_E2nd = -99.0;
 		Photon_Ecorr_o_Ereco = -99.0;
 		Photon_r19 = Photon_r9 = Photon_cross = -99.0;
-		Photon_caloConeSize = Photon_PreshEnergy = Photon_HoE = Photon_sigmaEtaEta = Photon_sigmaIetaIeta = Photon_covEtaEta = Photon_covPhiPhi = Photon_covEtaPhi = Photon_etaWidth = Photon_phiWidth = -99.0;
+		//Photon_caloConeSize = -99.0;
+		Photon_PreshEnergy = Photon_HoE = Photon_sigmaEtaEta = Photon_sigmaIetaIeta = Photon_covEtaEta = Photon_covPhiPhi = Photon_covEtaPhi = Photon_etaWidth = Photon_phiWidth = -99.0;
 		Photon_dR03isoEcalRecHit = Photon_dR03isoHcalRecHit = Photon_dR03isoSolidTrkCone = Photon_dR03isoHollowTrkCone = Photon_dR03isoNTracksSolidCone = Photon_dR03isoNTracksHollowCone = -99.0;
 		Photon_dR04isoEcalRecHit = Photon_dR04isoHcalRecHit = Photon_dR04isoSolidTrkCone = Photon_dR04isoHollowTrkCone = Photon_dR04isoNTracksSolidCone = Photon_dR04isoNTracksHollowCone = -99.0;
 		Photon_seedTime = Photon_seedFlag = -99.0;
