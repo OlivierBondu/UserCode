@@ -1,5 +1,5 @@
 #! /usr/local/bin/bash -l
-#$ -l ct=10000
+#$ -l ct=18000
 #$ -P P_cmsf
 #$ -l vmem=3G
 #$ -l fsize=10G
@@ -14,7 +14,7 @@
 #$ -cwd
 #$ -m a
 ### set array job indices 'min-max:interval'
-#$ -t 1-50
+#$ -t 1-30
 
 syntax="${0} {parameter}"
 #if [[ -z ${6} ]]
@@ -26,7 +26,7 @@ fi
 
 sample=${1}
 output=${2}
-ntotjob="50"
+ntotjob="30"
 ijob=`echo "${SGE_TASK_ID} - 1" | bc -ql`
 isZgammaMC=${3:-""}
 lumi_set=${4:-""}
@@ -116,7 +116,7 @@ echo "USER=${USER}"
 echo "COPY EXECUTABLE TO WORKER"
 cp ${SPSDIR}/Zmumugamma/Selection/rochcor_v2.h ${TMPDIR}/
 cp ${SPSDIR}/Zmumugamma/Selection/listFiles_${sample} ${TMPDIR}/
-cp ${SPSDIR}/Zmumugamma/Selection/Apply_v29.exe ${TMPDIR}/
+cp ${SPSDIR}/Zmumugamma/Selection/Apply_v32.exe ${TMPDIR}/
 
 echo "pwd; ls -als"
 pwd; ls -als
@@ -127,24 +127,31 @@ echo "USER=${USER}"
 # EXECUTE JOB
 echo "EXECUTE JOB"
 cd ${TMPDIR}/
-./Apply_v29.exe ${sample} ${output} ${ntotjob} ${ijob} ${isZgammaMC} ${lumi_set} ${pu_set} ${low_m_mumu_cut} ${high_m_mumu_cut} ${photon_energy_correction_scheme} ${extra_photon_scale} ${applyMuonScaleCorrection} ${muon_correction_sys} 2> ${output}_part${ijob}.err | tee ${output}_part${ijob}.out
+./Apply_v32.exe ${sample} ${output} ${ntotjob} ${ijob} ${isZgammaMC} ${lumi_set} ${pu_set} ${low_m_mumu_cut} ${high_m_mumu_cut} ${photon_energy_correction_scheme} ${extra_photon_scale} ${applyMuonScaleCorrection} ${muon_correction_sys} 2> ${output}_part${ijob}.err | tee ${output}_part${ijob}.out
 #if [[ -z ${9} ]]
 #then
-#	./Apply_v29.exe ${1} ${2} 50 ${ijob} ${3} ${4} ${5} ${6} ${7} ${8} ${9} 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
+#	./Apply_v32.exe ${1} ${2} 50 ${ijob} ${3} ${4} ${5} ${6} ${7} ${8} ${9} 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
 #else
-#	./Apply_v29.exe ${1} ${2} 50 ${ijob} 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
+#	./Apply_v32.exe ${1} ${2} 50 ${ijob} 2> ${2}_part${ijob}.err | tee ${2}_part${ijob}.out
 #fi
+
+let tsleep="20*${SGE_TASK_ID}"
+sleep ${tsleep}
+
 
 echo "pwd; ls -als"
 pwd; ls -als
 echo ""
 
+
+
 # GET BACK OUTPUT FILES TO SPS
 echo "GET BACK OUTPUT FILES TO SPS AND REMOVE THEM FROM DISTANT DIR"
 mv ${TMPDIR}/miniTree_${2}_part${ijob}*root ${SPSDIR}/Zmumugamma/Selection/
+mv ${TMPDIR}/miniFriend_${2}_part${ijob}*root ${SPSDIR}/Zmumugamma/Selection/
 mv ${TMPDIR}/${2}_part${ijob}*out ${SPSDIR}/Zmumugamma/Selection/
 mv ${TMPDIR}/${2}_part${ijob}*err ${SPSDIR}/Zmumugamma/Selection/
-rm ${TMPDIR}/Apply_v29.exe
+rm ${TMPDIR}/Apply_v32.exe
 
 #"cd ${SPSDIR}/Zmumugamma/Selection/"
 #cd ${SPSDIR}/Zmumugamma/Selection/
