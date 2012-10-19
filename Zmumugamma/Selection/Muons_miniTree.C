@@ -1,5 +1,5 @@
 #include "Muons_miniTree.h"
-#include "rochcor_v2.C"
+#include "rochcor_v4_new.C"
 
 	// ____________________________________________
 	// Event information
@@ -129,6 +129,7 @@ int main(int argc, char *argv[])
   // ******************************************
 	string lumi_set = "";
 	double integratedLuminosity = 1.0;
+	int runopt = 0;
   if( argc > 6 )
   {
 		lumi_set = argv[6];
@@ -138,9 +139,9 @@ int main(int argc, char *argv[])
 		if( lumi_set == "July05" ) integratedLuminosity = 1.157*1000.0;
 		if( lumi_set == "Aug05" ) integratedLuminosity = 389.876;
 		if( lumi_set == "Oct03" ) integratedLuminosity = 706.719;
-		if( lumi_set == "2011A" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719;
-		if( lumi_set == "2011A_rereco" ) integratedLuminosity = 2.221*1000.0;
-		if( lumi_set == "2011B" ) integratedLuminosity = 2.714*1000.0;
+		if( lumi_set == "2011A" ){ integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719; runopt = 0;}
+		if( lumi_set == "2011A_rereco" ){ integratedLuminosity = 2.221*1000.0; runopt = 0;}
+		if( lumi_set == "2011B" ){ integratedLuminosity = 2.714*1000.0; runopt = 1;}
 		if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
 		if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +  2.714*1000.0;
   }
@@ -182,6 +183,10 @@ int main(int argc, char *argv[])
 	{
 		std::stringstream ss ( argv[10] );
 		ss >> applyMuonScaleCorrection;
+        if( applyMuonScaleCorrection == 0 ) cout << "No muon correction will be applied" << endl;
+        if( applyMuonScaleCorrection == 1 ) cout << "MuScleFit muon corrections will be applied upstream" << endl;
+        if( applyMuonScaleCorrection == 2 ) cout << "SIDRA muon corrections will be applied upstream" << endl;
+        if( applyMuonScaleCorrection == 3 ) cout << "Rochester muon corrections will be applied upstream" << endl;
 	}
 
   // ******************************************
@@ -205,7 +210,7 @@ int main(int argc, char *argv[])
 
 //	TProof * p = TProof::Open("ccaplmaster.in2p3.fr");
 	gSystem->Load("libToto.so");
-	gROOT->ProcessLine(".L rochcor_v2.h+");
+	gROOT->ProcessLine(".L rochcor_v4_new.h+");
 //	gSystem->Load("libFWCoreFWLite.so");
 //	gSystem->Load("libDataFormatsFWLite.so");
 //	AutoLibraryLoader::enable();
@@ -748,7 +753,8 @@ if( ntotjob == 9999 )
 		nGenVertices = vertices->GetEntries();
 		if( (isZgammaMC == 1) || (isZgammaMC == 2) )
 		{
-			nGenVertices = event->nInTimePUVertices();
+//			nGenVertices = event->nInTimePUVertices();
+			nGenVertices = event->inTimePU_NumInteractions();
 		}
 		isMM = 0;
 
@@ -937,8 +943,8 @@ if( ntotjob == 9999 )
 			nbMuonsAfterID[8]++;
 			TOTALnbMuonsAfterID[8]++;
 
-//      if(! (mymuon->isoR03_sumPt()<3.0) ){// sum of pT of tracks with pT >1.5 within a cone of DR < 0.3 around the muon direction, vetoing a cone of 0.015 around that direction
-      if(! ( (double)(mymuon->isoR03_sumPt() + mymuon->isoR03_emEt() + mymuon->isoR03_hadEt())/(double)(mymuon->Pt()) < 0.10 ) ){// combined isolation as described in https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMuonId
+      if(! (mymuon->isoR03_sumPt()<3.0) ){// sum of pT of tracks with pT >1.5 within a cone of DR < 0.3 around the muon direction, vetoing a cone of 0.015 around that direction
+//      if(! ( (double)(mymuon->isoR03_sumPt() + mymuon->isoR03_emEt() + mymuon->isoR03_hadEt())/(double)(mymuon->Pt()) < 0.10 ) ){// combined isolation as described in https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideMuonId
         muonIsNotCommissioned.push_back(1);
         if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because sum of pT of tracks with pT >1.5 within a cone of DR < 0.3 around the muon direction, vetoing a cone of 0.015 around that direction" << endl;
         continue;
@@ -974,14 +980,79 @@ if( ntotjob == 9999 )
 				TLorentzVector muonRochesterDummy(mymuon->Px(), mymuon->Py(), mymuon->Pz(), mymuon->E());
 				// moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
 				// sysdev = 0 : no systematics yet
-				if( isZgammaMC > 0 ) // If sample is MC
+                if( isZgammaMC > 0 ) // If sample is MC
+                {
+                    if( (lumi_set == "2011A") || (lumi_set == "2011A_rereco") ) runopt = 0;
+                    if( (lumi_set == "2011B") || (lumi_set == "2011B_rereco") ) runopt = 1;
+                    if( lumi_set == "2011A" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719;
+                    if( lumi_set == "2011A_rereco" ) integratedLuminosity = 2.221*1000.0;
+                    if( lumi_set == "2011B" ) integratedLuminosity = 2.714*1000.0;
+                    if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
+                    if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +   2.714*1000.0;
+
+                    // event where to switch from Run2011A to Run2011B correction
+                    // We run over ntot=  DYToMuMu events
+                    // We run on average on avEventsPerJob= (ntot) / (ntotjob)= events per job
+                    // RunA represents Astat= (2.221) / (2.221 + 2.714) = 45.01 % of the total stat
+                    // RunB represents Bstat= (2.714) / (2.221 + 2.714) = 54.99 % of the total stat
+                    // The last event of 'RunA' is lastA= Astat*ntot
+                    // Which should happen in job ijobLastA= (int)(lastA)/(int)(avEventsPerJob)
+                    // and will be the event iEventLastA= (int)(lastA)%(int)(avEventsPerJob)
+                    // ***********************************
+                    // temp version
+                    // ***********************************
+                    if( (lumi_set == "2011" ) )
+                    {
+                        int ntot= 8950877;
+                        double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                        double Astat= (double)(215.552 + 951.716 + 389.876 + 706.719) / (double)(215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0);
+                        double Bstat= (double)(2.714*1000.0) / (double)(215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0);
+                        double lastA= Astat*ntot;
+                        int ijobLastA= (int)(lastA)/(int)(avEventsPerJob);
+                        int iEventLastA= (int)(lastA)%(int)(avEventsPerJob);
+                        if( ijob == (ijobLastA -1) )
+                        {
+                            if( ievt >= iEventLastA )
+                            {
+                                runopt = 1;
+                            } else runopt = 0;
+                        } else if( ijob >= ijobLastA ) runopt = 1;
+                    }
+                    if( (lumi_set == "2011_rereco" ) )
+                    {
+                        int ntot= 8950877;
+                        double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                        double Astat= (double)(2.221) / (double)(2.221 + 2.714);
+                        double Bstat= (double)(2.714) / (double)(2.221 + 2.714);
+                        double lastA= Astat*ntot;
+                        int ijobLastA= (int)(lastA)/(int)(avEventsPerJob);
+                        int iEventLastA= (int)(lastA)%(int)(avEventsPerJob);
+                        if( ijob == (ijobLastA -1) )
+                        {
+                            if( ievt >= iEventLastA )
+                            {
+                                runopt = 1;
+                            } else runopt = 0;
+                        } else if( ijob >= ijobLastA ) runopt = 1;
+                    }
+                    if( verbosity > 4) cerr << "### ievt= " << ievt << "\tijob= " << ijob << "\trunopt= " << runopt << endl;
+                    rmcor->momcor_mc(muonRochester, mymuon->charge(), sysdev, runopt);
+//                      if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
+//                      else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
+                } else {
+                    rmcor->momcor_data(muonRochester, mymuon->charge(), sysdev, runopt);
+//                      if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev, runopt);
+//                      else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev, runopt);
+                }
+
+				/*if( isZgammaMC > 0 ) // If sample is MC
 				{
 					if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
 					else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
 				} else {
 					if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
-          else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
-				}
+        			else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
+				}*/
 				corrected_Pt = muonRochester.Pt();
 			}
 			if( applyMuonScaleCorrection == 31 )
@@ -997,14 +1068,78 @@ if( ntotjob == 9999 )
 
 				// moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
 				// sysdev = 0 : no systematics yet
-				if( isZgammaMC > 0 ) // If sample is MC
+                if( isZgammaMC > 0 ) // If sample is MC
+                {
+                    if( (lumi_set == "2011A") || (lumi_set == "2011A_rereco") ) runopt = 0;
+                    if( (lumi_set == "2011B") || (lumi_set == "2011B_rereco") ) runopt = 1;
+                    if( lumi_set == "2011A" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719;
+                    if( lumi_set == "2011A_rereco" ) integratedLuminosity = 2.221*1000.0;
+                    if( lumi_set == "2011B" ) integratedLuminosity = 2.714*1000.0;
+                    if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
+                    if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +   2.714*1000.0;
+
+                    // event where to switch from Run2011A to Run2011B correction
+                    // We run over ntot=  DYToMuMu events
+                    // We run on average on avEventsPerJob= (ntot) / (ntotjob)= events per job
+                    // RunA represents Astat= (2.221) / (2.221 + 2.714) = 45.01 % of the total stat
+                    // RunB represents Bstat= (2.714) / (2.221 + 2.714) = 54.99 % of the total stat
+                    // The last event of 'RunA' is lastA= Astat*ntot
+                    // Which should happen in job ijobLastA= (int)(lastA)/(int)(avEventsPerJob)
+                    // and will be the event iEventLastA= (int)(lastA)%(int)(avEventsPerJob)
+                    // ***********************************
+                    // temp version
+                    // ***********************************
+                    if( (lumi_set == "2011" ) )
+                    {
+                        int ntot= 8950877;
+                        double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                        double Astat= (double)(215.552 + 951.716 + 389.876 + 706.719) / (double)(215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0);
+                        double Bstat= (double)(2.714*1000.0) / (double)(215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0);
+                        double lastA= Astat*ntot;
+                        int ijobLastA= (int)(lastA)/(int)(avEventsPerJob);
+                        int iEventLastA= (int)(lastA)%(int)(avEventsPerJob);
+                        if( ijob == (ijobLastA -1) )
+                        {
+                            if( ievt >= iEventLastA )
+                            {
+                                runopt = 1;
+                            } else runopt = 0;
+                        } else if( ijob >= ijobLastA ) runopt = 1;
+                    }
+                    if( (lumi_set == "2011_rereco" ) )
+                    {
+                        int ntot= 8950877;
+                        double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                        double Astat= (double)(2.221) / (double)(2.221 + 2.714);
+                        double Bstat= (double)(2.714) / (double)(2.221 + 2.714);
+                        double lastA= Astat*ntot;
+                        int ijobLastA= (int)(lastA)/(int)(avEventsPerJob);
+                        int iEventLastA= (int)(lastA)%(int)(avEventsPerJob);
+                        if( ijob == (ijobLastA -1) )
+                        {
+                            if( ievt >= iEventLastA )
+                            {
+                                runopt = 1;
+                            } else runopt = 0;
+                        } else if( ijob >= ijobLastA ) runopt = 1;
+                    }
+                    if( verbosity > 4) cerr << "### ievt= " << ievt << "\tijob= " << ijob << "\trunopt= " << runopt << endl;
+                    rmcor->momcor_mc(muonRochester, mymuon->charge(), sysdev, runopt);
+//                      if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
+//                      else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
+                } else {
+                    rmcor->momcor_data(muonRochester, mymuon->charge(), sysdev, runopt);
+//                      if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev, runopt);
+//                      else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev, runopt);
+                }
+/*				if( isZgammaMC > 0 ) // If sample is MC
 				{
 					if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
 					else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
 				} else {
 					if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
 					else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
-				}
+				}*/
 				corrected_Pt = muonRochester.Pt();
 			}
 			if( applyMuonScaleCorrection == 32 )
@@ -1020,14 +1155,78 @@ if( ntotjob == 9999 )
 
 				// moption = 1  : recommended by the authors (better match in Z mass profile vs. eta/phi between the reconstructed and generated Z mass)
 				// sysdev = 0 : no systematics yet
-				if( isZgammaMC > 0 ) // If sample is MC
+                if( isZgammaMC > 0 ) // If sample is MC
+                {
+                    if( (lumi_set == "2011A") || (lumi_set == "2011A_rereco") ) runopt = 0;
+                    if( (lumi_set == "2011B") || (lumi_set == "2011B_rereco") ) runopt = 1;
+                    if( lumi_set == "2011A" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719;
+                    if( lumi_set == "2011A_rereco" ) integratedLuminosity = 2.221*1000.0;
+                    if( lumi_set == "2011B" ) integratedLuminosity = 2.714*1000.0;
+                    if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
+                    if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +   2.714*1000.0;
+
+                    // event where to switch from Run2011A to Run2011B correction
+                    // We run over ntot=  DYToMuMu events
+                    // We run on average on avEventsPerJob= (ntot) / (ntotjob)= events per job
+                    // RunA represents Astat= (2.221) / (2.221 + 2.714) = 45.01 % of the total stat
+                    // RunB represents Bstat= (2.714) / (2.221 + 2.714) = 54.99 % of the total stat
+                    // The last event of 'RunA' is lastA= Astat*ntot
+                    // Which should happen in job ijobLastA= (int)(lastA)/(int)(avEventsPerJob)
+                    // and will be the event iEventLastA= (int)(lastA)%(int)(avEventsPerJob)
+                    // ***********************************
+                    // temp version
+                    // ***********************************
+                    if( (lumi_set == "2011" ) )
+                    {
+                        int ntot= 8950877;
+                        double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                        double Astat= (double)(215.552 + 951.716 + 389.876 + 706.719) / (double)(215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0);
+                        double Bstat= (double)(2.714*1000.0) / (double)(215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0);
+                        double lastA= Astat*ntot;
+                        int ijobLastA= (int)(lastA)/(int)(avEventsPerJob);
+                        int iEventLastA= (int)(lastA)%(int)(avEventsPerJob);
+                        if( ijob == (ijobLastA -1) )
+                        {
+                            if( ievt >= iEventLastA )
+                            {
+                                runopt = 1;
+                            } else runopt = 0;
+                        } else if( ijob >= ijobLastA ) runopt = 1;
+                    }
+                    if( (lumi_set == "2011_rereco" ) )
+                    {
+                        int ntot= 8950877;
+                        double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                        double Astat= (double)(2.221) / (double)(2.221 + 2.714);
+                        double Bstat= (double)(2.714) / (double)(2.221 + 2.714);
+                        double lastA= Astat*ntot;
+                        int ijobLastA= (int)(lastA)/(int)(avEventsPerJob);
+                        int iEventLastA= (int)(lastA)%(int)(avEventsPerJob);
+                        if( ijob == (ijobLastA -1) )
+                        {
+                            if( ievt >= iEventLastA )
+                            {
+                                runopt = 1;
+                            } else runopt = 0;
+                        } else if( ijob >= ijobLastA ) runopt = 1;
+                    }
+                    if( verbosity > 4) cerr << "### ievt= " << ievt << "\tijob= " << ijob << "\trunopt= " << runopt << endl;
+                    rmcor->momcor_mc(muonRochester, mymuon->charge(), sysdev, runopt);
+//                      if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
+//                      else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
+                } else {
+                    rmcor->momcor_data(muonRochester, mymuon->charge(), sysdev, runopt);
+//                      if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev, runopt);
+//                      else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev, runopt);
+                }
+/*				if( isZgammaMC > 0 ) // If sample is MC
 				{
 					if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
 					else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
 				} else {
 					if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
 					else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
-				}
+				}*/
 				corrected_Pt = muonRochester.Pt();
 			}
 			if( applyMuonScaleCorrection == 99 )
