@@ -46,7 +46,6 @@
 #include "interface/TRootVertex.h"
 
 // Muon corrections headers
-//#include "rochcor_v2.h"
 
 
 using namespace std;
@@ -66,8 +65,8 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			};
 			return weight[nGenVertices];
 		} else if ( pu_set == "PU_S4" )
-    {
-      double weight[36] = {0, 0.0575699, 0.456986, 0.938683, 1.55675, 2.01064, 2.1879, 2.08267, 1.7888, 1.40147, 1.03889, 0.72754, 0.494383, 0.325802, 0.20656, 0.129838, 0.0802393, 0.0489262, 0.0291108, 0.0178913, 0.0106616, 0.00642673, 0.00377871, 0.00232346, 0.00140085, 0.000857247, 0.000509539, 0.000302549, 0.000194001, 0.000110133, 6.37239e-05, 4.23769e-05, 2.58207e-05, 1.73478e-05, 9.19466e-06, 7.75149e-06
+		{
+			double weight[36] = {0, 0.0575699, 0.456986, 0.938683, 1.55675, 2.01064, 2.1879, 2.08267, 1.7888, 1.40147, 1.03889, 0.72754, 0.494383, 0.325802, 0.20656, 0.129838, 0.0802393, 0.0489262, 0.0291108, 0.0178913, 0.0106616, 0.00642673, 0.00377871, 0.00232346, 0.00140085, 0.000857247, 0.000509539, 0.000302549, 0.000194001, 0.000110133, 6.37239e-05, 4.23769e-05, 2.58207e-05, 1.73478e-05, 9.19466e-06, 7.75149e-06
 			};
 			return weight[nGenVertices];
 		}
@@ -80,8 +79,8 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			};
 			return weight[nGenVertices];
 		} else if ( pu_set == "PU_S4" )
-    {
-      double weight[36] = {0, 0.0633001, 0.507791, 1.03085, 1.67462, 2.11114, 2.23863, 2.07412, 1.73176, 1.31701, 0.946101, 0.640917, 0.420471, 0.266944, 0.162645, 0.0979641, 0.057811, 0.0335185, 0.0188679, 0.0109059, 0.00607106, 0.0033933, 0.00183537, 0.0010297, 0.000561865, 0.000308742, 0.000163576, 8.59978e-05, 4.85363e-05, 2.41283e-05, 1.21725e-05, 7.03273e-06, 3.71224e-06, 2.15547e-06, 9.86134e-07, 6.7091e-07
+		{
+			double weight[36] = {0, 0.0633001, 0.507791, 1.03085, 1.67462, 2.11114, 2.23863, 2.07412, 1.73176, 1.31701, 0.946101, 0.640917, 0.420471, 0.266944, 0.162645, 0.0979641, 0.057811, 0.0335185, 0.0188679, 0.0109059, 0.00607106, 0.0033933, 0.00183537, 0.0010297, 0.000561865, 0.000308742, 0.000163576, 8.59978e-05, 4.85363e-05, 2.41283e-05, 1.21725e-05, 7.03273e-06, 3.71224e-06, 2.15547e-06, 9.86134e-07, 6.7091e-07
 			};
 			return weight[nGenVertices];
 		}
@@ -94,8 +93,8 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			};
 			return weight[nGenVertices];
 		} else if ( pu_set == "PU_S4" )
-    {
-      double weight[36] = {0, 0.0622227, 0.498239, 1.01352, 1.65246, 2.09225, 2.22909, 2.07573, 1.74249, 1.33289, 0.963547, 0.657204, 0.434368, 0.27801, 0.170902, 0.103957, 0.0620279, 0.0364154, 0.0207938, 0.0122193, 0.00693416, 0.00396364, 0.00220075, 0.00127295, 0.000719609, 0.00041187, 0.000228623, 0.000126713, 7.58861e-05, 4.02985e-05, 2.1865e-05, 1.3678e-05, 7.86899e-06, 5.01186e-06, 2.52947e-06, 2.00217e-06
+		{
+			double weight[36] = {0, 0.0622227, 0.498239, 1.01352, 1.65246, 2.09225, 2.22909, 2.07573, 1.74249, 1.33289, 0.963547, 0.657204, 0.434368, 0.27801, 0.170902, 0.103957, 0.0620279, 0.0364154, 0.0207938, 0.0122193, 0.00693416, 0.00396364, 0.00220075, 0.00127295, 0.000719609, 0.00041187, 0.000228623, 0.000126713, 7.58861e-05, 4.02985e-05, 2.1865e-05, 1.3678e-05, 7.86899e-06, 5.01186e-06, 2.52947e-06, 2.00217e-06
 			};
 			return weight[nGenVertices];
 		}
@@ -108,8 +107,8 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			};
 			return weight[nGenVertices];
 		} else if ( pu_set == "PU_S4" )
-    {
-      double weight[36] = {0, 0.0496338, 0.372423, 0.737016, 1.21406, 1.60989, 1.85511, 1.92009, 1.831, 1.61708, 1.36475, 1.09398, 0.852235, 0.642864, 0.464613, 0.330819, 0.229706, 0.155831, 0.101998, 0.0681009, 0.043493, 0.0276993, 0.0169561, 0.0106961, 0.00652103, 0.00397967, 0.00232855, 0.00134481, 0.000829663, 0.000448781, 0.000245316, 0.000152979, 8.68513e-05, 5.40748e-05, 2.64391e-05, 1.96906e-05
+		{
+			double weight[36] = {0, 0.0496338, 0.372423, 0.737016, 1.21406, 1.60989, 1.85511, 1.92009, 1.831, 1.61708, 1.36475, 1.09398, 0.852235, 0.642864, 0.464613, 0.330819, 0.229706, 0.155831, 0.101998, 0.0681009, 0.043493, 0.0276993, 0.0169561, 0.0106961, 0.00652103, 0.00397967, 0.00232855, 0.00134481, 0.000829663, 0.000448781, 0.000245316, 0.000152979, 8.68513e-05, 5.40748e-05, 2.64391e-05, 1.96906e-05
 			};
 			return weight[nGenVertices];
 		}
@@ -122,8 +121,8 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			};
 			return weight[nGenVertices];
 		} else if ( pu_set == "PU_S4" )
-    {
-      double weight[36] = {0, 0.0363149, 0.290862, 0.606765, 1.03684, 1.41786, 1.68726, 1.81364, 1.8091, 1.68307, 1.50521, 1.28441, 1.06859, 0.862703, 0.668144, 0.51011, 0.379819, 0.276225, 0.193716, 0.138476, 0.094609, 0.0644025, 0.0421042, 0.0283444, 0.0184306, 0.0119912, 0.00747826, 0.00460347, 0.00302808, 0.00174741, 0.00101993, 0.000679965, 0.000413336, 0.00027605, 0.000145087, 0.000120553
+		{
+			double weight[36] = {0, 0.0363149, 0.290862, 0.606765, 1.03684, 1.41786, 1.68726, 1.81364, 1.8091, 1.68307, 1.50521, 1.28441, 1.06859, 0.862703, 0.668144, 0.51011, 0.379819, 0.276225, 0.193716, 0.138476, 0.094609, 0.0644025, 0.0421042, 0.0283444, 0.0184306, 0.0119912, 0.00747826, 0.00460347, 0.00302808, 0.00174741, 0.00101993, 0.000679965, 0.000413336, 0.00027605, 0.000145087, 0.000120553
 			};
 			return weight[nGenVertices];
 		}
@@ -136,8 +135,8 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			};
 			return weight[nGenVertices];
 		} else if ( pu_set == "PU_S4" )
-    {
-      double weight[36] = {0, 0.0521874, 0.413644, 0.842525, 1.39027, 1.80467, 2.00035, 1.96939, 1.77786, 1.48797, 1.19688, 0.922644, 0.698725, 0.518249, 0.372385, 0.266307, 0.187383, 0.129797, 0.0872939, 0.0601927, 0.0398649, 0.0264147, 0.0168676, 0.0111232, 0.007102, 0.00454628, 0.0027943, 0.00169766, 0.00110341, 0.000629799, 0.000363898, 0.00024033, 0.000144811, 9.59158e-05, 5.0019e-05, 4.11205e-05
+		{
+			double weight[36] = {0, 0.0521874, 0.413644, 0.842525, 1.39027, 1.80467, 2.00035, 1.96939, 1.77786, 1.48797, 1.19688, 0.922644, 0.698725, 0.518249, 0.372385, 0.266307, 0.187383, 0.129797, 0.0872939, 0.0601927, 0.0398649, 0.0264147, 0.0168676, 0.0111232, 0.007102, 0.00454628, 0.0027943, 0.00169766, 0.00110341, 0.000629799, 0.000363898, 0.00024033, 0.000144811, 9.59158e-05, 5.0019e-05, 4.11205e-05
 			};
 			return weight[nGenVertices];
 		}
@@ -150,12 +149,12 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			};
 			return weight[nGenVertices];
 		} else if ( pu_set == "PU_S4" )
-    {
-      double weight[36] = {0, 0.00168313, 0.0206868, 0.065525, 0.166132, 0.327199, 0.5446, 0.798706, 1.06772, 1.31765, 1.55816, 1.76238, 1.95602, 2.12525, 2.23733, 2.3458, 2.4228, 2.46728, 2.44417, 2.48785, 2.43795, 2.39617, 2.27554, 2.23758, 2.13611, 2.05017, 1.89456, 1.73544, 1.70551, 1.47611, 1.297, 1.30633, 1.20383, 1.2229, 0.980765, 1.66148
+		{
+			double weight[36] = {0, 0.00168313, 0.0206868, 0.065525, 0.166132, 0.327199, 0.5446, 0.798706, 1.06772, 1.31765, 1.55816, 1.76238, 1.95602, 2.12525, 2.23733, 2.3458, 2.4228, 2.46728, 2.44417, 2.48785, 2.43795, 2.39617, 2.27554, 2.23758, 2.13611, 2.05017, 1.89456, 1.73544, 1.70551, 1.47611, 1.297, 1.30633, 1.20383, 1.2229, 0.980765, 1.66148
 			};
 			return weight[nGenVertices];
 		}
-	} else if( lumi_set == "2011" || lumi_set == "2011ff" || lumi_set == "2011f"  || lumi_set == "2011_rereco")
+	} else if( lumi_set == "2011" || lumi_set == "2011ff" || lumi_set == "2011f"	|| lumi_set == "2011_rereco")
 	{
 		if( pu_set == "PU_S6" )
 		{
@@ -191,14 +190,14 @@ double weight_WJetsToLNu(int nGenVertices)
 	double weight[51] = {
 0, 0, 0.207242, 0.445507, 0.859512, 1.07573, 1.26513, 1.46919, 1.21893, 1.2368, 0.996704, 0.898286, 1.02384, 1.10968, 1.15656, 1.41378, 1.19411, 1.00502, 0.973797, 1.64394, 0, 0.947574, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0// May10_Promptv4_Aug05_Promptv6 2.15 fb-1
 };
-  return weight[nGenVertices];
+	return weight[nGenVertices];
 }
-double  weight_QCDMu(int nGenVertices)
+double	weight_QCDMu(int nGenVertices)
 {
-  double weight[51] = {
+	double weight[51] = {
 0, 0, 0.216306, 0.484129, 0.782602, 1.0295, 1.30368, 1.31239, 1.26043, 1.10026, 1.07655, 1.03941, 1.0667, 1.00138, 1.15552, 0.968367, 1.46147, 1.95245, 3.40521, 1.9162, 2.08934, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 // May10_Promptv4_Aug05_Promptv6 2.15 fb-1
 };
-  return weight[nGenVertices];
+	return weight[nGenVertices];
 }
 
 // *****************************************************************************************************
@@ -217,16 +216,16 @@ int factorial(int number) {
 // ******************* Execute bash command line and get output
 // *****************************************************************************************************
 std::string exec(char* cmd) {
-    FILE* pipe = popen(cmd, "r");
-    if (!pipe) return "ERROR";
-    char buffer[128];
-    std::string result = "";
-    while(!feof(pipe)) {
-        if(fgets(buffer, 128, pipe) != NULL)
-                result += buffer;
-    }
-    pclose(pipe);
-    return result;
+		FILE* pipe = popen(cmd, "r");
+		if (!pipe) return "ERROR";
+		char buffer[128];
+		std::string result = "";
+		while(!feof(pipe)) {
+				if(fgets(buffer, 128, pipe) != NULL)
+								result += buffer;
+		}
+		pclose(pipe);
+		return result;
 }
 
 // *****************************************************************************************************
@@ -247,36 +246,36 @@ double DeltaR( double eta1, double phi1, double eta2, double phi2)
 // *****************************************************************************************************
 void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* particule_trueE, float* particule_truePx, float* particule_truePy, float* particule_truePz, float* particule_truePhi, float* particule_trueEta, float* particule_truePt, int particle_pdgId = 0)
 {
-  TRootMCParticle* mygenparticle;
-  int NbMCpartInCone=0;
-  double bestPtdiff=500.0;
-  int igpsl=-1;
-  for (int igp=0; igp<mcParticles->GetEntriesFast(); igp++) {
-    mygenparticle = (TRootMCParticle*) mcParticles->At(igp);
-    //cout<<endl<<"deltaR = "<<DeltaR(mygenparticle->Eta(), mygenparticle->Phi(), myparticle->Eta(), myparticle->Phi())<<endl;
-    //cout<<"mygenparticle->Mag() = "<<mygenparticle->Mag()<<endl;
-    if (DeltaR(mygenparticle->Eta(), mygenparticle->Phi(), myparticle->Eta(), myparticle->Phi())<0.3){
-      if ( (mygenparticle->status()==1) && ( (particle_pdgId==0)?true:((mygenparticle->type())==particle_pdgId) ) ){
-        NbMCpartInCone++;
-        if (fabs( (mygenparticle->Pt()) - (myparticle->Pt()) )<bestPtdiff){
-          bestPtdiff=fabs(mygenparticle->Pt()-myparticle->Pt());
-          igpsl=igp;
-        }
-      }
-    }
-  }
-  if (igpsl!=-1){
-    mygenparticle = (TRootMCParticle*) mcParticles->At(igpsl);
-    *particule_trueE = mygenparticle->Energy();
-    *particule_truePx = mygenparticle->Px();
-    *particule_truePy = mygenparticle->Py();
-    *particule_truePz = mygenparticle->Pz();
-    *particule_truePhi = mygenparticle->Phi();
-    *particule_trueEta = mygenparticle->Eta();
+	TRootMCParticle* mygenparticle;
+	int NbMCpartInCone=0;
+	double bestPtdiff=500.0;
+	int igpsl=-1;
+	for (int igp=0; igp<mcParticles->GetEntriesFast(); igp++) {
+		mygenparticle = (TRootMCParticle*) mcParticles->At(igp);
+		//cout<<endl<<"deltaR = "<<DeltaR(mygenparticle->Eta(), mygenparticle->Phi(), myparticle->Eta(), myparticle->Phi())<<endl;
+		//cout<<"mygenparticle->Mag() = "<<mygenparticle->Mag()<<endl;
+		if (DeltaR(mygenparticle->Eta(), mygenparticle->Phi(), myparticle->Eta(), myparticle->Phi())<0.3){
+			if ( (mygenparticle->status()==1) && ( (particle_pdgId==0)?true:((mygenparticle->type())==particle_pdgId) ) ){
+				NbMCpartInCone++;
+				if (fabs( (mygenparticle->Pt()) - (myparticle->Pt()) )<bestPtdiff){
+					bestPtdiff=fabs(mygenparticle->Pt()-myparticle->Pt());
+					igpsl=igp;
+				}
+			}
+		}
+	}
+	if (igpsl!=-1){
+		mygenparticle = (TRootMCParticle*) mcParticles->At(igpsl);
+		*particule_trueE = mygenparticle->Energy();
+		*particule_truePx = mygenparticle->Px();
+		*particule_truePy = mygenparticle->Py();
+		*particule_truePz = mygenparticle->Pz();
+		*particule_truePhi = mygenparticle->Phi();
+		*particule_trueEta = mygenparticle->Eta();
 		*particule_truePt = mygenparticle->Pt();
 
-  }
-  return;
+	}
+	return;
 }
 
 // *****************************************************************************************************
@@ -285,60 +284,60 @@ void doGenInfo(TRootParticle* myparticle, TClonesArray* mcParticles, float* part
 int main(int argc, char *argv[]);
 
 
-  // ____________________________________________
-  // Event information
-  // ____________________________________________
-  extern ULong64_t iEvent, iEventID, iLumiID, iRunID;
-  extern Int_t isMM;
-  extern Int_t nVertices;
-  extern Int_t nGenVertices;
-  extern Float_t weight_pileUp, weight_Xsection;
+	// ____________________________________________
+	// Event information
+	// ____________________________________________
+	extern ULong64_t iEvent, iEventID, iLumiID, iRunID;
+	extern Int_t isMM;
+	extern Int_t nVertices;
+	extern Int_t nGenVertices;
+	extern Float_t weight_pileUp, weight_Xsection;
 
-  // ____________________________________________
-  // Muon variables 
-  // ____________________________________________
-  extern Int_t NbMuons;
-  
-  extern Float_t Pt_allMuons, Eta_allMuons, Phi_allMuons, Charge_allMuons;
+	// ____________________________________________
+	// Muon variables 
+	// ____________________________________________
+	extern Int_t NbMuons;
+	
+	extern Float_t Pt_allMuons, Eta_allMuons, Phi_allMuons, Charge_allMuons;
 // (M minus charge, P plus charge), (L leading, S subleading)
-  extern Float_t MuonM_Pt, MuonP_Pt, MuonL_Pt, MuonS_Pt;
-  extern Float_t MuonM_Eta, MuonP_Eta, MuonL_Eta, MuonS_Eta;
-  extern Float_t MuonM_Phi, MuonP_Phi, MuonL_Phi, MuonS_Phi;
-  extern Int_t MuonL_Charge, MuonS_Charge;
+	extern Float_t MuonM_Pt, MuonP_Pt, MuonL_Pt, MuonS_Pt;
+	extern Float_t MuonM_Eta, MuonP_Eta, MuonL_Eta, MuonS_Eta;
+	extern Float_t MuonM_Phi, MuonP_Phi, MuonL_Phi, MuonS_Phi;
+	extern Int_t MuonL_Charge, MuonS_Charge;
 
-  extern Float_t MuonM_isoR03_emEt, MuonP_isoR03_emEt, MuonL_isoR03_emEt, MuonS_isoR03_emEt;
-  extern Float_t MuonM_isoR03_hadEt, MuonP_isoR03_hadEt, MuonL_isoR03_hadEt, MuonS_isoR03_hadEt;
-  extern Float_t MuonM_isoR03_hoEt, MuonP_isoR03_hoEt, MuonL_isoR03_hoEt, MuonS_isoR03_hoEt;
-  extern Float_t MuonM_isoR03_nJets, MuonP_isoR03_nJets, MuonL_isoR03_nJets, MuonS_isoR03_nJets;
-  extern Float_t MuonM_isoR03_nTracks, MuonP_isoR03_nTracks, MuonL_isoR03_nTracks, MuonS_isoR03_nTracks;
-  extern Float_t MuonM_isoR03_sumPt, MuonP_isoR03_sumPt, MuonL_isoR03_sumPt, MuonS_isoR03_sumPt;
+	extern Float_t MuonM_isoR03_emEt, MuonP_isoR03_emEt, MuonL_isoR03_emEt, MuonS_isoR03_emEt;
+	extern Float_t MuonM_isoR03_hadEt, MuonP_isoR03_hadEt, MuonL_isoR03_hadEt, MuonS_isoR03_hadEt;
+	extern Float_t MuonM_isoR03_hoEt, MuonP_isoR03_hoEt, MuonL_isoR03_hoEt, MuonS_isoR03_hoEt;
+	extern Float_t MuonM_isoR03_nJets, MuonP_isoR03_nJets, MuonL_isoR03_nJets, MuonS_isoR03_nJets;
+	extern Float_t MuonM_isoR03_nTracks, MuonP_isoR03_nTracks, MuonL_isoR03_nTracks, MuonS_isoR03_nTracks;
+	extern Float_t MuonM_isoR03_sumPt, MuonP_isoR03_sumPt, MuonL_isoR03_sumPt, MuonS_isoR03_sumPt;
 
-  extern Float_t MuonM_isoR05_emEt, MuonP_isoR05_emEt, MuonL_isoR05_emEt, MuonS_isoR05_emEt;
-  extern Float_t MuonM_isoR05_hadEt, MuonP_isoR05_hadEt, MuonL_isoR05_hadEt, MuonS_isoR05_hadEt;
-  extern Float_t MuonM_isoR05_hoEt, MuonP_isoR05_hoEt, MuonL_isoR05_hoEt, MuonS_isoR05_hoEt;
-  extern Float_t MuonM_isoR05_nJets, MuonP_isoR05_nJets, MuonL_isoR05_nJets, MuonS_isoR05_nJets;
-  extern Float_t MuonM_isoR05_nTracks, MuonP_isoR05_nTracks, MuonL_isoR05_nTracks, MuonS_isoR05_nTracks;
-  extern Float_t MuonM_isoR05_sumPt, MuonP_isoR05_sumPt, MuonL_isoR05_sumPt, MuonS_isoR05_sumPt;
+	extern Float_t MuonM_isoR05_emEt, MuonP_isoR05_emEt, MuonL_isoR05_emEt, MuonS_isoR05_emEt;
+	extern Float_t MuonM_isoR05_hadEt, MuonP_isoR05_hadEt, MuonL_isoR05_hadEt, MuonS_isoR05_hadEt;
+	extern Float_t MuonM_isoR05_hoEt, MuonP_isoR05_hoEt, MuonL_isoR05_hoEt, MuonS_isoR05_hoEt;
+	extern Float_t MuonM_isoR05_nJets, MuonP_isoR05_nJets, MuonL_isoR05_nJets, MuonS_isoR05_nJets;
+	extern Float_t MuonM_isoR05_nTracks, MuonP_isoR05_nTracks, MuonL_isoR05_nTracks, MuonS_isoR05_nTracks;
+	extern Float_t MuonM_isoR05_sumPt, MuonP_isoR05_sumPt, MuonL_isoR05_sumPt, MuonS_isoR05_sumPt;
 
-  extern Float_t MuonM_E, MuonP_E, MuonL_E, MuonS_E;
-  extern Float_t MuonM_Px, MuonP_Px, MuonL_Px, MuonS_Px;
-  extern Float_t MuonM_Py, MuonP_Py, MuonL_Py, MuonS_Py;
-  extern Float_t MuonM_Pz, MuonP_Pz, MuonL_Pz, MuonS_Pz;
+	extern Float_t MuonM_E, MuonP_E, MuonL_E, MuonS_E;
+	extern Float_t MuonM_Px, MuonP_Px, MuonL_Px, MuonS_Px;
+	extern Float_t MuonM_Py, MuonP_Py, MuonL_Py, MuonS_Py;
+	extern Float_t MuonM_Pz, MuonP_Pz, MuonL_Pz, MuonS_Pz;
 
-  // ____________________________________________
-  // mumu information
-  // ____________________________________________
+	// ____________________________________________
+	// mumu information
+	// ____________________________________________
 
-  extern Float_t Mmumu;
-  extern Float_t Ptmumu;
-  // ____________________________________________
-  // MC Truth
-  // ___________________________________________
+	extern Float_t Mmumu;
+	extern Float_t Ptmumu;
+	// ____________________________________________
+	// MC Truth
+	// ___________________________________________
 
-  extern Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta, MuonM_MC_Pt;
-  extern Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta, MuonP_MC_Pt;
-  extern Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta, MuonL_MC_Pt;
-  extern Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta, MuonS_MC_Pt;
+	extern Float_t MuonM_MC_E, MuonM_MC_Px, MuonM_MC_Py, MuonM_MC_Pz, MuonM_MC_Phi, MuonM_MC_Eta, MuonM_MC_Pt;
+	extern Float_t MuonP_MC_E, MuonP_MC_Px, MuonP_MC_Py, MuonP_MC_Pz, MuonP_MC_Phi, MuonP_MC_Eta, MuonP_MC_Pt;
+	extern Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta, MuonL_MC_Pt;
+	extern Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta, MuonS_MC_Pt;
 	extern Float_t Mmumu_Muons_MC;
 
 // *****************************************************************************************************
@@ -346,24 +345,24 @@ int main(int argc, char *argv[]);
 // *****************************************************************************************************
 double applySidra( double _pt, double charge, double eta, double phi, TRandom3* generator)
 { 
-  double pt = _pt;
+	double pt = _pt;
 	double sgn_charge = charge >= 0.0 ? 1.0 : -1.0;
 // Correct MC
-  double a = 0.0650687e-3;
-  double b = 0.212987e-3;
-  double c = 1.53414;
-  pt = (double)(1.0)/(double)(pt);
-  pt -= a - b * sgn_charge * sin( phi + c );
+	double a = 0.0650687e-3;
+	double b = 0.212987e-3;
+	double c = 1.53414;
+	pt = (double)(1.0)/(double)(pt);
+	pt -= a - b * sgn_charge * sin( phi + c );
 // Apply Corrections
-  double A = 0.143812;
-  double B = 0.0404834;
-  double Ap = 0.0995898;
-  double Bp = -0.0692569;
-  double Cp = 0.0952174;
-  double phi0 = -1.08881;
-  pt += (double)(( A + B * eta * eta ) * (generator->Gaus(0,1))) / (double)(1000.) + (double)(Ap + Cp * sgn_charge * sin( phi + phi0 )+ Bp * sgn_charge * eta )/(double)(1000.);
-  pt = (double)(1.0)/(double)(pt);
-  return pt;
+	double A = 0.143812;
+	double B = 0.0404834;
+	double Ap = 0.0995898;
+	double Bp = -0.0692569;
+	double Cp = 0.0952174;
+	double phi0 = -1.08881;
+	pt += (double)(( A + B * eta * eta ) * (generator->Gaus(0,1))) / (double)(1000.) + (double)(Ap + Cp * sgn_charge * sin( phi + phi0 )+ Bp * sgn_charge * eta )/(double)(1000.);
+	pt = (double)(1.0)/(double)(pt);
+	return pt;
 } 
 
 // *****************************************************************************************************
@@ -371,21 +370,21 @@ double applySidra( double _pt, double charge, double eta, double phi, TRandom3* 
 // *****************************************************************************************************
 double applyMuScleFit(double _pt, double charge, double eta, double phi)
 {
-  double b = -5.03313e-6;
-  double c = -4.41463e-5;
-  double d0 = -0.000148871;
-  double e0 = 1.59501;
-  double d1 = 7.95495e-5;
-  double e1 = -0.364823;
-  double d2 = 0.000152032;
-  double e2 = 0.410195;
-  double d = eta > .9 ? d1 : (eta < -.9 ? d2 : d0);
-  double e = eta > .9 ? e1 : (eta < -.9 ? e2 : e0);
-  double pt = _pt;
-  double sgn_eta = eta >= 0.0 ? 1.0 : -1.0;
+	double b = -5.03313e-6;
+	double c = -4.41463e-5;
+	double d0 = -0.000148871;
+	double e0 = 1.59501;
+	double d1 = 7.95495e-5;
+	double e1 = -0.364823;
+	double d2 = 0.000152032;
+	double e2 = 0.410195;
+	double d = eta > .9 ? d1 : (eta < -.9 ? d2 : d0);
+	double e = eta > .9 ? e1 : (eta < -.9 ? e2 : e0);
+	double pt = _pt;
+	double sgn_eta = eta >= 0.0 ? 1.0 : -1.0;
 	double sgn_charge = charge >= 0.0 ? 1.0 : -1.0;
-  pt = _pt * (1.0 + b * _pt  + c * sgn_charge * _pt * sgn_eta * eta * eta + sgn_charge * d * _pt * sin( phi + e ));
-  return pt;
+	pt = _pt * (1.0 + b * _pt	+ c * sgn_charge * _pt * sgn_eta * eta * eta + sgn_charge * d * _pt * sin( phi + e ));
+	return pt;
 
 }
 
@@ -398,156 +397,156 @@ double applyMuScleFit(double _pt, double charge, double eta, double phi)
 //int FillMM(TRootMuon* mymuon1, TRootMuon* mymuon2, bool doMC, bool applyMuonScaleCorrection, TClonesArray* mcParticles, TRandom3* generator){
 int FillMM(TRootMuon* mymuon1, TRootMuon* mymuon2, bool doMC, bool applyMuonScaleCorrection, TClonesArray* mcParticles, double corrected_Pt1_, double corrected_Pt2_){
 
-    double corrected_Pt1 = mymuon1->Pt();
-    double corrected_Pt2 = mymuon2->Pt();
-    if( applyMuonScaleCorrection > 0 )
-    {
+		double corrected_Pt1 = mymuon1->Pt();
+		double corrected_Pt2 = mymuon2->Pt();
+		if( applyMuonScaleCorrection > 0 )
+		{
 /*
-      // Sidra makes MC look like data
-      if( doMC > 0) corrected_Pt1 = applySidra(mymuon1->Pt(), mymuon1->charge(), mymuon1->Eta(), mymuon1->Phi(), generator);
-      if( doMC > 0) corrected_Pt2 = applySidra(mymuon2->Pt(), mymuon2->charge(), mymuon2->Eta(), mymuon2->Phi(), generator);
-      // MuScleFit correct data absolute scale
-      corrected_Pt1 = applyMuScleFit(corrected_Pt1, mymuon1->charge(), mymuon1->Eta(), mymuon1->Phi());
-      corrected_Pt2 = applyMuScleFit(corrected_Pt2, mymuon2->charge(), mymuon2->Eta(), mymuon2->Phi());
+			// Sidra makes MC look like data
+			if( doMC > 0) corrected_Pt1 = applySidra(mymuon1->Pt(), mymuon1->charge(), mymuon1->Eta(), mymuon1->Phi(), generator);
+			if( doMC > 0) corrected_Pt2 = applySidra(mymuon2->Pt(), mymuon2->charge(), mymuon2->Eta(), mymuon2->Phi(), generator);
+			// MuScleFit correct data absolute scale
+			corrected_Pt1 = applyMuScleFit(corrected_Pt1, mymuon1->charge(), mymuon1->Eta(), mymuon1->Phi());
+			corrected_Pt2 = applyMuScleFit(corrected_Pt2, mymuon2->charge(), mymuon2->Eta(), mymuon2->Phi());
 */
 			corrected_Pt1 = corrected_Pt1_;
 			corrected_Pt2 = corrected_Pt2_;
-    }
-    double corrected_Pz1 = mymuon1->Pz();
-    double corrected_Pz2 = mymuon2->Pz();
-    double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
-    double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
-    double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
-    double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
-    double m_mu = 105.658367e-3;
-//    double corrected_E1 = mymuon1->E();
-//    double corrected_E2 = mymuon2->E();
-    double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1)) : mymuon1->E();
-    double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2)) : mymuon2->E();
-    TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
-    TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+		}
+		double corrected_Pz1 = mymuon1->Pz();
+		double corrected_Pz2 = mymuon2->Pz();
+		double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+		double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+		double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+		double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
+		double m_mu = 105.658367e-3;
+//		double corrected_E1 = mymuon1->E();
+//		double corrected_E2 = mymuon2->E();
+		double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1)) : mymuon1->E();
+		double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2)) : mymuon2->E();
+		TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+		TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
 
 		TRootMuon *mycorrectedMuon1 = new TRootMuon( corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1, mymuon1->vx(), mymuon1->vy(), mymuon1->vz(), 1, mymuon1->charge() );
 		TRootMuon *mycorrectedMuon2 = new TRootMuon( corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2, mymuon2->vx(), mymuon2->vy(), mymuon2->vz(), 1, mymuon2->charge() );
 
 
 
-      // Fill muons stuff
-      TRootMuon *leadingMuon;
-      TRootMuon *subleadingMuon;
-      if( (mycorrectedMuon1->Pt()) > (mycorrectedMuon2->Pt()) )      {
-        leadingMuon = mycorrectedMuon1;
-        subleadingMuon = mycorrectedMuon2;
-      } else {
-        leadingMuon = mycorrectedMuon2;
-        subleadingMuon = mycorrectedMuon1;
-      }
-      MuonL_Pt = leadingMuon->Pt();
-      MuonL_Eta = leadingMuon->Eta();
-      MuonL_Phi = leadingMuon->Phi();
-      MuonL_Charge = leadingMuon->charge();
-      MuonL_isoR03_emEt = leadingMuon->isoR03_emEt();
-      MuonL_isoR03_hadEt = leadingMuon->isoR03_hadEt();
-      MuonL_isoR03_hoEt = leadingMuon->isoR03_hoEt();
-      MuonL_isoR03_nJets = leadingMuon->isoR03_nJets();
-      MuonL_isoR03_nTracks = leadingMuon->isoR03_nTracks();
-      MuonL_isoR03_sumPt = leadingMuon->isoR03_sumPt();
-      MuonL_isoR05_emEt = leadingMuon->isoR05_emEt();
-      MuonL_isoR05_hadEt = leadingMuon->isoR05_hadEt();
-      MuonL_isoR05_hoEt = leadingMuon->isoR05_hoEt();
-      MuonL_isoR05_nJets = leadingMuon->isoR05_nJets();
-      MuonL_isoR05_nTracks = leadingMuon->isoR05_nTracks();
-      MuonL_isoR05_sumPt = leadingMuon->isoR05_sumPt();
-      MuonL_E = leadingMuon->Energy();
-      MuonL_Px = leadingMuon->Px();
-      MuonL_Py = leadingMuon->Py();
-      MuonL_Pz = leadingMuon->Pz();
+			// Fill muons stuff
+			TRootMuon *leadingMuon;
+			TRootMuon *subleadingMuon;
+			if( (mycorrectedMuon1->Pt()) > (mycorrectedMuon2->Pt()) )			{
+				leadingMuon = mycorrectedMuon1;
+				subleadingMuon = mycorrectedMuon2;
+			} else {
+				leadingMuon = mycorrectedMuon2;
+				subleadingMuon = mycorrectedMuon1;
+			}
+			MuonL_Pt = leadingMuon->Pt();
+			MuonL_Eta = leadingMuon->Eta();
+			MuonL_Phi = leadingMuon->Phi();
+			MuonL_Charge = leadingMuon->charge();
+			MuonL_isoR03_emEt = leadingMuon->isoR03_emEt();
+			MuonL_isoR03_hadEt = leadingMuon->isoR03_hadEt();
+			MuonL_isoR03_hoEt = leadingMuon->isoR03_hoEt();
+			MuonL_isoR03_nJets = leadingMuon->isoR03_nJets();
+			MuonL_isoR03_nTracks = leadingMuon->isoR03_nTracks();
+			MuonL_isoR03_sumPt = leadingMuon->isoR03_sumPt();
+			MuonL_isoR05_emEt = leadingMuon->isoR05_emEt();
+			MuonL_isoR05_hadEt = leadingMuon->isoR05_hadEt();
+			MuonL_isoR05_hoEt = leadingMuon->isoR05_hoEt();
+			MuonL_isoR05_nJets = leadingMuon->isoR05_nJets();
+			MuonL_isoR05_nTracks = leadingMuon->isoR05_nTracks();
+			MuonL_isoR05_sumPt = leadingMuon->isoR05_sumPt();
+			MuonL_E = leadingMuon->Energy();
+			MuonL_Px = leadingMuon->Px();
+			MuonL_Py = leadingMuon->Py();
+			MuonL_Pz = leadingMuon->Pz();
 
-      MuonS_Pt = subleadingMuon->Pt();
-      MuonS_Eta = subleadingMuon->Eta();
-      MuonS_Phi = subleadingMuon->Phi();
-      MuonS_Charge = subleadingMuon->charge();
-      MuonS_isoR03_emEt = subleadingMuon->isoR03_emEt();
-      MuonS_isoR03_hadEt = subleadingMuon->isoR03_hadEt();
-      MuonS_isoR03_hoEt = subleadingMuon->isoR03_hoEt();
-      MuonS_isoR03_nJets = subleadingMuon->isoR03_nJets();
-      MuonS_isoR03_nTracks = subleadingMuon->isoR03_nTracks();
-      MuonS_isoR03_sumPt = subleadingMuon->isoR03_sumPt();
-      MuonS_isoR05_emEt = subleadingMuon->isoR05_emEt();
-      MuonS_isoR05_hadEt = subleadingMuon->isoR05_hadEt();
-      MuonS_isoR05_hoEt = subleadingMuon->isoR05_hoEt();
-      MuonS_isoR05_nJets = subleadingMuon->isoR05_nJets();
-      MuonS_isoR05_nTracks = subleadingMuon->isoR05_nTracks();
-      MuonS_isoR05_sumPt = subleadingMuon->isoR05_sumPt();
-      MuonS_E = subleadingMuon->Energy();
-      MuonS_Px = subleadingMuon->Px();
-      MuonS_Py = subleadingMuon->Py();
-      MuonS_Pz = subleadingMuon->Pz();
+			MuonS_Pt = subleadingMuon->Pt();
+			MuonS_Eta = subleadingMuon->Eta();
+			MuonS_Phi = subleadingMuon->Phi();
+			MuonS_Charge = subleadingMuon->charge();
+			MuonS_isoR03_emEt = subleadingMuon->isoR03_emEt();
+			MuonS_isoR03_hadEt = subleadingMuon->isoR03_hadEt();
+			MuonS_isoR03_hoEt = subleadingMuon->isoR03_hoEt();
+			MuonS_isoR03_nJets = subleadingMuon->isoR03_nJets();
+			MuonS_isoR03_nTracks = subleadingMuon->isoR03_nTracks();
+			MuonS_isoR03_sumPt = subleadingMuon->isoR03_sumPt();
+			MuonS_isoR05_emEt = subleadingMuon->isoR05_emEt();
+			MuonS_isoR05_hadEt = subleadingMuon->isoR05_hadEt();
+			MuonS_isoR05_hoEt = subleadingMuon->isoR05_hoEt();
+			MuonS_isoR05_nJets = subleadingMuon->isoR05_nJets();
+			MuonS_isoR05_nTracks = subleadingMuon->isoR05_nTracks();
+			MuonS_isoR05_sumPt = subleadingMuon->isoR05_sumPt();
+			MuonS_E = subleadingMuon->Energy();
+			MuonS_Px = subleadingMuon->Px();
+			MuonS_Py = subleadingMuon->Py();
+			MuonS_Pz = subleadingMuon->Pz();
 
 
-      TLorentzVector mumu;
-      mumu = (*leadingMuon) + (*subleadingMuon);
+			TLorentzVector mumu;
+			mumu = (*leadingMuon) + (*subleadingMuon);
 //			cout << "mumu.M()= " << mumu.M() << endl;
 //			TLorentzVector mumu2;
 //			mumu2 = (*correctedMuon1) + (*correctedMuon2);
 //			cout << "mumu2.M()= " << mumu2.M() << endl;
 
-      Ptmumu = mumu.Pt();
-      double mumuInvMass = mumu.M();
-//      cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
-      mumu.Clear();
-      Mmumu = mumuInvMass;
+			Ptmumu = mumu.Pt();
+			double mumuInvMass = mumu.M();
+//			cerr << "\t\tINFO: Dimuon invariant mass : Mmumu = " << mumuInvMass << endl;
+			mumu.Clear();
+			Mmumu = mumuInvMass;
 
-    double phiMuon = mycorrectedMuon1->Phi();
-    double etaMuon = mycorrectedMuon1->Eta();
-    double phiMuon_oppositeCharge = mycorrectedMuon2->Phi();
-    double etaMuon_oppositeCharge = mycorrectedMuon2->Eta();
+		double phiMuon = mycorrectedMuon1->Phi();
+		double etaMuon = mycorrectedMuon1->Eta();
+		double phiMuon_oppositeCharge = mycorrectedMuon2->Phi();
+		double etaMuon_oppositeCharge = mycorrectedMuon2->Eta();
 
-    TRootMuon *minusMuon;
-    TRootMuon *plusMuon;
+		TRootMuon *minusMuon;
+		TRootMuon *plusMuon;
 		if( mycorrectedMuon1->charge()>0 ){
-      plusMuon  = (TRootMuon*) mycorrectedMuon1;
-      minusMuon = (TRootMuon*) mycorrectedMuon2;
-    } else {
-      minusMuon = (TRootMuon*) mycorrectedMuon1;
-      plusMuon  = (TRootMuon*) mycorrectedMuon2;
-    }
+			plusMuon	= (TRootMuon*) mycorrectedMuon1;
+			minusMuon = (TRootMuon*) mycorrectedMuon2;
+		} else {
+			minusMuon = (TRootMuon*) mycorrectedMuon1;
+			plusMuon	= (TRootMuon*) mycorrectedMuon2;
+		}
 
 
-    // FILLING MINITREE INFORMATION
-    MuonM_Pt = minusMuon->Pt();
-    MuonM_Eta = minusMuon->Eta();
-    MuonM_Phi = minusMuon->Phi();
-    MuonM_E = minusMuon->Energy();
-    MuonM_Px = minusMuon->Px();
-    MuonM_Py = minusMuon->Py();
-    MuonM_Pz = minusMuon->Pz();
-    MuonP_Pt = plusMuon->Pt();
-    MuonP_Eta = plusMuon->Eta();
-    MuonP_Phi = plusMuon->Phi();
-    MuonP_E = plusMuon->Energy();
-    MuonP_Px = plusMuon->Px();
-    MuonP_Py = plusMuon->Py();
-    MuonP_Pz = plusMuon->Pz();
+		// FILLING MINITREE INFORMATION
+		MuonM_Pt = minusMuon->Pt();
+		MuonM_Eta = minusMuon->Eta();
+		MuonM_Phi = minusMuon->Phi();
+		MuonM_E = minusMuon->Energy();
+		MuonM_Px = minusMuon->Px();
+		MuonM_Py = minusMuon->Py();
+		MuonM_Pz = minusMuon->Pz();
+		MuonP_Pt = plusMuon->Pt();
+		MuonP_Eta = plusMuon->Eta();
+		MuonP_Phi = plusMuon->Phi();
+		MuonP_E = plusMuon->Energy();
+		MuonP_Px = plusMuon->Px();
+		MuonP_Py = plusMuon->Py();
+		MuonP_Pz = plusMuon->Pz();
 
-    if( doMC )
-    { 
+		if( doMC )
+		{ 
 	// Compute Stuff, with MC truth information
-      doGenInfo( (TRootParticle*) minusMuon, mcParticles, &MuonM_MC_E, &MuonM_MC_Px, &MuonM_MC_Py, &MuonM_MC_Pz, &MuonM_MC_Phi, &MuonM_MC_Eta, &MuonM_MC_Pt, 13 );
-      doGenInfo( (TRootParticle*) plusMuon, mcParticles, &MuonP_MC_E, &MuonP_MC_Px, &MuonP_MC_Py, &MuonP_MC_Pz, &MuonP_MC_Phi, &MuonP_MC_Eta, &MuonP_MC_Pt, -13 );
-      doGenInfo( (TRootParticle*) leadingMuon, mcParticles, &MuonL_MC_E, &MuonL_MC_Px, &MuonL_MC_Py, &MuonL_MC_Pz, &MuonL_MC_Phi, &MuonL_MC_Eta, &MuonL_MC_Pt, (-1)*(leadingMuon->charge())*13 );
-      doGenInfo( (TRootParticle*) subleadingMuon, mcParticles, &MuonS_MC_E, &MuonS_MC_Px, &MuonS_MC_Py, &MuonS_MC_Pz, &MuonS_MC_Phi, &MuonS_MC_Eta, &MuonS_MC_Pt, (-1)*(subleadingMuon->charge())*13 );
+			doGenInfo( (TRootParticle*) minusMuon, mcParticles, &MuonM_MC_E, &MuonM_MC_Px, &MuonM_MC_Py, &MuonM_MC_Pz, &MuonM_MC_Phi, &MuonM_MC_Eta, &MuonM_MC_Pt, 13 );
+			doGenInfo( (TRootParticle*) plusMuon, mcParticles, &MuonP_MC_E, &MuonP_MC_Px, &MuonP_MC_Py, &MuonP_MC_Pz, &MuonP_MC_Phi, &MuonP_MC_Eta, &MuonP_MC_Pt, -13 );
+			doGenInfo( (TRootParticle*) leadingMuon, mcParticles, &MuonL_MC_E, &MuonL_MC_Px, &MuonL_MC_Py, &MuonL_MC_Pz, &MuonL_MC_Phi, &MuonL_MC_Eta, &MuonL_MC_Pt, (-1)*(leadingMuon->charge())*13 );
+			doGenInfo( (TRootParticle*) subleadingMuon, mcParticles, &MuonS_MC_E, &MuonS_MC_Px, &MuonS_MC_Py, &MuonS_MC_Pz, &MuonS_MC_Phi, &MuonS_MC_Eta, &MuonS_MC_Pt, (-1)*(subleadingMuon->charge())*13 );
 
-      TLorentzVector mumu_Muons_MC;
+			TLorentzVector mumu_Muons_MC;
 
-      TLorentzVector *MuonLMC = new TLorentzVector( MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_E);
-      TLorentzVector *MuonSMC = new TLorentzVector( MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_E);
+			TLorentzVector *MuonLMC = new TLorentzVector( MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_E);
+			TLorentzVector *MuonSMC = new TLorentzVector( MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_E);
 
-      mumu_Muons_MC = (*MuonLMC) + (*MuonSMC);
-      Mmumu_Muons_MC = mumu_Muons_MC.M();
-    MuonLMC->Clear();
-    MuonSMC->Clear();
-    }// end doMC
+			mumu_Muons_MC = (*MuonLMC) + (*MuonSMC);
+			Mmumu_Muons_MC = mumu_Muons_MC.M();
+		MuonLMC->Clear();
+		MuonSMC->Clear();
+		}// end doMC
 
 return 0;
 }

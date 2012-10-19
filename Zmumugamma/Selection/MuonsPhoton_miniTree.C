@@ -368,6 +368,7 @@ int main(int argc, char *argv[])
 	cout << "Sanity check: after seed[1]= " << seeed << endl;
 	
 
+
 		// TODO
 
 //	char* inputfile = argv[6];
@@ -471,26 +472,9 @@ if( ntotjob == 9999)
 			if( line == "") continue; // EOF !
 			if( iline >= ilineBegin && iline < ilineEnd )
 			{
-				if( itoy > 0 )
-				{ // if we are throwing toys to evaluate muon systematics, copy the files locally
-					string localFile = exec(Form("echo %s | rev | cut -d / -f 1 | rev", line.c_str()));
-					localFile = localFile.substr(0, localFile.size()-1); // removing end of line character
-					string doesTheFileAlreadyExistLocally = exec(Form("if [[ -f %s ]]; then echo ok; else echo ko; fi", localFile.c_str()));
-					doesTheFileAlreadyExistLocally = doesTheFileAlreadyExistLocally.substr(0, doesTheFileAlreadyExistLocally.size()-1); // removing end of line character
-					if( doesTheFileAlreadyExistLocally == "ko" )
-					{
-						cout << "File " << localFile << " do not exists locally, copying from dcache" << endl;
-						exec(Form("dccp %s%s .", protocol.c_str(), line.c_str()));
-					} else {
-						cout << "File " << localFile << " already exists locally, do not copy from dcache" << endl;
-					}
-					inputEventTree->Add(Form("%s", localFile.c_str()));
-					inputRunTree->Add(Form("%s", localFile.c_str()));
-				} else { // if we are not throwing toys, don't bother copying locally, just run on the fly
-					cout << "Adding file #" << iline << " ( / " << nlines << ") : " << line << endl;
-					inputEventTree->Add(Form("%s%s", protocol.c_str(), line.c_str()));
-					inputRunTree->Add(Form("%s%s", protocol.c_str(), line.c_str()));
-				}
+				cout << "Adding file #" << iline << " ( / " << nlines << ") : " << line << endl;
+				inputEventTree->Add(Form("%s%s", protocol.c_str(), line.c_str()));
+				inputRunTree->Add(Form("%s%s", protocol.c_str(), line.c_str()));
 			}
 		}
 		myfile.close();
@@ -517,8 +501,8 @@ if( ntotjob == 9999)
 
 // INSERTFILES
 
-	TFile* OutputRootFile = new TFile(Form("miniTree_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
-	TFile* OutputFriendFile = new TFile(Form("miniFriend_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
+	TFile* OutputRootFile = new TFile(Form("miniTreeMuonsPhoton_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
+	TFile* OutputFriendFile = new TFile(Form("miniFriendMuonsPhoton_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
 
 	OutputRootFile->cd();
 	
@@ -2559,7 +2543,7 @@ if( ntotjob == 9999)
 			double close_isoR03_hadEt = (deltaRphomu1 < deltaRphomu2) ? (mymuon1->isoR03_hadEt()) : (mymuon2->isoR03_hadEt());
 
 			if(verbosity>5) cerr << "close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
-			if( close_isoR03_hadEt >= 1.0)
+			if( close_isoR03_hadEt >= 9999.0)
 			{
 				if(verbosity>3) cerr << "candidate thrown because close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
@@ -2656,7 +2640,7 @@ if( ntotjob == 9999)
 			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
 			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
 			double far_isoR03_emEt = (deltaRphomu1 > deltaRphomu2) ? mymuon1->isoR03_emEt() : mymuon2->isoR03_emEt();
-			if( far_isoR03_emEt >= 1.0) 
+			if( far_isoR03_emEt >= 9999.0) 
 			{
 				if(verbosity>4) cerr << "candidate thrown because far_isoR03_emEt= " << far_isoR03_emEt << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
@@ -2751,7 +2735,7 @@ if( ntotjob == 9999)
 			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
 			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
 			double min_DeltaR = min(deltaRphomu1, deltaRphomu2);
-			if( min_DeltaR >= 0.8 )
+			if( min_DeltaR >= 9999.0 )
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
@@ -2845,7 +2829,7 @@ if( ntotjob == 9999)
 			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
 			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
 			double far_muonPt = (deltaRphomu1 > deltaRphomu2) ? mymuon1->Pt() : mymuon2->Pt();
-			if( far_muonPt <= 30.0 )
+			if( far_muonPt <= -5.0 )
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
@@ -2944,7 +2928,7 @@ if( ntotjob == 9999)
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
 //			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			mumugamma = (*PhotonEScale) + (*correctedMuon1) + (*correctedMuon2);
-			if( (mumugamma.M() < 30.0) || (180.0 < mumugamma.M())	)
+			if( (mumugamma.M() < 0.0) || (9999.0 < mumugamma.M())	)
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
@@ -3059,7 +3043,8 @@ if( ntotjob == 9999)
 			EScale = Photon_scale[MuMuGammaCandidates[5][i_mmg].first];
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
-			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())	)
+			if( (mumugamma.M() < 0.0) || (9999.0 < mumugamma.M())	)
+//			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())	)
 			{
 //				cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
@@ -3185,7 +3170,8 @@ if( ntotjob == 9999)
 			EScale = Photon_scale[MuMuGammaCandidates[6][i_mmg].first];
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
-			if( (mumugamma.M() < 87.2) || (95.2 < mumugamma.M())	)
+			if( (mumugamma.M() < 0.0) || (9999.0 < mumugamma.M())	)
+//			if( (mumugamma.M() < 87.2) || (95.2 < mumugamma.M())	)
 			{
 //				cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 //				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
