@@ -1,6 +1,5 @@
 #include "Selection_miniTree.h"
 #include "rochcor_v4_new.C"
-
 	// ____________________________________________
 	// Event information
 	// ____________________________________________
@@ -8,7 +7,7 @@
 	Int_t isSignalApplied, isStewApplied, isZJetsApplied;
 
 	Int_t isBeforeAllCuts, isAfterCutPthatFilter, isAfterCutZJETVETO;
-	Int_t isVeryLooseMMG, isJanLooseMMG, isLooseMMG, isMM, isTightMMG, isMMGCandidate;
+	Int_t isVeryLooseMMG, isLooseMMG, isMM, isTightMMG, isMMGCandidate;
 	Int_t isAfterFSRCut1, isAfterFSRCut2, isAfterFSRCut3;
 	Int_t isAfterFSRCut4, isMultipleCandidate, isAfterCut5, isAfterCut6, isAfterCut7, isAfterCut8, isAfterCut9, isAfterCut10;
 	Int_t isSelected;
@@ -97,9 +96,9 @@
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
 	// ____________________________________________
-	Int_t iCandidate[9];
-	Int_t iCandidate_temp[9][50];
-	Int_t nCandidate[9];
+	Int_t iCandidate[8];
+	Int_t iCandidate_temp[8][50];
+	Int_t nCandidate[8];
 
 	Float_t Mmumu, Mmumugamma, Mmumugamma_5x5, Mmumugamma_SC, Mmumugamma_SCraw, Mmumugamma_SCraw_fEta;
 	Float_t Ptmumu;
@@ -151,7 +150,7 @@
 	Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta, MuonF_MC_Pt;
 	Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta, MuonL_MC_Pt;
 	Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta, MuonS_MC_Pt;
-	Float_t Photon_SC_rawE_x_fEta_o_MC_E, Photon_E_o_MC_E, mmg_s_true;
+	Float_t Photon_SC_rawE_x_fEta_o_MC_E, Photon_E_o_MC_E;
 	Float_t Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E;	
 
 	Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
@@ -246,9 +245,7 @@ int main(int argc, char *argv[])
 		if( lumi_set == "2011A" ){ integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719; runopt = 0;}
 		if( lumi_set == "2011A_rereco" ){ integratedLuminosity = 2.221*1000.0; runopt = 0;}
 		if( lumi_set == "2011B" ){ integratedLuminosity = 2.714*1000.0; runopt = 1;}
-		//if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
-		//if( lumi_set == "2011" ) integratedLuminosity = 775.208 + 606.941 + 3010 + 1220;
-		if( lumi_set == "2011" ) integratedLuminosity = 706.370 + 385.819 + 2741 + 1099;
+		if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
 		if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +	2.714*1000.0;
 	}
 
@@ -284,8 +281,6 @@ int main(int argc, char *argv[])
 	// ******************************************
 	// Optional argument photon correction scheme
 	// ******************************************
-	
-	//ofstream outfile1(Form("mumugammaCutsTotal_%s_part%i_%i.txt",sample_char,ijob,isZgammaMC));	
 	double EScale = 1.0;
 	string correction = "";
 	bool isManualCorrectionsApplied = false;
@@ -463,11 +458,8 @@ if( ntotjob == 9999)
 {
 	//inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
 	//inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
-	//inputEventTree->Add(Form("/sps/cms/sgandurr/CMSSW_4_2_8_patch7/src/UserCode/IpnTreeProducer/test/%s/*root", sample_char));
-	//inputRunTree->Add(Form("/sps/cms/sgandurr/CMSSW_4_2_8_patch7/src/UserCode/IpnTreeProducer/test/%s/*root", sample_char));
-	inputEventTree->Add("test.root");
-	inputRunTree->Add("test.root");
-
+	inputEventTree->Add(Form("/sps/cms/sgandurr/CMSSW_4_2_8_patch7/src/UserCode/IpnTreeProducer/test/%s/*root", sample_char));
+				inputRunTree->Add(Form("/sps/cms/sgandurr/CMSSW_4_2_8_patch7/src/UserCode/IpnTreeProducer/test/%s/*root", sample_char));
 } else {
 	if (myfile.is_open())
 	{
@@ -728,7 +720,6 @@ if( ntotjob == 9999)
 	miniTree->Branch("isAfterCutZJETVETO", &isAfterCutZJETVETO, "isAfterCutZJETVETO/I");
 
 	miniTree->Branch("isVeryLooseMMG", &isVeryLooseMMG, "isVeryLooseMMG/I");
-	miniTree->Branch("isJanLooseMMG", &isJanLooseMMG, "isJanLooseMMG/I");
 	miniTree->Branch("isLooseMMG", &isLooseMMG, "isLooseMMG/I");
 	miniTree->Branch("isMM", &isMM, "isMM/I");
 	miniTree->Branch("isTightMMG", &isTightMMG, "isTightMMG/I");
@@ -786,7 +777,6 @@ if( ntotjob == 9999)
 	miniTree_allmuons->Branch("isAfterCutZJETVETO", &isAfterCutZJETVETO, "isAfterCutZJETVETO/I");
 
 	miniTree_allmuons->Branch("isVeryLooseMMG", &isVeryLooseMMG, "isVeryLooseMMG/I");
-	miniTree_allmuons->Branch("isJanLooseMMG", &isJanLooseMMG, "isJanLooseMMG/I");
 	miniTree_allmuons->Branch("isLooseMMG", &isLooseMMG, "isLooseMMG/I");
 	miniTree_allmuons->Branch("isMM", &isMM, "isMM/I");
 	miniTree_allmuons->Branch("isTightMMG", &isTightMMG, "isTightMMG/I");
@@ -821,7 +811,6 @@ if( ntotjob == 9999)
 	miniTree_allphotons->Branch("isAfterCutZJETVETO", &isAfterCutZJETVETO, "isAfterCutZJETVETO/I");
 
 	miniTree_allphotons->Branch("isVeryLooseMMG", &isVeryLooseMMG, "isVeryLooseMMG/I");
-	miniTree_allphotons->Branch("isJanLooseMMG", &isJanLooseMMG, "isJanLooseMMG/I");
 	miniTree_allphotons->Branch("isLooseMMG", &isLooseMMG, "isLooseMMG/I");
 	miniTree_allphotons->Branch("isMM", &isMM, "isMM/I");
 	miniTree_allphotons->Branch("isTightMMG", &isTightMMG, "isTightMMG/I");
@@ -1323,7 +1312,6 @@ if( ntotjob == 9999)
 	miniTree->Branch("MuonS_MC_Pt", &MuonS_MC_Pt, "MuonS_MC_Pt/F");
 	miniTree->Branch("Photon_SC_rawE_x_fEta_o_MC_E", &Photon_SC_rawE_x_fEta_o_MC_E, "Photon_SC_rawE_x_fEta_o_MC_E/F");
 	miniTree->Branch("Photon_E_o_MC_E", &Photon_E_o_MC_E, "Photon_E_o_MC_E/F");
-	miniTree->Branch("mmg_s_true", &mmg_s_true, "mmg_s_true/F");	
 
 	miniTree->Branch("Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E", &Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E, "Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E/F");
 	miniTree->Branch("Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E", &Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E, "Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E/F");
@@ -1410,8 +1398,8 @@ if( ntotjob == 9999)
 	cout << "Signal is: " << signal <<endl;
 	cout << "Stew is: " << stew << endl;
 	cout << "ZJet veto is: " << zjet_veto << endl;
-	int nBeforeAllCuts, nAfterCutPthatFilter, nAfterCutCSA07ID, nAfterCutZJETVETO, nAfterVeryLooseMMG, nAfterJanLooseMMG, nAfterLooseMMG, nAfterCut1c, nAfterTightMMG, nAfterCut1e, nAfterCut2a, nAfterCut2b, nAfterCut2c, nAfterCut3, nAfterCut4, nAfterCut5, nAfterCut6, nAfterCut7, nAfterCut8, nAfterCut9, nAfterCut10, nSelected;
-	nBeforeAllCuts = nAfterCutPthatFilter = nAfterCutCSA07ID = nAfterCutZJETVETO = nAfterVeryLooseMMG = nAfterJanLooseMMG = nAfterLooseMMG = nAfterCut1c = nAfterTightMMG = nAfterCut1e = nAfterCut2a = nAfterCut2b = nAfterCut2c = nAfterCut3 = nAfterCut4 = nAfterCut5 = nAfterCut6 = nAfterCut7 = nAfterCut8 = nAfterCut9 = nAfterCut10 = nSelected = 0;
+	int nBeforeAllCuts, nAfterCutPthatFilter, nAfterCutCSA07ID, nAfterCutZJETVETO, nAfterVeryLooseMMG, nAfterLooseMMG, nAfterCut1c, nAfterTightMMG, nAfterCut1e, nAfterCut2a, nAfterCut2b, nAfterCut2c, nAfterCut3, nAfterCut4, nAfterCut5, nAfterCut6, nAfterCut7, nAfterCut8, nAfterCut9, nAfterCut10, nSelected;
+	nBeforeAllCuts = nAfterCutPthatFilter = nAfterCutCSA07ID = nAfterCutZJETVETO = nAfterVeryLooseMMG = nAfterLooseMMG = nAfterCut1c = nAfterTightMMG = nAfterCut1e = nAfterCut2a = nAfterCut2b = nAfterCut2c = nAfterCut3 = nAfterCut4 = nAfterCut5 = nAfterCut6 = nAfterCut7 = nAfterCut8 = nAfterCut9 = nAfterCut10 = nSelected = 0;
 
 	vector<int> SelectedEvent_RunNumber;
 	vector<int> SelectedEvent_LumiNumber;
@@ -1485,8 +1473,8 @@ if( ntotjob == 9999)
 	int TOTALnbEventsAfterDimuonID[3] = {0};
 	int TOTALnbPhotonsAfterID[6] = {0};
 	int TOTALnbEventsAfterPhotonID[6] = {0};
-	int TOTALnbMuMuGammaAfterID[9] = {0};
-	int TOTALnbEventsAfterMuMuGammaID[9] = {0};
+	int TOTALnbMuMuGammaAfterID[8] = {0};
+	int TOTALnbEventsAfterMuMuGammaID[8] = {0};
 
 	int NbEventsPerJob = NbEvents;
 	int NbEventsBegin = 0;
@@ -1548,7 +1536,7 @@ if( ntotjob == 9999)
 		isStewApplied = stew;
 		isZJetsApplied = zjet_veto;
 		isAfterCutPthatFilter = isAfterCutZJETVETO = 0;
-		isVeryLooseMMG = isJanLooseMMG = isLooseMMG = isMM = isTightMMG = isMMGCandidate = 0;
+		isVeryLooseMMG = isLooseMMG = isMM = isTightMMG = isMMGCandidate = 0;
 		isAfterFSRCut1 = isAfterFSRCut2 = isAfterFSRCut3 = 0;
 		isAfterFSRCut4 = isMultipleCandidate = isAfterCut5 = isAfterCut6 = isAfterCut7 = isAfterCut8 = isAfterCut9 = isAfterCut10 = 0;
 		isSelected = 0;
@@ -1751,7 +1739,7 @@ if( ntotjob == 9999)
 		MuonF_MC_E = MuonF_MC_Px = MuonF_MC_Py = MuonF_MC_Pz = MuonF_MC_Phi = MuonF_MC_Eta = MuonF_MC_Pt = -99.0;
 		MuonL_MC_E = MuonL_MC_Px = MuonL_MC_Py = MuonL_MC_Pz = MuonL_MC_Phi = MuonL_MC_Eta = MuonL_MC_Pt = -99.0;
 		MuonS_MC_E = MuonS_MC_Px = MuonS_MC_Py = MuonS_MC_Pz = MuonS_MC_Phi = MuonS_MC_Eta = MuonS_MC_Pt = -99.0;
-		Photon_SC_rawE_x_fEta_o_MC_E = Photon_E_o_MC_E = mmg_s_true = -99.0;
+		Photon_SC_rawE_x_fEta_o_MC_E = Photon_E_o_MC_E = -99.0;
 		Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E = Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E	= Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E	= Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E	= Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E	= Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E	= -99.0;
 
 		Mmumu_Photon_MC = Mmumugamma_Photon_MC = mmg_k_Photon_MC = mmg_ik_Photon_MC = mmg_s_Photon_MC = mmg_logk_Photon_MC = mmg_logik_Photon_MC = mmg_logs_Photon_MC = -99.0;
@@ -2017,7 +2005,8 @@ if( ntotjob == 9999)
 
 			nbMuonsAfterID[9]++;
 			TOTALnbMuonsAfterID[9]++;
-
+		
+		TLorentzVector correctedMuon(mymuon->Px(), mymuon->Py(), mymuon->Pz(), mymuon->E());
 		double corrected_Pt = mymuon->Pt();
 		rochcor *rmcor = new rochcor(seeed);
 		if( applyMuonScaleCorrection > 0 )
@@ -2112,6 +2101,7 @@ if( ntotjob == 9999)
 //						else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev, runopt);
 				}
 				corrected_Pt = muonRochester.Pt();
+				correctedMuon = muonRochester;
 			}
 			if( applyMuonScaleCorrection == 31 )
 			{ // Apply Rochester corrections on top of MuscleFit
@@ -2172,6 +2162,9 @@ if( ntotjob == 9999)
 			// MuScleFit correct data absolute scale
 //			corrected_Pt = applyMuScleFit(corrected_Pt, mymuon->charge(), mymuon->Eta(), mymuon->Phi());
 		}
+
+		/*
+		
 		double corrected_Pz = mymuon->Pz();
 		double corrected_Px = applyMuonScaleCorrection > 0 ? mymuon->Px() * (double)(corrected_Pt)/(double)(mymuon->Pt()) : mymuon->Px();
 		double corrected_Py = applyMuonScaleCorrection > 0 ? mymuon->Py() * (double)(corrected_Pt)/(double)(mymuon->Pt()) : mymuon->Py();
@@ -2179,6 +2172,8 @@ if( ntotjob == 9999)
 		double corrected_E = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz * corrected_Pz + corrected_Pt * corrected_Pt) ) : mymuon->E();
 //		double corrected_E = mymuon->E();
 		TLorentzVector correctedMuon(corrected_Px, corrected_Py, corrected_Pz, corrected_E);
+
+		*/
 
 
 		 if(! (correctedMuon.Pt() > 10.0) ){// transverse momentum
@@ -2471,18 +2466,18 @@ if( ntotjob == 9999)
 // --------------------------------------------------------------------------------------------------------------------
 
 		if(verbosity>2) cout << "creating triplet pair object" << endl;
-		int nbMuMuGammaAfterID[9] = {0};
+		int nbMuMuGammaAfterID[8] = {0};
 		// Build mumugamma candidates
 		int nbMuMuGammaCandidates = ( nbPhotonsAfterID[5] )*( numberOfDimuons[2] );
 		nbMuMuGammaAfterID[0] = nbMuMuGammaCandidates;
 		TOTALnbMuMuGammaAfterID[0] += nbMuMuGammaAfterID[0];
 		TOTALnbEventsAfterMuMuGammaID[0]++ ;
-		pair <int, pair<int, int> > MuMuGammaCandidates[9][nbMuMuGammaCandidates];
-		pair <double, double > MuMuGammaCandidates_corrected[9][nbMuMuGammaCandidates];
+		pair <int, pair<int, int> > MuMuGammaCandidates[8][nbMuMuGammaCandidates];
+		pair <double, double > MuMuGammaCandidates_corrected[8][nbMuMuGammaCandidates];
 
 		if(verbosity>2) cout << "initializing triplet objects" << endl;
 		// Initializing triplet objects
-		for(int i = 0; i < 9; i++)
+		for(int i = 0; i < 8; i++)
 		{
 			for(int j = 0; j < nbMuMuGammaCandidates; j++)
 			{
@@ -2570,7 +2565,6 @@ if( ntotjob == 9999)
 			double close_isoR03_hadEt = (deltaRphomu1 < deltaRphomu2) ? (mymuon1->isoR03_hadEt()) : (mymuon2->isoR03_hadEt());
 
 			if(verbosity>5) cerr << "close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
-	/*
 			if( close_isoR03_hadEt >= 1.0)
 			{
 				if(verbosity>3) cerr << "candidate thrown because close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
@@ -2584,7 +2578,7 @@ if( ntotjob == 9999)
 				if(verbosity>5) cerr << "candidate accepted: close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
 				iCandidate_temp[1][i_mmg] = nbMuMuGammaAfterID[1];
 			}
-	*/	
+		
 			if(verbosity>5) cerr << " filling new pair " << endl;
 			MuMuGammaCandidates[1][nbMuMuGammaAfterID[1]] = make_pair(MuMuGammaCandidates[0][i_mmg].first, make_pair(MuMuGammaCandidates[0][i_mmg].second.first, MuMuGammaCandidates[0][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[1][nbMuMuGammaAfterID[1]] = make_pair(MuMuGammaCandidates_corrected[0][i_mmg].first, MuMuGammaCandidates_corrected[0][i_mmg].second);
@@ -2668,7 +2662,6 @@ if( ntotjob == 9999)
 			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
 			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
 			double far_isoR03_emEt = (deltaRphomu1 > deltaRphomu2) ? mymuon1->isoR03_emEt() : mymuon2->isoR03_emEt();
-			/*
 			if( far_isoR03_emEt >= 1.0) 
 			{
 				if(verbosity>4) cerr << "candidate thrown because far_isoR03_emEt= " << far_isoR03_emEt << endl;
@@ -2679,7 +2672,6 @@ if( ntotjob == 9999)
 				miniTree->Fill();
 				continue;
 			}
-			*/
 			iCandidate_temp[2][i_mmg] = nbMuMuGammaAfterID[2];
 			MuMuGammaCandidates[2][nbMuMuGammaAfterID[2]] = make_pair(MuMuGammaCandidates[1][i_mmg].first, make_pair(MuMuGammaCandidates[1][i_mmg].second.first, MuMuGammaCandidates[1][i_mmg].second.second) );
 			MuMuGammaCandidates_corrected[2][nbMuMuGammaAfterID[2]] = make_pair(MuMuGammaCandidates_corrected[1][i_mmg].first, MuMuGammaCandidates_corrected[1][i_mmg].second);
@@ -2859,7 +2851,7 @@ if( ntotjob == 9999)
 			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
 			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
 			double far_muonPt = (deltaRphomu1 > deltaRphomu2) ? mymuon1->Pt() : mymuon2->Pt();
-			if( far_muonPt <= 15.0 )
+			if( far_muonPt <= 30.0 )
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
@@ -2958,13 +2950,6 @@ if( ntotjob == 9999)
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
 //			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			mumugamma = (*PhotonEScale) + (*correctedMuon1) + (*correctedMuon2);
-			
-			TLorentzVector mumu;
-                        mumu = (*correctedMuon1) + (*correctedMuon2);
-                        if((mumu.M()+mumugamma.M()) >= 180) continue;          
-                        cout << "low_m_mumu" << low_m_mumu <<"     high_m_mumu" << high_m_mumu <<endl;
-
-
 			if( (mumugamma.M() < 30.0) || (180.0 < mumugamma.M())	)
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
@@ -3039,135 +3024,137 @@ if( ntotjob == 9999)
 		TOTALnbEventsAfterMuMuGammaID[5]++ ;
 			isVeryLooseMMG = 1;
 			nAfterVeryLooseMMG++;
-
-
-// --------------------------------------------------------------------------------------------------------------------// 
-// ----- cut on mumugamma.M() (Yang loose window) ----- 
-// --------------------------------------------------------------------------------------------------------------------
-                for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[5] ; i_mmg++)
-                {
-                        TRootPhoton* myphoton;
-                        TRootMuon* mymuon1;
-                        TRootMuon* mymuon2;
-                        myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[5][i_mmg].first);
-                        mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.first );
-                        mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.second );
-
-      double corrected_Pt1 = MuMuGammaCandidates_corrected[5][i_mmg].first;
-      double corrected_Pt2 = MuMuGammaCandidates_corrected[5][i_mmg].second;
-      double corrected_Pz1 = mymuon1->Pz();
-      double corrected_Pz2 = mymuon2->Pz();
-      double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
-      double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
-      double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
-      double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
-      double m_mu = 105.658367e-3;
-      double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
-      double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
-      TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
-      TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
-
-
-                        double phiPhoton = myphoton->Phi();
-                        double etaPhoton = myphoton->Eta();
-                        double phiMuon1 = mymuon1->Phi();
-                        double etaMuon1 = mymuon1->Eta();
-                        double phiMuon2 = mymuon2->Phi();
-                        double etaMuon2 = mymuon2->Eta();
-                        double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
-                        double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
-                        TLorentzVector mumugamma;
-                        EScale = Photon_scale[MuMuGammaCandidates[5][i_mmg].first];
-                        TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
-//                      mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
-                        mumugamma = (*PhotonEScale) + (*correctedMuon1) + (*correctedMuon2);
-                        if( (mumugamma.M() < 60.0) || (120.0 < mumugamma.M())  )
-                        {
-//                              FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-//                              FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
-                                FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
-                                iCandidate_temp[6][i_mmg] == -99;
-                                miniTree->Fill();
-                                continue;
-                        }
-                        iCandidate_temp[6][i_mmg] = nbMuMuGammaAfterID[6];
-                        MuMuGammaCandidates[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates[5][i_mmg].first, make_pair(MuMuGammaCandidates[5][i_mmg].second.first, MuMuGammaCandidates[5][i_mmg].second.second) );
-                        MuMuGammaCandidates_corrected[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates_corrected[5][i_mmg].first, MuMuGammaCandidates_corrected[5][i_mmg].second);
-      nbMuMuGammaAfterID[6]++;
-
-                        delete correctedMuon1;
-      correctedMuon1 = 0;
-      delete correctedMuon2;
-      correctedMuon2 = 0;
-                        delete PhotonEScale;
-                        PhotonEScale = 0;
-//                      correctedMuon1->Delete();
-//                      correctedMuon2->Delete();
-//                      PhotonEScale->Delete();
-
-    }
-                nCandidate[6] = nbMuMuGammaAfterID[6];
-                if(verbosity>4) cout << "nCandidate[6]= " << nCandidate[6] << endl;
-                for(int icand = 0 ; icand < nCandidate[5] ; icand++ )
-                {
-                        if(  iCandidate_temp[6][icand] == -99 )
-                            {
-                                iCandidate[5] = icand;
-                                iCandidate[4] = iCandidate_temp[4][icand];
-                                iCandidate[3] = iCandidate_temp[3][icand];
-                                iCandidate[2] = iCandidate_temp[2][icand];
-                                iCandidate[1] = iCandidate_temp[1][icand];
-                                iCandidate[0] = iCandidate_temp[0][icand];
-                                if(verbosity>4) cout << "\t## event cut: ";
-                                if(verbosity>4) cout << "\tiCandidate[5]= " << iCandidate[5];
-                                if(verbosity>4) cout << "\tiCandidate[4]= " << iCandidate[4];
-                                if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
-                                if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
-                                if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
-                                if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
-                                if(verbosity>4) cout << endl;
-                                miniFriend->Fill();
-                        } else {
-                                iCandidate_temp[6][iCandidate_temp[6][icand]] = iCandidate_temp[6][icand];
-                                iCandidate_temp[5][iCandidate_temp[6][icand]] = iCandidate_temp[5][icand];
-                                iCandidate_temp[4][iCandidate_temp[6][icand]] = iCandidate_temp[4][icand];
-                                iCandidate_temp[3][iCandidate_temp[6][icand]] = iCandidate_temp[3][icand];
-                                iCandidate_temp[2][iCandidate_temp[6][icand]] = iCandidate_temp[2][icand];
-                                iCandidate_temp[1][iCandidate_temp[6][icand]] = iCandidate_temp[1][icand];
-                                iCandidate_temp[0][iCandidate_temp[6][icand]] = iCandidate_temp[0][icand];
-                        }
-                }
-                if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
-//              for(int icand = 0 ; icand < nCandidate[4] - nCandidate[5] ; icand++){iCandidate[5] = icand; miniFriend->Fill();}
-    if(! (nbMuMuGammaAfterID[6] > 0) )
-    {
-//                      miniTree->Fill();
-      continue;
-    }
-      for(int i_mmg = 0; i_mmg < 1 ; i_mmg++)
-//    {
-//      TRootPhoton* myphoton;
-//      TRootMuon* mymuon1;
-//      TRootMuon* mymuon2;
-//      myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[5][i_mmg].first);
-//      mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.first );
-//      mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.second );
-//                      FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-//              }
-                TOTALnbMuMuGammaAfterID[6] += nbMuMuGammaAfterID[6];
-                TOTALnbEventsAfterMuMuGammaID[6]++ ;
-                        isJanLooseMMG = 1;
-                        nAfterJanLooseMMG++;
-
-
-
-
 // --------------------------------------------------------------------------------------------------------------------
 // ----- cut on mumugamma.M() (loose window) -----
 // --------------------------------------------------------------------------------------------------------------------
 
 
 		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[5] ; i_mmg++)
+		{
+			TRootPhoton* myphoton;
+			TRootMuon* mymuon1;
+			TRootMuon* mymuon2;
+			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[5][i_mmg].first);
+			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.first );
+			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[5][i_mmg].second.second );
+
+			double corrected_Pt1 = MuMuGammaCandidates_corrected[5][i_mmg].first;
+			double corrected_Pt2 = MuMuGammaCandidates_corrected[5][i_mmg].second;
+			double corrected_Pz1 = mymuon1->Pz();
+			double corrected_Pz2 = mymuon2->Pz();
+			double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
+			double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
+			double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
+			double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
+			double m_mu = 105.658367e-3;
+			double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
+			double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
+			TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
+			TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
+
+
+			double phiPhoton = myphoton->Phi();
+			double etaPhoton = myphoton->Eta();
+			double phiMuon1 = mymuon1->Phi();
+			double etaMuon1 = mymuon1->Eta();
+			double phiMuon2 = mymuon2->Phi();
+			double etaMuon2 = mymuon2->Eta();
+			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
+			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
+			TLorentzVector mumugamma;
+			EScale = Photon_scale[MuMuGammaCandidates[5][i_mmg].first];
+			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
+			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
+			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())	)
+			{
+//				cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
+//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				iCandidate_temp[6][i_mmg] == -99;
+				miniTree->Fill();
+				continue;
+			}
+			iCandidate_temp[6][i_mmg] = nbMuMuGammaAfterID[6];
+			MuMuGammaCandidates[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates[5][i_mmg].first, make_pair(MuMuGammaCandidates[5][i_mmg].second.first, MuMuGammaCandidates[5][i_mmg].second.second) );
+			MuMuGammaCandidates_corrected[6][nbMuMuGammaAfterID[6]] = make_pair(MuMuGammaCandidates_corrected[5][i_mmg].first, MuMuGammaCandidates_corrected[5][i_mmg].second);
+			nbMuMuGammaAfterID[6]++;
+ 
+	 
+			delete correctedMuon1;
+			correctedMuon1 = 0;
+			delete correctedMuon2;
+			correctedMuon2 = 0;
+			delete PhotonEScale;
+			PhotonEScale = 0;
+//			correctedMuon1->Delete();
+//			correctedMuon2->Delete();
+//			PhotonEScale->Delete();
+
+
+
+		}
+		nCandidate[6] = nbMuMuGammaAfterID[6];
+		if(verbosity>4) cout << "nCandidate[6]= " << nCandidate[6] << endl;
+		for(int icand = 0 ; icand < nCandidate[5] ; icand++ )
+		{
+			if(	iCandidate_temp[6][icand] == -99 )
+			{
+				iCandidate[5] = icand;
+				iCandidate[4] = iCandidate_temp[4][icand];
+				iCandidate[3] = iCandidate_temp[3][icand];
+				iCandidate[2] = iCandidate_temp[2][icand];
+				iCandidate[1] = iCandidate_temp[1][icand];
+				iCandidate[0] = iCandidate_temp[0][icand];
+				if(verbosity>4) cout << "\t## event cut: ";
+				if(verbosity>4) cout << "\tiCandidate[5]= " << iCandidate[5];
+				if(verbosity>4) cout << "\tiCandidate[4]= " << iCandidate[4];
+				if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
+				if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
+				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
+				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
+				if(verbosity>4) cout << endl;
+				miniFriend->Fill();
+			} else {
+				iCandidate_temp[6][iCandidate_temp[6][icand]] = iCandidate_temp[6][icand];
+				iCandidate_temp[5][iCandidate_temp[6][icand]] = iCandidate_temp[5][icand];
+				iCandidate_temp[4][iCandidate_temp[6][icand]] = iCandidate_temp[4][icand];
+				iCandidate_temp[3][iCandidate_temp[6][icand]] = iCandidate_temp[3][icand];
+				iCandidate_temp[2][iCandidate_temp[6][icand]] = iCandidate_temp[2][icand];
+				iCandidate_temp[1][iCandidate_temp[6][icand]] = iCandidate_temp[1][icand];
+				iCandidate_temp[0][iCandidate_temp[6][icand]] = iCandidate_temp[0][icand];
+			}
+		}
+		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
+//		for(int icand = 0 ; icand <	nCandidate[5] - nCandidate[6] ; icand++){iCandidate[6] = icand; miniFriend->Fill();}
+		if(! (nbMuMuGammaAfterID[6] > 0) )
+		{
+//			miniTree->Fill();
+			continue;
+		}
+			isLooseMMG = 1;
+			nAfterLooseMMG++;
+
+		TOTALnbMuMuGammaAfterID[6] += nbMuMuGammaAfterID[6];
+		TOTALnbEventsAfterMuMuGammaID[6]++ ;
+
+//		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[6] ; i_mmg++)
+//		for(int i_mmg = 0; i_mmg < 1 ; i_mmg++)
+//		{
+//			TRootPhoton* myphoton;
+//			TRootMuon* mymuon1;
+//			TRootMuon* mymuon2;
+//			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[6][i_mmg].first);
+//			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.first );
+//			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.second );
+//			FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//		}
+// --------------------------------------------------------------------------------------------------------------------
+// ----- cut on mumugamma.M() (tight window) -----
+// --------------------------------------------------------------------------------------------------------------------
+
+
+		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[6] ; i_mmg++)
 		{
 			TRootPhoton* myphoton;
 			TRootMuon* mymuon1;
@@ -3191,6 +3178,7 @@ if( ntotjob == 9999)
 			TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
 
 
+
 			double phiPhoton = myphoton->Phi();
 			double etaPhoton = myphoton->Eta();
 			double phiMuon1 = mymuon1->Phi();
@@ -3203,12 +3191,14 @@ if( ntotjob == 9999)
 			EScale = Photon_scale[MuMuGammaCandidates[6][i_mmg].first];
 			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
-			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())	)
+			if( (mumugamma.M() < 87.2) || (95.2 < mumugamma.M())	)
 			{
-//				cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
-//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//				cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
+//				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 //				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
 				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+//				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				iCandidate_temp[7][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -3218,17 +3208,18 @@ if( ntotjob == 9999)
 			MuMuGammaCandidates_corrected[7][nbMuMuGammaAfterID[7]] = make_pair(MuMuGammaCandidates_corrected[6][i_mmg].first, MuMuGammaCandidates_corrected[6][i_mmg].second);
 			nbMuMuGammaAfterID[7]++;
  
-	 
+	
 			delete correctedMuon1;
 			correctedMuon1 = 0;
 			delete correctedMuon2;
 			correctedMuon2 = 0;
 			delete PhotonEScale;
 			PhotonEScale = 0;
-//			correctedMuon1->Delete();
-//			correctedMuon2->Delete();
-//			PhotonEScale->Delete();
-
+/*
+			correctedMuon1->Delete();
+			correctedMuon2->Delete();
+			PhotonEScale->Delete();
+*/
 
 
 		}
@@ -3256,53 +3247,70 @@ if( ntotjob == 9999)
 				if(verbosity>4) cout << endl;
 				miniFriend->Fill();
 			} else {
+/*
 				iCandidate_temp[7][iCandidate_temp[7][icand]] = iCandidate_temp[7][icand];
-				iCandidate_temp[6][iCandidate_temp[6][icand]] = iCandidate_temp[6][icand];
-				iCandidate_temp[5][iCandidate_temp[6][icand]] = iCandidate_temp[5][icand];
-				iCandidate_temp[4][iCandidate_temp[6][icand]] = iCandidate_temp[4][icand];
-				iCandidate_temp[3][iCandidate_temp[6][icand]] = iCandidate_temp[3][icand];
-				iCandidate_temp[2][iCandidate_temp[6][icand]] = iCandidate_temp[2][icand];
-				iCandidate_temp[1][iCandidate_temp[6][icand]] = iCandidate_temp[1][icand];
-				iCandidate_temp[0][iCandidate_temp[6][icand]] = iCandidate_temp[0][icand];
+				iCandidate_temp[6][iCandidate_temp[7][icand]] = iCandidate_temp[6][icand];
+				iCandidate_temp[5][iCandidate_temp[7][icand]] = iCandidate_temp[5][icand];
+				iCandidate_temp[4][iCandidate_temp[7][icand]] = iCandidate_temp[4][icand];
+				iCandidate_temp[3][iCandidate_temp[7][icand]] = iCandidate_temp[3][icand];
+				iCandidate_temp[2][iCandidate_temp[7][icand]] = iCandidate_temp[2][icand];
+				iCandidate_temp[1][iCandidate_temp[7][icand]] = iCandidate_temp[1][icand];
+				iCandidate_temp[0][iCandidate_temp[7][icand]] = iCandidate_temp[0][icand];
+*/
+				iCandidate[7] = iCandidate_temp[7][icand];
+				iCandidate[6] = iCandidate_temp[6][icand];
+				iCandidate[5] = iCandidate_temp[5][icand];
+				iCandidate[4] = iCandidate_temp[4][icand];
+				iCandidate[3] = iCandidate_temp[3][icand];
+				iCandidate[2] = iCandidate_temp[2][icand];
+				iCandidate[1] = iCandidate_temp[1][icand];
+				iCandidate[0] = iCandidate_temp[0][icand];
+				if(verbosity>4) cout << "\t## event PASS: ";
+				if(verbosity>4) cout << "\tiCandidate[7]= " << iCandidate[7];
+				if(verbosity>4) cout << "\tiCandidate[6]= " << iCandidate[6];
+				if(verbosity>4) cout << "\tiCandidate[5]= " << iCandidate[5];
+				if(verbosity>4) cout << "\tiCandidate[4]= " << iCandidate[4];
+				if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
+				if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
+				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
+				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
+				if(verbosity>4) cout << endl;
+				miniFriend->Fill();
 			}
 		}
 		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
-//		for(int icand = 0 ; icand <	nCandidate[5] - nCandidate[6] ; icand++){iCandidate[6] = icand; miniFriend->Fill();}
-		if(! (nbMuMuGammaAfterID[7] > 0) )
+//		for(int icand = 0 ; icand <	nCandidate[6] - nCandidate[7] ; icand++){iCandidate[7] = icand; miniFriend->Fill();}
+		 if(! (nbMuMuGammaAfterID[7] > 0) )
 		{
-//			miniTree->Fill();
 			continue;
 		}
-			isLooseMMG = 1;
-			nAfterLooseMMG++;
 
 		TOTALnbMuMuGammaAfterID[7] += nbMuMuGammaAfterID[7];
 		TOTALnbEventsAfterMuMuGammaID[7]++ ;
+//		nCandidate[7] = nbMuMuGammaAfterID[7];
+//		cout << "nCandidate[7]= " << nCandidate[7] << endl;
+//		for(int icand = 0 ; icand < nCandidate[7] ; icand++){iCandidate[7] = icand; miniFriend->Fill();}
 
-//		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[6] ; i_mmg++)
-//		for(int i_mmg = 0; i_mmg < 1 ; i_mmg++)
-//		{
-//			TRootPhoton* myphoton;
-//			TRootMuon* mymuon1;
-//			TRootMuon* mymuon2;
-//			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[6][i_mmg].first);
-//			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.first );
-//			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[6][i_mmg].second.second );
-//			FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-//		}
-// --------------------------------------------------------------------------------------------------------------------
-// ----- cut on mumugamma.M() (tight window) -----
-// --------------------------------------------------------------------------------------------------------------------
+		isTightMMG = 1;
+		nAfterTightMMG++;
 
+		nAfterCut1e++;
 
-		for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[7] ; i_mmg++)
-		{
-			TRootPhoton* myphoton;
-			TRootMuon* mymuon1;
-			TRootMuon* mymuon2;
-			myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
-			mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
-			mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
+		nAfterCut2a++;
+
+		nAfterCut2b++;
+
+		nAfterCut2c++;
+		if( nbMuMuGammaAfterID[7] != 1 ){
+			isMultipleCandidate = 1;
+			for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[7] ; i_mmg++)
+			{
+				TRootPhoton* myphoton;
+				TRootMuon* mymuon1;
+				TRootMuon* mymuon2;
+				myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
+				mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
+				mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
 
 			double corrected_Pt1 = MuMuGammaCandidates_corrected[7][i_mmg].first;
 			double corrected_Pt2 = MuMuGammaCandidates_corrected[7][i_mmg].second;
@@ -3320,162 +3328,9 @@ if( ntotjob == 9999)
 
 
 
-			double phiPhoton = myphoton->Phi();
-			double etaPhoton = myphoton->Eta();
-			double phiMuon1 = mymuon1->Phi();
-			double etaMuon1 = mymuon1->Eta();
-			double phiMuon2 = mymuon2->Phi();
-			double etaMuon2 = mymuon2->Eta();
-			double deltaRphomu1 = DeltaR(etaPhoton, phiPhoton, etaMuon1, phiMuon1);
-			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
-			TLorentzVector mumugamma;
-			EScale = Photon_scale[MuMuGammaCandidates[7][i_mmg].first];
-			TLorentzVector *PhotonEScale = new TLorentzVector( EScale*(myphoton->Px()), EScale*(myphoton->Py()), EScale*(myphoton->Pz()), EScale*(myphoton->Energy()));
-			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
-			if( (mumugamma.M() < 87.2) || (95.2 < mumugamma.M())	)
-			{
-//				cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
-//				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
-//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
-//				FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-//				cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
-				iCandidate_temp[7][i_mmg] == -99;
-				miniTree->Fill();
-				continue;
-			}
-			iCandidate_temp[8][i_mmg] = nbMuMuGammaAfterID[8];
-			MuMuGammaCandidates[8][nbMuMuGammaAfterID[8]] = make_pair(MuMuGammaCandidates[7][i_mmg].first, make_pair(MuMuGammaCandidates[7][i_mmg].second.first, MuMuGammaCandidates[7][i_mmg].second.second) );
-			MuMuGammaCandidates_corrected[8][nbMuMuGammaAfterID[8]] = make_pair(MuMuGammaCandidates_corrected[7][i_mmg].first, MuMuGammaCandidates_corrected[7][i_mmg].second);
-			nbMuMuGammaAfterID[8]++;
- 
-	
-			delete correctedMuon1;
-			correctedMuon1 = 0;
-			delete correctedMuon2;
-			correctedMuon2 = 0;
-			delete PhotonEScale;
-			PhotonEScale = 0;
-/*
-			correctedMuon1->Delete();
-			correctedMuon2->Delete();
-			PhotonEScale->Delete();
-*/
-
-
-		}
-		nCandidate[8] = nbMuMuGammaAfterID[8];
-		if(verbosity>4) cout << "nCandidate[8]= " << nCandidate[8] << endl;
-		for(int icand = 0 ; icand < nCandidate[7] ; icand++ )
-		{
-			if(	iCandidate_temp[8][icand] == -99 )
-			{
-				iCandidate[7] = icand;
-				iCandidate[6] = iCandidate_temp[6][icand];
-				iCandidate[5] = iCandidate_temp[5][icand];
-				iCandidate[4] = iCandidate_temp[4][icand];
-				iCandidate[3] = iCandidate_temp[3][icand];
-				iCandidate[2] = iCandidate_temp[2][icand];
-				iCandidate[1] = iCandidate_temp[1][icand];
-				iCandidate[0] = iCandidate_temp[0][icand];
-				if(verbosity>4) cout << "\t## event cut: ";
-				if(verbosity>4) cout << "\tiCandidate[7]= " << iCandidate[7];
-				if(verbosity>4) cout << "\tiCandidate[6]= " << iCandidate[6];
-				if(verbosity>4) cout << "\tiCandidate[5]= " << iCandidate[5];
-				if(verbosity>4) cout << "\tiCandidate[4]= " << iCandidate[4];
-				if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
-				if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
-				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
-				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
-				if(verbosity>4) cout << endl;
-				miniFriend->Fill();
-			} else {
-/*
-				iCandidate_temp[7][iCandidate_temp[7][icand]] = iCandidate_temp[7][icand];
-				iCandidate_temp[6][iCandidate_temp[7][icand]] = iCandidate_temp[6][icand];
-				iCandidate_temp[5][iCandidate_temp[7][icand]] = iCandidate_temp[5][icand];
-				iCandidate_temp[4][iCandidate_temp[7][icand]] = iCandidate_temp[4][icand];
-				iCandidate_temp[3][iCandidate_temp[7][icand]] = iCandidate_temp[3][icand];
-				iCandidate_temp[2][iCandidate_temp[7][icand]] = iCandidate_temp[2][icand];
-				iCandidate_temp[1][iCandidate_temp[7][icand]] = iCandidate_temp[1][icand];
-				iCandidate_temp[0][iCandidate_temp[7][icand]] = iCandidate_temp[0][icand];
-*/
-				iCandidate[8] = iCandidate_temp[8][icand];
-				iCandidate[7] = iCandidate_temp[7][icand];
-				iCandidate[6] = iCandidate_temp[6][icand];
-				iCandidate[5] = iCandidate_temp[5][icand];
-				iCandidate[4] = iCandidate_temp[4][icand];
-				iCandidate[3] = iCandidate_temp[3][icand];
-				iCandidate[2] = iCandidate_temp[2][icand];
-				iCandidate[1] = iCandidate_temp[1][icand];
-				iCandidate[0] = iCandidate_temp[0][icand];
-				if(verbosity>4) cout << "\t## event PASS: ";
-				if(verbosity>4) cout << "\tiCandidate[8]= " << iCandidate[8];
-				if(verbosity>4) cout << "\tiCandidate[7]= " << iCandidate[7];
-				if(verbosity>4) cout << "\tiCandidate[6]= " << iCandidate[6];
-				if(verbosity>4) cout << "\tiCandidate[5]= " << iCandidate[5];
-				if(verbosity>4) cout << "\tiCandidate[4]= " << iCandidate[4];
-				if(verbosity>4) cout << "\tiCandidate[3]= " << iCandidate[3];
-				if(verbosity>4) cout << "\tiCandidate[2]= " << iCandidate[2];
-				if(verbosity>4) cout << "\tiCandidate[1]= " << iCandidate[1];
-				if(verbosity>4) cout << "\tiCandidate[0]= " << iCandidate[0];
-				if(verbosity>4) cout << endl;
-				miniFriend->Fill();
-			}
-		}
-		if(verbosity>4) for( int ia = 0 ; ia < 8 ; ia++ ){for( int ib = 0 ; ib < nCandidate[0] ; ib ++){ cout << "\t" << iCandidate_temp[ia][ib];} cout << endl;}
-//		for(int icand = 0 ; icand <	nCandidate[6] - nCandidate[7] ; icand++){iCandidate[7] = icand; miniFriend->Fill();}
-		 if(! (nbMuMuGammaAfterID[8] > 0) )
-		{
-			continue;
-		}
-
-		TOTALnbMuMuGammaAfterID[8] += nbMuMuGammaAfterID[8];
-		TOTALnbEventsAfterMuMuGammaID[8]++ ;
-//		nCandidate[7] = nbMuMuGammaAfterID[7];
-//		cout << "nCandidate[7]= " << nCandidate[7] << endl;
-//		for(int icand = 0 ; icand < nCandidate[7] ; icand++){iCandidate[7] = icand; miniFriend->Fill();}
-
-		isTightMMG = 1;
-		nAfterTightMMG++;
-
-		nAfterCut1e++;
-
-		nAfterCut2a++;
-
-		nAfterCut2b++;
-
-		nAfterCut2c++;
-		if( nbMuMuGammaAfterID[8] != 1 ){
-			isMultipleCandidate = 1;
-			for(int i_mmg = 0; i_mmg < nbMuMuGammaAfterID[8] ; i_mmg++)
-			{
-				TRootPhoton* myphoton;
-				TRootMuon* mymuon1;
-				TRootMuon* mymuon2;
-				myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[8][i_mmg].first);
-				mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[8][i_mmg].second.first );
-				mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[8][i_mmg].second.second );
-
-			double corrected_Pt1 = MuMuGammaCandidates_corrected[8][i_mmg].first;
-			double corrected_Pt2 = MuMuGammaCandidates_corrected[8][i_mmg].second;
-			double corrected_Pz1 = mymuon1->Pz();
-			double corrected_Pz2 = mymuon2->Pz();
-			double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
-			double corrected_Px2 = applyMuonScaleCorrection > 0 ? mymuon2->Px() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Px();
-			double corrected_Py1 = applyMuonScaleCorrection > 0 ? mymuon1->Py() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Py();
-			double corrected_Py2 = applyMuonScaleCorrection > 0 ? mymuon2->Py() * (double)(corrected_Pt2) / (double)(mymuon2->Pt()) : mymuon2->Py();
-			double m_mu = 105.658367e-3;
-			double corrected_E1 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz1 * corrected_Pz1 + corrected_Pt1 * corrected_Pt1) ) : mymuon1->E();
-			double corrected_E2 = applyMuonScaleCorrection > 0 ? sqrt( m_mu * m_mu + (corrected_Pz2 * corrected_Pz2 + corrected_Pt2 * corrected_Pt2) ) : mymuon2->E();
-			TLorentzVector *correctedMuon1 = new TLorentzVector(corrected_Px1, corrected_Py1, corrected_Pz1, corrected_E1);
-			TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
-
-
-
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[8][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 				miniTree->Fill();
 	
 			delete correctedMuon1;
@@ -3496,12 +3351,12 @@ if( ntotjob == 9999)
 		TRootPhoton* myphoton;
 		TRootMuon* mymuon1;
 		TRootMuon* mymuon2;
-		myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[8][i_mmg].first);
-		mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[8][i_mmg].second.first );
-		mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[8][i_mmg].second.second );
+		myphoton = (TRootPhoton*) photons->At(MuMuGammaCandidates[7][i_mmg].first);
+		mymuon1 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.first );
+		mymuon2 = (TRootMuon*) muons->At( MuMuGammaCandidates[7][i_mmg].second.second );
 
-			double corrected_Pt1 = MuMuGammaCandidates_corrected[8][i_mmg].first;
-			double corrected_Pt2 = MuMuGammaCandidates_corrected[8][i_mmg].second;
+			double corrected_Pt1 = MuMuGammaCandidates_corrected[7][i_mmg].first;
+			double corrected_Pt2 = MuMuGammaCandidates_corrected[7][i_mmg].second;
 			double corrected_Pz1 = mymuon1->Pz();
 			double corrected_Pz2 = mymuon2->Pz();
 			double corrected_Px1 = applyMuonScaleCorrection > 0 ? mymuon1->Px() * (double)(corrected_Pt1) / (double)(mymuon1->Pt()) : mymuon1->Px();
@@ -3517,7 +3372,7 @@ if( ntotjob == 9999)
 
 //		FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
 //		FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-		FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[8][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+		FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
 		isSelected = 1;
 		nSelected++;
 		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< endl;
@@ -3572,13 +3427,10 @@ if( ntotjob == 9999)
 			cout << "TOTALnbPhotonsAfterID["<<i<<"]=\t" << TOTALnbPhotonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterPhotonID["<<i<<"]=\t" << TOTALnbEventsAfterPhotonID[i] << endl;
 		}
 		cout << endl;
-		for(int i = 0; i < 9 ; i++)
+		for(int i = 0; i < 8 ; i++)
 		{
-			cout << "TOTALnbMuMuGammaAfterID["<<i<<"] = " << TOTALnbMuMuGammaAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuMuGammaID["<<i<<"] = " << TOTALnbEventsAfterMuMuGammaID[i] << endl;
-                     //outfile1 << "TOTALnbMuMuGammaAfterID["<<i<<"] = " << TOTALnbMuMuGammaAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuMuGammaID["<<i<<"] = " << TOTALnbEventsAfterMuMuGammaID[i] << endl;
-
-			//cout << "TOTALnbMuMuGammaAfterID["<<i<<"]=\t" << TOTALnbMuMuGammaAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuMuGammaID["<<i<<"]=\t" << TOTALnbEventsAfterMuMuGammaID[i] << endl;
-			//if(i == 6) cout << endl;
+			cout << "TOTALnbMuMuGammaAfterID["<<i<<"]=\t" << TOTALnbMuMuGammaAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuMuGammaID["<<i<<"]=\t" << TOTALnbEventsAfterMuMuGammaID[i] << endl;
+			if(i == 6) cout << endl;
 		}
 
 
@@ -3652,5 +3504,4 @@ if( ntotjob == 9999)
 
 	// Exit!
 	return 0;
-
 }
