@@ -730,7 +730,7 @@ int main(int argc, char *argv[]);
   extern Float_t MuonF_MC_E, MuonF_MC_Px, MuonF_MC_Py, MuonF_MC_Pz, MuonF_MC_Phi, MuonF_MC_Eta, MuonF_MC_Pt;
   extern Float_t MuonL_MC_E, MuonL_MC_Px, MuonL_MC_Py, MuonL_MC_Pz, MuonL_MC_Phi, MuonL_MC_Eta, MuonL_MC_Pt;
   extern Float_t MuonS_MC_E, MuonS_MC_Px, MuonS_MC_Py, MuonS_MC_Pz, MuonS_MC_Phi, MuonS_MC_Eta, MuonS_MC_Pt;
-  extern Float_t Photon_SC_rawE_x_fEta_o_MC_E, Photon_E_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E;
+  extern Float_t Photon_SC_rawE_x_fEta_o_MC_E, Photon_E_o_MC_E, mmg_s_true, Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta_o_MC_E, Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta_o_MC_E;
 
   extern Float_t Mmumu_Photon_MC, Mmumugamma_Photon_MC, mmg_k_Photon_MC, mmg_ik_Photon_MC, mmg_s_Photon_MC, mmg_logk_Photon_MC, mmg_logik_Photon_MC, mmg_logs_Photon_MC;
   extern Float_t Mmumu_Muons_MC, Mmumugamma_Muons_MC, mmg_k_Muons_MC, mmg_ik_Muons_MC, mmg_s_Muons_MC, mmg_logk_Muons_MC, mmg_logik_Muons_MC, mmg_logs_Muons_MC;
@@ -1484,7 +1484,7 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 
 			if(Photon_MC_E != 0.0) Photon_SC_rawE_x_fEta_o_MC_E = (double)(Photon_SC_rawE_x_fEta) / (double)(Photon_MC_E);
 			if(Photon_MC_E != 0.0) Photon_E_o_MC_E = (double)(Photon_E) / (double)(Photon_MC_E);
-			
+			if(Photon_MC_E != 0.0) mmg_s_true = Photon_E_o_MC_E - 1.0;	
 			if(Photon_MC_E != 0.0) Photon_SC_rawE_x_fEta_x_fBrem_o_MC_E  = (double)(Photon_SC_rawE_x_fEta_x_fBrem) / (double)(Photon_MC_E);
 			if(Photon_MC_E != 0.0) Photon_SC_rawE_x_fEta_x_fBrem_AF_o_MC_E  = (double)(Photon_SC_rawE_x_fEta_x_fBrem_AF) / (double)(Photon_MC_E);
 			if(Photon_MC_E != 0.0) Photon_SC_rawE_x_fEta_x_fBrem_L_o_MC_E  = (double)(Photon_SC_rawE_x_fEta_x_fBrem_L) / (double)(Photon_MC_E);
@@ -1619,4 +1619,3 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 
 return 0;
 }
-
