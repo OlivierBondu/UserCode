@@ -196,8 +196,11 @@ int main(int argc, char *argv[])
 int iline = 0;
 if( ntotjob == 9999 )
 {
-  inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
-  inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+  //inputEventTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+  //inputRunTree->Add(Form("/sps/cms/obondu/CMSSW_4_2_8__RECO_4_2_8_v2/src/Zmumugamma/TotoSamples/%s/%s*root", sample_char, sample_char));
+	inputEventTree->Add("DYToMuMu_test_2011.root");
+	inputRunTree->Add("DYToMuMu_test_2011.root");
+	cout << "addition ok "<< endl;
 } else {
   if (myfile.is_open())
   {
@@ -464,7 +467,8 @@ if( ntotjob == 9999 )
 //		nVertices = vertices->GetEntries();
 //		if( (isZgammaMC >= 1) )
 //    {
-			nVertices = event->nInTimePUVertices();
+			//nVertices = event->nInTimePUVertices();
+			nVertices = event->pu_TrueNumInteractions();
 //    }
 		pileup->Fill(nVertices);
 		miniTree->Fill();
