@@ -2055,7 +2055,8 @@ if( ntotjob == 9999)
 					if( lumi_set == "2011A" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719;
 					if( lumi_set == "2011A_rereco" ) integratedLuminosity = 2.221*1000.0;
 					if( lumi_set == "2011B" ) integratedLuminosity = 2.714*1000.0;
-					if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
+					//if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
+					if( lumi_set == "2011" ) integratedLuminosity = 706.370 + 385.819 + 2741 + 1099;
 					if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +	2.714*1000.0;
 
 					// event where to switch from Run2011A to Run2011B correction
@@ -2069,12 +2070,12 @@ if( ntotjob == 9999)
 					// ***********************************
 					// temp version
 					// ***********************************
-					if( (lumi_set == "2011" ) )
+					if( (lumi_set == "2011" ) && (sample_in.find("DYToMuMu") != string::npos))
 					{
-						int ntot= 8950877;
+						int ntot= 9198125;
 						double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
-						double Astat= (double)(215.552 + 951.716 + 389.876 + 706.719) / (double)(215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0);
-						double Bstat= (double)(2.714*1000.0) / (double)(215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0);
+						double Astat= (double)(706.370 + 385.819 + 1099) / (double)(706.370 + 385.819 + 2741 + 1099);
+						double Bstat= (double)(2741) / (double)(706.370 + 385.819 + 2741 + 1099);
 						double lastA= Astat*ntot;
 						int ijobLastA= (int)(lastA)/(int)(avEventsPerJob);
 						int iEventLastA= (int)(lastA)%(int)(avEventsPerJob);
@@ -2086,6 +2087,40 @@ if( ntotjob == 9999)
 							} else runopt = 0;
 						} else if( ijob >= ijobLastA ) runopt = 1;
 					}
+					if( (lumi_set == "2011" ) && (sample_in.find("TTJets") != string::npos))
+                                        {
+                                                int ntot= 131388;
+                                                double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                                                double Astat= (double)(706.370 + 385.819 + 1099) / (double)(706.370 + 385.819 + 2741 + 1099);
+                                                double Bstat= (double)(2741) / (double)(706.370 + 385.819 + 2741 + 1099);
+                                                double lastA= Astat*ntot;
+                                                int ijobLastA= (int)(lastA)/(int)(avEventsPerJob);
+                                                int iEventLastA= (int)(lastA)%(int)(avEventsPerJob);
+                                                if( ijob == (ijobLastA -1) )
+                                                {
+                                                        if( ievt >= iEventLastA )
+                                                        {
+                                                                runopt = 1; 
+                                                        } else runopt = 0; 
+                                                } else if( ijob >= ijobLastA ) runopt = 1; 
+                                        }	
+					if( (lumi_set == "2011" ) && (sample_in.find("WJetsToLNu") != string::npos))
+                                        {
+                                                int ntot= 14821;
+                                                double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                                                double Astat= (double)(706.370 + 385.819 + 1099) / (double)(706.370 + 385.819 + 2741 + 1099);
+                                                double Bstat= (double)(2741) / (double)(706.370 + 385.819 + 2741 + 1099);
+                                                double lastA= Astat*ntot;
+                                                int ijobLastA= (int)(lastA)/(int)(avEventsPerJob);
+                                                int iEventLastA= (int)(lastA)%(int)(avEventsPerJob);
+                                                if( ijob == (ijobLastA -1) )
+                                                {
+                                                        if( ievt >= iEventLastA )
+                                                        {
+                                                                runopt = 1;
+                                                        } else runopt = 0;
+                                                } else if( ijob >= ijobLastA ) runopt = 1;
+                                        }
 					if( (lumi_set == "2011_rereco" ) )
 					{
 						int ntot= 8950877;
