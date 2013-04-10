@@ -54,8 +54,8 @@
 
 // personal headers
 #include "corrections.h"
-#include "rochcor_v4_new.h"
-#include "EnergyScaleCorrection_class.h"
+#include "rochcor2012v2.h"
+
 
 using namespace std;
 
@@ -181,25 +181,59 @@ double weight_DYToMuMu(int nGenVertices, string lumi_set, string pu_set)
 			double weight[36] = {0, 0.0251666, 0.203404, 0.426814, 0.735332, 1.01419, 1.22149, 1.34305, 1.39792, 1.39684, 1.39017, 1.37192, 1.37141, 1.37803, 1.37017, 1.37888, 1.38338, 1.3804, 1.34827, 1.35904, 1.32289, 1.29428, 1.2253, 1.20232, 1.14617, 1.099, 1.01493, 0.929284, 0.912994, 0.790041, 0.69409, 0.699025, 0.644141, 0.654322, 0.524752, 0.888945};
 			return weight[nGenVertices];
 		}
-	}
-//			double weight[36] = {0.0};
-			double weight[36] = {1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
-//			double weight[25] = {0.0};
-	return weight[nGenVertices];
+	} else if(lumi_set == "2012" || lumi_set == "2012ABC" || lumi_set == "2012D")
+        {
+                if( pu_set == "PU_S10" )
+                {
+                        double weight[60] = {0, 10.4923, 24.4296, 37.9208, 31.8, 40.0539, 28.9985, 6.42726, 3.29256, 2.72439, 2.74116, 2.76669, 2.64701, 2.37805, 2.0256, 1.67002, 1.4141, 1.2635, 1.19499, 1.175, 1.16815, 1.15999, 1.12558, 1.06777, 1.00448, 0.933594, 0.861446, 0.801237, 0.739057, 0.683081, 0.626923, 0.578676, 0.533231, 0.489387, 0.449333, 0.413669, 0.379853, 0.347238, 0.31829, 0.290759, 0.266329, 0.243079, 0.221235, 0.203534, 0.185281, 0.16678, 0.156065, 0.137128, 0.128382, 0.118529, 0.106961, 0.0966754, 0.0900311, 0.0779896, 0.0726763, 0.0621801, 0.0612443, 0.0643741, 0.0467334, 0.047643};//minBias = 69400 mb
+                        //double weight[60] = {0, 6.97794, 15.9626, 25.1337, 21.5631, 27.8706, 20.7291, 4.72141, 2.48527, 2.11211, 2.18107, 2.25708, 2.21129, 2.03136, 1.76656, 1.48469, 1.27975, 1.16261, 1.11701, 1.11517, 1.12553, 1.13497, 1.11901, 1.07958, 1.03399, 0.979687, 0.922786, 0.877374, 0.828428, 0.784851, 0.739304, 0.701227, 0.664716, 0.628224, 0.594535, 0.56465, 0.535298, 0.505554, 0.479074, 0.452693, 0.429154, 0.405581, 0.382396, 0.364585, 0.344078, 0.321201, 0.311801, 0.284283, 0.276236, 0.26475, 0.248048, 0.232794, 0.225124, 0.202509, 0.195954, 0.174067, 0.177969, 0.194123, 0.146186, 0.154512}; //minBias = 73500 mb
+                        return weight[nGenVertices];
+
+                }
+        }
+
+        double weight[60] = {0, 10.4923, 24.4296, 37.9208, 31.8, 40.0539, 28.9985, 6.42726, 3.29256, 2.72439, 2.74116, 2.76669, 2.64701, 2.37805, 2.0256, 1.67002, 1.4141, 1.2635, 1.19499, 1.175, 1.16815, 1.15999, 1.12558, 1.06777, 1.00448, 0.933594, 0.861446, 0.801237, 0.739057, 0.683081, 0.626923, 0.578676, 0.533231, 0.489387, 0.449333, 0.413669, 0.379853, 0.347238, 0.31829, 0.290759, 0.266329, 0.243079, 0.221235, 0.203534, 0.185281, 0.16678, 0.156065, 0.137128, 0.128382, 0.118529, 0.106961, 0.0966754, 0.0900311, 0.0779896, 0.0726763, 0.0621801, 0.0612443, 0.0643741, 0.0467334, 0.047643};//minBias = 69400 mb        
+
+        return weight[nGenVertices];
+
 }
 
 
-
-
-double weight_TTJets(int nGenVertices)
+double weight_TTJets(int nGenVertices, string lumi_set, string pu_set)
 {
-	double weight[60] = {0, 1.04204, 0.953355, 1.18724, 1.08439, 1.07778, 1.03545, 1.05117, 1.17321, 1.27515, 1.25051, 1.3289, 1.62975, 1.43617, 1.16916, 1.07712, 1.00101, 1.16663, 0.659773, 0.62577, 0.556534, 0.480728, 0.30211, 0.288529, 0.221898, 0.184643, 0.161076, 0.145077, 0.122756, 0.0903329, 0.0414645, 0.0415935, 0.0427404, 0.0941495, 0.0595874, 0.0297779, 0, 0.00829203, 0, 0, 0.00155194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	return weight[nGenVertices];
+	//double weight[60] = {0, 1.04204, 0.953355, 1.18724, 1.08439, 1.07778, 1.03545, 1.05117, 1.17321, 1.27515, 1.25051, 1.3289, 1.62975, 1.43617, 1.16916, 1.07712, 1.00101, 1.16663, 0.659773, 0.62577, 0.556534, 0.480728, 0.30211, 0.288529, 0.221898, 0.184643, 0.161076, 0.145077, 0.122756, 0.0903329, 0.0414645, 0.0415935, 0.0427404, 0.0941495, 0.0595874, 0.0297779, 0, 0.00829203, 0, 0, 0.00155194, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	//return weight[nGenVertices];
+
+	if((lumi_set == "2012" || lumi_set == "2012ABC" || lumi_set == "2012D") && pu_set == "PU_S7")
+        {
+                double weight[60] = {0, 0.323701, 0, 9.35923, 16.8744, 4.13585, 7.21989, 9.76902, 11.9687, 11.3925, 13.9582, 11.3853, 11.3239, 7.78842, 6.62434, 5.79726, 4.69908, 3.55859, 2.6404, 2.11875, 1.69048, 1.43388, 1.22031, 1.08963, 0.992514, 0.922732, 0.794686, 0.711696, 0.612313, 0.560809, 0.471973, 0.40871, 0.358024, 0.31271, 0.267614, 0.232174, 0.209486, 0.1874, 0.172988, 0.157301, 0.14804, 0.134552, 0.129954, 0.125054, 0.128653, 0.130938, 0.149274, 0.165733, 0.184317, 0.310683, 0.263024, 0.558884, 0.605857, 0.457497, 0, 0, 0, 0, 0, 0}; //minBias = 69400 mb
+                //double weight[60] = {0, 0.215278, 0, 6.20324, 11.4423, 2.87784, 5.16102, 7.17624, 9.03417, 8.83212, 11.1062, 9.28817, 9.45992, 6.65298, 5.77719, 5.15393, 4.25264, 3.27444, 2.46809, 2.01086, 1.62881, 1.40294, 1.21319, 1.10168, 1.02168, 0.968288, 0.851272, 0.779324, 0.686358, 0.644362, 0.556578, 0.495267, 0.446306, 0.401425, 0.354094, 0.316913, 0.295214, 0.272841, 0.260372, 0.244908, 0.238548, 0.224502, 0.22462, 0.224006, 0.238916, 0.252173, 0.298233, 0.343583, 0.396589, 0.693947, 0.609966, 1.34579, 1.51496, 1.18794, 0, 0, 0, 0, 0, 0}; //minBias = 73500 mb
+                return weight[nGenVertices];
+
+        }
+
+        double weight[60] = {0, 0.323701, 0, 9.35923, 16.8744, 4.13585, 7.21989, 9.76902, 11.9687, 11.3925, 13.9582, 11.3853, 11.3239, 7.78842, 6.62434, 5.79726, 4.69908, 3.55859, 2.6404, 2.11875, 1.69048, 1.43388, 1.22031, 1.08963, 0.992514, 0.922732, 0.794686, 0.711696, 0.612313, 0.560809, 0.471973, 0.40871, 0.358024, 0.31271, 0.267614, 0.232174, 0.209486, 0.1874, 0.172988, 0.157301, 0.14804, 0.134552, 0.129954, 0.125054, 0.128653, 0.130938, 0.149274, 0.165733, 0.184317, 0.310683, 0.263024, 0.558884, 0.605857, 0.457497, 0, 0, 0, 0, 0, 0}; //minBias = 69400 mb
+        return weight[nGenVertices];
+
 }
-double weight_WJetsToLNu(int nGenVertices)
+
+double weight_WJetsToLNu(int nGenVertices, string lumi_set, string pu_set)
 {
-  	double weight[60] = {0, 1.81661, 1.06742, 1.24536, 1.07591, 1.14997, 1.11121, 1.14298, 1.29881, 1.21755, 1.27235, 1.2782, 1.56192, 1.29055, 1.10867, 1.13326, 0.976632, 1.08336, 0.693502, 0.682135, 0.530099, 0.425931, 0.354297, 0.272527, 0.192103, 0.147848, 0.123977, 0.115278, 0.132297, 0.0819375, 0.0464697, 0.03329, 0.0344375, 0.0323669, 0.0941032, 0.0227669, 0.0548884, 0.00644365, 0, 0, 0.000587713, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	return weight[nGenVertices];
+  	//double weight[60] = {0, 1.81661, 1.06742, 1.24536, 1.07591, 1.14997, 1.11121, 1.14298, 1.29881, 1.21755, 1.27235, 1.2782, 1.56192, 1.29055, 1.10867, 1.13326, 0.976632, 1.08336, 0.693502, 0.682135, 0.530099, 0.425931, 0.354297, 0.272527, 0.192103, 0.147848, 0.123977, 0.115278, 0.132297, 0.0819375, 0.0464697, 0.03329, 0.0344375, 0.0323669, 0.0941032, 0.0227669, 0.0548884, 0.00644365, 0, 0, 0.000587713, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	//return weight[nGenVertices];
+
+	if((lumi_set == "2012" || lumi_set == "2012ABC" || lumi_set == "2012D") && pu_set == "PU_S10")
+        {
+                double weight[60] = {0, 0, 0, 0, 0, 0, 0, 0, 1.6478, 1.81253, 1.79692, 1.40752, 2.5692, 1.89001, 1.39015, 1.09703, 0.969595, 1.04985, 1.14386, 0.930022, 0.91867, 1.15763, 0.993279, 1.31673, 1.13406, 0.881241, 0.914166, 0.827539, 0.802942, 0.669971, 0.980831, 0.475241, 0.604143, 0.772618, 0.903048, 0.802019, 0.545218, 0.624473, 0.549896, 0.339962, 0.518853, 0.325879, 0.291156, 1.07095, 0.389309, 0.279784, 0.397604, 0, 0.194203, 0, 0.0908993, 0.0612415, 0.0204273, 0, 0, 0, 0, 0, 0, 0.0018708}; //minBias = 69400 mb
+                //double weight[60] = {0, 0, 0, 0, 0, 0, 0, 0, 1.24378, 1.40518, 1.42976, 1.14826, 2.14629, 1.61447, 1.21237, 0.975294, 0.877477, 0.96602, 1.06922, 0.882665, 0.885155, 1.13266, 0.987485, 1.3313, 1.16738, 0.924749, 0.979259, 0.906174, 0.900038, 0.769788, 1.15665, 0.575887, 0.753114, 0.991807, 1.19487, 1.09474, 0.768335, 0.909189, 0.827675, 0.5293, 0.836065, 0.543734, 0.503251, 1.91837, 0.722971, 0.538836, 0.79437, 0, 0.41786, 0, 0.2108, 0.147469, 0.0510788, 0, 0, 0, 0, 0, 0, 0.00606726}; //minBias = 73500 mb
+                return weight[nGenVertices];
+
+        }
+
+        double weight[60] = {0, 0, 0, 0, 0, 0, 0, 0, 1.6478, 1.81253, 1.79692, 1.40752, 2.5692, 1.89001, 1.39015, 1.09703, 0.969595, 1.04985, 1.14386, 0.930022, 0.91867, 1.15763, 0.993279, 1.31673, 1.13406, 0.881241, 0.914166, 0.827539, 0.802942, 0.669971, 0.980831, 0.475241, 0.604143, 0.772618, 0.903048, 0.802019, 0.545218, 0.624473, 0.549896, 0.339962, 0.518853, 0.325879, 0.291156, 1.07095, 0.389309, 0.279784, 0.397604, 0, 0.194203, 0, 0.0908993, 0.0612415, 0.0204273, 0, 0, 0, 0, 0, 0, 0.0018708}; //minBias = 69400 mb
+        return weight[nGenVertices];
+
+
 }
 double  weight_QCDMu(int nGenVertices)
 {
@@ -327,13 +361,13 @@ float ETHZ_getValue(TRootPhoton *myphoton, float f_eta)
   float corr2 = 1.;
   float energy = 0;
 
-  if (myphoton->isEBPho()){
+  if (myphoton->isEB()){
 //    float cetacorr = fEta(myphoton->superCluster()->rawEnergy(), myphoton->superCluster()->Eta(), 0)/myphoton->superCluster()->rawEnergy();
 		float cetacorr = f_eta;
 
     energy = myphoton->superCluster()->rawEnergy()*cetacorr; //previously in CMSSW
   }
-  else if (myphoton->isEEPho()){
+  else if (myphoton->isEE()){
     energy = myphoton->superCluster()->rawEnergy()+myphoton->preshowerEnergy();
   }
 
@@ -345,8 +379,8 @@ float ETHZ_getValue(TRootPhoton *myphoton, float f_eta)
 
     float et = energy*TMath::Sin(2*TMath::ATan(TMath::Exp(-myphoton->superCluster()->Eta())))/corr;
 
-    if (myphoton->isEBPho()) corr2 = corr * ETHZ_fEt(et, 0);
-    if (myphoton->isEEPho()) corr2 = corr * ETHZ_fEnergy(energy/corr, 1);
+    if (myphoton->isEB()) corr2 = corr * ETHZ_fEt(et, 0);
+    if (myphoton->isEE()) corr2 = corr * ETHZ_fEnergy(energy/corr, 1);
 
     newEnergy = energy/corr2; 
 
@@ -358,8 +392,8 @@ float ETHZ_getValue(TRootPhoton *myphoton, float f_eta)
 
     float et = energy*TMath::Sin(2*TMath::ATan(TMath::Exp(-myphoton->superCluster()->Eta())))/corr;
 
-    if (myphoton->isEBPho()) corr2 = corr * ETHZ_fEt(et, 2);
-    if (myphoton->isEEPho()) corr2 = corr * ETHZ_fEnergy(energy/corr, 3);
+    if (myphoton->isEB()) corr2 = corr * ETHZ_fEt(et, 2);
+    if (myphoton->isEE()) corr2 = corr * ETHZ_fEnergy(energy/corr, 3);
 
     newEnergy = energy/corr2; 
 
@@ -392,7 +426,7 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet,
 	if( correctionSet == "ETHZ" )
 	{
 		if( verbositybis > 1) cout << "ETHZ_getValue(myphoton, f_eta)= " << ETHZ_getValue(myphoton, f_eta) << endl;
-		if( ((myphoton->isEBPho()) && (myphoton->r9()>0.94)) || ((myphoton->isEEPho()) && (myphoton->r9()>0.95)) ) return 1.0;
+		if( ((myphoton->isEB()) && (myphoton->r9()>0.94)) || ((myphoton->isEE()) && (myphoton->r9()>0.95)) ) return 1.0;
 		return ETHZ_getValue(myphoton, f_eta) / (double)(myphoton->Energy());
 	} else if( correctionSet == "Dynamic" )
 	{
@@ -403,36 +437,36 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet,
 	}
 	else if( correctionSet == "MITregression" )
 	{
-		//if( verbositybis > 1) cout << "myphoton->energyRegression() = " << myphoton->energyRegression() << endl;
-		//return myphoton->energyRegression() / (double)(myphoton->Energy());
+		//if( verbositybis > 1) cout << "myphoton->joshEnergyRegression() = " << myphoton->joshEnergyRegression() << endl;
+		//return myphoton->joshEnergyRegression() / (double)(myphoton->Energy());
 	
 		///// NEW VARIABLE IN TOTO FOR PHOTON REGRESSION /////
 
-		if( verbositybis > 1) cout << "myphoton->energyRegression() = " << myphoton->energyRegression() << endl;
-		return myphoton->energyRegression() / (double)(myphoton->Energy());
+		if( verbositybis > 1) cout << "myphoton->joshEnergyRegression() = " << myphoton->joshEnergyRegression() << endl;
+		return myphoton->joshEnergyRegression() / (double)(myphoton->Energy());
 
 	}
 	 else {
 		vector<double> param_fbrem;
 		vector<double> param_feteta;
-		parameters_fbrem(param_fbrem, correctionSet, myphoton->isEBPho());
-		parameters_feteta(param_feteta, correctionSet, myphoton->isEBPho());
+		parameters_fbrem(param_fbrem, correctionSet, myphoton->isEB());
+		parameters_feteta(param_feteta, correctionSet, myphoton->isEB());
 		double brem = (double)(myphoton->superCluster()->phiWidth()) / (double)(myphoton->superCluster()->etaWidth());
 		double f_brem = BremCor(param_fbrem, brem);
-		double sc_e = (myphoton->isEBPho()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
-		double sc_e_noCrack = (myphoton->isEBPho()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
+		double sc_e = (myphoton->isEB()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
+		double sc_e_noCrack = (myphoton->isEB()==1) ? (f_eta * myphoton->superCluster()->rawEnergy()) : (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy());
 		double f_crack = myphoton->superCluster()->crackCorrectionEtaPhi();
 		double sc_et = sc_e * (sin(myphoton->superCluster()->Theta()));
 	  double sc_et_noCrack = sc_e_noCrack * (sin(myphoton->superCluster()->Theta()));
-		double f_et_eta = EtEtaCor(param_feteta, f_brem * sc_et, myphoton->superCluster()->Eta(), myphoton->isEBPho());
-	  double f_et_eta_noCrack = EtEtaCor(param_feteta, f_brem * sc_et_noCrack, myphoton->superCluster()->Eta(), myphoton->isEBPho());
+		double f_et_eta = EtEtaCor(param_feteta, f_brem * sc_et, myphoton->superCluster()->Eta(), myphoton->isEB());
+	  double f_et_eta_noCrack = EtEtaCor(param_feteta, f_brem * sc_et_noCrack, myphoton->superCluster()->Eta(), myphoton->isEB());
 	  if( verbositybis > 1)
 		{
 			cout << "###\tmyphoton->superCluster()->crackCorrectionEta()= " << myphoton->superCluster()->crackCorrectionEta() << endl;
     	cout << "###\tmyphoton->superCluster()->crackCorrectionPhi()= " << myphoton->superCluster()->crackCorrectionPhi() << endl;
     	cout << "###\tmyphoton->superCluster()->crackCorrectionEtaPhi()= " << myphoton->superCluster()->crackCorrectionEtaPhi() << endl;
 		}
-		if( (myphoton->isEBPho()) && (myphoton->r9()<0.94) )
+		if( (myphoton->isEB()) && (myphoton->r9()<0.94) )
 		{
 	    if( verbositybis > 1)
 			{
@@ -444,17 +478,17 @@ double photonManualCorrectionFactor(TRootPhoton *myphoton, string correctionSet,
 // WITHOUT CRACK CORRECTIONS
 //		return (double)(f_et_eta * f_brem * f_eta * myphoton->superCluster()->rawEnergy()) / (double)(myphoton->Energy());
 		}
-		if( (myphoton->isEBPho()) && (myphoton->r9()>0.94) )
+		if( (myphoton->isEB()) && (myphoton->r9()>0.94) )
 		{
 			if( verbositybis > 1) cout << "f_eta * myphoton->e5x5()= " << f_eta * myphoton->e5x5() << endl;
 			return (double)(f_eta * myphoton->e5x5()) / (double)(myphoton->Energy());
 		}
-		if( (myphoton->isEEPho()) && (myphoton->r9()<0.95) )
+		if( (myphoton->isEE()) && (myphoton->r9()<0.95) )
 		{
 			if( verbositybis > 1) cout << "f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())= " << f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy()) << endl;
 			return (double)(f_et_eta * f_brem * (myphoton->superCluster()->rawEnergy() + myphoton->preshowerEnergy())) / (double)(myphoton->Energy());
 		}
-		if( (myphoton->isEEPho()) && (myphoton->r9()>0.95) )
+		if( (myphoton->isEE()) && (myphoton->r9()>0.95) )
 		{
 			if( verbositybis > 1) cout << "(myphoton->e5x5() + myphoton->preshowerEnergy())= " << (myphoton->e5x5() + myphoton->preshowerEnergy()) <<  endl;
 			return (double)(myphoton->e5x5() + myphoton->preshowerEnergy()) / (double)(myphoton->Energy());
@@ -513,6 +547,7 @@ else {
 // *****************************************************************************************************
 // ******************* Tentative to remove the muon from photon tracker isolation cone
 // *****************************************************************************************************
+/*
 double PtMuonsConefunction(TRootMuon *mymuon, TRootPhoton *myphoton, double deltaR)
 {
         double PtMuonsCone = 0;
@@ -554,7 +589,7 @@ double PtMuonsConefunction(TRootMuon *mymuon, TRootPhoton *myphoton, double delt
 
         return PtMuonsCone;
 }
-
+*/
 string DoubleToString(double x)
 {
 
@@ -679,8 +714,6 @@ int main(int argc, char *argv[]);
 
 	extern Float_t Photon_E_regression, Photon_E_regressionError, Photon_Et_regression;
 
-	extern Float_t shervinSmearing;
-
   // ____________________________________________
   // mugamma / mumu / mumugamma information
   // ____________________________________________
@@ -795,8 +828,7 @@ double applyMuScleFit(double _pt, double charge, double eta, double phi)
 // *****************************************************************************************************
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TClonesArray* mcPhotons, TMVA::Reader* reader){
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
-int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLorentzVector* correctedmymuon1, TLorentzVector* correctedmymuon2, double EScale, double shervinSmearingVector, bool doMC, bool doPhotonConversionMC, bool doR9Rescaling, TClonesArray* mcParticles, TMVA::Reader* reader, int binNumber){
-
+int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLorentzVector* correctedmymuon1, TLorentzVector* correctedmymuon2, double EScale, bool doMC, bool doPhotonConversionMC, bool doR9Rescaling, TClonesArray* mcParticles, TMVA::Reader* reader, int binNumber){
 
 //			cout << "correctedmymuon1->Pt()= " << correctedmymuon1->Pt() << endl;
 //			cout << "correctedmymuon2->Pt()= " << correctedmymuon2->Pt() << endl;
@@ -807,10 +839,10 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
       Photon_Px = myphoton->Px();
       Photon_Py = myphoton->Py();
       Photon_Pz = myphoton->Pz();
-      if( myphoton->isEBPho() ){ Photon_isEB=1; } else { Photon_isEB=0; }
-      if( myphoton->isEEPho() ){ Photon_isEE=1; } else { Photon_isEE=0; }
-      if( myphoton->isEEPho() && myphoton->Eta()<0 ){ Photon_isEEM=1; } else { Photon_isEEM=0; }
-      if( myphoton->isEEPho() && myphoton->Eta()>0 ){ Photon_isEEP=1; } else { Photon_isEEP=0; }
+      if( myphoton->isEB() ){ Photon_isEB=1; } else { Photon_isEB=0; }
+      if( myphoton->isEE() ){ Photon_isEE=1; } else { Photon_isEE=0; }
+      if( myphoton->isEE() && myphoton->Eta()<0 ){ Photon_isEEM=1; } else { Photon_isEEM=0; }
+      if( myphoton->isEE() && myphoton->Eta()>0 ){ Photon_isEEP=1; } else { Photon_isEEP=0; }
       Photon_hasPixelSeed = myphoton->hasPixelSeed();
       Photon_isAlsoElectron = myphoton->isAlsoElectron();
       Photon_Nclusters = myphoton->nbClusters();
@@ -849,19 +881,25 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
       Photon_E2nd = EScale*(myphoton->e2nd());
       Photon_r19 = myphoton->r19();
       Photon_r9 = myphoton->r9();
-      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEB == 1) Photon_r9 = myphoton->r9() * 1.005; // H->gg 2011 scale factor 
-      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEE == 1) Photon_r9 = myphoton->r9() * 1.005; // H->gg 2011 scale factor
-//FIXME  Photon_cross = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));   
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEB == 1) Photon_r9 = myphoton->r9() * 1.0045 + 0.0010; // 2012 H->gg scale factors
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEE == 1) Photon_r9 = myphoton->r9() * 1.0086 + -0.0007; // 2012 H->gg scale factors	  
+//FIXME   Photon_cross = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));   
       //Photon_caloConeSize = myphoton->caloConeSize();
       Photon_PreshEnergy = myphoton->preshowerEnergy();
       Photon_HoE = myphoton->hoe();
       Photon_sigmaEtaEta = myphoton->sigmaEtaEta();
       Photon_sigmaIetaIeta = myphoton->sigmaIetaIeta();
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEB == 1) Photon_sigmaIetaIeta = myphoton->sigmaIetaIeta() * 0.891832 + 0.0009133; // 2012 H->gg scale factors
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEE == 1) Photon_sigmaIetaIeta = myphoton->sigmaIetaIeta() * 0.99470 + 0.00003; // 2012 H->gg scale factors
       Photon_covEtaEta = myphoton->covEtaEta();
       Photon_covPhiPhi = myphoton->covPhiPhi();
       Photon_covEtaPhi = myphoton->covEtaPhi();
       Photon_etaWidth = myphoton->superCluster()->etaWidth();
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEB == 1) Photon_etaWidth = myphoton->superCluster()->etaWidth() * 1.04302 + -0.000618; 
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEE == 1) Photon_etaWidth = myphoton->superCluster()->etaWidth() * 0.903254 + 0.001346;
       Photon_phiWidth = myphoton->superCluster()->phiWidth();
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEB == 1) Photon_phiWidth = myphoton->superCluster()->phiWidth() * 1.00002 + -0.000371;
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEE == 1) Photon_phiWidth = myphoton->superCluster()->phiWidth() * 0.99992 + -0.00000048;
       Photon_dR03isoEcalRecHit = myphoton->dR03IsolationEcalRecHit();
       Photon_dR03isoHcalRecHit = myphoton->dR03IsolationHcalRecHit();
       Photon_dR03isoSolidTrkCone = myphoton->dR03IsolationSolidTrkCone();
@@ -890,32 +928,37 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 			Photon_ratioSeed = 0.0;
 			if (Photon_SC_rawE != 0) Photon_ratioSeed = Photon_Emax/Photon_SC_rawE; 
 			Photon_ratioS4 = 0.0;
-			if (Photon_E5x5 != 0)  Photon_ratioS4 = Photon_E2x2/Photon_E5x5;
+			if (Photon_E5x5 != 0)  
+			{
+				Photon_ratioS4 = Photon_E2x2/Photon_E5x5;
+				if(doR9Rescaling == 1 && doMC == 1 && Photon_isEB == 1) Photon_ratioS4 = Photon_ratioS4 * 1.01894 + -0.01034;
+				if(doR9Rescaling == 1 && doMC == 1 && Photon_isEE == 1) Photon_ratioS4 = Photon_ratioS4 * 1.04969 + -0.03642;
+			}
 			if(Photon_isEB) Photon_ratioS4_corrected = 1.008 * Photon_ratioS4;
 			if(Photon_isEE) Photon_ratioS4_corrected = 1.008074 * Photon_ratioS4;
 			Photon_lamdbaDivCov = 0.0;
 			if (Photon_covEtaEta != 0) Photon_lamdbaDivCov = (Photon_covEtaEta+Photon_covPhiPhi-sqrt((Photon_covEtaEta-Photon_covPhiPhi)*(Photon_covEtaEta-Photon_covPhiPhi)+4*Photon_covEtaPhi*Photon_covEtaPhi))/Photon_covEtaEta;
 //			Photon_SC_rawE_x_fEta = Photon_SC_rawE * fEta(Photon_SC_Eta);
 			
-//			Photon_SC_rawE_x_fEta_x_fBrem = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 0);
-//			Photon_SC_rawE_x_fEta_x_fBrem_AF = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 1);
-//			Photon_SC_rawE_x_fEta_x_fBrem_L = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 2);
+//			Photon_SC_rawE_x_fEta_x_fBrem = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), 0);
+//			Photon_SC_rawE_x_fEta_x_fBrem_AF = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), 1);
+//			Photon_SC_rawE_x_fEta_x_fBrem_L = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), 2);
 /*
-			Photon_SC_rawE_x_fEta_x_fBrem = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11");
-			Photon_SC_rawE_x_fEta_x_fBrem_AF = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur");
-			Photon_SC_rawE_x_fEta_x_fBrem_L = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis");
+			Photon_SC_rawE_x_fEta_x_fBrem = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11");
+			Photon_SC_rawE_x_fEta_x_fBrem_AF = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), "Anne-Fleur");
+			Photon_SC_rawE_x_fEta_x_fBrem_L = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), "Louis");
 
 			float etraw_fEta_fBrem = Photon_SC_rawE_x_fEta_x_fBrem/cosh(Photon_SC_Eta);
 			float etraw_fEta_fBrem_AF = Photon_SC_rawE_x_fEta_x_fBrem_AF/cosh(Photon_SC_Eta);
 			float etraw_fEta_fBrem_L = Photon_SC_rawE_x_fEta_x_fBrem_L/cosh(Photon_SC_Eta);
 */
-//			Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 0) * EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEEPho(), 0);
-//			Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 0) * EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), 1);
-//			Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), 0) * EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), 1);
+//			Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), 0) * EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEE(), 0);
+//			Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), 0) * EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEE(), 1);
+//			Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), 0) * EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEE(), 1);
 /*
-			Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11") * EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEEPho(), "START42_V11");
-			Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11") * EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur");
-			Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11") * EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur");
+			Photon_SC_rawE_x_fEta_x_fBrem_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11") * EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEE(), "START42_V11");
+			Photon_SC_rawE_x_fEta_x_fBrem_AF_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11") * EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur");
+			Photon_SC_rawE_x_fEta_x_fBrem_L_x_fEtEta = Photon_SC_rawE * fEta(Photon_SC_Eta) * BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11") * EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur");
 */
 
 			Photon_secondMomentMaj = myphoton->secondMomentMaj();
@@ -932,11 +975,6 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 
 // Read NN output from weight file
 			Photon_NNshapeOutput = reader->EvaluateMVA("MLP method");
-
-
-		shervinSmearing = shervinSmearingVector;
-
-
 
       // Fill muons stuff
       TRootMuon *leadingMuon;
@@ -1040,30 +1078,30 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
     Pz_SCraw_fEta = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta));
 
 
-    Px_SCraw_fEta_fBrem = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11"));
-    Px_SCraw_fEta_fBrem_AF = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur"));
-    Px_SCraw_fEta_fBrem_L = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis"));
+    Px_SCraw_fEta_fBrem = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11"));
+    Px_SCraw_fEta_fBrem_AF = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Anne-Fleur"));
+    Px_SCraw_fEta_fBrem_L = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Louis"));
 
-    Py_SCraw_fEta_fBrem = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11"));
-    Py_SCraw_fEta_fBrem_AF = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur"));
-    Py_SCraw_fEta_fBrem_L = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis"));
+    Py_SCraw_fEta_fBrem = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11"));
+    Py_SCraw_fEta_fBrem_AF = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Anne-Fleur"));
+    Py_SCraw_fEta_fBrem_L = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Louis"));
 
-    Pz_SCraw_fEta_fBrem = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11"));
-    Pz_SCraw_fEta_fBrem_AF = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur"));
-    Pz_SCraw_fEta_fBrem_L = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis"));
+    Pz_SCraw_fEta_fBrem = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11"));
+    Pz_SCraw_fEta_fBrem_AF = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Anne-Fleur"));
+    Pz_SCraw_fEta_fBrem_L = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Louis"));
 
 
-    Px_SCraw_fEta_fBrem_fEtEta = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11")) * (EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEEPho(), "START42_V11"));
-    Px_SCraw_fEta_fBrem_AF_fEtEta  = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur")) * (EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur"));
-    Px_SCraw_fEta_fBrem_L_fEtEta  = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis")) * (EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur"));
+    Px_SCraw_fEta_fBrem_fEtEta = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11")) * (EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEE(), "START42_V11"));
+    Px_SCraw_fEta_fBrem_AF_fEtEta  = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Anne-Fleur")) * (EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur"));
+    Px_SCraw_fEta_fBrem_L_fEtEta  = (myphoton->Px()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Louis")) * (EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur"));
 
-    Py_SCraw_fEta_fBrem_fEtEta = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11")) * (EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEEPho(), "START42_V11"));
-    Py_SCraw_fEta_fBrem_AF_fEtEta  = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur")) * (EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur"));
-    Py_SCraw_fEta_fBrem_L_fEtEta  = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis")) * (EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur"));
+    Py_SCraw_fEta_fBrem_fEtEta = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11")) * (EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEE(), "START42_V11"));
+    Py_SCraw_fEta_fBrem_AF_fEtEta  = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Anne-Fleur")) * (EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur"));
+    Py_SCraw_fEta_fBrem_L_fEtEta  = (myphoton->Py()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Louis")) * (EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur"));
 
-    Pz_SCraw_fEta_fBrem_fEtEta = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11")) * (EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEEPho(), "START42_V11"));
-    Pz_SCraw_fEta_fBrem_AF_fEtEta  = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur")) * (EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur"));
-    Pz_SCraw_fEta_fBrem_L_fEtEta  = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis")) * (EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur"));
+    Pz_SCraw_fEta_fBrem_fEtEta = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11")) * (EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEE(), "START42_V11"));
+    Pz_SCraw_fEta_fBrem_AF_fEtEta  = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Anne-Fleur")) * (EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur"));
+    Pz_SCraw_fEta_fBrem_L_fEtEta  = (myphoton->Pz()) / (myphoton->Energy()) * (myphoton->superCluster()->rawEnergy()) * (fEta(Photon_SC_Eta)) * (BremCor(Photon_SC_brem, myphoton->isEE(), "Louis")) * (EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur"));
 */
 
 
@@ -1084,18 +1122,18 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 /*
     TLorentzVector *PhotonSC_raw_fEta = new TLorentzVector(EScale*Px_SCraw_fEta , EScale*Py_SCraw_fEta, EScale*Pz_SCraw_fEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta)));
 
-    TLorentzVector *PhotonSC_raw_fEta_fBrem = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem, EScale*Py_SCraw_fEta_fBrem, EScale*Pz_SCraw_fEta_fBrem, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11")));
+    TLorentzVector *PhotonSC_raw_fEta_fBrem = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem, EScale*Py_SCraw_fEta_fBrem, EScale*Pz_SCraw_fEta_fBrem, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11")));
 
-    TLorentzVector *PhotonSC_raw_fEta_fBrem_AF = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_AF, EScale*Py_SCraw_fEta_fBrem_AF, EScale*Pz_SCraw_fEta_fBrem_AF, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur")));
+    TLorentzVector *PhotonSC_raw_fEta_fBrem_AF = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_AF, EScale*Py_SCraw_fEta_fBrem_AF, EScale*Pz_SCraw_fEta_fBrem_AF, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEE(), "Anne-Fleur")));
 
-    TLorentzVector *PhotonSC_raw_fEta_fBrem_L = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_L, EScale*Py_SCraw_fEta_fBrem_L, EScale*Pz_SCraw_fEta_fBrem_L, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis")));
+    TLorentzVector *PhotonSC_raw_fEta_fBrem_L = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_L, EScale*Py_SCraw_fEta_fBrem_L, EScale*Pz_SCraw_fEta_fBrem_L, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEE(), "Louis")));
 
     
-    TLorentzVector *PhotonSC_raw_fEta_fBrem_fEtEta = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_fEtEta, EScale*Py_SCraw_fEta_fBrem_fEtEta, EScale*Pz_SCraw_fEta_fBrem_fEtEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEEPho(), "START42_V11"))*(EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEEPho(), "START42_V11")));
+    TLorentzVector *PhotonSC_raw_fEta_fBrem_fEtEta = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_fEtEta, EScale*Py_SCraw_fEta_fBrem_fEtEta, EScale*Pz_SCraw_fEta_fBrem_fEtEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEE(), "START42_V11"))*(EtEtaCor(etraw_fEta_fBrem, abs(Photon_SC_Eta), myphoton->isEE(), "START42_V11")));
 
-    TLorentzVector *PhotonSC_raw_fEta_fBrem_AF_fEtEta = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_AF_fEtEta, EScale*Py_SCraw_fEta_fBrem_AF_fEtEta, EScale*Pz_SCraw_fEta_fBrem_AF_fEtEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEEPho(), "Anne-Fleur"))*(EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur")));
+    TLorentzVector *PhotonSC_raw_fEta_fBrem_AF_fEtEta = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_AF_fEtEta, EScale*Py_SCraw_fEta_fBrem_AF_fEtEta, EScale*Pz_SCraw_fEta_fBrem_AF_fEtEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEE(), "Anne-Fleur"))*(EtEtaCor(etraw_fEta_fBrem_AF, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur")));
 
-    TLorentzVector *PhotonSC_raw_fEta_fBrem_L_fEtEta = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_L_fEtEta, EScale*Py_SCraw_fEta_fBrem_L_fEtEta, EScale*Pz_SCraw_fEta_fBrem_L_fEtEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEEPho(), "Louis"))*(EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEEPho(), "Anne-Fleur")));
+    TLorentzVector *PhotonSC_raw_fEta_fBrem_L_fEtEta = new TLorentzVector(EScale*Px_SCraw_fEta_fBrem_L_fEtEta, EScale*Py_SCraw_fEta_fBrem_L_fEtEta, EScale*Pz_SCraw_fEta_fBrem_L_fEtEta, EScale*(myphoton->superCluster()->rawEnergy())*(fEta(Photon_SC_Eta))*(BremCor(Photon_SC_brem, myphoton->isEE(), "Louis"))*(EtEtaCor(etraw_fEta_fBrem_L, abs(Photon_SC_Eta), myphoton->isEE(), "Anne-Fleur")));
 */
 
 

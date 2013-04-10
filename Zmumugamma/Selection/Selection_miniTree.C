@@ -94,8 +94,6 @@
 	Float_t Photon_secondMomentMaj, Photon_secondMomentMin, Photon_secondMomentAlpha;
 	Float_t Photon_etaLAT, Photon_phiLAT, Photon_LAT, Photon_Zernike20, Photon_Zernike42, Photon_ESratio;
 
-	Float_t shervinSmearing;
-
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
 	// ____________________________________________
@@ -248,6 +246,9 @@ int main(int argc, char *argv[])
 		//if( lumi_set == "2011" ) integratedLuminosity = 775.208 + 606.941 + 3010 + 1220;
 		if( lumi_set == "2011" ) integratedLuminosity = 706.370 + 385.819 + 2741 + 1099;
 		if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +	2.714*1000.0;
+		if( lumi_set == "2012" ) { integratedLuminosity = 808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0; runopt = 0; }
+		if( lumi_set == "2012ABC" ) { integratedLuminosity = 808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0; runopt = 0; } 
+                if( lumi_set == "2012D" ) { integratedLuminosity = 7274.0; runopt = 1; }
 	}
 
 	// ******************************************
@@ -376,7 +377,7 @@ int main(int argc, char *argv[])
 
 //	TProof * p = TProof::Open("ccaplmaster.in2p3.fr");
 	gSystem->Load("libToto.so");
-	gROOT->ProcessLine(".L rochcor_v4_new.h+");
+	gROOT->ProcessLine(".L rochcor2012v2v2.h+");
 //	gSystem->Load("libFWCoreFWLite.so");
 //	gSystem->Load("libDataFormatsFWLite.so");
 //	AutoLibraryLoader::enable();
@@ -407,12 +408,6 @@ int main(int argc, char *argv[])
 	bool doPhotonVertexCorrection = false;
 	bool doPhotonIsolation = false;
 	bool doR9Rescaling = true;
-
-	bool doApplyScaleAndSmearingFactors = true; 
-	EnergyScaleCorrection_class photonScaleAndSmearing("scaleFile.dat", "HggRunEtaR9","smearingFile_v2.dat", "HggRunEtaR9");
-	double scaleFactor = 1.0;
-	double smearingFactor = 1.0;
-
 
 	// DATASET	
 	TChain *inputEventTree = new TChain("eventTree");
@@ -463,12 +458,10 @@ int main(int argc, char *argv[])
 	int iline = 0;
 	if( ntotjob == 9999)
 	{
-		cout<<"Run on local file"<<endl;
+		cout<<"Coucou"<<endl;
 		inputEventTree->Add("test_DYtoMuMu2.root");
 		inputRunTree->Add("test_DYtoMuMu2.root");
-		//inputEventTree->Add("totoupleData_test.root");
-		//inputRunTree->Add("totoupleData_test.root");	
-
+	
 	} 
 	else 
 	{
@@ -516,6 +509,7 @@ int main(int argc, char *argv[])
 		}
 	}
 	
+	cout<<endl<<"Coucou"<<endl;
 	// INSERTFILES
 
 	TFile* OutputRootFile = new TFile(Form("miniTree_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
@@ -687,6 +681,7 @@ int main(int argc, char *argv[])
 	}
 */
 
+	cout<<endl<<"Coucou"<<endl;
 
 	int* NumWantedHLTnames;
 
@@ -1130,10 +1125,7 @@ int main(int argc, char *argv[])
 	miniTree->Branch("Photon_Zernike20", &Photon_Zernike20, "Photon_Zernike20/F");
 	miniTree->Branch("Photon_Zernike42", &Photon_Zernike42, "Photon_Zernike42/F");
 	miniTree->Branch("Photon_ESratio", &Photon_ESratio, "Photon_ESratio/F");
-	
-	miniTree->Branch("shervinSmearing", &shervinSmearing, "shervinSmearing/F");
-
-	
+		
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
 	// ____________________________________________
@@ -1398,6 +1390,8 @@ int main(int argc, char *argv[])
 	miniTree->Branch("mmg_logik_MZ_Muons_RECO_MC",&mmg_logik_MZ_Muons_RECO_MC,"mmg_logik_MZ_Muons_RECO_MC/F");
 	miniTree->Branch("mmg_logs_MZ_Muons_RECO_MC",&mmg_logs_MZ_Muons_RECO_MC,"mmg_logs_MZ_Muons_RECO_MC/F");
 
+	cout<<endl<<"Coucou"<<endl;
+
 
 	TMVA::Reader* reader = new TMVA::Reader( "!Color:!Silent" );
 	reader->AddVariable("pho_cEP",&Photon_covEtaPhi);
@@ -1455,14 +1449,14 @@ int main(int argc, char *argv[])
 
 	string lastFile = "";
 
-	double XSectionDYToMuMu = 1665.835;
-	double XSectionTTJets = 165.0;
-	double XSectionWJetsToLNu = 31314.0;
+	double XSectionDYToMuMu = 1914.894;
+	double XSectionTTJets = 234.0;
+	double XSectionWJetsToLNu = 37509.25;
 	double XSectionQCDMu = 349988.0; //FIXME
 
-	double InitialNumberDYToMuMu = 29743564.0;
-	double InitialNumberTTJets = 3701947.0;
-	double InitialNumberWJetsToLNu = 81345381.0;
+	double InitialNumberDYToMuMu = 48819386.0;
+	double InitialNumberTTJets = 6736135.0;
+	double InitialNumberWJetsToLNu = 57709905.0;
 	double InitialNumberQCDMu = 8797418.0; //FIXME
 
 	double minPtHat = -100;
@@ -1595,12 +1589,12 @@ int main(int argc, char *argv[])
 		else if( sample_in.find("TTJets") != string::npos )
 		{
 			weight_Xsection = (double)(	(double)((double)(XSectionTTJets) / (double)(InitialNumberTTJets)) * (double)integratedLuminosity);
-			weight_pileUp = weight_TTJets(nGenVertices+1);
+			weight_pileUp = weight_TTJets(nGenVertices+1, lumi_set, pu_set);
 		} 
 		else if( sample_in.find("WToMuNu") != string::npos	|| sample_in.find("WJetsToLNu") != string::npos)
 		{
 			weight_Xsection = (double)(	(double)((double)(XSectionWJetsToLNu) / (double)(InitialNumberWJetsToLNu)) * (double)integratedLuminosity);
-			weight_pileUp = weight_WJetsToLNu(nGenVertices+1);
+			weight_pileUp = weight_WJetsToLNu(nGenVertices+1, lumi_set, pu_set);
 		}
 
 
@@ -1635,15 +1629,14 @@ int main(int argc, char *argv[])
 		// ___________________________________________
 		NbPhotons = photons->GetEntries();
 		vector<double> Photon_scale;
-		vector<double> shervinSmearingVector;
 		if( (argc > 5) && (EResolution != 0) )
 		{ // If there is an extra resolution to smear the photon energy
 			for(int iphoton = 0; iphoton < NbPhotons ; iphoton++)
 			{
-				//Photon_scale.push_back(generator->Gaus(EScale_true_injected * EScale_inj, EResolution)); 
+				//Photon_scale.push_back(generator->Gaus(EScale_true_injected * EScale_inj, EResolution));
 				TRootPhoton *myphotontocorrect;
-                                myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
-                                Photon_scale.push_back(generator->Gaus(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons) * EScale_true_injected,EResolution));
+				myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
+				Photon_scale.push_back(generator->Gaus(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons) * EScale_true_injected,EResolution));	
 			}
 		} 
 		else 
@@ -1654,24 +1647,8 @@ int main(int argc, char *argv[])
 				{
 					TRootPhoton *myphotontocorrect;
 					myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
-			
 					Photon_scale.push_back(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons) * EScale_true_injected);
-					scaleFactor = 1.0;
-                                        smearingFactor = 1.0;
-	
-					if(doApplyScaleAndSmearingFactors)
-        				{
-              					if(isZgammaMC == 0) scaleFactor = photonScaleAndSmearing.getScaleOffset(iRunID, myphotontocorrect->isEBPho(), myphotontocorrect->r9(), myphotontocorrect->superCluster()->Eta());
-						//if(isZgammaMC > 0) smearingFactor = photonScaleAndSmearing.getSmearingSigma(myphotontocorrect->Energy()*Photon_scale[Photon_scale.size() - 1], myphotontocorrect->isEBPho(), myphotontocorrect->r9(), myphotontocorrect->superCluster()->Eta());
-						if(isZgammaMC > 0) smearingFactor = photonScaleAndSmearing.getSmearing(myphotontocorrect->Energy()*Photon_scale[Photon_scale.size() - 1], myphotontocorrect->isEBPho(), myphotontocorrect->r9(), myphotontocorrect->superCluster()->Eta());	
-        				}
-		
-					shervinSmearingVector.push_back(scaleFactor * smearingFactor);
-					cout<<endl<<" shervinSmearingVector = "<<shervinSmearingVector[shervinSmearingVector.size() - 1]<<endl;
-					Photon_scale[Photon_scale.size() - 1] *= scaleFactor * smearingFactor;
-				
-					cout<<endl<<"scaleFactor = "<<scaleFactor<<", smearingFactor = "<<smearingFactor<<", Photon_scale[Photon_scale.size() - 1] = "<<Photon_scale[Photon_scale.size() - 1];
-	
+					
 					if(verbosity>1) cout << "EScale_true_injected= " << EScale_true_injected	<< endl;
 					if(verbosity>1) cout << "myphotontocorrect->Energy()= " << myphotontocorrect->Energy() << endl;
 					if(verbosity>1) cout << "photonManualCorrectionFactor= " << Photon_scale[Photon_scale.size() - 1] << endl;
@@ -1718,8 +1695,6 @@ int main(int argc, char *argv[])
 		Photon_secondMomentMaj = Photon_secondMomentMin = Photon_secondMomentAlpha = -99.0;
 		Photon_etaLAT = Photon_phiLAT = Photon_LAT = Photon_Zernike20 = Photon_Zernike42 = Photon_ESratio = -99.0;
 		Photon_E_regression = Photon_E_regressionError = Photon_Et_regression = -99.0;
-	
-		shervinSmearing = -99.0;	
 
 		// ____________________________________________
 		// mugamma / mumu / mumugamma information
@@ -1985,6 +1960,8 @@ int main(int argc, char *argv[])
 		{
 			TRootMuon *mymuon;
 			mymuon = (TRootMuon*) muons->At(imuon);
+	
+			 // 2010 muon ID
 
 			if(! (mymuon->isGlobalMuon()) )
 			{
@@ -2068,18 +2045,33 @@ int main(int argc, char *argv[])
 
 			nbMuonsAfterID[9]++;
 			TOTALnbMuonsAfterID[9]++;
+			
+			/*
+			
+			// 2012 Tight muon ID
+			if(! (mymuon->isTightMuonPerso() == 1))
+			{
+				muonIsNotCommissioned.push_back(1);
+				if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because isTightMuonPerso() != 1" << endl;
+				continue;
+			}	
+			nbMuonsAfterID[1]++;
+                        TOTALnbMuonsAfterID[1]++;	
 
+			*/
 			TLorentzVector correctedMuon(mymuon->Px(), mymuon->Py(), mymuon->Pz(), mymuon->E());
+			float qter = 1.0;
 			double corrected_Pt = mymuon->Pt();
-			rochcor *rmcor = 0; 
+			rochcor2012 *rmcor = 0;
                         if(itoy != 0) 
                         {
-                                rmcor = new rochcor(seeed);
+                                rmcor = new rochcor2012(seeed);
                         }
                         else
                         {
-                                rmcor = new rochcor();
-                        }
+                                rmcor = new rochcor2012();
+                        }	
+
 			if( applyMuonScaleCorrection > 0 )
 			{
 		 		if( applyMuonScaleCorrection == 2 )
@@ -2117,6 +2109,7 @@ int main(int argc, char *argv[])
 						//if( lumi_set == "2011" ) integratedLuminosity = 215.552 + 951.716 + 389.876 + 706.719 + 2.714*1000.0;
 						if( lumi_set == "2011" ) integratedLuminosity = 706.370 + 385.819 + 2741 + 1099;
 						if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +	2.714*1000.0;
+						if( lumi_set == "2012" ) integratedLuminosity = 808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0;
 	
 						// event where to switch from Run2011A to Run2011B correction
 						// We run over ntot=  DYToMuMu events
@@ -2148,6 +2141,26 @@ int main(int argc, char *argv[])
 							} 
 							else if( ijob >= ijobLastA ) runopt = 1;
 						}
+						if( (lumi_set == "2012" ) && (sample_in.find("DYToMuMu") != string::npos))
+                                                {
+                                                        int ntot= 3568581;
+                                                        double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                                                        double ABCstat= (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
+                                                        double Dstat= (double)(7274.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
+                                                        double lastABC= ABCstat*ntot;
+                                                        int ijobLastABC= (int)(lastABC)/(int)(avEventsPerJob);
+                                                        int iEventLastABC= (int)(lastABC)%(int)(avEventsPerJob);
+                                                        if( ijob == (ijobLastABC -1) )
+                                                        {
+                                                                if( ievt >= iEventLastABC )
+                                                                {
+                                                                        runopt = 1;
+                                                                }
+                                                                else runopt = 0;
+                                                        }
+                                                        else if( ijob >= ijobLastABC ) runopt = 1;
+                                                }
+
 						if( (lumi_set == "2011" ) && (sample_in.find("TTJets") != string::npos))
 	                                        {
 	                                                int ntot= 131388;
@@ -2167,6 +2180,26 @@ int main(int argc, char *argv[])
 	                                                } 
 							else if( ijob >= ijobLastA ) runopt = 1; 
 	                                        }	
+						if( (lumi_set == "2012" ) && (sample_in.find("TTJets") != string::npos))
+                                                {
+                                                        int ntot= 110095;
+                                                        double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                                                        double ABCstat= (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
+                                                        double Dstat= (double)(7274.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
+                                                        double lastABC= ABCstat*ntot;
+                                                        int ijobLastABC= (int)(lastABC)/(int)(avEventsPerJob);
+                                                        int iEventLastABC= (int)(lastABC)%(int)(avEventsPerJob);
+                                                        if( ijob == (ijobLastABC -1) )
+                                                        {
+                                                                if( ievt >= iEventLastABC )
+                                                                {
+                                                                        runopt = 1;
+                                                                }
+                                                                else runopt = 0;
+                                                        }
+                                                        else if( ijob >= ijobLastABC ) runopt = 1;
+                                                }
+
 						if( (lumi_set == "2011" ) && (sample_in.find("WJetsToLNu") != string::npos))
 	                                        {
 	                                                int ntot= 14821;
@@ -2184,6 +2217,26 @@ int main(int argc, char *argv[])
 	                                                        } else runopt = 0;
 	                                                } else if( ijob >= ijobLastA ) runopt = 1;
 	                                        }
+						if( (lumi_set == "2012" ) && (sample_in.find("WJetsToLNu") != string::npos))
+                                                {
+                                                        int ntot= 3353;
+                                                        double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
+                                                        double ABCstat= (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
+                                                        double Dstat= (double)(7274.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
+                                                        double lastABC= ABCstat*ntot;
+                                                        int ijobLastABC= (int)(lastABC)/(int)(avEventsPerJob);
+                                                        int iEventLastABC= (int)(lastABC)%(int)(avEventsPerJob);
+                                                        if( ijob == (ijobLastABC -1) )
+                                                        {
+                                                                if( ievt >= iEventLastABC )
+                                                                {
+                                                                        runopt = 1;
+                                                                }
+                                                                else runopt = 0;
+                                                        }
+                                                        else if( ijob >= ijobLastABC ) runopt = 1;
+                                                }
+
 						if( (lumi_set == "2011_rereco" ) )
 						{
 							int ntot= 8950877;
@@ -2202,15 +2255,15 @@ int main(int argc, char *argv[])
 							} else if( ijob >= ijobLastA ) runopt = 1;
 						}
 						if( verbosity > 4) cerr << "### ievt= " << ievt << "\tijob= " << ijob << "\trunopt= " << runopt << endl;
-						rmcor->momcor_mc(muonRochester, mymuon->charge(), sysdev, runopt);
+						rmcor->momcor_mc(muonRochester, mymuon->charge(), runopt, qter);
 						//if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
 						//else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
 					} 
 					else 
 					{
-						rmcor->momcor_data(muonRochester, mymuon->charge(), sysdev, runopt);
-						//if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev, runopt);
-						//else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev, runopt);
+						rmcor->momcor_data(muonRochester, mymuon->charge(), runopt, qter);
+						//if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, runopt, qter);
+						//else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, runopt, qter);
 					}
 					corrected_Pt = muonRochester.Pt();
 					correctedMuon = muonRochester;
@@ -2230,13 +2283,13 @@ int main(int argc, char *argv[])
 					// sysdev = 0 : no systematics yet
 					if( isZgammaMC > 0 ) // If sample is MC
 					{
-						rmcor->momcor_mc(muonRochester, mymuon->charge(), sysdev, runopt);
+						rmcor->momcor_mc(muonRochester, mymuon->charge(), runopt, qter);
 						//if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
 						//else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
 					} 
 					else 
 					{
-						rmcor->momcor_data(muonRochester, mymuon->charge(), sysdev, runopt);
+						rmcor->momcor_data(muonRochester, mymuon->charge(), runopt, qter);
 						//if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
 						//else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
 					}
@@ -2257,13 +2310,13 @@ int main(int argc, char *argv[])
 					// sysdev = 0 : no systematics yet
 					if( isZgammaMC > 0 ) // If sample is MC
 					{
-						rmcor->momcor_mc(muonRochester, mymuon->charge(), sysdev, runopt);
+						rmcor->momcor_mc(muonRochester, mymuon->charge(), runopt, qter);
 						//if( mymuon->charge() < 0 ) rmcor->momcor_mc(muonRochester, muonRochesterDummy, 1, sysdev);
 						//else rmcor->momcor_mc(muonRochesterDummy, muonRochester, 1, sysdev);
 					} 
 					else 
 					{
-						rmcor->momcor_data(muonRochester,mymuon->charge(), sysdev, runopt);
+						rmcor->momcor_data(muonRochester,mymuon->charge(), runopt, qter);
 						//if( mymuon->charge() < 0 ) rmcor->momcor_data(muonRochester, muonRochesterDummy, 1, sysdev);
 						//else rmcor->momcor_data(muonRochesterDummy, muonRochester, 1, sysdev);
 					}
@@ -2289,7 +2342,20 @@ int main(int argc, char *argv[])
 			TLorentzVector correctedMuon(corrected_Px, corrected_Py, corrected_Pz, corrected_E);
 
 			*/
-		 	if(! (correctedMuon.Pt() > 10.0) )
+			
+			/*
+			// 2012 muon ID cut
+			if(! ( (mymuon->pfIsoChargedHadronPt04() / correctedMuon.Pt()) < 0.2 ) )
+			{	
+				muonIsNotCommissioned.push_back(1);
+				if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because pfIsoChargedHadronPt04 / Pt > 0.2" << endl;
+				continue;
+			}
+			nbMuonsAfterID[2]++;
+                        TOTALnbMuonsAfterID[2]++;
+			*/
+
+		 	if(! (correctedMuon.Pt() > 10.5) )
 			{// transverse momentum
 				//if(! (mymuon->Pt() > 10.0) ){// transverse momentum
 				muonIsNotCommissioned.push_back(1);
@@ -2328,7 +2394,7 @@ int main(int argc, char *argv[])
 		unsigned int NbMuonsIdentified = muonIdentified.size();
 		
 		// Increasing counter
-		for(int i = 0; i < 12 ; i++)
+		for(int i = 0; i < 5 ; i++)
 		{
 			if(nbMuonsAfterID[i] >= 2)
 			{ 
@@ -2701,7 +2767,7 @@ int main(int argc, char *argv[])
 			{
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], shervinSmearingVector[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[1][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -2796,11 +2862,12 @@ int main(int argc, char *argv[])
 			double deltaRphomu2 = DeltaR(etaPhoton, phiPhoton, etaMuon2, phiMuon2);
 			//double far_muonPt = (deltaRphomu1 > deltaRphomu2) ? mymuon1->Pt() : mymuon2->Pt();
 			double far_muonPt = (deltaRphomu1 > deltaRphomu2) ? correctedMuon1->Pt() : correctedMuon2->Pt();
-			if( far_muonPt <= 15.0 )
+			//if( far_muonPt <= 15.0 )
+			if( far_muonPt <= 21.0 )
 			{
 				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
 				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], shervinSmearingVector[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[2][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -2918,7 +2985,7 @@ int main(int argc, char *argv[])
 			{
 				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
 				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, shervinSmearingVector[MuMuGammaCandidates[2][i_mmg].first] ,doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[3][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -3034,7 +3101,7 @@ int main(int argc, char *argv[])
                         {
 				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
 				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
-                                FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, shervinSmearingVector[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
+                                FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
                                 iCandidate_temp[4][i_mmg] == -99;
                                 miniTree->Fill();
                                 continue;
@@ -3413,7 +3480,7 @@ int main(int argc, char *argv[])
 			{
 				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
 				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], shervinSmearingVector[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[7][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -3540,7 +3607,7 @@ int main(int argc, char *argv[])
 				//cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
 				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, shervinSmearingVector[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[8][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -3703,10 +3770,11 @@ int main(int argc, char *argv[])
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			if( (mumugamma.M() < 87.2) || (95.2 < mumugamma.M()) )
 			{
+				cout<<endl<<"avant FillMMG dans Tight window"<<endl;
 				//cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 				//cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, shervinSmearingVector[MuMuGammaCandidates[8][i_mmg].first],  doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
 				//cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				iCandidate_temp[9][i_mmg] == -99;
@@ -3718,6 +3786,7 @@ int main(int argc, char *argv[])
 			MuMuGammaCandidates_corrected[9][nbMuMuGammaAfterID[9]] = make_pair(MuMuGammaCandidates_corrected[8][i_mmg].first, MuMuGammaCandidates_corrected[8][i_mmg].second);
 			MuMuGammaCandidates_corrected_Pz[9][nbMuMuGammaAfterID[9]] = make_pair(MuMuGammaCandidates_corrected_Pz[8][i_mmg].first, MuMuGammaCandidates_corrected_Pz[8][i_mmg].second);
 			MuMuGammaCandidates_corrected_E[9][nbMuMuGammaAfterID[9]] = make_pair(MuMuGammaCandidates_corrected_E[8][i_mmg].first, MuMuGammaCandidates_corrected_E[8][i_mmg].second);
+			cerr << "coucou avant nbMuMuGammaAfterID[9]++" <<endl;
 			nbMuMuGammaAfterID[9]++;
  
 	
@@ -3854,7 +3923,7 @@ int main(int argc, char *argv[])
 //				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[8][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
 				cerr << "correctedMuon1->Pt() dans isMultiple = "<<correctedMuon1->Pt()<<endl;
                 		cerr << "correctedMuon2->Pt() dans isMultiple = "<<correctedMuon2->Pt()<<endl;
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[9][i_mmg].first],  shervinSmearingVector[MuMuGammaCandidates[9][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[9][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				miniTree->Fill();
 	
 				delete correctedMuon1;
@@ -3871,6 +3940,7 @@ int main(int argc, char *argv[])
 		}
 		isSelected = 1;	
 
+		cout<<endl<<"Coucou de la fin qui ne devrait pas se voir !!!"<<endl;
 
 		/*
 		int i_mmg = 0;
