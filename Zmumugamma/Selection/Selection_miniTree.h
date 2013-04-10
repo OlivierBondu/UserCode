@@ -55,7 +55,7 @@
 // personal headers
 #include "corrections.h"
 #include "rochcor_v4_new.h"
-
+#include "EnergyScaleCorrection_class.h"
 
 using namespace std;
 
@@ -679,6 +679,8 @@ int main(int argc, char *argv[]);
 
 	extern Float_t Photon_E_regression, Photon_E_regressionError, Photon_Et_regression;
 
+	extern Float_t shervinSmearing;
+
   // ____________________________________________
   // mugamma / mumu / mumugamma information
   // ____________________________________________
@@ -793,7 +795,8 @@ double applyMuScleFit(double _pt, double charge, double eta, double phi)
 // *****************************************************************************************************
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TClonesArray* mcPhotons, TMVA::Reader* reader){
 //int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader){
-int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLorentzVector* correctedmymuon1, TLorentzVector* correctedmymuon2, double EScale, bool doMC, bool doPhotonConversionMC, TClonesArray* mcParticles, TMVA::Reader* reader, int binNumber){
+int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLorentzVector* correctedmymuon1, TLorentzVector* correctedmymuon2, double EScale, double shervinSmearingVector, bool doMC, bool doPhotonConversionMC, bool doR9Rescaling, TClonesArray* mcParticles, TMVA::Reader* reader, int binNumber){
+
 
 //			cout << "correctedmymuon1->Pt()= " << correctedmymuon1->Pt() << endl;
 //			cout << "correctedmymuon2->Pt()= " << correctedmymuon2->Pt() << endl;
@@ -846,7 +849,9 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
       Photon_E2nd = EScale*(myphoton->e2nd());
       Photon_r19 = myphoton->r19();
       Photon_r9 = myphoton->r9();
-  //FIXME   Photon_cross = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));   
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEB == 1) Photon_r9 = myphoton->r9() * 1.005; // H->gg 2011 scale factor 
+      if(doR9Rescaling == 1 && doMC == 1 && Photon_isEE == 1) Photon_r9 = myphoton->r9() * 1.005; // H->gg 2011 scale factor
+//FIXME  Photon_cross = 1-((myphoton->superCluster()->s4())/(myphoton->superCluster()->eMax()));   
       //Photon_caloConeSize = myphoton->caloConeSize();
       Photon_PreshEnergy = myphoton->preshowerEnergy();
       Photon_HoE = myphoton->hoe();
@@ -927,6 +932,11 @@ int FillMMG(TRootPhoton* myphoton, TRootMuon* mymuon1, TRootMuon* mymuon2, TLore
 
 // Read NN output from weight file
 			Photon_NNshapeOutput = reader->EvaluateMVA("MLP method");
+
+
+		shervinSmearing = shervinSmearingVector;
+
+
 
       // Fill muons stuff
       TRootMuon *leadingMuon;

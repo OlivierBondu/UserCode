@@ -94,6 +94,8 @@
 	Float_t Photon_secondMomentMaj, Photon_secondMomentMin, Photon_secondMomentAlpha;
 	Float_t Photon_etaLAT, Photon_phiLAT, Photon_LAT, Photon_Zernike20, Photon_Zernike42, Photon_ESratio;
 
+	Float_t shervinSmearing;
+
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
 	// ____________________________________________
@@ -404,6 +406,13 @@ int main(int argc, char *argv[])
 	bool doBardak = false;
 	bool doPhotonVertexCorrection = false;
 	bool doPhotonIsolation = false;
+	bool doR9Rescaling = true;
+
+	bool doApplyScaleAndSmearingFactors = true; 
+	EnergyScaleCorrection_class photonScaleAndSmearing("scaleFile.dat", "HggRunEtaR9","smearingFile_v2.dat", "HggRunEtaR9");
+	double scaleFactor = 1.0;
+	double smearingFactor = 1.0;
+
 
 	// DATASET	
 	TChain *inputEventTree = new TChain("eventTree");
@@ -454,10 +463,12 @@ int main(int argc, char *argv[])
 	int iline = 0;
 	if( ntotjob == 9999)
 	{
-		cout<<"Coucou"<<endl;
+		cout<<"Run on local file"<<endl;
 		inputEventTree->Add("test_DYtoMuMu2.root");
 		inputRunTree->Add("test_DYtoMuMu2.root");
-	
+		//inputEventTree->Add("totoupleData_test.root");
+		//inputRunTree->Add("totoupleData_test.root");	
+
 	} 
 	else 
 	{
@@ -505,7 +516,6 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	cout<<endl<<"Coucou"<<endl;
 	// INSERTFILES
 
 	TFile* OutputRootFile = new TFile(Form("miniTree_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
@@ -677,7 +687,6 @@ int main(int argc, char *argv[])
 	}
 */
 
-	cout<<endl<<"Coucou"<<endl;
 
 	int* NumWantedHLTnames;
 
@@ -1121,7 +1130,10 @@ int main(int argc, char *argv[])
 	miniTree->Branch("Photon_Zernike20", &Photon_Zernike20, "Photon_Zernike20/F");
 	miniTree->Branch("Photon_Zernike42", &Photon_Zernike42, "Photon_Zernike42/F");
 	miniTree->Branch("Photon_ESratio", &Photon_ESratio, "Photon_ESratio/F");
-		
+	
+	miniTree->Branch("shervinSmearing", &shervinSmearing, "shervinSmearing/F");
+
+	
 	// ____________________________________________
 	// mugamma / mumu / mumugamma information
 	// ____________________________________________
@@ -1386,8 +1398,6 @@ int main(int argc, char *argv[])
 	miniTree->Branch("mmg_logik_MZ_Muons_RECO_MC",&mmg_logik_MZ_Muons_RECO_MC,"mmg_logik_MZ_Muons_RECO_MC/F");
 	miniTree->Branch("mmg_logs_MZ_Muons_RECO_MC",&mmg_logs_MZ_Muons_RECO_MC,"mmg_logs_MZ_Muons_RECO_MC/F");
 
-	cout<<endl<<"Coucou"<<endl;
-
 
 	TMVA::Reader* reader = new TMVA::Reader( "!Color:!Silent" );
 	reader->AddVariable("pho_cEP",&Photon_covEtaPhi);
@@ -1625,11 +1635,15 @@ int main(int argc, char *argv[])
 		// ___________________________________________
 		NbPhotons = photons->GetEntries();
 		vector<double> Photon_scale;
+		vector<double> shervinSmearingVector;
 		if( (argc > 5) && (EResolution != 0) )
 		{ // If there is an extra resolution to smear the photon energy
 			for(int iphoton = 0; iphoton < NbPhotons ; iphoton++)
 			{
-				Photon_scale.push_back(generator->Gaus(EScale_true_injected * EScale_inj, EResolution));
+				//Photon_scale.push_back(generator->Gaus(EScale_true_injected * EScale_inj, EResolution)); 
+				TRootPhoton *myphotontocorrect;
+                                myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
+                                Photon_scale.push_back(generator->Gaus(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons) * EScale_true_injected,EResolution));
 			}
 		} 
 		else 
@@ -1640,8 +1654,24 @@ int main(int argc, char *argv[])
 				{
 					TRootPhoton *myphotontocorrect;
 					myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
+			
 					Photon_scale.push_back(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons) * EScale_true_injected);
-					
+					scaleFactor = 1.0;
+                                        smearingFactor = 1.0;
+	
+					if(doApplyScaleAndSmearingFactors)
+        				{
+              					if(isZgammaMC == 0) scaleFactor = photonScaleAndSmearing.getScaleOffset(iRunID, myphotontocorrect->isEBPho(), myphotontocorrect->r9(), myphotontocorrect->superCluster()->Eta());
+						//if(isZgammaMC > 0) smearingFactor = photonScaleAndSmearing.getSmearingSigma(myphotontocorrect->Energy()*Photon_scale[Photon_scale.size() - 1], myphotontocorrect->isEBPho(), myphotontocorrect->r9(), myphotontocorrect->superCluster()->Eta());
+						if(isZgammaMC > 0) smearingFactor = photonScaleAndSmearing.getSmearing(myphotontocorrect->Energy()*Photon_scale[Photon_scale.size() - 1], myphotontocorrect->isEBPho(), myphotontocorrect->r9(), myphotontocorrect->superCluster()->Eta());	
+        				}
+		
+					shervinSmearingVector.push_back(scaleFactor * smearingFactor);
+					cout<<endl<<" shervinSmearingVector = "<<shervinSmearingVector[shervinSmearingVector.size() - 1]<<endl;
+					Photon_scale[Photon_scale.size() - 1] *= scaleFactor * smearingFactor;
+				
+					cout<<endl<<"scaleFactor = "<<scaleFactor<<", smearingFactor = "<<smearingFactor<<", Photon_scale[Photon_scale.size() - 1] = "<<Photon_scale[Photon_scale.size() - 1];
+	
 					if(verbosity>1) cout << "EScale_true_injected= " << EScale_true_injected	<< endl;
 					if(verbosity>1) cout << "myphotontocorrect->Energy()= " << myphotontocorrect->Energy() << endl;
 					if(verbosity>1) cout << "photonManualCorrectionFactor= " << Photon_scale[Photon_scale.size() - 1] << endl;
@@ -1688,6 +1718,8 @@ int main(int argc, char *argv[])
 		Photon_secondMomentMaj = Photon_secondMomentMin = Photon_secondMomentAlpha = -99.0;
 		Photon_etaLAT = Photon_phiLAT = Photon_LAT = Photon_Zernike20 = Photon_Zernike42 = Photon_ESratio = -99.0;
 		Photon_E_regression = Photon_E_regressionError = Photon_Et_regression = -99.0;
+	
+		shervinSmearing = -99.0;	
 
 		// ____________________________________________
 		// mugamma / mumu / mumugamma information
@@ -2039,7 +2071,15 @@ int main(int argc, char *argv[])
 
 			TLorentzVector correctedMuon(mymuon->Px(), mymuon->Py(), mymuon->Pz(), mymuon->E());
 			double corrected_Pt = mymuon->Pt();
-			rochcor *rmcor = new rochcor(seeed);
+			rochcor *rmcor = 0; 
+                        if(itoy != 0) 
+                        {
+                                rmcor = new rochcor(seeed);
+                        }
+                        else
+                        {
+                                rmcor = new rochcor();
+                        }
 			if( applyMuonScaleCorrection > 0 )
 			{
 		 		if( applyMuonScaleCorrection == 2 )
@@ -2659,9 +2699,9 @@ int main(int argc, char *argv[])
 			double min_DeltaR = min(deltaRphomu1, deltaRphomu2);
 			if( min_DeltaR >= 0.8 )
 			{
-//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[2][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[0][i_mmg].first], shervinSmearingVector[MuMuGammaCandidates[0][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[1][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -2758,9 +2798,9 @@ int main(int argc, char *argv[])
 			double far_muonPt = (deltaRphomu1 > deltaRphomu2) ? correctedMuon1->Pt() : correctedMuon2->Pt();
 			if( far_muonPt <= 15.0 )
 			{
-				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[1][i_mmg].first], shervinSmearingVector[MuMuGammaCandidates[1][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[2][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -2876,9 +2916,9 @@ int main(int argc, char *argv[])
 			//if( (mumugamma.M() < 30.0) || (180.0 < mumugamma.M()))
 			if( (mumugamma.M() < 30.0) || (180.0 < mumugamma.M()) || (mumu.M()+mumugamma.M()) >= 180)
 			{
-				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, shervinSmearingVector[MuMuGammaCandidates[2][i_mmg].first] ,doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[3][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -2992,9 +3032,9 @@ int main(int argc, char *argv[])
                         mumugamma = (*PhotonEScale) + (*correctedMuon1) + (*correctedMuon2);
                         if( (mumugamma.M() < 60.0) || (120.0 < mumugamma.M())  )
                         {
-				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
-                                FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
+                                FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, shervinSmearingVector[MuMuGammaCandidates[3][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
                                 iCandidate_temp[4][i_mmg] == -99;
                                 miniTree->Fill();
                                 continue;
@@ -3117,9 +3157,9 @@ int main(int argc, char *argv[])
 			if( close_isoR03_hadEt >= 1.0)
 			{
 				if(verbosity>3) cerr << "candidate thrown because close_isoR03_hadEt= " << close_isoR03_hadEt << endl;
-				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[4][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[4][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[4][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[4][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[4][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[4][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[5][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -3246,9 +3286,9 @@ int main(int argc, char *argv[])
 			if( far_isoR03_emEt >= 1.0) 
 			{
 				if(verbosity>4) cerr << "candidate thrown because far_isoR03_emEt= " << far_isoR03_emEt << endl;
-				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[5][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[5][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[5][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[5][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[5][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[5][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[6][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -3371,9 +3411,9 @@ int main(int argc, char *argv[])
 			double far_muonPt = (deltaRphomu1 > deltaRphomu2) ? correctedMuon1->Pt() : correctedMuon2->Pt();
 			if( far_muonPt <= 30.0 )
 			{
-				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+				//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[6][i_mmg].first], shervinSmearingVector[MuMuGammaCandidates[6][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[7][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -3498,9 +3538,9 @@ int main(int argc, char *argv[])
 			if( (mumugamma.M() < 70.0) || (110.0 < mumugamma.M())	)
 			{
 				//cout << "non-loose event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
-				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, shervinSmearingVector[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				iCandidate_temp[8][i_mmg] == -99;
 				miniTree->Fill();
 				continue;
@@ -3663,12 +3703,11 @@ int main(int argc, char *argv[])
 			mumugamma = (*PhotonEScale) + (*mymuon1) + (*mymuon2);
 			if( (mumugamma.M() < 87.2) || (95.2 < mumugamma.M()) )
 			{
-				cout<<endl<<"avant FillMMG dans Tight window"<<endl;
 				//cout << "non-tight event: rejected: mumugamma.M()= " << mumugamma.M() << endl;
 				//cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
-				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader);
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
-				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
+				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, EScale, shervinSmearingVector[MuMuGammaCandidates[8][i_mmg].first],  doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
+				//FillMMG(myphoton, mymuon1, mymuon2, EScale, doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
 				//cout << "*** isVeryLooseMMG:isLooseMMG:isTightMMG= " << isVeryLooseMMG << isLooseMMG << isTightMMG << endl;
 				iCandidate_temp[9][i_mmg] == -99;
 				miniTree->Fill();
@@ -3679,7 +3718,6 @@ int main(int argc, char *argv[])
 			MuMuGammaCandidates_corrected[9][nbMuMuGammaAfterID[9]] = make_pair(MuMuGammaCandidates_corrected[8][i_mmg].first, MuMuGammaCandidates_corrected[8][i_mmg].second);
 			MuMuGammaCandidates_corrected_Pz[9][nbMuMuGammaAfterID[9]] = make_pair(MuMuGammaCandidates_corrected_Pz[8][i_mmg].first, MuMuGammaCandidates_corrected_Pz[8][i_mmg].second);
 			MuMuGammaCandidates_corrected_E[9][nbMuMuGammaAfterID[9]] = make_pair(MuMuGammaCandidates_corrected_E[8][i_mmg].first, MuMuGammaCandidates_corrected_E[8][i_mmg].second);
-			cerr << "coucou avant nbMuMuGammaAfterID[9]++" <<endl;
 			nbMuMuGammaAfterID[9]++;
  
 	
@@ -3812,11 +3850,11 @@ int main(int argc, char *argv[])
 
 
 
-//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[8][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[8][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[8][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+//				FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[8][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
 				cerr << "correctedMuon1->Pt() dans isMultiple = "<<correctedMuon1->Pt()<<endl;
                 		cerr << "correctedMuon2->Pt() dans isMultiple = "<<correctedMuon2->Pt()<<endl;
-				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[9][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+				FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[9][i_mmg].first],  shervinSmearingVector[MuMuGammaCandidates[9][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 				miniTree->Fill();
 	
 				delete correctedMuon1;
@@ -3833,7 +3871,6 @@ int main(int argc, char *argv[])
 		}
 		isSelected = 1;	
 
-		cout<<endl<<"Coucou de la fin qui ne devrait pas se voir !!!"<<endl;
 
 		/*
 		int i_mmg = 0;
@@ -3863,12 +3900,12 @@ int main(int argc, char *argv[])
 		TLorentzVector *correctedMuon2 = new TLorentzVector(corrected_Px2, corrected_Py2, corrected_Pz2, corrected_E2);
 
 
-		//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, mcPhotons, reader);
-		//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader);
+		//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, mcPhotons, reader);
+		//FillMMG(myphoton, mymuon1, mymuon2, Photon_scale[MuMuGammaCandidates[7][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader);
 		cerr << "avant dernier FillMMG "<<endl;
 		cerr << "correctedMuon1->Pt() avant dernier FillMMG = "<<correctedMuon1->Pt()<<endl;
 		cerr << "correctedMuon2->Pt() avant dernier FillMMG = "<<correctedMuon2->Pt()<<endl;	
-		FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[8][i_mmg].first], doMC, doPhotonConversionMC, mcParticles, reader, binNumber);
+		FillMMG(myphoton, mymuon1, mymuon2, correctedMuon1, correctedMuon2, Photon_scale[MuMuGammaCandidates[8][i_mmg].first], doMC, doPhotonConversionMC, doR9Rescaling, mcParticles, reader, binNumber);
 		isSelected = 1;
 		nSelected++;
 		cerr << "OK: Surviving veto event: "<< ievt << " ( " << iRunID << " , " << iLumiID << " , " << iEventID << " )"	<< endl;
