@@ -247,9 +247,10 @@ int main(int argc, char *argv[])
 		if( lumi_set == "2011" ) integratedLuminosity = 706.370 + 385.819 + 2741 + 1099;
 		if( lumi_set == "2011_rereco" ) integratedLuminosity = 2.221*1000.0 +	2.714*1000.0;
 		if( lumi_set == "2012" ) { integratedLuminosity = 808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0; runopt = 0; }
-		if( lumi_set == "2012ABC" ) { integratedLuminosity = 808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0; runopt = 0; } 
-                if( lumi_set == "2012D" ) { integratedLuminosity = 7274.0; runopt = 1; }
+		if( lumi_set == "2012ABC" ) { integratedLuminosity = 808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0; runopt = 0; }
+		if( lumi_set == "2012D" ) { integratedLuminosity = 7274.0; runopt = 1; }
 	}
+
 
 	// ******************************************
 	// Optional argument : pile-up scenario used
@@ -458,9 +459,8 @@ int main(int argc, char *argv[])
 	int iline = 0;
 	if( ntotjob == 9999)
 	{
-		cout<<"Coucou"<<endl;
-		inputEventTree->Add("test_DYtoMuMu2.root");
-		inputRunTree->Add("test_DYtoMuMu2.root");
+		inputEventTree->Add("test_run2012A.root");
+		inputRunTree->Add("test_run2012A.root");
 	
 	} 
 	else 
@@ -509,7 +509,6 @@ int main(int argc, char *argv[])
 		}
 	}
 	
-	cout<<endl<<"Coucou"<<endl;
 	// INSERTFILES
 
 	TFile* OutputRootFile = new TFile(Form("miniTree_%s_part%i.root", sample.c_str(), ijob), "RECREATE");
@@ -681,7 +680,6 @@ int main(int argc, char *argv[])
 	}
 */
 
-	cout<<endl<<"Coucou"<<endl;
 
 	int* NumWantedHLTnames;
 
@@ -1390,7 +1388,6 @@ int main(int argc, char *argv[])
 	miniTree->Branch("mmg_logik_MZ_Muons_RECO_MC",&mmg_logik_MZ_Muons_RECO_MC,"mmg_logik_MZ_Muons_RECO_MC/F");
 	miniTree->Branch("mmg_logs_MZ_Muons_RECO_MC",&mmg_logs_MZ_Muons_RECO_MC,"mmg_logs_MZ_Muons_RECO_MC/F");
 
-	cout<<endl<<"Coucou"<<endl;
 
 
 	TMVA::Reader* reader = new TMVA::Reader( "!Color:!Silent" );
@@ -1463,7 +1460,7 @@ int main(int argc, char *argv[])
 	double maxPtHat = 1000000;
 	int verbosity = 0;
 	int Nb_events_outside_powheg_cuts = 0;
-	int TOTALnbMuonsAfterID[12] = {0};
+	int TOTALnbMuonsAfterID[5] = {0};
 	int TOTALnbEventsAfterMuonID[12] = {0};
 	int TOTALnbDimuonsAfterID[3] = {0};
 	int TOTALnbEventsAfterDimuonID[3] = {0};
@@ -1635,8 +1632,9 @@ int main(int argc, char *argv[])
 			{
 				//Photon_scale.push_back(generator->Gaus(EScale_true_injected * EScale_inj, EResolution));
 				TRootPhoton *myphotontocorrect;
-				myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
-				Photon_scale.push_back(generator->Gaus(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons) * EScale_true_injected,EResolution));	
+                                myphotontocorrect = (TRootPhoton*) photons->At(iphoton);
+                                Photon_scale.push_back(generator->Gaus(photonManualCorrectionFactor(myphotontocorrect, correction, clusters, superClusters, photons) * EScale_true_injected,EResolution));
+			
 			}
 		} 
 		else 
@@ -1950,7 +1948,7 @@ int main(int argc, char *argv[])
                 muonIdentified_corrected_Pz.clear();
 		vector<double> muonIdentified_corrected_E;
                 muonIdentified_corrected_E.clear();	
-		int nbMuonsAfterID[12] = {0};
+		int nbMuonsAfterID[5] = {0};
 		
 		if(verbosity>0) cerr << "\t\tThere is " << NbMuons << " muons in the muon collection" << endl;
 
@@ -1961,7 +1959,7 @@ int main(int argc, char *argv[])
 			TRootMuon *mymuon;
 			mymuon = (TRootMuon*) muons->At(imuon);
 	
-			 // 2010 muon ID
+			/* // 2010 muon ID
 
 			if(! (mymuon->isGlobalMuon()) )
 			{
@@ -2045,8 +2043,8 @@ int main(int argc, char *argv[])
 
 			nbMuonsAfterID[9]++;
 			TOTALnbMuonsAfterID[9]++;
+			*/
 			
-			/*
 			
 			// 2012 Tight muon ID
 			if(! (mymuon->isTightMuonPerso() == 1))
@@ -2058,20 +2056,20 @@ int main(int argc, char *argv[])
 			nbMuonsAfterID[1]++;
                         TOTALnbMuonsAfterID[1]++;	
 
-			*/
+
 			TLorentzVector correctedMuon(mymuon->Px(), mymuon->Py(), mymuon->Pz(), mymuon->E());
 			float qter = 1.0;
 			double corrected_Pt = mymuon->Pt();
 			rochcor2012 *rmcor = 0;
-                        if(itoy != 0) 
-                        {
-                                rmcor = new rochcor2012(seeed);
-                        }
-                        else
-                        {
-                                rmcor = new rochcor2012();
-                        }	
-
+			if(itoy != 0) 
+			{
+				rmcor = new rochcor2012(seeed);
+			}
+			else
+			{
+				rmcor = new rochcor2012();
+			}
+			
 			if( applyMuonScaleCorrection > 0 )
 			{
 		 		if( applyMuonScaleCorrection == 2 )
@@ -2143,7 +2141,7 @@ int main(int argc, char *argv[])
 						}
 						if( (lumi_set == "2012" ) && (sample_in.find("DYToMuMu") != string::npos))
                                                 {
-                                                        int ntot= 3568581;
+                                                        int ntot= 3568581; 
                                                         double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
                                                         double ABCstat= (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
                                                         double Dstat= (double)(7274.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
@@ -2160,7 +2158,6 @@ int main(int argc, char *argv[])
                                                         }
                                                         else if( ijob >= ijobLastABC ) runopt = 1;
                                                 }
-
 						if( (lumi_set == "2011" ) && (sample_in.find("TTJets") != string::npos))
 	                                        {
 	                                                int ntot= 131388;
@@ -2179,10 +2176,10 @@ int main(int argc, char *argv[])
 								else runopt = 0; 
 	                                                } 
 							else if( ijob >= ijobLastA ) runopt = 1; 
-	                                        }	
+	                                        }
 						if( (lumi_set == "2012" ) && (sample_in.find("TTJets") != string::npos))
                                                 {
-                                                        int ntot= 110095;
+                                                        int ntot= 110095; 
                                                         double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
                                                         double ABCstat= (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
                                                         double Dstat= (double)(7274.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
@@ -2193,13 +2190,13 @@ int main(int argc, char *argv[])
                                                         {
                                                                 if( ievt >= iEventLastABC )
                                                                 {
-                                                                        runopt = 1;
+                                                                        runopt = 1; 
                                                                 }
-                                                                else runopt = 0;
+                                                                else runopt = 0; 
                                                         }
-                                                        else if( ijob >= ijobLastABC ) runopt = 1;
+                                                        else if( ijob >= ijobLastABC ) runopt = 1; 
                                                 }
-
+	
 						if( (lumi_set == "2011" ) && (sample_in.find("WJetsToLNu") != string::npos))
 	                                        {
 	                                                int ntot= 14821;
@@ -2219,9 +2216,9 @@ int main(int argc, char *argv[])
 	                                        }
 						if( (lumi_set == "2012" ) && (sample_in.find("WJetsToLNu") != string::npos))
                                                 {
-                                                        int ntot= 3353;
+                                                        int ntot= 3353; 
                                                         double avEventsPerJob= (double)(ntot)/(double)(ntotjob);
-                                                        double ABCstat= (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
+                                                        double ABCstat= (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0); 
                                                         double Dstat= (double)(7274.0) / (double)(808.472 + 82.136 + 4429.0 + 495.003 + 134.242 + 6397.0 + 7274.0);
                                                         double lastABC= ABCstat*ntot;
                                                         int ijobLastABC= (int)(lastABC)/(int)(avEventsPerJob);
@@ -2342,8 +2339,7 @@ int main(int argc, char *argv[])
 			TLorentzVector correctedMuon(corrected_Px, corrected_Py, corrected_Pz, corrected_E);
 
 			*/
-			
-			/*
+
 			// 2012 muon ID cut
 			if(! ( (mymuon->pfIsoChargedHadronPt04() / correctedMuon.Pt()) < 0.2 ) )
 			{	
@@ -2353,7 +2349,6 @@ int main(int argc, char *argv[])
 			}
 			nbMuonsAfterID[2]++;
                         TOTALnbMuonsAfterID[2]++;
-			*/
 
 		 	if(! (correctedMuon.Pt() > 10.5) )
 			{// transverse momentum
@@ -2362,8 +2357,8 @@ int main(int argc, char *argv[])
 				if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because transverse momentum" << endl;
 				continue;
 			}
-			nbMuonsAfterID[10]++;
-			TOTALnbMuonsAfterID[10]++;
+			nbMuonsAfterID[3]++;
+			TOTALnbMuonsAfterID[3]++;
 
 			if(! (fabs(mymuon->Eta())<2.4) )
 			{// |eta_muon|< 2.1
@@ -2371,8 +2366,8 @@ int main(int argc, char *argv[])
 				if(verbosity>0) cerr << "\t\t\tmuon " << imuon << " rejected because high eta (" << mymuon->Eta() << ")" << endl;
 				continue;
 			}
-			nbMuonsAfterID[11]++;
-			TOTALnbMuonsAfterID[11]++;
+			nbMuonsAfterID[4]++;
+			TOTALnbMuonsAfterID[4]++;
 
 			//if(! (mymuon->) ){// 
 			//muonIsNotCommissioned.push_back(1);
@@ -2402,7 +2397,7 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		if(! (nbMuonsAfterID[11] >=2) )// Not enough dimuon candidates, skip the event
+		if(! (nbMuonsAfterID[4] >=2) )// Not enough dimuon candidates, skip the event
 		{
 				continue;
 		}
@@ -2417,7 +2412,7 @@ int main(int argc, char *argv[])
 
 		// Making dimuon pairs holder
 		int numberOfDimuons[3] = {0};
-		numberOfDimuons[0] = factorial(nbMuonsAfterID[11] -1);
+		numberOfDimuons[0] = factorial(nbMuonsAfterID[4] -1);
 
 		if(! (numberOfDimuons[0] >= 1) )// Not enough dimuon candidates, skip the event. This cut is redundant with the previous one, should do nothing
 		{
@@ -2444,9 +2439,9 @@ int main(int argc, char *argv[])
 		if(verbosity>2) cout << "Filling pair object for dimuon pairs composed of ID'ed muons" << endl;
 		// Filling pair object for dimuon pairs composed of ID'ed muons
 		int i_dimuons_ = 0;
-		for(int muon_i = 0; muon_i < nbMuonsAfterID[11] ; muon_i++)
+		for(int muon_i = 0; muon_i < nbMuonsAfterID[4] ; muon_i++)
 		{
-			for(int muon_j = muon_i +1; muon_j < nbMuonsAfterID[11]; muon_j++)
+			for(int muon_j = muon_i +1; muon_j < nbMuonsAfterID[4]; muon_j++)
 			{
 				IDofMuons[0][i_dimuons_] = make_pair(muonIdentified[muon_i], muonIdentified[muon_j]);
 				PtofMuons[0][i_dimuons_] = make_pair(muonIdentified_corrected_Pt[muon_i], muonIdentified_corrected_Pt[muon_j]);
@@ -3940,7 +3935,6 @@ int main(int argc, char *argv[])
 		}
 		isSelected = 1;	
 
-		cout<<endl<<"Coucou de la fin qui ne devrait pas se voir !!!"<<endl;
 
 		/*
 		int i_mmg = 0;
@@ -4012,7 +4006,7 @@ int main(int argc, char *argv[])
 
 
 	cout << "Nb_events_outside_powheg_cuts= " << Nb_events_outside_powheg_cuts << endl << endl;
-	for(int i = 0; i < 12 ; i++)
+	for(int i = 0; i < 5 ; i++)
 	{
 		cout << "TOTALnbMuonsAfterID["<<i<<"]=\t" << TOTALnbMuonsAfterID[i] << "\t\t" << "TOTALnbEventsAfterMuonID["<<i<<"]=\t" << TOTALnbEventsAfterMuonID[i] << endl;
 	}
